@@ -1,0 +1,35 @@
+version: '3.7'
+services:
+  php8:
+    build:
+      context: .
+      dockerfile: .docker/dev/Dockerfile
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+    environment:
+      DATABASE_URL: mysql://root:symfony@database/chargingDA?serverVersion=8
+
+  database:
+    image: mysql:8
+    environment:
+      MYSQL_DATABASE: chargingDA
+      MYSQL_USER: chargingDA
+      MYSQL_PASSWORD: symfony
+      MYSQL_ROOT_PASSWORD: symfony
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "33060:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: symfony
+    ports:
+      - "8080:80"
+
+volumes:
+  db-data:
