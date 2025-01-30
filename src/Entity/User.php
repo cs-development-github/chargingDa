@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -65,6 +66,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        // Convertir DateTime en DateTimeImmutable si nécessaire
+        if (!$createdAt instanceof \DateTimeImmutable) {
+            $createdAt = \DateTimeImmutable::createFromMutable($createdAt);
+        }
+
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -83,7 +96,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);

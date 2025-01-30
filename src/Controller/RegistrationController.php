@@ -16,29 +16,29 @@ use Symfony\Component\Routing\Attribute\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
+            // Récupération du mot de passe
+            $plainPassword = $form->get('password')->getData();
 
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
+            $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+    
+            $user->setRoles(['ROLE_ADMIN']);
+            $user->setIsActive(true);
+    
             $entityManager->persist($user);
             $entityManager->flush();
-
-            // do anything else you need here, like send an email
-
-            return $security->login($user, UserAuthenticator::class, 'main');
+    
+            return $this->redirectToRoute('app_login');
         }
-
+    
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+            'registrationForm' => $form->createView(),
         ]);
     }
 }

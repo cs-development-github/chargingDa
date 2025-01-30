@@ -13,6 +13,12 @@ Encore
     // Activer Sass/SCSS pour Bootstrap
     .enableSassLoader()
 
+    .copyFiles({
+        from: './assets/images',
+        to: 'images/[path][name].[ext]'
+    })
+
+
     // Activer les sources maps en dev
     .enableSourceMaps(!Encore.isProduction())
 
