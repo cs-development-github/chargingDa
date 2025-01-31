@@ -5,8 +5,8 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
 
-    // Ajouter Bootstrap
     .addEntry('app', './assets/app.js')
+    .addEntry('carousel', './assets/carousel.js')
 
     .enableSingleRuntimeChunk()
 
@@ -17,7 +17,6 @@ Encore
         from: './assets/images',
         to: 'images/[path][name].[ext]'
     })
-
 
     // Activer les sources maps en dev
     .enableSourceMaps(!Encore.isProduction())

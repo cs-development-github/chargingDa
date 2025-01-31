@@ -43,7 +43,9 @@
                 style="width: 45px; height: 45px;">
         </div>
         <div class="ms-2">
+            {% if app.user %}
             <strong>{{ app.user.name }} {{ app.user.lastname }}</strong><br>
+            {% endif %}
             <span class="text-danger fw-bold">ADMIN</span>
         </div>
     </div>

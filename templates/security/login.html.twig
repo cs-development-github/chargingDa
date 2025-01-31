@@ -1,217 +1,81 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.login.html.twig' %}
 
-{% block title %}Connexion Partenaire{% endblock %}
+{% block title %} Connexion {% endblock %}
+
+{% block stylesheet %}
+	{{ parent() }}
+	{{ encore_entry_link_tags("carousel") }}
+{% endblock %}
 
 {% block body %}
-<style>
-	.logo-carousel {
-		position: relative;
-		width: 100%;
-		max-width: 700px;
-		height: 80px;
-		overflow: hidden;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: white;
-		border-radius: 15px;
-		box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
-		padding: 10px;
-	}
-
-	.logo-track {
-		display: flex;
-		width: 200%;
-		animation: slide-right 10s linear infinite;
-	}
-
-	.logo-slide {
-		height: 60px;
-		width: auto;
-		margin: 0 20px;
-		flex-shrink: 0;
-	}
-
-	@keyframes slide-right {
-		from {
-			transform: translateX(-50%);
-		}
-
-		to {
-			transform: translateX(0%);
-		}
-	}
-</style>
-
-<div class="container-fluid p-0 position-relative"
-	style="min-height: 100vh; background-image: url('../build/images/background.png'); ">
-	<div class="position-absolute top-0 start-0 w-50 h-100" style="background-color: rgba(255, 255, 255, 0.8)"></div>
-
-	<div class="card position-absolute top-50 start-50 translate-middle w-100" style="
-      max-width: 1200px;
-      border-radius: 30px;
-      overflow: hidden;
-      border: none;
-	  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); 
-      background-color: transparent;
-    ">
-		<div class="row g-0" style="
-    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); 
-    border-radius: 30px; 
-    overflow: hidden; 
-    background-color: white; 
-">
-			<div class="col-md-6" style="
-			background-color: #f5f5f5;
-			padding: 3rem;
-			box-shadow: 10px 0 20px rgba(0, 0, 0, 0.2); 
-			z-index: 2; 
-			box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); 
-			position: relative;
-		">
-
-				<div class="text-center mb-4">
-					<div style="
-              width: 80px;
-              height: 80px;
-              border-radius: 20px;
-              overflow: hidden;
-              box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-              display: inline-flex;
-              align-items: center;
-              justify-content: center;
-            ">
-						<img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi"
-							style="width: 100%; height: auto;">
-					</div>
-					<h2 class="mt-3 mb-0" style="
-              font-weight: 700;
-              font-size: 1.5rem;
-              background: linear-gradient(to right, #000, #444);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-            ">
-						CONNECTION
-					</h2>
-					<h2 class="mt-1 mb-0" style="
-              font-weight: 700;
-              font-size: 1.5rem;
-              background: linear-gradient(to right, #ff4081, #ff8c00);
-              -webkit-background-clip: text;
-              -webkit-text-fill-color: transparent;
-            ">
-						PARTENAIRE
-					</h2>
-				</div>
-
-				<form method="post" style="max-width: 400px; margin: 0 auto">
-					{% if error %}
-					<div class="alert alert-danger">
-						{{ error.messageKey|trans(error.messageData, 'security') }}
-					</div>
-					{% endif %} {% if app.user %}
-					<div class="alert alert-info">
-						Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
-						<a href="{{ path('app_logout') }}">Déconnexion</a>
-					</div>
-					{% endif %}
-
-					<div class="mb-3">
-						<label for="inputEmail" class="form-label" style="font-weight: 500">EMAIL
-							OU SIRET</label>
-						<input type="text" name="email" value="{{ last_username }}" id="inputEmail"
-							class="form-control form-control-lg" style="
-                border-radius: 10px;
-                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-              " required autofocus />
-					</div>
-
-					<div class="mb-3">
-						<label for="inputPassword" class="form-label" style="font-weight: 500">MOT
-							DE PASSE</label>
-						<input type="password" name="password" id="inputPassword" class="form-control form-control-lg"
-							style="
-                border-radius: 10px;
-                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-              " required />
-					</div>
-
-					<div class="mb-3 d-flex align-items-center">
-						<input type="checkbox" class="form-check-input me-2" id="rememberMe" />
-						<label class="form-check-label" for="rememberMe" style="font-size: 0.95rem">
-							ENREGISTRER LES INFORMATIONS DE CONNEXION
-						</label>
-					</div>
-
-					<div class="mb-4 text-center">
-						<a href="{{ path('app_forgot_password_request') }}"
-							style="color: #000; text-decoration: none; font-size: 0.9rem">
-							MOT DE PASSE OUBLIÉ ?
-						</a>
-
-					</div>
-
-					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-					<button type="submit" class="btn w-100 py-2" style="
-              background: linear-gradient(to right, #ff4081, #ff8c00);
-              border: none;
-              color: #fff;
-              font-weight: 600;
-              border-radius: 10px;
-              box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            ">
-						CONNEXION
-					</button>
-				</form>
-			</div>
-
-			<div class="col-md-6 d-flex flex-column justify-content-center text-start"
-				style="background-color: #fff; padding: 3rem">
-				<h1 style="
-            font-size: 2.5rem;
-            font-weight: 900;
-            font-family: 'Poppins', sans-serif;
-            color: #000;
-            margin: 0;
-          ">
-					Votre Solution<br />De
-					<span style="
-						background: linear-gradient(to right, #ff4081, #ff8c00);
-						-webkit-background-clip: text;
-						-webkit-text-fill-color: transparent;
-					">Supervision</span>!
-				</h1>
-
-				<p class="mt-3" style="
-					color: #555;
-					font-size: 1rem;
-					max-width: 450px;
-					text-align: left;
-					font-family: 'Poppins', sans-serif;
-					margin: 0;
-">
-					LODMI vous accompagne avec une boîte à outils complète pour simplifier
-					la mise en service des bornes de recharge de vos clients.
-				</p>
-				<div class="card border-0 shadow mt-5 logo-carousel">
-					<div class="logo-track">
-						<img src="{{ asset('build/images/1.png') }}" alt="1" class="logo-slide">
-						<img src="{{ asset('build/images/2.png') }}" alt="2" class="logo-slide">
-						<img src="{{ asset('build/images/3.png') }}" alt="3" class="logo-slide">
-						<img src="{{ asset('build/images/4.png') }}" alt="4" class="logo-slide">
-						<img src="{{ asset('build/images/5.png') }}" alt="5" class="logo-slide">
-
-						<img src="{{ asset('build/images/1.png') }}" alt="1" class="logo-slide">
-						<img src="{{ asset('build/images/2.png') }}" alt="2" class="logo-slide">
-						<img src="{{ asset('build/images/3.png') }}" alt="3" class="logo-slide">
-						<img src="{{ asset('build/images/4.png') }}" alt="4" class="logo-slide">
-						<img src="{{ asset('build/images/5.png') }}" alt="5" class="logo-slide">
-					</div>
-				</div>
-
-
-			</div>
-		</div>
-	</div>
+<div class="container-fluid p-0 position-relative" style="min-height: 100vh; background-image: url('../build/images/background.png');">
+  <div class="position-absolute top-0 start-0 w-50 h-100" style="background-color: rgba(255, 255, 255, 0.8)"></div>
+  <div class="card position-absolute top-50 start-50 translate-middle w-100" style="max-width: 1200px; border-radius: 30px; overflow: hidden; border: none; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); background-color: transparent;">
+    <div class="row g-0" style="box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); border-radius: 30px; overflow: hidden; background-color: white;">
+      <div class="col-md-6 p-4">
+        <div class="d-flex align-items-center justify-content-center mb-4">
+          <div style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; justify-content: center;">
+            <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi" style="width: 100%; height: auto;">
+          </div>
+          <div class="ms-3">
+            <h2 class="title mb-0">INSCRIPTION</h2>
+            <h2 class="form-title mb-0">PARTENAIRE</h2>
+          </div>
+        </div>
+        <form method="post" style="max-width: 400px; margin: 0 auto">
+          {% if error %}
+          <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+          </div>
+          {% endif %}
+          {% if app.user %}
+          <div class="alert alert-info">
+            Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
+            <a href="{{ path('app_logout') }}">Déconnexion</a>
+          </div>
+          {% endif %}
+          <div class="mb-3">
+            <label for="inputEmail" class="form-label">Email ou SIRET</label>
+            <input type="text" name="email" value="{{ last_username }}" id="inputEmail" class="form-control form-input" required autofocus />
+          </div>
+          <div class="mb-3">
+            <label for="inputPassword" class="form-label">Mot de passe</label>
+            <input type="password" name="password" id="inputPassword" class="form-control form-input" required />
+          </div>
+          <div class="mb-3 d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" id="rememberMe" />
+            <label class="form-check-label" for="rememberMe">Enregistrer les informations de connexion</label>
+          </div>
+          <div class="mb-4 text-center">
+            <a href="{{ path('app_forgot_password_request') }}" style="text-decoration: none;">Mot de passe oublié ?</a>
+          </div>
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
+          <button type="submit" class="btn form-button">CONNEXION</button>
+          <div class="mt-3 text-center">
+            <p class="mb-0">Pas de compte ? <a href="{{ path('app_register') }}" class="text-primary">Créez-en un</a></p>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-6 d-flex flex-column justify-content-center text-start" style="background-color: #fff; padding: 3rem">
+        <h1 style="font-size: 2.5rem; font-weight: 900; font-family: 'Poppins', sans-serif; color: #000; margin: 0;">
+          Votre Solution<br />De
+          <span style="background: linear-gradient(to right, #ff4081, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Supervision</span>!
+        </h1>
+        <p class="mt-3" style="color: #555; font-size: 1rem; max-width: 450px; text-align: left; font-family: 'Poppins', sans-serif; margin: 0;">
+          LODMI vous accompagne avec une boîte à outils complète pour simplifier la mise en service des bornes de recharge de vos clients.
+        </p>
+        <div class="card border-0 shadow mt-5 logo-carousel">
+          <div class="logo-track">
+            {% for i in 1..5 %}
+              <img src="{{ asset('build/images/' ~ i ~ '.png') }}" alt="{{ i }}" class="logo-slide" />
+            {% endfor %}
+            {% for i in 1..5 %}
+              <img src="{{ asset('build/images/' ~ i ~ '.png') }}" alt="{{ i }}" class="logo-slide" />
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

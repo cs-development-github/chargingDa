@@ -44,6 +44,9 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('societyName', TextType::class, [
+                'label' => 'Nom de l\'entreprise'
+            ])
             ->add('siret', TextType::class, [
                 'label' => 'Numéro SIRET',
                 'constraints' => [

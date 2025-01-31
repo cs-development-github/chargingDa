@@ -47,6 +47,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?bool $isActive = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $societyName = null;
+
     use TimestampableTrait;
 
     public function getId(): ?int
@@ -68,7 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        // Convertir DateTime en DateTimeImmutable si nécessaire
         if (!$createdAt instanceof \DateTimeImmutable) {
             $createdAt = \DateTimeImmutable::createFromMutable($createdAt);
         }
@@ -179,6 +181,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    public function getSocietyName(): ?string
+    {
+        return $this->societyName;
+    }
+
+    public function setSocietyName(?string $societyName): static
+    {
+        $this->societyName = $societyName;
 
         return $this;
     }
