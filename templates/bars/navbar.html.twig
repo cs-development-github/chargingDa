@@ -1,0 +1,50 @@
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3" style="
+    height: 70px;
+    z-index: 1050; /* Asegura que esté por encima del sidebar */
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+">
+    <div class="d-flex align-items-center">
+        <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo" class="img-fluid me-2"
+            style="height: 50px; border-radius: 10px;">
+        <h4 class="fw-bold mb-0" style="
+                background: linear-gradient(to right, #ff4081, #ff8c00);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            ">
+            PARTENAIRE
+        </h4>
+    </div>
+
+
+    <form class="d-flex mx-auto">
+        <input class="form-control border-0 shadow-sm" type="search" placeholder="Rechercher" style="
+            width: 300px;
+            border-top-left-radius: 30px;
+            border-bottom-left-radius: 30px;
+            border: 2px solid transparent;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(to right, #ff4081, #ff8c00) border-box;
+        ">
+        <button class="btn text-white px-3" type="submit" style="
+            background: linear-gradient(to right, #ff4081, #ff8c00);
+            border-top-right-radius: 30px;
+            border-bottom-right-radius: 30px;
+        ">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+
+    <div class="d-flex align-items-center">
+        <div class="position-relative">
+            <img src="{{ asset('images/user.jpg') }}" alt="User" class="rounded-circle"
+                style="width: 45px; height: 45px;">
+        </div>
+        <div class="ms-2">
+            <strong>{{ app.user.name }} {{ app.user.lastname }}</strong><br>
+            <span class="text-danger fw-bold">ADMIN</span>
+        </div>
+    </div>
+</nav>
