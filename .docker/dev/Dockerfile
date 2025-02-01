@@ -18,6 +18,8 @@ RUN curl -sS https://get.symfony.com/cli/installer | bash
 RUN mv /root/.symfony5/bin/symfony /usr/local/bin/symfony
 RUN a2enmod rewrite
 
+RUN apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+
 COPY  ./.docker/dev/apache.conf /etc/apache2/sites-available/000-default.conf
 COPY ./.docker/dev/php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
 
