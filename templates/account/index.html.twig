@@ -5,31 +5,54 @@
 {% block body %}
 <style>
     :root {
-        --gradient-start: #ec008c;
-        --gradient-end: #f6941f;
         --gray-color: #818285;
         --input-bg: #fff;
-        --button-bg: #e0e0e0;
+        --button-bg: #f7f7f7;
+        --control-height: 50px;
+        --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
     }
 
     .grid-container {
         margin-top: 100px;
+        margin-left: 90px;
     }
 
     .label-gray {
         color: var(--gray-color);
+        font-weight: bold;
+        margin-bottom: 5px;
     }
 
-    .input-bg {
+    .custom-input {
         background-color: var(--input-bg);
-        border: 1px solid #ccc;
-        padding: 10px;
-        border-radius: 20px;
+        border: none;
+        border-radius: 15px;
+        padding: 12px 15px;
         width: 100%;
+        height: var(--control-height);
+        box-shadow: var(--shadow-inset);
+        outline: none;
+        transition: box-shadow 0.2s ease-in-out;
     }
 
-    .input-inset {
-        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    .custom-input:focus {
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .input-row label {
+        flex: 0 0 140px;
+        color: var(--gray-color);
+        font-weight: bold;
+    }
+
+    .input-row .custom-input {
+        flex: 1;
     }
 
     .attach-btn,
@@ -38,14 +61,23 @@
         color: var(--gray-color);
         border: 1px solid var(--gray-color);
         cursor: pointer;
-        border-radius: 8px;
-        padding: 6px 12px;
         transition: opacity 0.3s;
+        min-height: var(--control-height);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .attach-btn {
+        border-radius: 30px;
+        padding: 6px 12px;
+        width: 100%;
     }
 
     .attach-file-btn {
-        border-radius: 30px;
+        border-radius: 40px;
         padding: 10px 20px;
+        width: 100%;
     }
 
     .attach-btn:hover,
@@ -56,7 +88,7 @@
     .profile-pic-wrapper {
         width: 220px;
         height: 220px;
-        background: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+        background: linear-gradient(45deg, #ec008c, #f6941f);
         border-radius: 50%;
         padding: 5px;
         display: flex;
@@ -72,10 +104,6 @@
         object-fit: cover;
     }
 
-    .grid-column {
-        padding: 20px;
-    }
-
     .documents-column {
         display: flex;
         flex-direction: column;
@@ -85,12 +113,39 @@
     .form-check-label {
         font-size: 0.85rem;
     }
+
+    /* Nuevo botón Save */
+    .save-btn {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+        transition: opacity 0.3s;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    }
+
+    .save-btn:hover {
+        opacity: 0.9;
+    }
 </style>
 
 <div class="container grid-container">
+    <h1 class="text-center mb-4">Mon Profil</h1>
+
     <div class="row">
         <div class="col-md-4 grid-column">
             <h2>Données Personnelles</h2>
+
+            <div id="update-message" class="mt-2 text-success fw-bold" style="display: none;">
+                ✅ Données mises à jour avec succès !
+            </div>
+            
             <div class="mb-3">
                 <label for="nom" class="form-label label-gray">NOM</label>
                 <input type="text" id="nom" name="nom" class="form-control input-bg input-inset"
@@ -116,28 +171,33 @@
                 <input type="email" id="email" name="email" class="form-control input-bg input-inset"
                     value="{{ user.email }}" placeholder="votre@email.fr">
             </div>
-        </div>
 
+            <div class="text-center mt-3">
+                <button type="button" class="save-btn btn btn-primary">
+                    <i class="bi bi-pencil"></i> Modifier
+                </button>
+            </div>
+            
+        </div>
         <div class="col-md-4 grid-column documents-column">
-            <h2 class="text-center">Documents</h2>
             <div class="mb-3">
-                <button type="button" class="attach-btn w-100">
+                <button type="button" class="attach-btn">
                     <i class="bi bi-paperclip"></i> Insérer KBIS
                 </button>
             </div>
             <div class="mb-3">
-                <button type="button" class="attach-btn w-100">
+                <button type="button" class="attach-btn">
                     <i class="bi bi-paperclip"></i> Insérer QUALIFELEC
                 </button>
             </div>
             <div class="mb-3 d-flex align-items-center justify-content-center">
-                <label class="me-2 label-gray">ASSURANCE DÉCENNALE</label>
+                <label class="me-2">ASSURANCE DÉCENNALE</label>
                 <i class="bi bi-check-circle-fill text-success fs-4 me-2"></i>
                 <i class="bi bi-download fs-4"></i>
             </div>
             <div class="mb-3 form-check">
                 <input class="form-check-input" type="checkbox" id="acceptDocs">
-                <label class="form-check-label label-gray" for="acceptDocs">
+                <label class="form-check-label" for="acceptDocs">
                     En cochant, j’accepte de transmettre mes documents (assurance décennale, KBIS, Qualifelec) afin de
                     justifier de mes capacités professionnelles.
                 </label>
@@ -145,7 +205,6 @@
         </div>
 
         <div class="col-md-4 grid-column text-center">
-            <h2>Profil</h2>
             <div class="profile-pic-wrapper mx-auto">
                 <img src="{{ user.profilePicture ?? 'https://via.placeholder.com/200' }}" 
                      alt="Photo de profil" class="profile-pic">
@@ -157,4 +216,50 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const saveButton = document.querySelector(".save-btn");
+        const updateMessage = document.querySelector("#update-message");
+    
+        saveButton.addEventListener("click", function () {
+            saveButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mise à jour...';
+            saveButton.disabled = true; // Désactive le bouton temporairement
+    
+            const userData = {
+                name: document.querySelector("#nom").value,
+                lastname: document.querySelector("#prenom").value,
+                societyName: document.querySelector("#entreprise").value,
+                phone: document.querySelector("#telephone").value,
+                email: document.querySelector("#email").value
+            };
+    
+            fetch("{{ path('app_account_update') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    updateMessage.style.display = "block"; // Afficher le message de succès
+                    setTimeout(() => {
+                        updateMessage.style.display = "none"; // Masquer après 3 secondes
+                    }, 3000);
+                } else {
+                    alert("Erreur lors de la mise à jour.");
+                }
+            })
+            .catch(error => console.error("Erreur:", error))
+            .finally(() => {
+                saveButton.innerHTML = '<i class="bi bi-pencil"></i> Modifier';
+                saveButton.disabled = false; // Réactive le bouton
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}
