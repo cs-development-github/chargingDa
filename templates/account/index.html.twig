@@ -140,32 +140,44 @@
 
     <div class="row">
         <div class="col-md-4 grid-column">
-            <div class="input-row">
-                <label for="nom">NOM</label>
-                <input type="text" id="nom" name="nom" class="custom-input" placeholder="Votre nom">
+            <h2>Données Personnelles</h2>
+
+            <div id="update-message" class="mt-2 text-success fw-bold" style="display: none;">
+                ✅ Données mises à jour avec succès !
             </div>
-            <div class="input-row">
-                <label for="prenom">PRÉNOM</label>
-                <input type="text" id="prenom" name="prenom" class="custom-input" placeholder="Votre prénom">
+
+            <div class="mb-3">
+                <label for="nom" class="form-label label-gray">NOM</label>
+                <input type="text" id="nom" name="nom" class="form-control input-bg input-inset"
+                    value="{{ user.name }}" placeholder="Votre nom">
             </div>
-            <div class="input-row">
-                <label for="entreprise">ENTREPRISE</label>
-                <input type="text" id="entreprise" name="entreprise" class="custom-input"
-                    placeholder="Nom de l’entreprise">
+            <div class="mb-3">
+                <label for="prenom" class="form-label label-gray">PRÉNOM</label>
+                <input type="text" id="prenom" name="prenom" class="form-control input-bg input-inset"
+                    value="{{ user.lastname }}" placeholder="Votre prénom">
             </div>
-            <div class="input-row">
-                <label for="telephone">TÉLÉPHONE</label>
-                <input type="text" id="telephone" name="telephone" class="custom-input" placeholder="+33...">
+            <div class="mb-3">
+                <label for="entreprise" class="form-label label-gray">ENTREPRISE</label>
+                <input type="text" id="entreprise" name="entreprise" class="form-control input-bg input-inset"
+                    value="{{ user.societyName }}" placeholder="Nom de l’entreprise">
             </div>
-            <div class="input-row">
-                <label for="email">EMAIL</label>
-                <input type="email" id="email" name="email" class="custom-input" placeholder="votre@email.fr">
+            <div class="mb-3">
+                <label for="telephone" class="form-label label-gray">TÉLÉPHONE</label>
+                <input type="text" id="telephone" name="telephone" class="form-control input-bg input-inset"
+                    value="{{ user.phone }}" placeholder="+33...">
             </div>
+            <div class="mb-3">
+                <label for="email" class="form-label label-gray">EMAIL</label>
+                <input type="email" id="email" name="email" class="form-control input-bg input-inset"
+                    value="{{ user.email }}" placeholder="votre@email.fr">
+            </div>
+
             <div class="text-center mt-3">
-                <button type="button" class="save-btn">
-                    <i class="bi bi-save"></i> Save
+                <button type="button" class="save-btn btn btn-primary">
+                    <i class="bi bi-pencil"></i> Modifier
                 </button>
             </div>
+            
         </div>
         <div class="col-md-4 grid-column documents-column">
             <div class="mb-3">
@@ -194,7 +206,8 @@
 
         <div class="col-md-4 grid-column text-center">
             <div class="profile-pic-wrapper mx-auto">
-                <img src="https://via.placeholder.com/200" alt="Photo de profil" class="profile-pic">
+                <img src="{{ user.profilePicture ?? '/build/images/avatar.png' }}" 
+                     alt="Photo de profil" class="profile-pic">
             </div>
             <div class="mb-3 fw-bold label-gray">MODIFIER L'IMAGE DE PROFIL</div>
             <button type="button" class="attach-file-btn">
@@ -203,4 +216,50 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const saveButton = document.querySelector(".save-btn");
+        const updateMessage = document.querySelector("#update-message");
+    
+        saveButton.addEventListener("click", function () {
+            saveButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mise à jour...';
+            saveButton.disabled = true; // Désactive le bouton temporairement
+    
+            const userData = {
+                name: document.querySelector("#nom").value,
+                lastname: document.querySelector("#prenom").value,
+                societyName: document.querySelector("#entreprise").value,
+                phone: document.querySelector("#telephone").value,
+                email: document.querySelector("#email").value
+            };
+    
+            fetch("{{ path('app_account_update') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    updateMessage.style.display = "block"; // Afficher le message de succès
+                    setTimeout(() => {
+                        updateMessage.style.display = "none"; // Masquer après 3 secondes
+                    }, 3000);
+                } else {
+                    alert("Erreur lors de la mise à jour.");
+                }
+            })
+            .catch(error => console.error("Erreur:", error))
+            .finally(() => {
+                saveButton.innerHTML = '<i class="bi bi-pencil"></i> Modifier';
+                saveButton.disabled = false; // Réactive le bouton
+            });
+        });
+    });
+    </script>
+    
 {% endblock %}
