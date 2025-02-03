@@ -12,7 +12,6 @@
         --button-bg: #e0e0e0;
     }
 
-
     .grid-container {
         margin-top: 100px;
     }
@@ -95,27 +94,27 @@
             <div class="mb-3">
                 <label for="nom" class="form-label label-gray">NOM</label>
                 <input type="text" id="nom" name="nom" class="form-control input-bg input-inset"
-                    placeholder="Votre nom">
+                    value="{{ user.name }}" placeholder="Votre nom">
             </div>
             <div class="mb-3">
                 <label for="prenom" class="form-label label-gray">PRÉNOM</label>
                 <input type="text" id="prenom" name="prenom" class="form-control input-bg input-inset"
-                    placeholder="Votre prénom">
+                    value="{{ user.lastname }}" placeholder="Votre prénom">
             </div>
             <div class="mb-3">
                 <label for="entreprise" class="form-label label-gray">ENTREPRISE</label>
                 <input type="text" id="entreprise" name="entreprise" class="form-control input-bg input-inset"
-                    placeholder="Nom de l’entreprise">
+                    value="{{ user.societyName }}" placeholder="Nom de l’entreprise">
             </div>
             <div class="mb-3">
                 <label for="telephone" class="form-label label-gray">TÉLÉPHONE</label>
                 <input type="text" id="telephone" name="telephone" class="form-control input-bg input-inset"
-                    placeholder="+33...">
+                    value="{{ user.phone }}" placeholder="+33...">
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label label-gray">EMAIL</label>
                 <input type="email" id="email" name="email" class="form-control input-bg input-inset"
-                    placeholder="votre@email.fr">
+                    value="{{ user.email }}" placeholder="votre@email.fr">
             </div>
         </div>
 
@@ -148,7 +147,8 @@
         <div class="col-md-4 grid-column text-center">
             <h2>Profil</h2>
             <div class="profile-pic-wrapper mx-auto">
-                <img src="https://via.placeholder.com/200" alt="Photo de profil" class="profile-pic">
+                <img src="{{ user.profilePicture ?? 'https://via.placeholder.com/200' }}" 
+                     alt="Photo de profil" class="profile-pic">
             </div>
             <div class="mb-3 fw-bold label-gray">MODIFIER L'IMAGE DE PROFIL</div>
             <button type="button" class="attach-file-btn">
