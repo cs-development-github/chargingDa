@@ -7,8 +7,11 @@ use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ChargingStationsRepository;
 
 #[ORM\Entity(repositoryClass: ChargingStationsRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class ChargingStations
 {
+    use TimestampableTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -20,20 +23,20 @@ class ChargingStations
     #[ORM\Column(length: 255)]
     private ?string $manufacturer = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $manufacturerImage = null; // ✅ Nombre correcto
+
     #[ORM\Column]
     private ?int $connectors = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $documentation = null;
 
     #[ORM\Column]
-    private ?bool $isActive = null; 
-
-    use TimestampableTrait;
-
+    private ?bool $isActive = null;
 
     public function getId(): ?int
     {
@@ -48,7 +51,6 @@ class ChargingStations
     public function setModel(string $model): static
     {
         $this->model = $model;
-
         return $this;
     }
 
@@ -60,7 +62,19 @@ class ChargingStations
     public function setManufacturer(string $manufacturer): static
     {
         $this->manufacturer = $manufacturer;
+        return $this;
+    }
 
+    // ✅ Método Getter con nombre correcto
+    public function getManufacturerImage(): ?string
+    {
+        return $this->manufacturerImage;
+    }
+
+    // ✅ Método Setter con nombre correcto
+    public function setManufacturerImage(?string $manufacturerImage): static
+    {
+        $this->manufacturerImage = $manufacturerImage;
         return $this;
     }
 
@@ -72,7 +86,6 @@ class ChargingStations
     public function setConnectors(int $connectors): static
     {
         $this->connectors = $connectors;
-
         return $this;
     }
 
@@ -81,10 +94,9 @@ class ChargingStations
         return $this->image;
     }
 
-    public function setImage(string $image): static
+    public function setImage(?string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -93,10 +105,9 @@ class ChargingStations
         return $this->documentation;
     }
 
-    public function setDocumentation(string $documentation): static
+    public function setDocumentation(?string $documentation): static
     {
         $this->documentation = $documentation;
-
         return $this;
     }
 
@@ -108,7 +119,6 @@ class ChargingStations
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 }
