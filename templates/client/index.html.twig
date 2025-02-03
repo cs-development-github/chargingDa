@@ -1,0 +1,131 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter Clients{% endblock %}
+
+{% block body %}
+<style>
+    :root {
+        --gray-color: #818285;
+        --input-bg: #fff;
+        --button-bg: #f7f7f7;
+        --control-height: 50px;
+        --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid-container {
+        margin-top: 100px;
+    }
+
+    .label-gray {
+        color: var(--gray-color);
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .custom-input {
+        background-color: var(--input-bg);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 15px;
+        width: 100%;
+        height: var(--control-height);
+        box-shadow: var(--shadow-inset);
+        outline: none;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .custom-input:focus {
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .input-row label {
+        flex: 0 0 150px;
+        color: var(--gray-color);
+        font-weight: bold;
+    }
+
+    .input-row .custom-input {
+        flex: 1;
+    }
+
+    .confirm-btn {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 1rem;
+        transition: opacity 0.3s;
+        font-weight: bold;
+    }
+
+    .confirm-btn:hover {
+        opacity: 0.9;
+    }
+</style>
+
+<div class="container grid-container">
+    <h1 class="text-center mb-4">AJOUTER CLIENTS</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="input-row">
+                <label for="nom">NOM</label>
+                <input type="text" id="nom" name="nom" class="custom-input" placeholder="Nom du client">
+            </div>
+            <div class="input-row">
+                <label for="prenom">PRÉNOM</label>
+                <input type="text" id="prenom" name="prenom" class="custom-input" placeholder="Prénom du client">
+            </div>
+            <div class="input-row">
+                <label for="entreprise">ENTREPRISE</label>
+                <input type="text" id="entreprise" name="entreprise" class="custom-input" placeholder="Entreprise">
+            </div>
+            <div class="input-row">
+                <label for="adresse">ADRESSE FACT</label>
+                <input type="text" id="adresse" name="adresse" class="custom-input" placeholder="Adresse">
+            </div>
+            <div class="input-row">
+                <label for="siret">SIRET</label>
+                <input type="text" id="siret" name="siret" class="custom-input" placeholder="Numéro SIRET">
+            </div>
+            <div class="input-row">
+                <label for="telephone">TÉLÉPHONE</label>
+                <input type="text" id="telephone" name="telephone" class="custom-input" placeholder="Téléphone">
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="input-row">
+                <label for="email">EMAIL</label>
+                <input type="email" id="email" name="email" class="custom-input" placeholder="Email">
+            </div>
+            <div class="input-row">
+                <label for="prix_kw">PRIX KW</label>
+                <input type="text" id="prix_kw" name="prix_kw" class="custom-input" placeholder="Prix par KW">
+            </div>
+            <div class="input-row">
+                <label for="prix_revente">PRIX REVENTE</label>
+                <input type="text" id="prix_revente" name="prix_revente" class="custom-input" placeholder="Prix revente">
+            </div>
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" id="acceptDocs">
+                <label class="form-check-label" for="acceptDocs" style="font-style: italic; font-size: 0.85rem;">
+                    En cochant, j’assure avoir pris connaissance des CGV et des CGU et en avoir informé mon client.
+                </label>
+            </div>
+            <div class="text-center mt-3">
+                <button type="submit" class="confirm-btn">JE TRANSMET LE CONTRAT</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
