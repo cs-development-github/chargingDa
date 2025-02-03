@@ -145,7 +145,7 @@
             <div id="update-message" class="mt-2 text-success fw-bold" style="display: none;">
                 ✅ Données mises à jour avec succès !
             </div>
-            
+
             <div class="mb-3">
                 <label for="nom" class="form-label label-gray">NOM</label>
                 <input type="text" id="nom" name="nom" class="form-control input-bg input-inset"
@@ -206,7 +206,7 @@
 
         <div class="col-md-4 grid-column text-center">
             <div class="profile-pic-wrapper mx-auto">
-                <img src="{{ user.profilePicture ?? 'https://via.placeholder.com/200' }}" 
+                <img src="{{ user.profilePicture ?? '/build/images/avatar.png' }}" 
                      alt="Photo de profil" class="profile-pic">
             </div>
             <div class="mb-3 fw-bold label-gray">MODIFIER L'IMAGE DE PROFIL</div>
