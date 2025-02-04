@@ -23,7 +23,7 @@ final class ChargingStationsController extends AbstractController
         $this->uploadsDirectory = $params->get('uploads_directory');
     }
 
-    #[Route('/charging/stations', name: 'app_charging_stations')]
+    #[Route('/borne-de-recharge', name: 'app_charging_stations')]
     public function index(ChargingStationsRepository $chargingStationsRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
         $chargingStations = $chargingStationsRepository->findAll();
