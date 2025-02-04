@@ -63,11 +63,11 @@
         <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
             <i class="bi bi-person me-2"></i> <span class="text-truncate">MES CLIENTS</span>
         </a>
-        <a href="#" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
+        <a href="{{ path('app_charging_stations') }}" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
             style="height: 44px;">
             <i class="bi bi-collection-fill me-2"></i> <span>DOC. BORNE</span>
         </a>
-        <a href="#"
+        <a href="{{path('app_add_client')}}"
             class="btn text-white fw-bold d-flex align-items-center justify-content-between px-3 py-2 rounded-3 mb-3"
             style="background: linear-gradient(to right, #ff4081, #ff8c00);">
             <span class="text-truncate">AJOUTER UN CLIENT</span> <i class="bi bi-plus-lg"></i>

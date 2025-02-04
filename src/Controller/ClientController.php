@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class ClientController extends AbstractController
 {
-    #[Route('/client', name: 'app_client')]
+    #[Route('/ajouter/client', name: 'app_add_client')]
     public function index(): Response
     {
         return $this->render('client/index.html.twig', [
