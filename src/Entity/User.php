@@ -74,7 +74,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        // Convertir DateTime en DateTimeImmutable si nécessaire
         if (!$createdAt instanceof \DateTimeImmutable) {
             $createdAt = \DateTimeImmutable::createFromMutable($createdAt);
         }
