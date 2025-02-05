@@ -65,7 +65,7 @@ final class ChargingStationsController extends AbstractController
             if ($manufacturerImageFile) {
                 $manufacturerImageFilename = uniqid().'.'.$manufacturerImageFile->guessExtension();
                 $manufacturerImageFile->move($this->uploadsDirectory, $manufacturerImageFilename);
-                $station->setManufacturerImage($manufacturerImageFilename);
+                // $station->setManufacturerImage($manufacturerImageFilename);
             }
     
             $docFile = $request->files->get('documentation');

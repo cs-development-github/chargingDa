@@ -20,12 +20,6 @@ class ChargingStations
     #[ORM\Column(length: 255)]
     private ?string $model = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $manufacturer = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $manufacturerImage = null; // ✅ Nombre correcto
-
     #[ORM\Column]
     private ?int $connectors = null;
 
@@ -37,6 +31,10 @@ class ChargingStations
 
     #[ORM\Column]
     private ?bool $isActive = null;
+
+    #[ORM\ManyToOne(inversedBy: 'chargingStations')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Manufacturer $manufacturer = null;
 
     public function getId(): ?int
     {
@@ -51,30 +49,6 @@ class ChargingStations
     public function setModel(string $model): static
     {
         $this->model = $model;
-        return $this;
-    }
-
-    public function getManufacturer(): ?string
-    {
-        return $this->manufacturer;
-    }
-
-    public function setManufacturer(string $manufacturer): static
-    {
-        $this->manufacturer = $manufacturer;
-        return $this;
-    }
-
-    // ✅ Método Getter con nombre correcto
-    public function getManufacturerImage(): ?string
-    {
-        return $this->manufacturerImage;
-    }
-
-    // ✅ Método Setter con nombre correcto
-    public function setManufacturerImage(?string $manufacturerImage): static
-    {
-        $this->manufacturerImage = $manufacturerImage;
         return $this;
     }
 
@@ -119,6 +93,18 @@ class ChargingStations
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
+        return $this;
+    }
+
+    public function getManufacturer(): ?Manufacturer
+    {
+        return $this->manufacturer;
+    }
+
+    public function setManufacturer(?Manufacturer $manufacturer): static
+    {
+        $this->manufacturer = $manufacturer;
+
         return $this;
     }
 }
