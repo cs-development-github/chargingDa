@@ -5,8 +5,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ChargingStationsRepository;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: ChargingStationsRepository::class)]
+#[UniqueEntity(fields: ['slug'], message: 'Ce slug est déjà utilisé.')]
 #[ORM\HasLifecycleCallbacks]
 class ChargingStations
 {
@@ -35,6 +38,9 @@ class ChargingStations
     #[ORM\ManyToOne(inversedBy: 'chargingStations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Manufacturer $manufacturer = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $slug = null;
 
     public function getId(): ?int
     {
@@ -106,5 +112,22 @@ class ChargingStations
         $this->manufacturer = $manufacturer;
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function generateSlug(SluggerInterface $slugger): void
+    {
+        $slug = $slugger->slug($this->model)->lower();
+        $this->setSlug($slug);
     }
 }

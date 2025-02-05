@@ -104,10 +104,14 @@
                 style="background: linear-gradient(to right, #ff4081, #ff8c00); border-radius: 10px;">
                 <i class="bi bi-search"></i>
             </button>
+            {% if is_granted('ROLE_SUPER_ADMIN') %}
+
             <button class="btn text-white ms-3 px-3" data-bs-toggle="modal" data-bs-target="#addStationModal"
                 style="background: linear-gradient(to right, #ff4081, #ff8c00); border-radius: 10px;">
                 <i class="bi bi-plus-lg"></i> Ajouter
             </button>
+
+            {% endif %}
         </div>
     </div>
 
@@ -129,8 +133,8 @@
                     </div>
 
                     <div class="station-info">
-                        {% if station.manufacturerImage %}
-                        <img src="{{ asset('uploads/' ~ station.manufacturerImage	) }}" alt="Logo Fabricant" width="90">
+                        {% if station.manufacturer.image %}
+                        <img src="{{ asset('uploads/' ~ station.manufacturer.image	) }}" alt="Logo Fabricant" width="90">
                         {% else %}
                         manufacturer
                         {% endif %}
@@ -149,7 +153,7 @@
 
                     <div class="station-info">
                         <div class="station-actions">
-                            <a href="{{ path('charging_station_show', { id: station.id }) }}" class="text-muted">
+                            <a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="text-muted">
                                 <i class="bi bi-eye-fill" style="font-size: 1.4rem;"></i>
                             </a>
                             {% if station.documentation %}
@@ -174,55 +178,88 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addStationModalLabel">Ajouter une borne</h5>
+                <h5 class="modal-title" id="addStationModalLabel">Gestion des Bornes</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
 
             <div class="modal-body">
-                <form action="{{ path('charging_station_add') }}" method="post" enctype="multipart/form-data">
-                    {{ form_start(form) }}
+                <!-- Onglets -->
+                <ul class="nav nav-tabs" id="borneTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="borne-tab" data-bs-toggle="tab" data-bs-target="#borne" type="button" role="tab">Ajouter une Borne</button>
+                    </li>
 
-                    <div class="mb-3">
-                        {{ form_label(form.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
-                        {{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="proprietaire-tab" data-bs-toggle="tab" data-bs-target="#proprietaire" type="button" role="tab">Ajouter un constructeur</button>
+                    </li>
+                </ul>
+
+                <!-- Contenu des onglets -->
+                <div class="tab-content" id="borneTabsContent">
+                    <!-- Onglet Ajouter une Borne -->
+                    <div class="tab-pane fade show active" id="borne" role="tabpanel">
+                        <form action="{{ path('charging_station_add') }}" method="post" enctype="multipart/form-data">
+                            {{ form_start(form) }}
+
+                            <div class="mb-3">
+                                {{ form_label(form.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
+                                {{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
+                                {{ form_widget(form.manufacturer, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="mb-3">
+                                {{ form_label(form.connectors, 'PDC', {'label_attr': {'class': 'fw-bold'}}) }}
+                                {{ form_widget(form.connectors, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="fw-bold">Photo</label>
+                                <input type="file" name="image" class="form-control">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="fw-bold">Documentation</label>
+                                <input type="file" name="documentation" class="form-control">
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-save">Enregistrer</button>
+                            </div>
+
+                            {{ form_end(form) }}
+                        </form>
                     </div>
 
-                    <div class="mb-3">
-                        {{ form_label(form.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
-                        {{ form_widget(form.manufacturer, {'attr': {'class': 'form-control'}}) }}
-                    {# </div> #}
+                    <!-- Onglet Ajouter un Propriétaire -->
+                    <div class="tab-pane fade" id="proprietaire" role="tabpanel">
+                        <form action="{{ path('manufacturer_add') }}" method="POST" enctype="multipart/form-data">
+                            {{ form_start(manufacturerForm) }}
+                    
+                            <div class="mb-3">
+                                {{ form_label(manufacturerForm.name, 'Nom du constructeur', {'label_attr': {'class': 'fw-bold'}}) }}
+                                {{ form_widget(manufacturerForm.name, {'attr': {'class': 'form-control'}}) }}
+                            </div>
 
-                    <div class="mb-3">
-                        {{ form_label(form.connectors, 'PDC', {'label_attr': {'class': 'fw-bold'}}) }}
-                        {{ form_widget(form.connectors, {'attr': {'class': 'form-control'}}) }}
+                            <div class="mb-3">
+                                {{ form_label(manufacturerForm.image, 'Logo du constructeur', {'label_attr': {'class': 'fw-bold'}}) }}
+                                {{ form_widget(manufacturerForm.image, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                    
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-save">Ajouter</button>
+                            </div>
+                    
+                            {{ form_end(manufacturerForm) }}
+                        </form>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="fw-bold">Fabricant Logo</label>
-                        <input type="file" name="manufacturer_image" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="fw-bold">Photo</label>
-                        <input type="file" name="image" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="fw-bold">Documentation</label>
-                        <input type="file" name="documentation" class="form-control">
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-save">Enregistrer</button>
-                    </div>
-
-                    {{ form_end(form) }}
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
-
 
 {% endblock %}
