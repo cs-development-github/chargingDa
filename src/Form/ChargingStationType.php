@@ -2,11 +2,12 @@
 
 namespace App\Form;
 
+use App\Entity\Manufacturer;
 use App\Entity\ChargingStations;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -20,16 +21,17 @@ class ChargingStationType extends AbstractType
                 'label' => 'Modèle',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('manufacturer', TextType::class, [
-                'label' => 'Fabricant',
-                'attr' => ['class' => 'form-control'],
+            ->add('manufacturer', EntityType::class, [
+                'class' => Manufacturer::class,
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez un fabricant',
+                'required' => true,
+                'attr' => ['class' => 'form-control']
             ])
             ->add('connectors', IntegerType::class, [
                 'label' => 'PDC',
                 'attr' => ['class' => 'form-control'],
             ])
-
-
 
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Actif ',
