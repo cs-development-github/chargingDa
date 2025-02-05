@@ -1,0 +1,124 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la borne - {{ station.model }}{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Détails de la borne</h2>
+
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <th>Modèle</th>
+                <td>{{ station.model }}</td>
+            </tr>
+            <tr>
+                <th>Fabricant</th>
+                <td>{{ station.manufacturer.name }}</td>
+            </tr>
+            <tr>
+                <th>PDC</th>
+                <td>{{ station.connectors }}</td>
+            </tr>
+            <tr>
+                <th>Logo Fabricant</th>
+                <td>
+                    {% if station.manufacturer.image %}
+                        <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo" width="100">
+                    {% else %}
+                        <span class="text-muted">Non disponible</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Photo</th>
+                <td>
+                    {% if station.image %}
+                        <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image Borne" width="100">
+                    {% else %}
+                        <span class="text-muted">Non disponible</span>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
+            Modifier la borne
+        </button>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStationModal">
+            Supprimer la borne
+        </button>
+    {% endif %}
+</div>
+
+<!-- MODAL D'ÉDITION -->
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+<div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStationModalLabel">Modifier la borne</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('charging_station_edit', { slug: station.slug }) }}" method="POST" enctype="multipart/form-data">
+                    {{ form_start(editForm) }}
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.model, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.manufacturer, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.connectors, 'PDC', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.connectors, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold">Nouvelle Image de la Borne</label>
+                        <input type="file" name="image" class="form-control">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                    </div>
+
+                    {{ form_end(editForm) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- MODAL DE SUPPRESSION -->
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+<div class="modal fade" id="deleteStationModal" tabindex="-1" aria-labelledby="deleteStationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteStationModalLabel">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette borne ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form action="{{ path('charging_station_delete', { slug: station.slug }) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

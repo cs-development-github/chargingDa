@@ -1,0 +1,83 @@
+<style>
+    .sidebar {
+        width: 260px;
+        background-image: url('/build/images/background.png');
+        background-size: cover;
+        background-position: center;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        height: calc(100vh - 70px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+
+    .sidebar .menu {
+        flex-grow: 1;
+    }
+
+    .sidebar .btn {
+        width: 100%;
+        text-align: left;
+        padding: 12px 15px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        border-radius: 10px;
+    }
+
+    .sidebar .btn-light {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .sidebar .btn-light i {
+        font-size: 1.3rem;
+        margin-right: 10px;
+    }
+
+    .sidebar .ajouter-client {
+        margin-top: 20px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        justify-content: center;
+    }
+
+    .sidebar .logout {
+        margin-top: auto;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        justify-content: center;
+    }
+</style>
+
+<div class="sidebar">
+    <div class="menu">
+        <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
+            <i class="bi bi-people-fill me-2"></i> <span class="text-truncate">MES ÉQUIPES</span>
+        </a>
+        <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
+            <i class="bi bi-person me-2"></i> <span class="text-truncate">MES CLIENTS</span>
+        </a>
+        <a href="{{ path('app_charging_stations') }}" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
+            style="height: 44px;">
+            <i class="bi bi-collection-fill me-2"></i> <span>DOC. BORNE</span>
+        </a>
+        <a href="{{path('app_add_client')}}"
+            class="btn text-white fw-bold d-flex align-items-center justify-content-between px-3 py-2 rounded-3 mb-3"
+            style="background: linear-gradient(to right, #ff4081, #ff8c00);">
+            <span class="text-truncate">AJOUTER UN CLIENT</span> <i class="bi bi-plus-lg"></i>
+        </a>
+    </div>
+
+
+    <a href="{{ path('app_logout') }}" class="btn text-white fw-bold px-3 py-2 rounded-3 logout"
+        style="background: linear-gradient(to right, #ff4081, #ff8c00);">
+        DÉCONNEXION
+    </a>
+</div>
+</div>

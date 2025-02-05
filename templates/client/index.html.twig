@@ -1,0 +1,221 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter Clients{% endblock %}
+
+{% block body %}
+<style>
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --gray-color: #818285;
+        --input-bg: #fff;
+        --control-height: 50px;
+        --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid-container {
+        margin-top: 100px;
+    }
+
+    .label-gray {
+        color: var(--gray-color);
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .custom-input {
+        background-color: var(--input-bg);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 15px;
+        width: 100%;
+        height: var(--control-height);
+        box-shadow: var(--shadow-inset);
+        outline: none;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .custom-input:focus {
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-select-wrapper {
+        width: 100%;
+        height: var(--control-height);
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        padding: 2px;
+        border-radius: 15px;
+        display: inline-block;
+    }
+
+    .custom-select {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 13px;
+        background-color: var(--input-bg);
+        padding: 12px 15px;
+        font-size: 1rem;
+        outline: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'7'%20viewBox%3D'0%200%2010%207'%20xmlns%3D'http://www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M1%200l4%207%204-7'%20stroke%3D'%23f6941f'%20stroke-width%3D'2'%20fill%3D'none'%20fill-rule%3D'evenodd'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    #equipe,
+    #installateur,
+    #borne {
+        text-align: center;
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .input-row label {
+        flex: 0 0 150px;
+        color: var(--gray-color);
+        font-weight: bold;
+    }
+
+    .input-row .custom-input,
+    .input-row .custom-select-wrapper {
+        flex: 1;
+    }
+
+    .confirm-btn {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 1rem;
+        transition: opacity 0.3s;
+        font-weight: bold;
+    }
+
+    .confirm-btn:hover {
+        opacity: 0.9;
+    }
+</style>
+
+<div class="container grid-container">
+    <h1 class="text-center mb-4">AJOUTER CLIENTS</h1>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-row">
+                        <label for="nom">NOM</label>
+                        <input type="text" id="nom" name="nom" class="custom-input" placeholder="Nom du client">
+                    </div>
+                    <div class="input-row">
+                        <label for="prenom">PRÉNOM</label>
+                        <input type="text" id="prenom" name="prenom" class="custom-input"
+                            placeholder="Prénom du client">
+                    </div>
+                    <div class="input-row">
+                        <label for="entreprise">ENTREPRISE</label>
+                        <input type="text" id="entreprise" name="entreprise" class="custom-input"
+                            placeholder="Entreprise">
+                    </div>
+                    <div class="input-row">
+                        <label for="adresse">ADRESSE FACT</label>
+                        <input type="text" id="adresse" name="adresse" class="custom-input" placeholder="Adresse">
+                    </div>
+                    <div class="input-row">
+                        <label for="siret">SIRET</label>
+                        <input type="text" id="siret" name="siret" class="custom-input" placeholder="Numéro SIRET">
+                    </div>
+                    <div class="input-row">
+                        <label for="num_tva">NUM TVA</label>
+                        <input type="text" id="num_tva" name="num_tva" class="custom-input" placeholder="Numéro TVA">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="input-row">
+                        <label for="code_naf">CODE NAF</label>
+                        <input type="text" id="code_naf" name="code_naf" class="custom-input" placeholder="Code NAF">
+                    </div>
+                    <div class="input-row">
+                        <label for="email">EMAIL</label>
+                        <input type="email" id="email" name="email" class="custom-input" placeholder="Email">
+                    </div>
+                    <div class="input-row">
+                        <label for="telephone">TÉLÉPHONE</label>
+                        <input type="text" id="telephone" name="telephone" class="custom-input" placeholder="Téléphone">
+                    </div>
+                    <div class="input-row">
+                        <label for="prix_kw">PRIX ACHAT</label>
+                        <input type="text" id="prix_kw" name="prix_kw" class="custom-input" placeholder="Prix par kW">
+                    </div>
+                    <div class="input-row">
+                        <label for="prix_revente">PRIX REVENTE</label>
+                        <input type="text" id="prix_revente" name="prix_revente" class="custom-input"
+                            placeholder="Prix par kW">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="input-row">
+                <label for="equipe">ÉQUIPE</label>
+                <div class="custom-select-wrapper">
+                    <select id="equipe" name="equipe" class="custom-select">
+                        <option value="lodmi">LODMI</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label for="installateur">INSTALLATEUR</label>
+                <div class="custom-select-wrapper">
+                    <select id="installateur" name="installateur" class="custom-select">
+                        <option value="arthur">ARTHUR DRUMAIN</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <label for="borne">BORNE</label>
+                <div class="custom-select-wrapper">
+                    <select id="borne" name="borne" class="custom-select">
+                        <option value="autel">AUTEL PRO AC</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input class="form-check-input" type="checkbox" id="acceptDocs">
+                <label class="form-check-label" for="acceptDocs" style="font-style: italic; font-size: 0.85rem;">
+                    En cochant, j’assure avoir pris connaissance des CGV et des CGU et en avoir informé mon client.
+                </label>
+            </div>
+
+            <div class="text-center mt-3">
+                <button type="submit" class="confirm-btn">JE TRANSMET LE CONTRAT</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
