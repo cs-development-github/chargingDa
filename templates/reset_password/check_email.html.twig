@@ -1,11 +1,44 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.login.html.twig' %}
 
-{% block title %}Password Reset Email Sent{% endblock %}
+{% block title %}Email de réinitialisation envoyé{% endblock %}
+
+{% block stylesheet %}
+	{{ parent() }}
+	{{ encore_entry_link_tags("carousel") }}
+{% endblock %}
 
 {% block body %}
-    <p>
-        If an account matching your email exists, then an email was just sent that contains a link that you can use to reset your password.
-        This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-    </p>
-    <p>If you don't receive an email please check your spam folder or <a href="{{ path('app_forgot_password_request') }}">try again</a>.</p>
+<div class="container-fluid p-0 position-relative" style="min-height: 100vh; background-image: url('../build/images/background.png');">
+  <div class="position-absolute top-0 start-0 w-50 h-100" style="background-color: rgba(255, 255, 255, 0.8)"></div>
+  <div class="card position-absolute top-50 start-50 translate-middle w-100" style="max-width: 1200px; border-radius: 30px; overflow: hidden; border: none; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); background-color: transparent;">
+    <div class="row g-0" style="box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); border-radius: 30px; overflow: hidden; background-color: white;">
+      <div class="col-md-6 p-4 text-center d-flex flex-column justify-content-center align-items-center">
+        <div class="d-flex align-items-center justify-content-center mb-4">
+          <div style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; justify-content: center;">
+            <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi" style="width: 100%; height: auto;">
+          </div>
+          <div class="ms-3">
+            <h2 class="title mb-0">EMAIL ENVOYÉ</h2>
+            <h2 class="form-title mb-0">VÉRIFIEZ VOTRE BOÎTE MAIL</h2>
+          </div>
+        </div>
+        <p class="mt-3 text-muted">
+          Si un compte correspond à votre adresse e-mail, vous recevrez un e-mail contenant un lien permettant de réinitialiser votre mot de passe.
+          Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+        </p>
+        <p class="mt-2 text-muted">
+          Si vous ne recevez pas d'e-mail, vérifiez votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">essayez à nouveau</a>.
+        </p>
+      </div>
+      <div class="col-md-6 d-flex flex-column justify-content-center text-start" style="background-color: #fff; padding: 3rem">
+        <h1 style="font-size: 2.5rem; font-weight: 900; font-family: 'Poppins', sans-serif; color: #000; margin: 0;">
+          Besoin d'aide ?<br />Nous sommes là pour vous !
+        </h1>
+        <p class="mt-3" style="color: #555; font-size: 1rem; max-width: 450px; text-align: left; font-family: 'Poppins', sans-serif; margin: 0;">
+          Suivez les instructions dans l'e-mail pour réinitialiser votre mot de passe. Vous pouvez toujours refaire une demande si nécessaire.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

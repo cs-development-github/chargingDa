@@ -1,0 +1,37 @@
+.logo-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    height: 80px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+}
+
+.logo-track {
+    display: flex;
+    width: 200%;
+    animation: slide-right 10s linear infinite;
+}
+
+.logo-slide {
+    height: 60px;
+    width: auto;
+    margin: 0 20px;
+    flex-shrink: 0;
+}
+
+@keyframes slide-right {
+    from {
+        transform: translateX(-50%);
+    }
+
+    to {
+        transform: translateX(0%);
+    }
+}
