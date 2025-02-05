@@ -44,9 +44,12 @@
     </table>
 
     {% if is_granted('ROLE_SUPER_ADMIN') %}
-    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
-        Modifier la borne
-    </button>
+        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
+            Modifier la borne
+        </button>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStationModal">
+            Supprimer la borne
+        </button>
     {% endif %}
 </div>
 
@@ -94,4 +97,28 @@
     </div>
 </div>
 {% endif %}
+
+<!-- MODAL DE SUPPRESSION -->
+{% if is_granted('ROLE_SUPER_ADMIN') %}
+<div class="modal fade" id="deleteStationModal" tabindex="-1" aria-labelledby="deleteStationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteStationModalLabel">Confirmation de suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer cette borne ? Cette action est irréversible.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <form action="{{ path('charging_station_delete', { slug: station.slug }) }}" method="POST">
+                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% endblock %}

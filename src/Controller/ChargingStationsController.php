@@ -163,4 +163,19 @@ final class ChargingStationsController extends AbstractController
             'editForm' => $form->createView(),
         ]);
     }
+
+    #[Route('/charging/stations/{slug}/delete', name: 'charging_station_delete', methods: ['POST'])]
+    public function deleteChargingStation(ChargingStations $station, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+            throw $this->createAccessDeniedException('Vous n\'avez pas le droit de supprimer cette borne.');
+        }
+
+        $entityManager->remove($station);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Borne supprimée avec succès !');
+
+        return $this->redirectToRoute('app_charging_stations');
+    }
 }
