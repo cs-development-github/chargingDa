@@ -1,0 +1,22 @@
+version: '3.7'
+services:
+  app:
+    restart: always
+    build:
+      context: ../..
+      dockerfile: ./.docker/prod/Dockerfile
+    ports:
+      - "8000:80"
+    env_file:
+      - .env.local
+
+  database:
+    image: mysql:8.0
+    restart: always
+    env_file:
+      - .env.local
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
