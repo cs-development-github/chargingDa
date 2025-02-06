@@ -9,7 +9,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Configuration des extensions PHP, installation de dépendances, etc.
 RUN chmod +x /usr/local/bin/install-php-extensions && \
     install-php-extensions intl pdo_mysql && \
-    apt update && apt install -yqq zip
+    apt update && apt install -yqq zip git
 
 # Installation de Node.js et Yarn
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
