@@ -20,14 +20,22 @@
 </head>
 
 <body>
+    <style>
+        /* Contenu principal qui s'adapte */
+.main-content {
+    flex-grow: 1;
+    margin-left: 260px; /* Décale le contenu pour éviter qu'il ne passe sous la sidebar */
+    padding: 20px; /* Ajoute un peu d'espace autour */
+    overflow-y: auto; /* Permet le défilement si nécessaire */
+}
+    </style>
 
     {% include 'bars/navbar.html.twig' %}
     {% include 'bars/sidebar.html.twig' %}
 
-    <div class="container mt-4">
+    <main class="main-content">
         {% block body %}{% endblock %}
-    </div>
-
+    </main>
 </body>
 
 </html>
