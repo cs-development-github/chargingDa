@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -27,9 +28,16 @@ class Team
     #[ORM\ManyToOne(inversedBy: 'teams')]
     private ?User $createdBy = null;
 
+    /**
+     * @var Collection<int, SimCard>
+     */
+    #[ORM\OneToMany(targetEntity: SimCard::class, mappedBy: 'team')]
+    private Collection $simCards;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
+        $this->simCards = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,4 +98,50 @@ class Team
 
         return $this;
     }
+
+    public function getChefEffectif(): ?User
+    {
+        foreach ($this->user as $installateur) {
+            if ($installateur->isChefEffectif()) {
+                return $installateur;
+            }
+        }
+        return null;
+    }
+
+    public function getInstallator(EntityManagerInterface $entityManagerInterface): array
+    {
+        return $entityManagerInterface->getRepository(User::class)->findBy(['team' => $this]);
+    }
+
+    /**
+     * @return Collection<int, SimCard>
+     */
+    public function getSimCards(): Collection
+    {
+        return $this->simCards;
+    }
+
+    public function addSimCard(SimCard $simCard): static
+    {
+        if (!$this->simCards->contains($simCard)) {
+            $this->simCards->add($simCard);
+            $simCard->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSimCard(SimCard $simCard): static
+    {
+        if ($this->simCards->removeElement($simCard)) {
+            // set the owning side to null (unless already changed)
+            if ($simCard->getTeam() === $this) {
+                $simCard->setTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -1,0 +1,57 @@
+<div class="modal fade" id="addInstallateurModal" tabindex="-1" aria-labelledby="addInstallateurModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addInstallateurModalLabel">Ajouter un Installateur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('app_installateur_add') }}" method="post">
+                    {{ form_start(instalatorForm) }}
+
+                    <div class="mb-3">
+                        {{ form_label(instalatorForm.name, 'Prénom', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(instalatorForm.name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(instalatorForm.lastName, 'Nom', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(instalatorForm.lastName, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(instalatorForm.email, 'Email', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(instalatorForm.email, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(instalatorForm.phone, 'Numéro de téléphone', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(instalatorForm.phone, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(instalatorForm.password, 'Mot de passe', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(instalatorForm.password, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(instalatorForm.team, 'Équipe', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(instalatorForm.team, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        {{ form_widget(instalatorForm.isChefEffectif) }}
+                        {{ form_label(instalatorForm.isChefEffectif, 'Chef d’équipe', {'label_attr': {'class': 'form-check-label'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-save">Enregistrer</button>
+                    </div>
+
+                    {{ form_end(instalatorForm) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

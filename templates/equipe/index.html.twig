@@ -1,5 +1,6 @@
-{% extends 'base.html.twig' %} {% block title %}Mes Équipes{% endblock %} {%
-block body %}
+{% extends 'base.html.twig' %} {% block title %}Mes Équipes{% endblock %} 
+
+{% block body %}
 
 <style>
   .modal-content {
@@ -24,7 +25,7 @@ block body %}
   }
 </style>
 <div class="container mt-10" style="margin-top: 100px">
-  <div class="d-flex justify-content-end mb-3">
+  <div class="d-flex flex-column align-items-end gap-2 mb-3">
     <button
       class="btn btn-sm text-white fw-bold px-3 py-2"
       style="
@@ -36,6 +37,18 @@ block body %}
       data-bs-target="#addInstallateurModal"
     >
       AJOUTER UN INSTALLATEUR <i class="bi bi-plus"></i>
+    </button>
+    <button
+      class="btn btn-sm text-white fw-bold px-3 py-2"
+      style="
+        border-radius: 10px;
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        border: none;
+      "
+      data-bs-toggle="modal"
+      data-bs-target="#addSimModal"
+    >
+      AJOUTER UNE CARTE SIM <i class="bi bi-plus"></i>
     </button>
   </div>
 
@@ -69,23 +82,36 @@ block body %}
         <div class="col-3">NOMBRE DE SIM</div>
       </div>
 
-      <div
-        class="card mb-3 p-3"
-        style="
-          border-radius: 15px;
-          box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.07);
-          min-height: 80px;
-        "
-      >
-        <div class="row text-center">
-          <div class="col-3"><span class="fw-bold text-dark">LODMI</span></div>
-          <div class="col-3">
-            <span class="fw-bold text-dark">CEDRIC DELBREL</span>
+      {% for team in teams %}
+          <div class="card mb-3 p-3" style="border-radius: 15px; box-shadow: inset 0 0 8px rgba(0,0,0,0.07); min-height: 80px;">
+              <div class="row text-center">
+                  <div class="col-3">
+                      <span class="fw-bold text-dark">{{ team.name }}</span>
+                  </div>
+                  <div class="col-3">
+                      {% set chef = null %}
+                      {% for installateur in teamInstallateurs[team.id] %}
+                          {% if installateur.isChefEffectif %}
+                              {% set chef = installateur %} 
+                          {% endif %}
+                      {% endfor %}
+                      {% if chef %}
+                          <span class="fw-bold text-dark">{{ chef.name }} {{ chef.lastName }}</span>
+                      {% else %}
+                          <span class="text-muted">Aucun</span>
+                      {% endif %}
+                  </div>
+                  <div class="col-3">
+                      <span class="fw-bold text-dark">{{ teamInstallateurs[team.id]|length }}</span>
+                  </div>
+                  <div class="col-3">
+                      <span class="fw-bold text-dark"> XX </span>
+                  </div>
+              </div>
           </div>
-          <div class="col-3"><span class="fw-bold text-dark">4</span></div>
-          <div class="col-3"><span class="fw-bold text-dark">12</span></div>
-        </div>
-      </div>
+      {% else %}
+          <p class="text-muted text-center">Aucune équipe enregistrée.</p>
+      {% endfor %}
     </div>
 
     <div class="col-md-4">
@@ -94,7 +120,7 @@ block body %}
         style="border-radius: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3)"
       >
         <div class="card-body text-center">
-          <p class="card-text"> ICI nombre d'équipe </p>
+          <p class="card-text"> {{ totalTeams}} </p>
         </div>
         <div class="card-footer bg-transparent border-0">
           <button
@@ -111,156 +137,13 @@ block body %}
           </button>
         </div>
 
-        <!-- MODAL AJOUT ÉQUIPE -->
-        <div
-          class="modal fade"
-          id="addEquipeModal"
-          tabindex="-1"
-          aria-labelledby="addEquipeModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="addEquipeModalLabel">
-                  Ajouter une Équipe
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Fermer"
-                ></button>
-              </div>
-
-              <div class="modal-body">
-                <form action="{{ path('app_equipes_add') }}" method="post">
-                  {{ form_start(teamForm) }}
-
-                  <div class="mb-3">
-                    {{ form_label(teamForm.name, 'Nom de l’équipe', {'label_attr': {'class': 'fw-bold'
-
-                    }}) }}
-                    {{ form_widget(teamForm.name, {'attr': {'class': 'form-control'
-
-                    }}) }}
-                  </div>
-
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Annuler
-                    </button>
-                    <button type="submit" class="btn btn-save">
-                      Enregistrer
-                    </button>
-                  </div>
-
-                  {{ form_end(teamForm) }}
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- MODAL AJOUT INSTALLATEUR -->
-        <div
-          class="modal fade"
-          id="addInstallateurModal"
-          tabindex="-1"
-          aria-labelledby="addInstallateurModalLabel"
-          aria-hidden="true"
-        >
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="addInstallateurModalLabel">
-                  Ajouter un Installateur
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                  aria-label="Fermer"
-                ></button>
-              </div>
-
-              <div class="modal-body">
-                <form action="{{ path('app_installateur_add') }}" method="post">
-                  {{ form_start(instalatorForm) }}
-
-                  <div class="mb-3">
-                    {{ form_label(instalatorForm.name, 'Prénom', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(instalatorForm.name, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3">
-                    {{ form_label(instalatorForm.lastName, 'Nom', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(instalatorForm.lastName, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3">
-                    {{ form_label(instalatorForm.email, 'Email', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(instalatorForm.email, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3">
-                    {{ form_label(instalatorForm.phone, 'Numéro de téléphone', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(instalatorForm.phone, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3">
-                    {{ form_label(instalatorForm.password, 'Mot de passe', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(instalatorForm.password, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3">
-                    {{ form_label(instalatorForm.team, 'Équipe', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(instalatorForm.team, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3 form-check">
-                    {{ form_widget(instalatorForm.isChefEffectif) }}
-                    {{ form_label(instalatorForm.isChefEffectif, 'Chef d’équipe', {'label_attr': {'class': 'form-check-label'
-                    }}) }}
-                  </div>
-
-                  <div class="modal-footer">
-                    <button
-                      type="button"
-                      class="btn btn-secondary"
-                      data-bs-dismiss="modal"
-                    >
-                      Annuler
-                    </button>
-                    <button type="submit" class="btn btn-save">
-                      Enregistrer
-                    </button>
-                  </div>
-
-                  {{ form_end(instalatorForm) }}
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </div>
+
+{% include 'modals/add_team.html.twig' %}
+{% include 'modals/add_installator.html.twig' %}
+{% include 'modals/add_sim.html.twig' %}
+
 {% endblock %}

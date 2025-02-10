@@ -1,0 +1,32 @@
+<div class="modal fade" id="addSimModal" tabindex="-1" aria-labelledby="addSimModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addSimModalLabel">Ajouter une carte SIM</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('app_sim_add') }}" method="post">
+                    {{ form_start(simForm) }}
+                    
+                    <div class="mb-3">
+                        {{ form_label(simForm.activateCode, 'Code d\'activation', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(simForm.activateCode, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(simForm.team, 'Attribuer à l\'équipe', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(simForm.team, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-save">Enregistrer</button>
+                    </div>
+
+                    {{ form_end(simForm) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

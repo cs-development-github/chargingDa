@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\SimCard;
 use App\Entity\Team;
 use App\Form\TeamType;
 use App\Form\InstallateurType;
+use App\Form\SimCardType;
+use App\Repository\TeamRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +19,27 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class EquipeController extends AbstractController
 {
     #[Route('/equipe', name: 'app_equipes')]
-    public function index(Request $request, EntityManagerInterface $entityManager): Response
+    public function index(Security $security, TeamRepository $teamRepository, UserRepository $userRepository): Response
     {
-        $teamForm = $this->createForm(TeamType::class);
-        $instalatorForm = $this->createForm(InstallateurType::class);
-
+        $user = $security->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté.');
+        }
+    
+        $teams = $teamRepository->findBy(['createdBy' => $user]);
+    
+        $teamInstallateurs = [];
+        foreach ($teams as $team) {
+            $teamInstallateurs[$team->getId()] = $userRepository->findBy(['team' => $team]);
+        }
+    
         return $this->render('equipe/index.html.twig', [
-            'teamForm' => $teamForm->createView(),
-            'instalatorForm' => $instalatorForm->createView(),
+            'teams' => $teams,
+            'teamInstallateurs' => $teamInstallateurs,
+            'totalTeams' => count($teams),
+            'teamForm' => $this->createForm(TeamType::class)->createView(),
+            'instalatorForm' => $this->createForm(InstallateurType::class)->createView(),
+            'simForm' => $this->createForm(SimCardType::class)->createView(),
         ]);
     }
 
@@ -52,7 +69,27 @@ final class EquipeController extends AbstractController
         }
 
         return $this->render('equipe/index.html.twig', [
-            'teamForm' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/equipes/add/sims", name="app_sim_add", methods={"POST"})
+     */
+    public function addSim(Request $request, Security $security, EntityManagerInterface $entityManager): Response
+    {
+        $sim = new SimCard();
+        $form = $this->createForm(SimCardType::class, $sim);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($sim);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Sim ajoutée avec succès !');
+            return $this->redirectToRoute('app_equipes');
+        }
+
+        return $this->render('equipe/index.html.twig', [
         ]);
     }
 }
