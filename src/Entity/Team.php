@@ -24,6 +24,9 @@ class Team
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'team')]
     private Collection $user;
 
+    #[ORM\ManyToOne(inversedBy: 'teams')]
+    private ?User $createdBy = null;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -72,6 +75,18 @@ class Team
                 $user->setTeam(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

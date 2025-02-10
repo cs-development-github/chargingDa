@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 
 final class EquipeController extends AbstractController
 {
@@ -20,7 +21,7 @@ final class EquipeController extends AbstractController
         $instalatorForm = $this->createForm(InstallateurType::class);
 
         return $this->render('equipe/index.html.twig', [
-            'teamForm' => $teamForm->createView(), // Assure-toi que cette ligne est bien présente
+            'teamForm' => $teamForm->createView(),
             'instalatorForm' => $instalatorForm->createView(),
         ]);
     }
@@ -28,14 +29,22 @@ final class EquipeController extends AbstractController
     /**
      * @Route("/equipes/add", name="app_equipes_add", methods={"POST"})
      */
-    public function addEquipe(Request $request, EntityManagerInterface $entityManager): Response
+    public function addEquipe(Request $request, Security $security, EntityManagerInterface $entityManager): Response
     {
-        $equipe = new Team();
-        $form = $this->createForm(TeamType::class, $equipe);
+        $team = new Team();
+        $form = $this->createForm(TeamType::class, $team);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($equipe);
+
+            $user = $security->getUser();
+            if (!$user) {
+                throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un installateur.');
+            }
+
+            $team->setCreatedBy($user);
+
+            $entityManager->persist($team);
             $entityManager->flush();
 
             $this->addFlash('success', 'Équipe ajoutée avec succès !');
