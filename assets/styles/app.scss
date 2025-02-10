@@ -1,1 +1,12 @@
 @import 'bootstrap/scss/bootstrap';
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../Fonts/Montserrat-SemiBold.ttf') format('ttf');
+    font-weight: normal;
+}
+
+/* Appliquer la police à tout le site */
+body {
+    font-family: 'Montserrat', sans-serif;
+}

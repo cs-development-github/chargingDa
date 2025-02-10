@@ -1,59 +1,259 @@
-{% extends 'base.html.twig' %}
+{% extends 'base.html.twig' %} {% block title %}Mes Équipes{% endblock %} {%
+block body %}
 
-{% block title %}Mes Équipes{% endblock %}
+<style>
+  .modal-content {
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 30px;
+    border: none;
+  }
 
-{% block body %}
+  .modal-header {
+    background: linear-gradient(to right, #ec008c, #f6941f);
+    color: white;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .btn-save {
+    background: linear-gradient(to right, #ec008c, #f6941f);
+    border-radius: 10px;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+  }
+</style>
 <div class="container mt-10" style="margin-top: 100px">
-    <div class="d-flex justify-content-end mb-3">
-        <button class="btn btn-sm text-white fw-bold px-3 py-2"
-                style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;">
-            AJOUTER UN INSTALLATEUR <i class="bi bi-plus"></i>
-        </button>
+  <div class="d-flex justify-content-end mb-3">
+    <button
+      class="btn btn-sm text-white fw-bold px-3 py-2"
+      style="
+        border-radius: 10px;
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        border: none;
+      "
+      data-bs-toggle="modal"
+      data-bs-target="#addInstallateurModal"
+    >
+      AJOUTER UN INSTALLATEUR <i class="bi bi-plus"></i>
+    </button>
+  </div>
+
+  <div class="d-flex align-items-center mb-3">
+    <h3 class="fw-bold mb-0 me-3">MES ÉQUIPES</h3>
+    <div class="d-flex align-items-center">
+      <input
+        type="text"
+        class="form-control rounded-pill"
+        placeholder="Rechercher"
+        style="max-width: 200px; border: 1px solid #ddd"
+      />
+      <button
+        class="btn btn-sm"
+        style="margin-left: -40px; background: none; border: none"
+      >
+        <i class="bi bi-search" style="color: #ec008c"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-8">
+      <div
+        class="row text-center mb-3"
+        style="font-weight: bold; color: #6c757d"
+      >
+        <div class="col-3">DÉNOMINATION</div>
+        <div class="col-3">CHEF D’ÉQUIPE</div>
+        <div class="col-3">INSTALLATEUR</div>
+        <div class="col-3">NOMBRE DE SIM</div>
+      </div>
+
+      <div
+        class="card mb-3 p-3"
+        style="
+          border-radius: 15px;
+          box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.07);
+          min-height: 80px;
+        "
+      >
+        <div class="row text-center">
+          <div class="col-3"><span class="fw-bold text-dark">LODMI</span></div>
+          <div class="col-3">
+            <span class="fw-bold text-dark">CEDRIC DELBREL</span>
+          </div>
+          <div class="col-3"><span class="fw-bold text-dark">4</span></div>
+          <div class="col-3"><span class="fw-bold text-dark">12</span></div>
+        </div>
+      </div>
     </div>
 
-    <div class="d-flex align-items-center mb-3">
-        <h3 class="fw-bold mb-0 me-3">MES ÉQUIPES</h3>
-        <div class="d-flex align-items-center">
-            <input type="text" class="form-control rounded-pill" placeholder="Rechercher"
-                   style="max-width: 200px; border: 1px solid #ddd;">
-            <button class="btn btn-sm" style="margin-left: -40px; background: none; border: none;">
-                <i class="bi bi-search" style="color: #ec008c;"></i>
-            </button>
+    <div class="col-md-4">
+      <div
+        class="card p-3 border-0"
+        style="border-radius: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3)"
+      >
+        <div class="card-body text-center">
+          <p class="card-text">info</p>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-8">
-            <div class="row text-center mb-3" style="font-weight: bold; color: #6c757d;">
-                <div class="col-3">DÉNOMINATION</div>
-                <div class="col-3">CHEF D’ÉQUIPE</div>
-                <div class="col-3">INSTALLATEUR</div>
-                <div class="col-3">NOMBRE DE SIM</div>
-            </div>
-
-            <div class="card mb-3 p-3" style="border-radius: 15px; box-shadow: inset 0 0 8px rgba(0,0,0,0.07); min-height: 80px;">
-                <div class="row text-center">
-                    <div class="col-3"><span class="fw-bold text-dark">LODMI</span></div>
-                    <div class="col-3"><span class="fw-bold text-dark">CEDRIC DELBREL</span></div>
-                    <div class="col-3"><span class="fw-bold text-dark">4</span></div>
-                    <div class="col-3"><span class="fw-bold text-dark">12</span></div>
-                </div>
-            </div>
+        <div class="card-footer bg-transparent border-0">
+          <button
+            class="btn btn-sm text-white fw-bold px-3 py-2"
+            style="
+              border-radius: 10px;
+              background: linear-gradient(45deg, #ec008c, #f6941f);
+              border: none;
+            "
+            data-bs-toggle="modal"
+            data-bs-target="#addEquipeModal"
+          >
+            AJOUTER UNE ÉQUIPE <i class="bi bi-plus"></i>
+          </button>
         </div>
 
-        <div class="col-md-4">
-            <div class="card p-3 border-0" style="border-radius: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-                <div class="card-body text-center">
-                    <p class="card-text">info</p>
-                </div>
-                <div class="card-footer bg-transparent border-0">
-                    <button class="btn btn-sm text-white fw-bold px-3 py-2 w-100"
-                            style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;">
-                        AJOUTER UNE ÉQUIPE <i class="bi bi-plus"></i>
+        <!-- MODAL AJOUT ÉQUIPE -->
+        <div
+          class="modal fade"
+          id="addEquipeModal"
+          tabindex="-1"
+          aria-labelledby="addEquipeModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addEquipeModalLabel">
+                  Ajouter une Équipe
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Fermer"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <form action="{{ path('app_equipes_add') }}" method="post">
+                  {{ form_start(teamForm) }}
+
+                  <div class="mb-3">
+                    {{ form_label(teamForm.name, 'Nom de l’équipe', {'label_attr': {'class': 'fw-bold'
+
+                    }}) }}
+                    {{ form_widget(teamForm.name, {'attr': {'class': 'form-control'
+
+                    }}) }}
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Annuler
                     </button>
-                </div>
+                    <button type="submit" class="btn btn-save">
+                      Enregistrer
+                    </button>
+                  </div>
+
+                  {{ form_end(teamForm) }}
+                </form>
+              </div>
             </div>
+          </div>
         </div>
+
+        <!-- MODAL AJOUT INSTALLATEUR -->
+        <div
+          class="modal fade"
+          id="addInstallateurModal"
+          tabindex="-1"
+          aria-labelledby="addInstallateurModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="addInstallateurModalLabel">
+                  Ajouter un Installateur
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Fermer"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <form action="{{ path('app_installateur_add') }}" method="post">
+                  {{ form_start(installateurForm) }}
+
+                  <div class="mb-3">
+                    {{ form_label(installateurForm.firstName, 'Prénom', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(installateurForm.firstName, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3">
+                    {{ form_label(installateurForm.lastName, 'Nom', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(installateurForm.lastName, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3">
+                    {{ form_label(installateurForm.email, 'Email', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(installateurForm.email, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3">
+                    {{ form_label(installateurForm.password, 'Mot de passe', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(installateurForm.password, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3">
+                    {{ form_label(installateurForm.equipe, 'Équipe', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(installateurForm.equipe, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3 form-check">
+                    {{ form_widget(installateurForm.isChef) }}
+                    {{ form_label(installateurForm.isChef, 'Chef d’équipe', {'label_attr': {'class': 'form-check-label'
+                    }}) }}
+                  </div>
+
+                  <div class="modal-footer">
+                    <button
+                      type="button"
+                      class="btn btn-secondary"
+                      data-bs-dismiss="modal"
+                    >
+                      Annuler
+                    </button>
+                    <button type="submit" class="btn btn-save">
+                      Enregistrer
+                    </button>
+                  </div>
+
+                  {{ form_end(installateurForm) }}
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
