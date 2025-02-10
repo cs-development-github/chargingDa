@@ -31,26 +31,24 @@ final class InstallatorController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hachage du mot de passe
+
             $hashedPassword = $passwordHasher->hashPassword($installateur, $installateur->getPassword());
             $installateur->setPassword($hashedPassword);
-            $installateur->setRoles(['ROLE_USER']); // L'installateur est par défaut un utilisateur normal
+            $installateur->setRoles(['ROLE_USER']);
             $installateur->setIsActive(true);
     
-            // Récupère l'utilisateur connecté
             $user = $security->getUser();
             if (!$user) {
                 throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un installateur.');
             }
-    
-            // Assigne l'utilisateur connecté comme créateur
+
             $installateur->setCreatedBy($user);
     
             $entityManager->persist($installateur);
             $entityManager->flush();
     
             $this->addFlash('success', 'Installateur ajouté avec succès !');
-            return $this->redirectToRoute('app_equipes'); // Retour à la liste des équipes
+            return $this->redirectToRoute('app_equipes');
         }
     
         return $this->render('equipe/index.html.twig', [

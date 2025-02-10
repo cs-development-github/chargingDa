@@ -12,8 +12,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-
-
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
@@ -21,15 +19,12 @@
 
 <body>
     <style>
-        /* Contenu principal qui s'adapte */
-.main-content {
-    flex-grow: 1;
-    margin-left: 260px; /* Décale le contenu pour éviter qu'il ne passe sous la sidebar */
-    padding: 20px; /* Ajoute un peu d'espace autour */
-    overflow-y: auto; /* Permet le défilement si nécessaire */
-}
-
-
+        .main-content {
+            flex-grow: 1;
+            margin-left: 260px;
+            padding: 20px;
+            overflow-y: auto;
+        }
     </style>
 
     {% include 'bars/navbar.html.twig' %}
