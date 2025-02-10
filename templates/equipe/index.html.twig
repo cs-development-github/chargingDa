@@ -190,46 +190,53 @@ block body %}
 
               <div class="modal-body">
                 <form action="{{ path('app_installateur_add') }}" method="post">
-                  {{ form_start(installateurForm) }}
+                  {{ form_start(instalatorForm) }}
 
                   <div class="mb-3">
-                    {{ form_label(installateurForm.firstName, 'Prénom', {'label_attr': {'class': 'fw-bold'
+                    {{ form_label(instalatorForm.name, 'Prénom', {'label_attr': {'class': 'fw-bold'
                     }}) }}
-                    {{ form_widget(installateurForm.firstName, {'attr': {'class': 'form-control'
+                    {{ form_widget(instalatorForm.name, {'attr': {'class': 'form-control'
                     }}) }}
                   </div>
 
                   <div class="mb-3">
-                    {{ form_label(installateurForm.lastName, 'Nom', {'label_attr': {'class': 'fw-bold'
+                    {{ form_label(instalatorForm.lastName, 'Nom', {'label_attr': {'class': 'fw-bold'
                     }}) }}
-                    {{ form_widget(installateurForm.lastName, {'attr': {'class': 'form-control'
-                    }}) }}
-                  </div>
-
-                  <div class="mb-3">
-                    {{ form_label(installateurForm.email, 'Email', {'label_attr': {'class': 'fw-bold'
-                    }}) }}
-                    {{ form_widget(installateurForm.email, {'attr': {'class': 'form-control'
+                    {{ form_widget(instalatorForm.lastName, {'attr': {'class': 'form-control'
                     }}) }}
                   </div>
 
                   <div class="mb-3">
-                    {{ form_label(installateurForm.password, 'Mot de passe', {'label_attr': {'class': 'fw-bold'
+                    {{ form_label(instalatorForm.email, 'Email', {'label_attr': {'class': 'fw-bold'
                     }}) }}
-                    {{ form_widget(installateurForm.password, {'attr': {'class': 'form-control'
+                    {{ form_widget(instalatorForm.email, {'attr': {'class': 'form-control'
                     }}) }}
                   </div>
 
                   <div class="mb-3">
-                    {{ form_label(installateurForm.equipe, 'Équipe', {'label_attr': {'class': 'fw-bold'
+                    {{ form_label(instalatorForm.phone, 'Numéro de téléphone', {'label_attr': {'class': 'fw-bold'
                     }}) }}
-                    {{ form_widget(installateurForm.equipe, {'attr': {'class': 'form-control'
+                    {{ form_widget(instalatorForm.phone, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3">
+                    {{ form_label(instalatorForm.password, 'Mot de passe', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(instalatorForm.password, {'attr': {'class': 'form-control'
+                    }}) }}
+                  </div>
+
+                  <div class="mb-3">
+                    {{ form_label(instalatorForm.team, 'Équipe', {'label_attr': {'class': 'fw-bold'
+                    }}) }}
+                    {{ form_widget(instalatorForm.team, {'attr': {'class': 'form-control'
                     }}) }}
                   </div>
 
                   <div class="mb-3 form-check">
-                    {{ form_widget(installateurForm.isChef) }}
-                    {{ form_label(installateurForm.isChef, 'Chef d’équipe', {'label_attr': {'class': 'form-check-label'
+                    {{ form_widget(instalatorForm.isChefEffectif) }}
+                    {{ form_label(instalatorForm.isChefEffectif, 'Chef d’équipe', {'label_attr': {'class': 'form-check-label'
                     }}) }}
                   </div>
 
@@ -246,7 +253,7 @@ block body %}
                     </button>
                   </div>
 
-                  {{ form_end(installateurForm) }}
+                  {{ form_end(instalatorForm) }}
                 </form>
               </div>
             </div>

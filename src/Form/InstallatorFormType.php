@@ -19,7 +19,7 @@ class InstallateurType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName', TextType::class, [
+            ->add('name', TextType::class, [
                 'label' => 'Prénom',
                 'attr' => ['class' => 'form-control']
             ])
@@ -31,18 +31,22 @@ class InstallateurType extends AbstractType
                 'label' => 'Email',
                 'attr' => ['class' => 'form-control']
             ])
+            ->add('phone', TextType::class, [
+                'label' => 'Numéro de Téléphone',
+                'attr' => ['class' => 'form-control']
+            ])
             ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'attr' => ['class' => 'form-control']
             ])
-            ->add('equipe', EntityType::class, [
+            ->add('team', EntityType::class, [
                 'class' => Team::class,
                 'choice_label' => 'name',
                 'placeholder' => 'Sélectionner une équipe',
                 'label' => 'Équipe',
                 'attr' => ['class' => 'form-control']
             ])
-            ->add('isChef', CheckboxType::class, [
+            ->add('isChefEffectif', CheckboxType::class, [
                 'label' => 'Chef d’équipe',
                 'required' => false,
                 'attr' => ['class' => 'form-check-input']

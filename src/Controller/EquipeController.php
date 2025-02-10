@@ -3,13 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Team;
-use App\Form\InstallateurType;
 use App\Form\TeamType;
+use App\Form\InstallateurType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 final class EquipeController extends AbstractController
 {
@@ -17,11 +17,11 @@ final class EquipeController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $teamForm = $this->createForm(TeamType::class);
-        $installateurForm = $this->createForm(InstallateurType::class);
+        $instalatorForm = $this->createForm(InstallateurType::class);
 
         return $this->render('equipe/index.html.twig', [
             'teamForm' => $teamForm->createView(), // Assure-toi que cette ligne est bien présente
-            'installateurForm' => $installateurForm->createView(),
+            'instalatorForm' => $instalatorForm->createView(),
         ]);
     }
 
