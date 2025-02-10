@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
 class Team
@@ -27,6 +28,9 @@ class Team
 
     #[ORM\ManyToOne(inversedBy: 'teams')]
     private ?User $createdBy = null;
+    
+    #[ORM\Column(length: 255)]
+    private ?string $slug = null;
 
     /**
      * @var Collection<int, SimCard>
@@ -114,6 +118,12 @@ class Team
         return $entityManagerInterface->getRepository(User::class)->findBy(['team' => $this]);
     }
 
+    public function getSimCard(EntityManagerInterface $entityManagerInterface): array
+    {
+        return $entityManagerInterface->getRepository(User::class)->findBy(['team' => $this]);
+    }
+
+
     /**
      * @return Collection<int, SimCard>
      */
@@ -128,20 +138,33 @@ class Team
             $this->simCards->add($simCard);
             $simCard->setTeam($this);
         }
-
         return $this;
     }
 
     public function removeSimCard(SimCard $simCard): static
     {
         if ($this->simCards->removeElement($simCard)) {
-            // set the owning side to null (unless already changed)
             if ($simCard->getTeam() === $this) {
                 $simCard->setTeam(null);
             }
         }
-
         return $this;
     }
 
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): static
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
+    public function generateSlug(SluggerInterface $slugger): void
+    {
+        $slug = $slugger->slug($this->name)->lower();
+        $this->setSlug($slug);
+    }
 }

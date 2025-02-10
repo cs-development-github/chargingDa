@@ -7,6 +7,7 @@ use App\Entity\Team;
 use App\Form\TeamType;
 use App\Form\InstallateurType;
 use App\Form\SimCardType;
+use App\Repository\SimCardRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,7 +20,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 final class EquipeController extends AbstractController
 {
     #[Route('/equipe', name: 'app_equipes')]
-    public function index(Security $security, TeamRepository $teamRepository, UserRepository $userRepository): Response
+    public function index(Security $security, TeamRepository $teamRepository, UserRepository $userRepository, SimCardRepository $simCardRepository): Response
     {
         $user = $security->getUser();
         if (!$user) {
@@ -32,10 +33,17 @@ final class EquipeController extends AbstractController
         foreach ($teams as $team) {
             $teamInstallateurs[$team->getId()] = $userRepository->findBy(['team' => $team]);
         }
+
+
+        $teamSims = [];
+        foreach ($teams as $team) {
+            $teamSims[$team->getId()] = $simCardRepository->count(['team' => $team]);
+        }
     
         return $this->render('equipe/index.html.twig', [
             'teams' => $teams,
             'teamInstallateurs' => $teamInstallateurs,
+            'teamSims' => $teamSims,
             'totalTeams' => count($teams),
             'teamForm' => $this->createForm(TeamType::class)->createView(),
             'instalatorForm' => $this->createForm(InstallateurType::class)->createView(),
@@ -92,4 +100,18 @@ final class EquipeController extends AbstractController
         return $this->render('equipe/index.html.twig', [
         ]);
     }
+
+    #[Route('/equipe/{slug}', name: 'app_equipes_show', methods: ['GET'])]
+    public function show(Team $team, UserRepository $userRepository, SimCardRepository $simCardRepository): Response
+    {
+        $installateurs = $userRepository->findBy(['team' => $team]);
+        $sims = $simCardRepository->findBy(['team' => $team]);
+
+        return $this->render('equipe/show.html.twig', [
+            'team' => $team,
+            'installateurs' => $installateurs,
+            'sims' => $sims,
+        ]);
+    }
+
 }
