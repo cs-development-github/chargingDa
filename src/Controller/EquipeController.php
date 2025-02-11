@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\SimCard;
 use App\Entity\Team;
+use App\Entity\User;
 use App\Form\TeamType;
 use App\Form\InstallateurType;
 use App\Form\SimCardType;
@@ -26,9 +27,9 @@ final class EquipeController extends AbstractController
         if (!$user) {
             throw $this->createAccessDeniedException('Vous devez être connecté.');
         }
-    
+
         $teams = $teamRepository->findBy(['createdBy' => $user]);
-    
+
         $teamInstallateurs = [];
         foreach ($teams as $team) {
             $teamInstallateurs[$team->getId()] = $userRepository->findBy(['team' => $team]);
@@ -39,7 +40,7 @@ final class EquipeController extends AbstractController
         foreach ($teams as $team) {
             $teamSims[$team->getId()] = $simCardRepository->count(['team' => $team]);
         }
-    
+
         return $this->render('equipe/index.html.twig', [
             'teams' => $teams,
             'teamInstallateurs' => $teamInstallateurs,
@@ -76,8 +77,7 @@ final class EquipeController extends AbstractController
             return $this->redirectToRoute('app_equipes');
         }
 
-        return $this->render('equipe/index.html.twig', [
-        ]);
+        return $this->render('equipe/index.html.twig', []);
     }
 
     /**
@@ -97,8 +97,7 @@ final class EquipeController extends AbstractController
             return $this->redirectToRoute('app_equipes');
         }
 
-        return $this->render('equipe/index.html.twig', [
-        ]);
+        return $this->render('equipe/index.html.twig', []);
     }
 
     #[Route('/equipe/{slug}', name: 'app_equipes_show', methods: ['GET'])]
@@ -111,7 +110,58 @@ final class EquipeController extends AbstractController
             'team' => $team,
             'installateurs' => $installateurs,
             'sims' => $sims,
+            'instalatorForm' => $this->createForm(InstallateurType::class)->createView(),
         ]);
     }
 
+    #[Route('/equipe/{slug}/attribuer-chef', name: 'app_equipes_attribuer_chef', methods: ['POST'])]
+    public function attribuerChef(Request $request, Team $team, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    
+        $chefId = $request->request->get('chef_id');
+        $chef = $userRepository->find($chefId);
+    
+        if ($chef && $chef->getTeam() === $team) {
+            foreach ($userRepository->findBy(['team' => $team]) as $installateur) {
+                $installateur->setIschefEffectif(false);
+            }
+            $chef->setIschefEffectif(true);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Chef d\'équipe attribué avec succès.');
+        } else {
+            $this->addFlash('error', 'Installateur non valide.');
+        }
+    
+        return $this->redirectToRoute('app_equipes_show', ['slug' => $team->getSlug()]);
+    }
+    
+    #[Route('/installateur/{id}/supprimer', name: 'app_installateur_supprimer', methods: ['POST'])]
+    public function supprimerInstallateur(User $installateur, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+    
+        $installateur->setTeam(null);
+        $entityManager->flush();
+    
+        $this->addFlash('success', 'Installateur retiré de l\'équipe.');
+        return $this->redirectToRoute('app_equipes_show', ['slug' => $installateur->getTeam()->getSlug()]);
+    }
+    
+
+
+    #[Route('/equipe/{slug}/supprimer', name: 'app_equipes_supprimer', methods: ['POST'])]
+    public function supprimerEquipe(Team $team, EntityManagerInterface $entityManager, Security $security): Response
+    {
+        if (!$this->isGranted('ROLE_ADMIN') && $team->getCreatedBy() !== $security->getUser()) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $entityManager->remove($team);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Équipe supprimée avec succès.');
+        return $this->redirectToRoute('app_equipes');
+    }
 }

@@ -36,7 +36,12 @@
 
                     <div class="mb-3">
                         {{ form_label(instalatorForm.team, 'Équipe', {'label_attr': {'class': 'fw-bold'}}) }}
-                        {{ form_widget(instalatorForm.team, {'attr': {'class': 'form-control'}}) }}
+                        {% if team is defined %}
+                            {{ form_widget(instalatorForm.team, {'attr': {'class': 'form-control', 'disabled': 'disabled'}, 'value': team.id}) }}
+                            <input type="hidden" name="installator[team]" value="{{ team.id }}">
+                        {% else %}
+                            {{ form_widget(instalatorForm.team, {'attr': {'class': 'form-control'}}) }}
+                        {% endif %}
                     </div>
 
                     <div class="mb-3 form-check">
