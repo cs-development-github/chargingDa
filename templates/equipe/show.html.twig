@@ -3,27 +3,77 @@
 {% block title %}{{ team.name }} - Composition{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2 class="fw-bold">{{ team.name }}</h2>
+
+<style>
+    .btn-gradient {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        border: none;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 9px;
+        padding: 6px 12px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-gradient:hover {
+        transform: scale(1.05);
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .table-custom {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 19px;
+        overflow: hidden; 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background: #fff;
+    }
+
+    .table-custom thead th {
+        background-color: #f8f9fa;
+        text-transform: uppercase;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #dee2e6;
+        padding: 12px;
+    }
+
+    .table-custom tbody td {
+        padding: 12px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+
+    .table-custom tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+</style>
+
+<div class="p-4 shadow rounded bg-white" style="margin-top: 90px">
+    <h2 class="fw-bold">
+        <i class="bi bi-people-fill"></i> {{ team.name }}
+    </h2>
 
     <p><strong>Chef d'équipe :</strong> 
         {% set chef = installateurs|filter(i => i.isChefEffectif)|first %}
         {% if chef %}
-            <span class="badge bg-success">{{ chef.name }} {{ chef.lastName }}</span>
+            <span class="badge bg-success">
+                <i class="bi bi-person-check-fill"></i> {{ chef.name }} {{ chef.lastName }}
+            </span>
         {% else %}
             <span class="text-danger">Aucun</span>
         {% endif %}
     </p>
 
     {% if is_granted('ROLE_ADMIN') or team.createdBy == app.user %}
-        <button class="btn btn-success btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addInstallateurModal">
-            ➕ Ajouter un installateur
+        <button class="btn btn-gradient btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addInstallateurModal">
+            <i class="bi bi-person-plus"></i> Ajouter un installateur
         </button>
     {% endif %}
-
-    <h4 class="mt-4">📌 Effectif</h4>
-    <table class="table table-striped">
-        <thead class="table-dark">
+    <h4 class="mt-4">
+        <i class="bi bi-card-checklist"></i> Effectif
+    </h4>
+    <table class="table-custom">
+        <thead>
             <tr>
                 <th>Nom</th>
                 <th>Prénom</th>
@@ -38,9 +88,13 @@
                     <td>{{ installateur.lastName }}</td>
                     <td>
                         {% if installateur.isChefEffectif %}
-                            <span class="badge bg-primary">Chef d'équipe</span>
+                            <span class="badge bg-primary">
+                                <i class="bi bi-star-fill"></i> Chef d'équipe
+                            </span>
                         {% else %}
-                            <span class="badge bg-secondary">Installateur</span>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-person"></i> Installateur
+                            </span>
                         {% endif %}
                     </td>
                     <td>
@@ -48,12 +102,16 @@
                             {% if not installateur.isChefEffectif %}
                                 <form method="post" action="{{ path('app_equipes_attribuer_chef', { 'slug': team.slug }) }}" class="d-inline">
                                     <input type="hidden" name="chef_id" value="{{ installateur.id }}">
-                                    <button type="submit" class="btn btn-warning btn-sm">⭐ Mettre Chef</button>
+                                    <button type="submit" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-star"></i> Mettre Chef
+                                    </button>
                                 </form>
                             {% endif %}
                             
                             <form method="post" action="{{ path('app_installateur_supprimer', { 'id': installateur.id }) }}" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer cet installateur de l\'équipe ?');">
-                                <button type="submit" class="btn btn-danger btn-sm">🗑 Supprimer</button>
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Supprimer
+                                </button>
                             </form>
                         {% endif %}
                     </td>
@@ -65,24 +123,43 @@
             {% endfor %}
         </tbody>
     </table>
-
-    <h4 class="mt-4">📌 Cartes SIM</h4>
+    <h4 class="mt-4">
+        <i class="bi bi-sim"></i> Cartes SIM
+    </h4>
     {% if is_granted('ROLE_ADMIN') or team.createdBy == app.user %}
-    <button class="btn btn-success btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addSimModal">
-        ➕ Ajouter une carte sim
-    </button>
-{% endif %}
-    <ul class="list-group">
-        {% for sim in sims %}
-            <li class="list-group-item">Code : {{ sim.activateCode }}</li>
-        {% else %}
-            <li class="list-group-item text-muted">Aucune carte SIM</li>
-        {% endfor %}
-    </ul>
+        <button class="btn btn-gradient btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addSimModal">
+            <i class="bi bi-plus-lg"></i> Ajouter une carte sim
+        </button>
+    {% endif %}
 
-    <a href="{{ path('app_equipes') }}" class="btn btn-secondary mt-3">Retour</a>
+    <table class="table-custom">
+        <thead>
+            <tr>
+                <th>Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for sim in sims %}
+                <tr>
+                    <td>
+                        <i class="bi bi-upc-scan"></i> {{ sim.activateCode }}
+                    </td>
+                    <td>
+                        
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="2" class="text-center text-muted">Aucune carte SIM</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_equipes') }}" class="btn btn-secondary mt-3">
+        <i class="bi bi-arrow-left-circle"></i> Retour
+    </a>
 </div>
-
 {% include 'modals/add_installator.html.twig' with {'team': team} %}
 {% include 'modals/add_sim.html.twig' with {'team': team} %}
 
