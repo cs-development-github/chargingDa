@@ -78,6 +78,6 @@
     <a href="{{ path('app_equipes') }}" class="btn btn-secondary mt-3">Retour</a>
 </div>
 
-{% include 'modals/add_installator.html.twig' %}
+{% include 'modals/add_installator.html.twig' with {'team': team} %}
 
 {% endblock %}

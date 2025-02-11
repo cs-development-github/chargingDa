@@ -148,8 +148,6 @@ final class EquipeController extends AbstractController
         $this->addFlash('success', 'Installateur retiré de l\'équipe.');
         return $this->redirectToRoute('app_equipes_show', ['slug' => $installateur->getTeam()->getSlug()]);
     }
-    
-
 
     #[Route('/equipe/{slug}/supprimer', name: 'app_equipes_supprimer', methods: ['POST'])]
     public function supprimerEquipe(Team $team, EntityManagerInterface $entityManager, Security $security): Response

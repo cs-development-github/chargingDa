@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Team;
 use App\Entity\User;
 use App\Form\InstallateurType;
 use App\Form\TeamType;
@@ -24,31 +25,49 @@ final class InstallatorController extends AbstractController
     }
 
     #[Route('/equipe/installateur/add', name: 'app_installateur_add', methods: ['POST'])]
-    public function addInstallateur(Request $request, UserPasswordHasherInterface $passwordHasher,Security $security, EntityManagerInterface $entityManager): Response
-    {
+    public function addInstallateur(
+        Request $request, 
+        UserPasswordHasherInterface $passwordHasher,
+        Security $security, 
+        EntityManagerInterface $entityManager
+    ): Response {
         $installateur = new User();
         $form = $this->createForm(InstallateurType::class, $installateur);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // Hachage du mot de passe
             $hashedPassword = $passwordHasher->hashPassword($installateur, $installateur->getPassword());
             $installateur->setPassword($hashedPassword);
             $installateur->setRoles(['ROLE_USER']);
             $installateur->setIsActive(true);
     
+            // Vérification de l'utilisateur connecté
             $user = $security->getUser();
             if (!$user) {
                 throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter un installateur.');
             }
-
             $installateur->setCreatedBy($user);
+    
+            $teamId = $request->request->all('installator')['team'] ?? null;
+            if ($teamId) {
+                $team = $entityManager->getRepository(Team::class)->find($teamId);
+                if ($team) {
+                    $installateur->setTeam($team);
+                } else {
+                    $this->addFlash('danger', 'Équipe non trouvée.');
+                    return $this->redirectToRoute('app_equipes');
+                }
+            }
     
             $entityManager->persist($installateur);
             $entityManager->flush();
     
             $this->addFlash('success', 'Installateur ajouté avec succès !');
-            return $this->redirectToRoute('app_equipes');
+    
+            return $team 
+                ? $this->redirectToRoute('app_equipes_show', ['slug' => $team->getSlug()])
+                : $this->redirectToRoute('app_equipes');
         }
     
         return $this->render('equipe/index.html.twig', [
@@ -56,5 +75,4 @@ final class InstallatorController extends AbstractController
             'instalatorForm' => $form->createView(),
         ]);
     }
-    
 }
