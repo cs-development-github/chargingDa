@@ -1,45 +1,42 @@
 <style>
-/* Ajustement du contenu principal */
-main {
-    margin-left: 260px; /* Correspond à la largeur de la sidebar */
-    padding: 90px 20px 20px; /* Laisse de l’espace sous la navbar */
-    transition: margin-left 0.3s ease-in-out;
-}
 
-/* Cache la sidebar en mode réduit */
-.sidebar {
-    width: 260px;
-    background-image: url('/build/images/background.png');
-    background-size: cover;
-    background-position: center;
-    position: fixed;
-    top: 70px;
-    left: 0;
-    height: calc(100vh - 70px);
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    padding: 1rem;
-    transition: transform 0.3s ease-in-out;
-}
+    main {
+        margin-left: 260px;
+        padding: 90px 20px 20px;
+        transition: margin-left 0.3s ease-in-out;
+    }
 
-.sidebar.collapsed {
-    transform: translateX(-100%);
-}
+    .sidebar {
+        width: 260px;
+        background-image: url('/build/images/background.png');
+        background-size: cover;
+        background-position: center;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        height: calc(100vh - 70px);
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        transition: transform 0.3s ease-in-out;
+    }
 
-/* Ajuste le contenu lorsque la sidebar est repliée */
-.sidebar.collapsed + main {
-    margin-left: 0;
-}
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+    }
 
-/* Style du bouton burger */
-.navbar-toggler {
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    outline: none;
-}
+    .sidebar.collapsed + main {
+        margin-left: 0;
+    }
+
+    .navbar-toggler {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        outline: none;
+    }
 
     .sidebar .menu {
         flex-grow: 1;
@@ -83,7 +80,7 @@ main {
 
 <div class="sidebar">
     <div class="menu">
-        <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
+        <a href="{{ path('app_equipes') }}" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
             <i class="bi bi-people-fill me-2"></i> <span class="text-truncate">MES ÉQUIPES</span>
         </a>
         <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
@@ -99,7 +96,6 @@ main {
             <span class="text-truncate">AJOUTER UN CLIENT</span> <i class="bi bi-plus-lg"></i>
         </a>
     </div>
-
 
     <a href="{{ path('app_logout') }}" class="btn text-white fw-bold px-3 py-2 rounded-3 logout"
         style="background: linear-gradient(to right, #ff4081, #ff8c00);">

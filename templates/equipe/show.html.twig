@@ -1,0 +1,89 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ team.name }} - Composition{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h2 class="fw-bold">{{ team.name }}</h2>
+
+    <p><strong>Chef d'équipe :</strong> 
+        {% set chef = installateurs|filter(i => i.isChefEffectif)|first %}
+        {% if chef %}
+            <span class="badge bg-success">{{ chef.name }} {{ chef.lastName }}</span>
+        {% else %}
+            <span class="text-danger">Aucun</span>
+        {% endif %}
+    </p>
+
+    {% if is_granted('ROLE_ADMIN') or team.createdBy == app.user %}
+        <button class="btn btn-success btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addInstallateurModal">
+            ➕ Ajouter un installateur
+        </button>
+    {% endif %}
+
+    <h4 class="mt-4">📌 Effectif</h4>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Rôle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for installateur in installateurs %}
+                <tr>
+                    <td>{{ installateur.name }}</td>
+                    <td>{{ installateur.lastName }}</td>
+                    <td>
+                        {% if installateur.isChefEffectif %}
+                            <span class="badge bg-primary">Chef d'équipe</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Installateur</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if is_granted('ROLE_ADMIN') or team.createdBy == app.user %}
+                            {% if not installateur.isChefEffectif %}
+                                <form method="post" action="{{ path('app_equipes_attribuer_chef', { 'slug': team.slug }) }}" class="d-inline">
+                                    <input type="hidden" name="chef_id" value="{{ installateur.id }}">
+                                    <button type="submit" class="btn btn-warning btn-sm">⭐ Mettre Chef</button>
+                                </form>
+                            {% endif %}
+                            
+                            <form method="post" action="{{ path('app_installateur_supprimer', { 'id': installateur.id }) }}" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer cet installateur de l\'équipe ?');">
+                                <button type="submit" class="btn btn-danger btn-sm">🗑 Supprimer</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center text-muted">Aucun installateur dans cette équipe.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="mt-4">📌 Cartes SIM</h4>
+    {% if is_granted('ROLE_ADMIN') or team.createdBy == app.user %}
+    <button class="btn btn-success btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addSimModal">
+        ➕ Ajouter une carte sim
+    </button>
+{% endif %}
+    <ul class="list-group">
+        {% for sim in sims %}
+            <li class="list-group-item">Code : {{ sim.activateCode }}</li>
+        {% else %}
+            <li class="list-group-item text-muted">Aucune carte SIM</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ path('app_equipes') }}" class="btn btn-secondary mt-3">Retour</a>
+</div>
+
+{% include 'modals/add_installator.html.twig' with {'team': team} %}
+{% include 'modals/add_sim.html.twig' with {'team': team} %}
+
+{% endblock %}
