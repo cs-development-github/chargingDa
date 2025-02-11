@@ -80,24 +80,48 @@ final class EquipeController extends AbstractController
         return $this->render('equipe/index.html.twig', []);
     }
 
-    /**
-     * @Route("/equipes/add/sims", name="app_sim_add", methods={"POST"})
-     */
-    public function addSim(Request $request, Security $security, EntityManagerInterface $entityManager): Response
-    {
+    #[Route('/equipes/add/sims', name: 'app_sim_add', methods: ['POST'])]
+    public function addSim(
+        Request $request, 
+        Security $security, 
+        EntityManagerInterface $entityManager
+    ): Response {
         $sim = new SimCard();
         $form = $this->createForm(SimCardType::class, $sim);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
+            // Vérification de l'utilisateur connecté
+            $user = $security->getUser();
+            if (!$user) {
+                throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter une carte SIM.');
+            }
+    
+            // 🔥 Récupération de l'équipe depuis la requête
+            $teamId = $request->request->all('sim')['team'] ?? null;
+            if ($teamId) {
+                $team = $entityManager->getRepository(Team::class)->find($teamId);
+                if ($team) {
+                    $sim->setTeam($team);
+                } else {
+                    $this->addFlash('danger', 'Équipe non trouvée.');
+                    return $this->redirectToRoute('app_equipes');
+                }
+            }
+    
             $entityManager->persist($sim);
             $entityManager->flush();
-
-            $this->addFlash('success', 'Sim ajoutée avec succès !');
-            return $this->redirectToRoute('app_equipes');
+    
+            $this->addFlash('success', 'Carte SIM ajoutée avec succès !');
+    
+            return $team 
+                ? $this->redirectToRoute('app_equipes_show', ['slug' => $team->getSlug()])
+                : $this->redirectToRoute('app_equipes');
         }
-
-        return $this->render('equipe/index.html.twig', []);
+    
+        return $this->render('equipe/index.html.twig', [
+            'simForm' => $form->createView(),
+        ]);
     }
 
     #[Route('/equipe/{slug}', name: 'app_equipes_show', methods: ['GET'])]
@@ -111,6 +135,7 @@ final class EquipeController extends AbstractController
             'installateurs' => $installateurs,
             'sims' => $sims,
             'instalatorForm' => $this->createForm(InstallateurType::class)->createView(),
+            'simForm' => $this->createForm(SimCardType::class)->createView(),
         ]);
     }
 

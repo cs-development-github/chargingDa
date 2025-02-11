@@ -67,6 +67,11 @@
     </table>
 
     <h4 class="mt-4">📌 Cartes SIM</h4>
+    {% if is_granted('ROLE_ADMIN') or team.createdBy == app.user %}
+    <button class="btn btn-success btn-sm my-2" data-bs-toggle="modal" data-bs-target="#addSimModal">
+        ➕ Ajouter une carte sim
+    </button>
+{% endif %}
     <ul class="list-group">
         {% for sim in sims %}
             <li class="list-group-item">Code : {{ sim.activateCode }}</li>
@@ -79,5 +84,6 @@
 </div>
 
 {% include 'modals/add_installator.html.twig' with {'team': team} %}
+{% include 'modals/add_sim.html.twig' with {'team': team} %}
 
 {% endblock %}
