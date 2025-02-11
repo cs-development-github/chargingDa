@@ -36,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 14, nullable: true)] // ✅ SIRET est maintenant optionnel
+    #[ORM\Column(length: 14, nullable: true)]
     private ?string $siret = null;
 
     #[ORM\Column]

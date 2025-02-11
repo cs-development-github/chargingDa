@@ -7,9 +7,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
+#[UniqueEntity(fields: ['slug'], message: 'Ce slug est déjà utilisé.')]
+#[ORM\HasLifecycleCallbacks]
 class Team
 {
     #[ORM\Id]

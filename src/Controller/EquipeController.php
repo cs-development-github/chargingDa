@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 final class EquipeController extends AbstractController
 {
@@ -55,7 +56,7 @@ final class EquipeController extends AbstractController
     /**
      * @Route("/equipes/add", name="app_equipes_add", methods={"POST"})
      */
-    public function addEquipe(Request $request, Security $security, EntityManagerInterface $entityManager): Response
+    public function addEquipe(Request $request, Security $security, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $team = new Team();
         $form = $this->createForm(TeamType::class, $team);
@@ -69,6 +70,7 @@ final class EquipeController extends AbstractController
             }
 
             $team->setCreatedBy($user);
+            $team->generateSlug($slugger);
 
             $entityManager->persist($team);
             $entityManager->flush();
