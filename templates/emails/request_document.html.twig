@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Documents Manquants</title>
+</head>
+<body>
+    <h2>Demande de documents pour {{ client.name }} {{ client.lastname }}</h2>
+    <p>Certains champs sont encore vides, merci de les compléter :</p>
+    <ul>
+        {% if not client.name %}<li>Nom</li>{% endif %}
+        {% if not client.lastname %}<li>Prénom</li>{% endif %}
+        {% if not client.societyName %}<li>Entreprise</li>{% endif %}
+        {% if not client.siret %}<li>SIRET</li>{% endif %}
+        {% if not client.numberTva %}<li>Numéro TVA</li>{% endif %}
+        {% if not client.codeNaf %}<li>Code NAF</li>{% endif %}
+        {% if not client.email %}<li>Email</li>{% endif %}
+        {% if not client.phone %}<li>Téléphone</li>{% endif %}
+        {% if not client.priceKwh %}<li>Prix Achat</li>{% endif %}
+        {% if not client.priceResale %}<li>Prix Revente</li>{% endif %}
+        {% if not client.adress %}<li>Adresse</li>{% endif %}
+    </ul>
+</body>
+</html>

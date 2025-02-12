@@ -23,7 +23,7 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/ajouter/client', name: 'app_add_client')]
-    public function addClient(Request $request, EntityManagerInterface $entityManager): Response
+    public function addClient(Request $request, EntityManagerInterface $entityManager, MailService $mailerService): Response
     {
         $client = new Client();
         $form = $this->createForm(ClientFormType::class, $client);
@@ -38,6 +38,20 @@ final class ClientController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
+            // Vérifier si tous les champs sont remplis
+            $isComplete = $this->checkAllFieldsFilled($client);
+
+            // Définition du template email
+            $template = $isComplete ? 'emails/full_pdf.html.twig' : 'emails/request_document.html.twig';
+
+            // Envoi de l'e-mail
+            $mailerService->sendEmail(
+                to: 'admin@tondomaine.com', // Remplace par l'adresse de destination
+                subject: $isComplete ? 'Contrat client validé' : 'Demande de documents manquants',
+                template: $template,
+                context: ['client' => $client]
+            );
+
             $this->addFlash('success', 'Le client a été ajouté avec succès.');
 
             return $this->redirectToRoute('app_add_client');
@@ -46,5 +60,10 @@ final class ClientController extends AbstractController
         return $this->render('client/add.client.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    private function checkAllFieldsFilled(Client $client): bool
+    {
+        return !empty($client->getEmail()) && !empty($client->getSocietyName());
     }
 }
