@@ -48,4 +48,16 @@ class MailService
 
         $this->mailer->send($email);
     }
+
+    public function sendEmailWithAttachment(string $to, string $subject, string $htmlTemplate, string $pdfPath)
+    {
+        $email = (new Email())
+            ->from('nepasrepondrelodmi@gmail.com')
+            ->to($to)
+            ->subject($subject)
+            ->html($htmlTemplate)
+            ->attachFromPath($pdfPath, 'Contrat_Client.pdf');
+
+        $this->mailer->send($email);
+    }
 }

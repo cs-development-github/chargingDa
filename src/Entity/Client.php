@@ -47,6 +47,20 @@ class Client
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adress = null;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
+    private ?string $secureToken = null;
+
+    public function getSecureToken(): ?string
+    {
+        return $this->secureToken;
+    }
+
+    public function setSecureToken(?string $secureToken): self
+    {
+        $this->secureToken = $secureToken;
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

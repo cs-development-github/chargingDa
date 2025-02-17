@@ -1,23 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Documents Manquants</title>
-</head>
-<body>
-    <h2>Demande de documents pour {{ client.name }} {{ client.lastname }}</h2>
-    <p>Certains champs sont encore vides, merci de les compléter :</p>
-    <ul>
-        {% if not client.name %}<li>Nom</li>{% endif %}
-        {% if not client.lastname %}<li>Prénom</li>{% endif %}
-        {% if not client.societyName %}<li>Entreprise</li>{% endif %}
-        {% if not client.siret %}<li>SIRET</li>{% endif %}
-        {% if not client.numberTva %}<li>Numéro TVA</li>{% endif %}
-        {% if not client.codeNaf %}<li>Code NAF</li>{% endif %}
-        {% if not client.email %}<li>Email</li>{% endif %}
-        {% if not client.phone %}<li>Téléphone</li>{% endif %}
-        {% if not client.priceKwh %}<li>Prix Achat</li>{% endif %}
-        {% if not client.priceResale %}<li>Prix Revente</li>{% endif %}
-        {% if not client.adress %}<li>Adresse</li>{% endif %}
-    </ul>
-</body>
-</html>
+<p>Bonjour {{ client.email }},</p>
+
+<p>Nous avons bien reçu votre demande, mais il manque certaines informations pour finaliser votre dossier.</p>
+
+<p>Veuillez compléter vos informations en cliquant sur le lien ci-dessous :</p>
+
+<a href="{{ completionUrl }}" style="display:inline-block; padding:10px 20px; background-color:#007bff; color:#fff; text-decoration:none; border-radius:5px;">
+    Compléter mon dossier
+</a>
+
+<p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
+<p>{{ completionUrl }}</p>
+
+<p>Merci de votre coopération.</p>
