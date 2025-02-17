@@ -50,7 +50,7 @@ class Client
     #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
     private ?string $secureToken = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $legalForm = null;
 
     public function getSecureToken(): ?string

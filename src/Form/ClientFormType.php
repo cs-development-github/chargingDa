@@ -89,6 +89,7 @@ class ClientFormType extends AbstractType
         ])
         ->add('legalForm', ChoiceType::class, [
             'label' => 'Forme juridique',
+            'required' => false,
             'choices' => [
                 'Entreprise Individuelle (EI)' => 'EI',
                 'Entreprise Individuelle à Responsabilité Limitée (EIRL)' => 'EIRL',

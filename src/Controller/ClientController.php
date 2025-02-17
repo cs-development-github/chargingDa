@@ -134,95 +134,27 @@ final class ClientController extends AbstractController
             throw $this->createAccessDeniedException('Token manquant.');
         }
 
-        // Vérification du client en base
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
 
         if (!$client) {
             throw $this->createNotFoundException('Client introuvable.');
         }
 
-        // Création du formulaire et gestion de la requête
         $form = $this->createForm(ClientFormType::class, $client);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Suppression du token après soumission
             $client->setSecureToken(null);
             $em->persist($client);
             $em->flush();
 
-            // ✅ 1. Remplacer les placeholders dans le HTML
-            $htmlContent = '
-    <!DOCTYPE html>
-    <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Contrat Exploitation</title>
-        <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; margin: 40px; padding: 20px; background-color: #f4f4f4; }
-            .container { max-width: 900px; background: white; padding: 20px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); border-radius: 5px; margin: auto; }
-            h1 { text-align: center; font-size: 24px; text-transform: uppercase; border-bottom: 2px solid #ccc; padding-bottom: 5px; margin-bottom: 20px; }
-            .section-title { font-size: 18px; font-weight: bold; margin-top: 20px; border-bottom: 2px solid #ccc; padding-bottom: 5px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-            th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
-            th { background-color: #f4f4f4; font-weight: bold; }
-            tbody tr:nth-child(even) { background-color: #f9f9f9; }
-        </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1>Contrat de Service de Plateforme de Gestion</h1>
-            <p>Arras, le <strong>' . date("d/m/Y") . '</strong></p>
-    
-            <h2 class="section-title">1) Le prestataire :</h2>
-            <p>
-                LODMI société de droit Français enregistrée au RCS Arras sous le numéro B 901 360 602, 
-                ayant son siège social au 11 Rue Willy Brandt 62000 ARRAS, immatriculée au registre du 
-                commerce, sous le SIRET n° 90136060200030, dûment représentée par 
-                M. Thomas SAINT MACHIN, agissant en qualité de Président de ladite société.
-            </p>
-    
-            <h2 class="section-title">2) Le client :</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Raison sociale</th>
-                        <th>Siret</th>
-                        <th>Forme juridique</th>
-                        <th>Code Naf</th>
-                        <th>Numéro de TVA</th>
-                        <th>Adresse</th>
-                        <th>Représentant</th>
-                        <th>Numéro de contrat</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>' . htmlspecialchars($client->getSocietyName()) . '</td>
-                        <td>' . htmlspecialchars($client->getSiret()) . '</td>
-                        <td> a définir </td>
-                        <td>' . htmlspecialchars($client->getCodeNaf()) . '</td>
-                        <td>' . htmlspecialchars($client->getPriceKwh()) . '</td>
-                        <td>' . htmlspecialchars($client->getAdress()) . '</td>
-                        <td>' . htmlspecialchars($client->getName()) . ' ' . htmlspecialchars($client->getLastname()) . '</td>
-                        <td>' . uniqid() . '</td>
-                    </tr>
-                </tbody>
-            </table>
-    
-            <p>Agissant en qualités, les Parties reconnaissent avoir la capacité juridique suffisante 
-            pour conclure le présent contrat de service de plateforme de gestion.</p>
-        </div>
-    </body>
-    </html>
-            ';
+            $htmlContent = $this->renderView('pdf/contrat_template.html.twig', [
+                'client' => $client
+            ]);
 
-            // ✅ 2. Générer le PDF
             $pdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_{$client->getId()}.pdf";
             $pdfEditorService->createCustomPdf($pdfPath, $htmlContent);
 
-            // ✅ 3. Envoyer le PDF par email
             $mailService->sendEmailWithAttachment(
                 $client->getEmail(),
                 "Votre contrat est prêt",
@@ -255,7 +187,8 @@ final class ClientController extends AbstractController
             && !empty($client->getSiret())
             && !empty($client->getCodeNaf())
             && !empty($client->getPriceKwh())
-            && !empty($client->getPriceResale());
+            && !empty($client->getPriceResale())
+            && !empty($client->getLegalForm());
     }
 
     #[Route('/merge-pdfs', name: 'merge_pdfs')]
@@ -283,19 +216,18 @@ final class ClientController extends AbstractController
         int $clientId
     ): Response {
         $client = $em->getRepository(Client::class)->find($clientId);
-    
+
         if (!$client) {
             throw $this->createNotFoundException('Client introuvable.');
         }
-    
+
         $htmlContent = $this->renderView('pdf/contrat_template.html.twig', [
             'client' => $client
         ]);
-    
+
         $pdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_{$client->getId()}.pdf";
         $pdfEditorService->createCustomPdf($pdfPath, $htmlContent);
-    
-        return new Response('PDF généré avec succès ! <a href="/pdf/contrat_'. $client->getId() .'.pdf">Voir le PDF</a>');
+
+        return new Response('PDF généré avec succès ! <a href="/pdf/contrat_' . $client->getId() . '.pdf">Voir le PDF</a>');
     }
-    
 }
