@@ -129,44 +129,79 @@ final class ClientController extends AbstractController
         MailService $mailService
     ): Response {
         $token = $request->request->get('token');
-
+    
         if (!$token) {
             throw $this->createAccessDeniedException('Token manquant.');
         }
-
+    
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-
+    
         if (!$client) {
             throw $this->createNotFoundException('Client introuvable.');
         }
-
+    
         $form = $this->createForm(ClientFormType::class, $client);
         $form->handleRequest($request);
-
+    
         if ($form->isSubmitted() && $form->isValid()) {
             $client->setSecureToken(null);
             $em->persist($client);
             $em->flush();
-
-            $htmlContent = $this->renderView('pdf/contrat_template.html.twig', [
+    
+            $firstPageHtml = $this->renderView('pdf/first_page_template.html.twig', [
                 'client' => $client
             ]);
+            $firstPagePath = $this->getParameter('kernel.project_dir') . "/public/pdf/first_page_{$client->getId()}.pdf";
+            $pdfEditorService->createCustomPdf($firstPagePath, $firstPageHtml);
+    
+            $existingPdfPath2 = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_exploitation-2.pdf";
+    
+            $thirdPageHtml = $this->renderView('pdf/third_page_template.html.twig', [
+                'client' => $client
+            ]);
+            $thirdPagePath = $this->getParameter('kernel.project_dir') . "/public/pdf/third_page_{$client->getId()}.pdf";
+            $pdfEditorService->createCustomPdf($thirdPagePath, $thirdPageHtml);
 
-            $pdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_{$client->getId()}.pdf";
-            $pdfEditorService->createCustomPdf($pdfPath, $htmlContent);
+            $twentySecondPageHtmlPath = $this->renderView('pdf/twenty_second_template.html.twig', [
+                'client' => $client
+            ]);
+            $twentySecondPath = $this->getParameter('kernel.project_dir') . "/public/pdf/twenty_second{$client->getId()}.pdf";
+            $pdfEditorService->createCustomPdf($twentySecondPath,$twentySecondPageHtmlPath);
 
+            $existingPdfPath4 = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_exploitation-4-21.pdf";
+
+            $twentyThirdPageHtmlPath = $this->renderView('pdf/twenty_third_template.html.twig', [
+                'client' => $client
+            ]);
+            $twentyThirdPath = $this->getParameter('kernel.project_dir') . "/public/pdf/twenty_third{$client->getId()}.pdf";
+            $pdfEditorService->createCustomPdf($twentyThirdPath, $twentyThirdPageHtmlPath);
+
+            $existingPdfPath5 =  $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_exploitation-24-27.pdf";
+    
+            $mergedPdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_final_{$client->getId()}.pdf";
+    
+            $pdfEditorService->mergePdfs([
+                $firstPagePath,
+                $existingPdfPath2,
+                $thirdPagePath,
+                $existingPdfPath4,
+                $twentySecondPath,
+                $twentyThirdPath,
+                $existingPdfPath5
+            ], $mergedPdfPath);
+    
             $mailService->sendEmailWithAttachment(
                 $client->getEmail(),
                 "Votre contrat est prêt",
                 "Veuillez trouver ci-joint votre contrat de service.",
-                $pdfPath
+                $mergedPdfPath
             );
-
+    
             $this->addFlash('success', 'Les informations ont été mises à jour et le contrat a été envoyé.');
-
+    
             return $this->redirectToRoute('app_clients');
         }
-
+    
         return $this->render('client/complete_form.html.twig', [
             'form' => $form->createView(),
             'client' => $client
@@ -195,7 +230,7 @@ final class ClientController extends AbstractController
     public function mergePdfs(PdfEditorService $pdfEditorService): Response
     {
         $pdfFiles = [
-            $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-1.pdf',
+            $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-2.pdf',
             $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-2.pdf',
             $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-3.pdf',
         ];
