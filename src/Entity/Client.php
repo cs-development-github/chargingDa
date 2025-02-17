@@ -50,6 +50,9 @@ class Client
     #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
     private ?string $secureToken = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $legalForm = null;
+
     public function getSecureToken(): ?string
     {
         return $this->secureToken;
@@ -194,6 +197,18 @@ class Client
     public function setAdress(string $adress): static
     {
         $this->adress = $adress;
+
+        return $this;
+    }
+
+    public function getLegalForm(): ?string
+    {
+        return $this->legalForm;
+    }
+
+    public function setLegalForm(string $legalForm): static
+    {
+        $this->legalForm = $legalForm;
 
         return $this;
     }

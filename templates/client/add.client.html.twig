@@ -133,6 +133,10 @@
                             {{ form_widget(form.societyName, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
+                            {{ form_label(form.legalForm, 'Forme juridique', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.legalForm, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
                             {{ form_label(form.adress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
                             {{ form_widget(form.adress, {'attr': {'class': 'custom-input'}}) }}
                         </div>

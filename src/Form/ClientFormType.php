@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Client;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -85,6 +86,23 @@ class ClientFormType extends AbstractType
             'constraints' => [
                 new Optional(),
             ],
+        ])
+        ->add('legalForm', ChoiceType::class, [
+            'label' => 'Forme juridique',
+            'choices' => [
+                'Entreprise Individuelle (EI)' => 'EI',
+                'Entreprise Individuelle à Responsabilité Limitée (EIRL)' => 'EIRL',
+                'Entreprise Unipersonnelle à Responsabilité Limitée (EURL)' => 'EURL',
+                'Société à Responsabilité Limitée (SARL)' => 'SARL',
+                'Société Anonyme (SA)' => 'SA',
+                'Société par Actions Simplifiée (SAS)' => 'SAS',
+                'Société par Actions Simplifiée Unipersonnelle (SASU)' => 'SASU',
+                'Société en Nom Collectif (SNC)' => 'SNC',
+                'Société Coopérative de Production (SCOP)' => 'SCOP',
+                'Société Coopérative d’Intérêt Collectif (SCIC)' => 'SCIC',
+            ],
+            'placeholder' => 'Sélectionnez une forme juridique',
+            'attr' => ['class' => 'form-control']
         ])
         ->add('priceResale', TextType::class, [
             'label' => 'PRIX REVENTE',
