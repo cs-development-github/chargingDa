@@ -20,11 +20,9 @@ class PdfEditorService
 
     public function createCustomPdf(string $outputPath, string $htmlContent)
     {
-        // ✅ Créer un fichier HTML temporaire
         $htmlFile = sys_get_temp_dir() . '/custom_pdf.html';
         file_put_contents($htmlFile, $htmlContent);
 
-        // ✅ Commande WKHTMLtoPDF pour convertir le HTML en PDF
         $cmd = "wkhtmltopdf $htmlFile $outputPath";
         shell_exec($cmd);
 
