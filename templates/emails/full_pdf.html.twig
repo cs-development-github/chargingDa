@@ -1,11 +1,81 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contrat Validé</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #ff0080;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header img {
+            height: 40px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            color: #333333;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background-color: #2e2e3a;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ff8000;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <h2>Le contrat du client {{ client.name }} {{ client.lastname }} est validé !</h2>
-    <p>Tous les champs ont été remplis avec succès.</p>
-    <p>Vous pouvez consulter le PDF joint.</p>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logo_lodmi_mail" alt="LODMI PARTENAIRE">
+            <h2>Contrat Validé</h2>
+        </div>
+        <div class="content">
+            <p>Le contrat du client <strong>{{ client.name }} {{ client.lastname }}</strong> est validé !</p>
+            <p>Tous les champs ont été remplis avec succès.</p>
+            <p>Vous pouvez consulter le PDF joint.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 LODMI. Tous droits réservés.</p>
+            <p><a href="https://votre-site.com">Visitez notre site</a></p>
+        </div>
+    </div>
 </body>
 </html>
