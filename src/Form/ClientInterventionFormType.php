@@ -14,12 +14,8 @@ class ClientInterventionFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('client', ClientFormType::class) // Formulaire Client
-            ->add('intervention', InterventionFormType::class) // Formulaire Intervention
-            ->add('submit', SubmitType::class, [
-                'label' => 'Ajouter Client et Intervention',
-                'attr' => ['class' => 'confirm-btn'],
-            ]);
+            ->add('client', ClientFormType::class)
+            ->add('intervention', InterventionFormType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

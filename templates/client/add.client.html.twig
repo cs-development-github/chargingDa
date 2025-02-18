@@ -149,14 +149,13 @@
                         {{ form_label(form.client.siret, 'Siret', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.client.siret, {'attr': {'class': 'custom-input'}}) }}
                     </div>
-                    <div class="input-row">
-                        {{ form_label(form.client.numberTva, 'Numéro de TVA', {'label_attr': {'class': 'form-label'}})
-                        }}
-                        {{ form_widget(form.client.numberTva, {'attr': {'class': 'custom-input'}}) }}
-                    </div>
                 </div>
 
                 <div class="col-md-6">
+                    <div class="input-row">
+                        {{ form_label(form.client.numberTva, 'Numéro de TVA', {'label_attr': {'class': 'form-label'}})}}
+                        {{ form_widget(form.client.numberTva, {'attr': {'class': 'custom-input'}}) }}
+                    </div>
                     <div class="input-row">
                         {{ form_label(form.client.codeNaf, 'Code NAF', {'label_attr': {'class': 'form-label'}}) }}
                         {{ form_widget(form.client.codeNaf, {'attr': {'class': 'custom-input'}}) }}
@@ -179,74 +178,40 @@
                         'form-label'}}) }}
                         {{ form_widget(form.client.priceResale, {'attr': {'class': 'custom-input'}}) }}
                     </div>
-
-                    <div class="input-row">
-                        {{ form_label(form.intervention.sim, 'SIM ID', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.intervention.sim, {'attr': {'class': 'custom-input'}}) }}
-                    </div>
-                    <div class="input-row">
-                        {{ form_label(form.intervention.ChargingStation, 'Borne', {'label_attr': {'class':
-                        'form-label'}}) }}
-                        {{ form_widget(form.intervention.ChargingStation, {'attr': {'class': 'custom-select'}}) }}
-                    </div>
-                    <div class="input-row">
-                        {{ form_label(form.intervention.installer, 'Installateur', {'label_attr': {'class':
-                        'form-label'}}) }}
-                        {{ form_widget(form.intervention.installer, {'attr': {'class': 'custom-input', 'disabled':
-                        'disabled'}}) }}
-                    </div>
-                    <div class="text-center mt-3">
-                        <button type="submit" class="confirm-btn">Ajouter Intervention</button>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
             <div class="input-row">
-                <label for="equipe" class="form-label">ÉQUIPE</label>
-                <div class="custom-select-wrapper">
-                    <select id="equipe" class="custom-select">
-                        <option value="" disabled selected>Choisir une équipe</option>
-                        <option value="lodmi">Lodmi</option>
-                        <option value="tech">Tech</option>
-                    </select>
-                </div>
+                {{ form_label(form.intervention.sim, 'SIM ID', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.intervention.sim, {'attr': {'class': 'custom-input'}}) }}
             </div>
-
+        
             <div class="input-row">
-                <label for="installateur2" class="form-label">INSTALLATEUR</label>
+                {{ form_label(form.intervention.ChargingStation, 'Borne', {'label_attr': {'class': 'form-label'}}) }}
                 <div class="custom-select-wrapper">
-                    <select id="installateur2" class="custom-select">
-                        <option value="" disabled selected>Choisir un installateur</option>
-                        <option value="arthur">Arthur Drumain</option>
-                        <option value="yassine">Yassine</option>
-                    </select>
+                    {{ form_widget(form.intervention.ChargingStation, {'attr': {'class': 'custom-select'}}) }}
                 </div>
             </div>
-
+        
             <div class="input-row">
-                <label for="borne2" class="form-label">BORNE</label>
-                <div class="custom-select-wrapper">
-                    <select id="borne2" class="custom-select">
-                        <option value="" disabled selected>Choisir une borne</option>
-                        <option value="autel">Autel Pro AC</option>
-                        <option value="ac-bleble">AC-BLEBLE</option>
-                    </select>
-                </div>
+                {{ form_label(form.intervention.installer, 'Installateur', {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.intervention.installer, {'attr': {'class': 'custom-input', 'disabled': 'disabled'}}) }}
             </div>
-
+        
             <div class="form-check mt-4 text-end">
                 <input class="form-check-input" type="checkbox" id="acceptTerms2">
                 <label class="form-check-label text-muted" for="acceptTerms2">
                     En cochant j’assure avoir pris connaissance des CGV et des CGU et en avoir informé mon client.
                 </label>
             </div>
-
+        
             <div class="text-center mt-3">
                 <button type="submit" class="confirm-btn">JE TRANSMET LE CONTRAT</button>
             </div>
         </div>
+        
     </div>
     {{ form_end(form) }}
 </div>
