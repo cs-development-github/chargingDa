@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email LODMI</title>
+    <title>Contrat Validé</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,18 +47,6 @@
             line-height: 1.5;
         }
 
-        .btn {
-            display: block;
-            width: fit-content;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #ff8000;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            text-align: center;
-        }
-
         .footer {
             background-color: #2e2e3a;
             color: #ffffff;
@@ -76,21 +64,18 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="https://partenaires.lodmi.com/public/logo/logo_lodmi_mail.png" alt="LODMI PARTENAIRE">
-            <h2>Demande d'informations complémentaire</h2>
+            <img src="cid:logo_lodmi_mail" alt="LODMI PARTENAIRE">
+            <h2>Demande de Supervision</h2>
         </div>
         <div class="content">
-            <p>Bonjour,</p>
-            <p>Pour programmer la mise en supervision de vos points de charge, il ne vous reste plus qu’une étape !</p>
-            <p>Cliquez sur le bouton ci-dessous pour compléter vos informations et recevoir votre contrat de supervision. :</p>
-            <a href="{{ completionUrl }}" class="btn">Compléter mon dossier</a>
-            <p>Une fois le formulaire rempli, vous recevrez votre contrat prêt à être signé.</p>
-            <p>À bientôt,</p>
-            <p>L'équipe LODMI</p>
+            <p>Le contrat de vôtre client <strong>{{ client.name }} {{ client.lastname }}</strong> a bien été transmis !</p>
+            <p>Vous receverez une confirmation automatique a reception de la validation.</p>
+            <br>
+            <p>Une fois la validation faites vous retrouvez toutes les informations nécessaire a la mise en place de la supervision dans le dashboard de votre espace partenaires.lodmi.</p>
         </div>
         <div class="footer">
             <p>&copy; 2024 LODMI. Tous droits réservés.</p>
-            <p><a href="https://lodmi.com">Visitez notre site</a></p>
+            <p><a href="https://votre-site.com">Visitez notre site</a></p>
         </div>
     </div>
 </body>
