@@ -3,8 +3,8 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<div class="container mt-10" style="margin-top: 100px">
-    <h2 class="mb-3">Prochaine intervention prévue</h2>
+    <div class="container mt-4">
+        <h2 class="mb-3">Prochaine intervention prévue</h2>
 
         {% if nextIntervention %}
             <div class="card shadow-sm">
@@ -23,6 +23,10 @@
                                 📄 Voir la documentation
                             </a>
                         {% endif %}
+
+                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#imageModal">
+                            🖼️ Notice de supervision
+                        </button>
                     </div>
                 </div>
             </div>
@@ -32,4 +36,33 @@
             </div>
         {% endif %}
     </div>
+
+    <!-- Modal Bootstrap -->
+    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">  {# Utilisation de modal-xl pour un affichage large #}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imageModalLabel">Images de la Documentation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0"> {# Supprime le padding pour un affichage pleine largeur #}
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12">
+                                {% for i in 1..10 %}
+                                    <img src="{{ asset('build/images/Documentation/Autel_' ~ i ~ '.png') }}" 
+                                         class="img-fluid w-100 d-block" 
+                                         alt="Autel {{ i }}">
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
