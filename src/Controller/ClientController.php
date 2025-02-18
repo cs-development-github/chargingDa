@@ -68,7 +68,6 @@ final class ClientController extends AbstractController
             $intervention->setInstaller($user);
             $client->setCreatedBy($user);
     
-            // Sauvegarde des données en base
             $entityManager->persist($client);
             $entityManager->persist($intervention);
             $entityManager->flush();
@@ -88,6 +87,21 @@ final class ClientController extends AbstractController
                     template: 'emails/request_document.html.twig',
                     context: ['client' => $client, 'completionUrl' => $completionUrl]
                 );
+
+                $mailerService->sendEmail(
+                    to: 'contact@lodmi.com',
+                    subject: 'Demande de Supervision',
+                    template: 'emails/lodmi_contract.html.twig',
+                    context: ['client' => $client, 'completionUrl' => $completionUrl]
+                );
+
+                $mailerService->sendEmail(
+                    to: 'chris.vermersch@hotmail.com',
+                    subject: 'Demande de Supervision',
+                    template: 'emails/confirmation_installator.html.twig',
+                    context: ['client' => $client, 'completionUrl' => $completionUrl]
+                );
+                
     
                 $this->addFlash('info', 'Le client a été ajouté, mais certaines informations sont manquantes.');
             }
