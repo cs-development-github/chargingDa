@@ -34,9 +34,12 @@ class InterventionFormType extends AbstractType
                 'choice_label' => 'activate_code',
                 'query_builder' => function (EntityRepository $er) use ($user) {
                     return $er->createQueryBuilder('s')
-                        ->join('s.team', 't') // Supposons que SimCard a une relation `team`
-                        ->where('t = :team')
-                        ->setParameter('team', $user->getTeam()); // On récupère l'équipe de l'utilisateur
+                        ->where('s NOT IN (
+                            SELECT sim_sub FROM App\Entity\Intervention i_sub
+                            JOIN i_sub.sim sim_sub
+                        )')
+                        ->andWhere('s.team = :team')
+                        ->setParameter('team', $user->getTeam());
                 },
             ])
             ->add('ChargingStation', EntityType::class, [
@@ -47,8 +50,7 @@ class InterventionFormType extends AbstractType
                 'class' => User::class,
                 'choice_label' => 'name',
                 'required' => false,
-            ])
-        ;
+            ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($user) {
             $intervention = $event->getData();

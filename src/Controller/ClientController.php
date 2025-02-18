@@ -84,7 +84,7 @@ final class ClientController extends AbstractController
                 $completionUrl = $urlGenerator->generate('client_complete_info', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
                 $mailerService->sendEmail(
                     to: $client->getEmail() ?: 'chris.vermersch@hotmail.com',
-                    subject: 'Demande de documents manquants',
+                    subject: 'Demande d\'information complémentaire contrat de supervision',
                     template: 'emails/request_document.html.twig',
                     context: ['client' => $client, 'completionUrl' => $completionUrl]
                 );
