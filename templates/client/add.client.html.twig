@@ -1,0 +1,197 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter Clients{% endblock %}
+
+{% block body %}
+<style>
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --gray-color: #818285;
+        --input-bg: #fff;
+        --control-height: 50px;
+        --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .grid-container {
+        margin-top: 100px;
+    }
+
+    .label-gray {
+        color: var(--gray-color);
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .custom-input {
+        background-color: var(--input-bg);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 15px;
+        width: 100%;
+        height: var(--control-height);
+        box-shadow: var(--shadow-inset);
+        outline: none;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .custom-input:focus {
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .custom-select-wrapper {
+        width: 100%;
+        height: var(--control-height);
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        padding: 2px;
+        border-radius: 15px;
+        display: inline-block;
+    }
+
+    .custom-select {
+        width: 100%;
+        height: 100%;
+        border: none;
+        border-radius: 13px;
+        background-color: var(--input-bg);
+        padding: 12px 15px;
+        font-size: 1rem;
+        outline: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D'10'%20height%3D'7'%20viewBox%3D'0%200%2010%207'%20xmlns%3D'http://www.w3.org/2000/svg'%3E%3Cpath%20d%3D'M1%200l4%207%204-7'%20stroke%3D'%23f6941f'%20stroke-width%3D'2'%20fill%3D'none'%20fill-rule%3D'evenodd'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    #equipe,
+    #installateur,
+    #borne {
+        text-align: center;
+    }
+
+    .input-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .input-row label {
+        flex: 0 0 150px;
+        color: var(--gray-color);
+        font-weight: bold;
+    }
+
+    .input-row .custom-input,
+    .input-row .custom-select-wrapper {
+        flex: 1;
+    }
+
+    .confirm-btn {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        color: #fff;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 1rem;
+        transition: opacity 0.3s;
+        font-weight: bold;
+    }
+
+    .confirm-btn:hover {
+        opacity: 0.9;
+    }
+</style>
+
+<div class="container grid-container">
+    <h1 class="text-center mb-4">AJOUTER CLIENTS</h1>
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-row">
+                            {{ form_label(form.client.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.name, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.lastname, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.lastname, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.societyName, 'Entreprise *', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.societyName, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.legalForm, 'Forme juridique', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.legalForm, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.adress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.adress, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.siret, 'Siret', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.siret, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.numberTva, 'Numéro de TVA', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.numberTva, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="input-row">
+                            {{ form_label(form.client.codeNaf, 'Code NAF', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.codeNaf, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.email, 'Email *', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.email, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.phone, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.phone, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.priceKwh, 'Prix achat kW', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.priceKwh, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.client.priceResale, 'Prix revente kW', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.priceResale, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+
+                        <div class="input-row">
+                            {{ form_label(form.intervention.sim, 'SIM ID', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.intervention.sim, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.intervention.ChargingStation, 'Borne', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.intervention.ChargingStation, {'attr': {'class': 'custom-select'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.intervention.installer, 'Installateur', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.intervention.installer, {'attr': {'class': 'custom-input', 'disabled': 'disabled'}}) }}
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="confirm-btn">Ajouter Intervention</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+</div>
+
+{% endblock %}

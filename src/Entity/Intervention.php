@@ -19,8 +19,9 @@ class Intervention
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?User $installer = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $simId = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?SimCard $sim = null;
 
     public function getId(): ?int
     {
@@ -51,15 +52,16 @@ class Intervention
         return $this;
     }
 
-    public function getSimId(): ?string
+    public function getSim(): ?SimCard
     {
-        return $this->simId;
+        return $this->sim;
     }
 
-    public function setSimId(string $simId): static
+    public function setSim(SimCard $sim): static
     {
-        $this->simId = $simId;
+        $this->sim = $sim;
 
         return $this;
     }
+
 }

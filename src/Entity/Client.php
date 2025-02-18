@@ -14,38 +14,58 @@ class Client
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255)]
     private ?string $societyName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $siret = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $numberTva = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $codeNaf = null;
 
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $priceKwh = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $priceResale = null;
 
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adress = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
+    private ?string $secureToken = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $legalForm = null;
+
+    #[ORM\ManyToOne(inversedBy: 'teams')]
+    private ?User $createdBy = null;
+
+    public function getSecureToken(): ?string
+    {
+        return $this->secureToken;
+    }
+
+    public function setSecureToken(?string $secureToken): self
+    {
+        $this->secureToken = $secureToken;
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -180,6 +200,30 @@ class Client
     public function setAdress(string $adress): static
     {
         $this->adress = $adress;
+
+        return $this;
+    }
+
+    public function getLegalForm(): ?string
+    {
+        return $this->legalForm;
+    }
+
+    public function setLegalForm(string $legalForm): static
+    {
+        $this->legalForm = $legalForm;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
