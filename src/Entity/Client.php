@@ -53,6 +53,9 @@ class Client
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $legalForm = null;
 
+    #[ORM\ManyToOne(inversedBy: 'teams')]
+    private ?User $createdBy = null;
+
     public function getSecureToken(): ?string
     {
         return $this->secureToken;
@@ -209,6 +212,18 @@ class Client
     public function setLegalForm(string $legalForm): static
     {
         $this->legalForm = $legalForm;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }

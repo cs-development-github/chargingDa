@@ -21,9 +21,6 @@
         <button class="btn text-white fw-bold px-4 py-2 me-2 btn-custom">
             AJOUTER UN CLIENT <i class="bi bi-plus"></i>
         </button>
-        <button class="btn text-white fw-bold px-4 py-2 btn-custom">
-            AJOUTER CARTE SIM <i class="bi bi-plus"></i>
-        </button>
     </div>
 
     <div class="d-flex align-items-center mb-3">
@@ -40,27 +37,30 @@
     <div class="row text-center mb-3 fw-bold" style="color: #6c757d;">
         <div class="col-2"><span class="text-uppercase">DÉNOMINATION</span></div>
         <div class="col-2"><span class="text-uppercase">BORNES</span></div>
-        <div class="col-2"><span class="text-uppercase">ETAT</span></div>
         <div class="col-2"><span class="text-uppercase">INSTALLATEUR</span></div>
         <div class="col-2"><span class="text-uppercase">CONTRAT</span></div>
     </div>
 
     <div class="row">
         <div class="col-12">
-            <div class="card p-3 mb-3 border-0"
-                style="border-radius: 15px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);">
-                <div class="row align-items-center text-center">
-                    <div class="col-2 fw-bold text-dark">LODMI</div>
-                    <div class="col-2 fw-bold text-dark">AUTEL PRO AC</div>
-                    <div class="col-2 fw-bold text-success">ACTIF</div>
-                    <div class="col-2 fw-bold text-dark">ARTHUR DRUMAIN</div>
-                    <div class="col-2 d-flex justify-content-center gap-3">
-                        <i class="bi bi-eye-fill" style="font-size: 1.2rem; cursor: pointer;"></i>
-                        <i class="bi bi-download" style="font-size: 1.2rem; cursor: pointer;"></i>
+            {% for client in clients %}
+                <div class="card p-3 mb-3 border-0"
+                    style="border-radius: 15px; box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);">
+                    <div class="row align-items-center text-center">
+                        <div class="col-2 fw-bold text-dark">{{ client.societyName }}</div>
+                        <div class="col-2 fw-bold text-dark">AC 230300</div>
+                        <div class="col-2 fw-bold text-dark">Paul le roublard</div>
+                        <div class="col-2 d-flex justify-content-center gap-3">
+                            <i class="bi bi-eye-fill" style="font-size: 1.2rem; cursor: pointer;"></i>
+                            <i class="bi bi-download" style="font-size: 1.2rem; cursor: pointer;"></i>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% else %}
+                <p class="text-center text-muted">Aucun client trouvé.</p>
+            {% endfor %}
         </div>
     </div>
+    
 </div>
 {% endblock %}

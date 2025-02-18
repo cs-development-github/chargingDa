@@ -3,12 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Client;
+use App\Entity\Intervention;
 use App\Form\ClientFormType;
+use App\Form\ClientInterventionFormType;
+use App\Form\InterventionFormType;
 use App\Service\ClientContractService;
 use App\Service\MailService;
 use App\Service\PdfEditorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,14 +23,21 @@ use Symfony\Component\Uid\Uuid;
 final class ClientController extends AbstractController
 {
     #[Route('/clients', name: 'app_clients')]
-    public function index(EntityManagerInterface $em): Response
+    public function index(EntityManagerInterface $em, Security $security): Response
     {
-        $clients = $em->getRepository(Client::class)->findAll();
-
+        $user = $security->getUser();
+    
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour voir cette page.');
+        }
+    
+        $clients = $em->getRepository(Client::class)->findByUserOrTeam($user);
+    
         return $this->render('client/index.html.twig', [
             'clients' => $clients,
         ]);
     }
+    
 
     #[Route('/ajouter/client', name: 'app_add_client')]
     public function addClient(
@@ -34,31 +45,43 @@ final class ClientController extends AbstractController
         EntityManagerInterface $entityManager,
         ClientContractService $contractService,
         MailService $mailerService,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        Security $security
     ): Response {
         $client = new Client();
-        $form = $this->createForm(ClientFormType::class, $client);
-        $form->add('submit', SubmitType::class, [
-            'label' => 'JE TRANSMETS LE CONTRAT',
-            'attr' => ['class' => 'confirm-btn']
+        $intervention = new Intervention();
+    
+        $user = $security->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour effectuer cette action.');
+        }
+    
+        $form = $this->createForm(ClientInterventionFormType::class, [
+            'client' => $client,
+            'intervention' => $intervention,
         ]);
     
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
+            // Associer l'installateur
+            $intervention->setInstaller($user);
+            $client->setCreatedBy($user);
+    
+            // Sauvegarde des données en base
             $entityManager->persist($client);
+            $entityManager->persist($intervention);
             $entityManager->flush();
     
             if ($this->isClientDataComplete($client)) {
                 $contractService->generateAndSendContract($client);
-                $this->addFlash('success', 'Le client a été ajouté et le contrat a été envoyé.');
+                $this->addFlash('success', 'Le client et l\'intervention ont été ajoutés et le contrat a été envoyé.');
             } else {
                 $token = Uuid::v4()->toRfc4122();
                 $client->setSecureToken($token);
                 $entityManager->flush();
     
                 $completionUrl = $urlGenerator->generate('client_complete_info', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-    
                 $mailerService->sendEmail(
                     to: $client->getEmail() ?: 'chris.vermersch@hotmail.com',
                     subject: 'Demande de documents manquants',
@@ -76,7 +99,6 @@ final class ClientController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
-    
 
     #[Route('/client/complete-info', name: 'client_complete_info')]
     public function completeClientInfo(Request $request, EntityManagerInterface $em): Response
@@ -142,7 +164,6 @@ final class ClientController extends AbstractController
             'client' => $client
         ]);
     }
-    
 
     /**
      * Vérifie si tous les champs obligatoires sont remplis.
@@ -160,45 +181,5 @@ final class ClientController extends AbstractController
             && !empty($client->getPriceKwh())
             && !empty($client->getPriceResale())
             && !empty($client->getLegalForm());
-    }
-
-    #[Route('/merge-pdfs', name: 'merge_pdfs')]
-    public function mergePdfs(PdfEditorService $pdfEditorService): Response
-    {
-        $pdfFiles = [
-            $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-2.pdf',
-            $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-2.pdf',
-            $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation-3.pdf',
-        ];
-
-        $outputPath = $this->getParameter('kernel.project_dir') . '/public/pdf/contrat_exploitation_final.pdf';
-
-        if ($pdfEditorService->mergePdfs($pdfFiles, $outputPath)) {
-            return new Response('PDF fusionné avec succès ! <a href="/pdf/contrat_exploitation_final.pdf">Voir le PDF fusionné</a>');
-        }
-
-        return new Response('Erreur lors de la fusion des PDFs.');
-    }
-
-    #[Route('/generate-pdf', name: 'generate_pdf')]
-    public function generatePdf(
-        PdfEditorService $pdfEditorService,
-        EntityManagerInterface $em,
-        int $clientId
-    ): Response {
-        $client = $em->getRepository(Client::class)->find($clientId);
-
-        if (!$client) {
-            throw $this->createNotFoundException('Client introuvable.');
-        }
-
-        $htmlContent = $this->renderView('pdf/contrat_template.html.twig', [
-            'client' => $client
-        ]);
-
-        $pdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_{$client->getId()}.pdf";
-        $pdfEditorService->createCustomPdf($pdfPath, $htmlContent);
-
-        return new Response('PDF généré avec succès ! <a href="/pdf/contrat_' . $client->getId() . '.pdf">Voir le PDF</a>');
     }
 }

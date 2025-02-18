@@ -121,55 +121,71 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="input-row">
-                            {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.name, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.name, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.lastname, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.lastname, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.lastname, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.lastname, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.societyName, 'Entreprise *', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.societyName, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.societyName, 'Entreprise *', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.societyName, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.legalForm, 'Forme juridique', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.legalForm, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.legalForm, 'Forme juridique', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.legalForm, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.adress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.adress, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.adress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.adress, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.siret, 'Siret', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.siret, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.siret, 'Siret', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.siret, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.numberTva, 'Numéro de TVA', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.numberTva, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.numberTva, 'Numéro de TVA', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.numberTva, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="input-row">
-                            {{ form_label(form.codeNaf, 'Code NAF', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.codeNaf, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.codeNaf, 'Code NAF', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.codeNaf, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.email, 'Email *', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.email, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.email, 'Email *', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.email, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.phone, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.phone, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.phone, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.phone, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.priceKwh, 'Prix achat kW', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.priceKwh, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.priceKwh, 'Prix achat kW', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.priceKwh, {'attr': {'class': 'custom-input'}}) }}
                         </div>
                         <div class="input-row">
-                            {{ form_label(form.priceResale, 'Prix revente kW', {'label_attr': {'class': 'form-label'}}) }}
-                            {{ form_widget(form.priceResale, {'attr': {'class': 'custom-input'}}) }}
+                            {{ form_label(form.client.priceResale, 'Prix revente kW', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.client.priceResale, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+
+                        <div class="input-row">
+                            {{ form_label(form.intervention.sim, 'SIM ID', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.intervention.sim, {'attr': {'class': 'custom-input'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.intervention.ChargingStation, 'Borne', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.intervention.ChargingStation, {'attr': {'class': 'custom-select'}}) }}
+                        </div>
+                        <div class="input-row">
+                            {{ form_label(form.intervention.installer, 'Installateur', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(form.intervention.installer, {'attr': {'class': 'custom-input', 'disabled': 'disabled'}}) }}
+                        </div>
+                        <div class="text-center mt-3">
+                            <button type="submit" class="confirm-btn">Ajouter Intervention</button>
                         </div>
                     </div>
                 </div>

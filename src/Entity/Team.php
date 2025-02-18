@@ -126,7 +126,6 @@ class Team
         return $entityManagerInterface->getRepository(User::class)->findBy(['team' => $this]);
     }
 
-
     /**
      * @return Collection<int, SimCard>
      */
