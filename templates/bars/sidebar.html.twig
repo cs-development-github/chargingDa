@@ -1,4 +1,11 @@
 <style>
+
+    main {
+        margin-left: 260px;
+        padding: 90px 20px 20px;
+        transition: margin-left 0.3s ease-in-out;
+    }
+
     .sidebar {
         width: 260px;
         background-image: url('/build/images/background.png');
@@ -12,8 +19,24 @@
         display: flex;
         flex-direction: column;
         padding: 1rem;
+        transition: transform 0.3s ease-in-out;
     }
 
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.collapsed + main {
+        margin-left: 0;
+    }
+
+    .navbar-toggler {
+        background: none;
+        border: none;
+        font-size: 1.8rem;
+        cursor: pointer;
+        outline: none;
+    }
 
     .sidebar .menu {
         flex-grow: 1;
@@ -57,10 +80,10 @@
 
 <div class="sidebar">
     <div class="menu">
-        <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
+        <a href="{{ path('app_equipes') }}" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
             <i class="bi bi-people-fill me-2"></i> <span class="text-truncate">MES ÉQUIPES</span>
         </a>
-        <a href="#" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
+        <a href="{{ path('app_clients') }}" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
             <i class="bi bi-person me-2"></i> <span class="text-truncate">MES CLIENTS</span>
         </a>
         <a href="{{ path('app_charging_stations') }}" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
@@ -72,8 +95,13 @@
             style="background: linear-gradient(to right, #ff4081, #ff8c00);">
             <span class="text-truncate">AJOUTER UN CLIENT</span> <i class="bi bi-plus-lg"></i>
         </a>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <a href="{{ path('app_user') }}" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
+            style="height: 44px;">
+            <i class="bi bi-person me-2"></i> <span>Utilisateurs</span>
+        </a>
+        {% endif %}
     </div>
-
 
     <a href="{{ path('app_logout') }}" class="btn text-white fw-bold px-3 py-2 rounded-3 logout"
         style="background: linear-gradient(to right, #ff4081, #ff8c00);">

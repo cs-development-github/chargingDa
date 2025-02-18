@@ -1,0 +1,27 @@
+<div class="modal fade" id="addEquipeModal" tabindex="-1" aria-labelledby="addEquipeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addEquipeModalLabel">Ajouter une Équipe</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('app_equipes_add') }}" method="post">
+                    {{ form_start(teamForm) }}
+                    
+                    <div class="mb-3">
+                        {{ form_label(teamForm.name, 'Nom de l’équipe', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(teamForm.name, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="submit" class="btn btn-save">Enregistrer</button>
+                    </div>
+
+                    {{ form_end(teamForm) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

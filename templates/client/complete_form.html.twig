@@ -1,0 +1,10 @@
+<h2>Complétez vos informations</h2>
+
+{{ form_start(form, { 'action': path('client_update_info'), 'method': 'POST' }) }}
+    {{ form_widget(form) }}
+
+    <input type="hidden" name="token" value="{{ client.secureToken }}">
+
+    <button type="submit">Valider</button>
+
+{{ form_end(form) }}

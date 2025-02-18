@@ -1,12 +1,16 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3" style="
     height: 70px;
-    z-index: 1050; /* Asegura que esté por encima del sidebar */
+    z-index: 1050;
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
 ">
     <div class="d-flex align-items-center">
+        <button class="navbar-toggler me-3" id="sidebarToggle">
+            <i class="bi bi-list"></i> 
+        </button>
+
         <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo" class="img-fluid me-2"
             style="height: 50px; border-radius: 10px;">
         <h4 class="fw-bold mb-0" style="
@@ -17,7 +21,6 @@
             PARTENAIRE
         </h4>
     </div>
-
 
     <form class="d-flex mx-auto">
         <input class="form-control border-0 shadow-sm" type="search" placeholder="Rechercher" style="
@@ -50,3 +53,16 @@
         </div>
     </a>
 </nav>
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const sidebar = document.querySelector(".sidebar");
+        const toggleButton = document.getElementById("sidebarToggle");
+    
+        toggleButton.addEventListener("click", function () {
+            sidebar.classList.toggle("collapsed");
+        });
+    });
+    </script>
+    

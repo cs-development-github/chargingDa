@@ -135,7 +135,6 @@
     }
 </style>
 
-<div class="container grid-container">
     <h1 class="text-center mb-4">Mon Profil</h1>
 
     <div class="row">
@@ -215,7 +214,6 @@
             </button>
         </div>
     </div>
-</div>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -224,7 +222,7 @@
     
         saveButton.addEventListener("click", function () {
             saveButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mise à jour...';
-            saveButton.disabled = true; // Désactive le bouton temporairement
+            saveButton.disabled = true;
     
             const userData = {
                 name: document.querySelector("#nom").value,

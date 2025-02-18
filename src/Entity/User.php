@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Entity\Trait\TimestampableTrait;
@@ -34,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 14, nullable: true)] // ✅ SIRET est maintenant optionnel
+    #[ORM\Column(length: 14, nullable: true)]
     private ?string $siret = null;
 
     #[ORM\Column]
@@ -47,14 +49,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $phone = null;
 
     #[ORM\Column(type: "boolean", options: ["default" => false])]
-    private bool $isChefEffectif = false; // ✅ Ajout de la gestion du chef d'effectif
+    private bool $isChefEffectif = false;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
     #[ORM\JoinColumn(onDelete: "SET NULL")]
     private ?User $createdBy = null;
 
     #[ORM\ManyToOne(inversedBy: 'user')]
-    private ?Team $team = null; // ✅ Lien vers l'admin qui a créé cet utilisateur (optionnel)
+    private ?Team $team = null;
+
+    /**
+     * @var Collection<int, Team>
+     */
+    #[ORM\OneToMany(targetEntity: Team::class, mappedBy: 'createdBy')]
+    private Collection $teams;
+
+    public function __construct()
+    {
+        $this->teams = new ArrayCollection();
+    }
 
     use TimestampableTrait;
 
@@ -224,6 +237,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTeam(?Team $team): static
     {
         $this->team = $team;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Team>
+     */
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    public function addTeam(Team $team): static
+    {
+        if (!$this->teams->contains($team)) {
+            $this->teams->add($team);
+            $team->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeam(Team $team): static
+    {
+        if ($this->teams->removeElement($team)) {
+            // set the owning side to null (unless already changed)
+            if ($team->getCreatedBy() === $this) {
+                $team->setCreatedBy(null);
+            }
+        }
 
         return $this;
     }

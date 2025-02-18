@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email LODMI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #ff0080;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header img {
+            height: 40px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            color: #333333;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff8000;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .footer {
+            background-color: #2e2e3a;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ff8000;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://partenaires.lodmi.com/public/logo/logo_lodmi_mail.png" alt="LODMI PARTENAIRE">
+            <h2>Notification de dossier incomplet</h2>
+        </div>
+        <div class="content">
+            <p>Bonjour <strong>{{ client.email }}</strong>,</p>
+            <p>Nous avons bien reçu votre demande, mais il manque certaines informations pour finaliser votre dossier.</p>
+            <p>Veuillez compléter vos informations en cliquant sur le lien ci-dessous :</p>
+            <a href="{{ completionUrl }}" class="btn">Compléter mon dossier</a>
+            <p>Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :</p>
+            <p>{{ completionUrl }}</p>
+            <p>Merci de votre coopération.</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 LODMI. Tous droits réservés.</p>
+            <p><a href="https://lodmi.com">Visitez notre site</a></p>
+        </div>
+    </div>
+</body>
+</html>

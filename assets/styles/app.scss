@@ -1,1 +1,24 @@
 @import 'bootstrap/scss/bootstrap';
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../Fonts/Montserrat-SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'UrbaneRounded';
+    src: url('../Fonts/UrbaneRounded-DemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Appliquer la police à tout le site */
+body {
+    font-family: 'Montserrat', sans-serif !important;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'UrbaneRounded', sans-serif !important;
+}

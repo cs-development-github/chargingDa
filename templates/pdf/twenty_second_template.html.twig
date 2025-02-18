@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrat - Page 1</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            line-height: 1.6;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 1.1em;
+            text-decoration: underline;
+            margin-bottom: 5px;
+        }
+        .signature {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .signature div {
+            text-align: center;
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            text-align: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">Contrat de Prestations</div>
+
+        <div class="section">
+            <h2>Le Prestataire</h2>
+            <p><strong>LODMI</strong><br>
+                11 Rue Willy Brandt, Parc des Bonnettes, Bâtiment 2<br>
+                62000 ARRAS<br>
+                Courriel : <a href="mailto:contact@lodmi.com">contact@lodmi.com</a><br>
+                Site web : <a href="https://www.lodmi.com" target="_blank">www.lodmi.com</a>
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Le Client</h2>
+            <p>Nom du Client : <strong>{{ client.name }} {{ client.lastname }}</strong><br>
+               Adresse : <strong>{{ client.adress }} </strong><br>
+               En cas de changement d’adresse, l’autre Partie devra aussitôt en être avisée.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Droit applicable et juridiction compétente</h2>
+            <p>Le présent Contrat, de nature commerciale, sera régi et interprété conformément au droit français.</p>
+            <p>Pour le règlement de tout litige découlant du présent Contrat ou s'y rapportant, les Parties conviennent expressément de se soumettre à la compétence des tribunaux français.</p>
+            <p>En foi de quoi, les Parties ont apposé leurs signatures sur les présentes en double exemplaire, au lieu et à la date indiqués ci-dessus.</p>
+        </div>
+
+        <div class="signature">
+            <div>
+                <p>Le Prestataire</p>
+                <p><strong>LODMI</strong></p>
+                <p>M. Thomas SAINT MACHIN</p>
+            </div>
+            <div>
+                <p>Le Client</p>
+                <p><strong>{{ client.societyName }}</strong></p>
+                <p><strong>{{ client.name }} {{ client.lastname }}</strong></p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>LODMI, société de droit Français enregistrée au RCS Arras sous le numéro B 901 360 602, ayant son siège social au 11 Rue Willy Brandt, 62000 ARRAS.</p>
+            <p>Immatriculée au registre du commerce sous le SIRET n° 90136060200030.</p>
+        </div>
+    </div>
+
+</body>
+</html>
