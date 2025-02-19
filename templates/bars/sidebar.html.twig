@@ -1,5 +1,4 @@
 <style>
-
     main {
         margin-left: 260px;
         padding: 90px 20px 20px;
@@ -8,7 +7,7 @@
 
     .sidebar {
         width: 260px;
-        background-image: url('/build/images/background.png');
+        background-image: url('{{ asset("build/images/background.png") }}');
         background-size: cover;
         background-position: center;
         position: fixed;
@@ -26,7 +25,7 @@
         transform: translateX(-100%);
     }
 
-    .sidebar.collapsed + main {
+    .sidebar.collapsed+main {
         margin-left: 0;
     }
 
@@ -75,6 +74,19 @@
         text-transform: uppercase;
         font-size: 0.85rem;
         justify-content: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar .profile {
+        background: linear-gradient(to right, #00c6ff, #0072ff);
+        color: white;
+        font-weight: bold;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .sidebar .profile:hover,
+    .sidebar .logout:hover {
+        transform: scale(1.03);
     }
 </style>
 
@@ -86,26 +98,31 @@
         <a href="{{ path('app_clients') }}" class="btn btn-light mb-3 d-flex align-items-center px-3 py-2 rounded-3">
             <i class="bi bi-person me-2"></i> <span class="text-truncate">MES CLIENTS</span>
         </a>
-        <a href="{{ path('app_charging_stations') }}" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
+        <a href="{{ path('app_charging_stations') }}"
+            class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
             style="height: 44px;">
             <i class="bi bi-collection-fill me-2"></i> <span>DOC. BORNE</span>
         </a>
-        <a href="{{path('app_add_client')}}"
+        <a href="{{ path('app_add_client') }}"
             class="btn text-white fw-bold d-flex align-items-center justify-content-between px-3 py-2 rounded-3 mb-3"
             style="background: linear-gradient(to right, #ff4081, #ff8c00);">
             <span class="text-truncate">AJOUTER UN CLIENT</span> <i class="bi bi-plus-lg"></i>
         </a>
         {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <a href="{{ path('app_user') }}" class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
+        <a href="{{ path('app_user') }}"
+            class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
             style="height: 44px;">
             <i class="bi bi-person me-2"></i> <span>Utilisateurs</span>
         </a>
         {% endif %}
     </div>
 
-    <a href="{{ path('app_logout') }}" class="btn text-white fw-bold px-3 py-2 rounded-3 logout"
-        style="background: linear-gradient(to right, #ff4081, #ff8c00);">
-        DÉCONNEXION
+    <a href="{{ path('app_account') }}" class="btn profile d-flex align-items-center px-3 py-2 rounded-3 mb-3">
+        <i class="bi bi-person-circle me-2"></i> <span class="text-truncate">Mon Profil</span>
     </a>
-</div>
+
+    <a href="{{ path('app_logout') }}" class="btn logout text-white fw-bold px-3 py-2 rounded-3"
+        style="background: linear-gradient(to right, #ff4081, #ff8c00);">
+        <i class="bi bi-box-arrow-right me-2"></i> DÉCONNEXION
+    </a>
 </div>

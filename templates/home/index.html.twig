@@ -3,52 +3,92 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <div class="container mt-4" style="margin-top: 100px;"><div class="container mt-10" style="margin-top: 100px">
-        <h2 class="mb-3">Prochaine intervention prévue</h2>
+<style>
+    .btn-gradient {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        border: none;
+        border-radius: 9px;
+        color: #fff;
+        font-weight: bold;
+        padding: 10px 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-decoration: none;
+    }
+    .btn-gradient:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    .container {
+        background-color: #fff;
+        border-radius: 10px;
+    }
+    .card {
+        margin-bottom: 20px;
+    }
+    .modal-body img {
+        margin-bottom: 15px;
+    }
+    @media (max-width: 576px) {
+        .container {
+            padding: 10px;
+        }
+        .btn-gradient {
+            padding: 8px 16px;
+            font-size: 0.85rem;
+        }
+    }
+</style>
 
-        {% if nextIntervention %}
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title text-primary">
-                        🚧 Intervention sur {{ nextIntervention.chargingStation.model }}
-                    </h5>
-                    <p class="card-text">
-                        📅 <strong>Date prévue :</strong> 21/04/2025
-                    </p>
-                    <div class="d-flex gap-2">
-                        {% if nextIntervention.chargingStation.documentation %}
-                            <a href="{{ asset('uploads/' ~ nextIntervention.chargingStation.documentation) }}" 
-                               target="_blank" 
-                               class="btn btn-secondary">
-                                📄 Voir la documentation
-                            </a>
-                        {% endif %}
+<div class="container">
+    <h2 class="mb-3">
+        <i class="bi bi-calendar-check me-1"></i> Prochaine intervention prévue
+    </h2>
 
-                        <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#imageModal">
-                            🖼️ Notice de supervision
-                        </button>
-                    </div>
+    {% if nextIntervention %}
+        <div class="card shadow">
+            <div class="card-body">
+                <h5 class="card-title text-primary">
+                    <i class="bi bi-wrench me-1"></i> Intervention sur {{ nextIntervention.chargingStation.model }}
+                </h5>
+                <p class="card-text">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    <strong>Date prévue :</strong> 21/04/2025
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    {% if nextIntervention.chargingStation.documentation %}
+                        <a href="{{ asset('uploads/' ~ nextIntervention.chargingStation.documentation) }}" 
+                           target="_blank" 
+                           class="btn-gradient">
+                            <i class="bi bi-file-earmark-text me-1"></i> Voir la documentation
+                        </a>
+                    {% endif %}
+                    <button type="button" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#imageModal">
+                        <i class="bi bi-image me-1"></i> Notice de supervision
+                    </button>
                 </div>
             </div>
-        {% else %}
-            <div class="alert alert-warning" role="alert">
-                📭 Aucune intervention prévue pour le moment.
-            </div>
-        {% endif %}
-    </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning d-flex align-items-center" role="alert">
+            <i class="bi bi-envelope me-2"></i> Aucune intervention prévue pour le moment.
+        </div>
+    {% endif %}
+</div>
 
-    <!-- Modal Bootstrap -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">  {# Utilisation de modal-xl pour un affichage large #}
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="imageModalLabel">Images de la Documentation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-0"> {# Supprime le padding pour un affichage pleine largeur #}
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-12">
+
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="imageModalLabel">
+                    <i class="bi bi-images me-1"></i> Images de la Documentation
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body p-0">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12">
                                 {% for i in 1..9 %}
                                     <img src="{{ asset('build/images/Documentation/Autel_' ~ i ~ '.png') }}" 
                                         class="img-fluid w-100 d-block" 
@@ -86,15 +126,16 @@
                                     }
                                 </script>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-gradient" data-bs-dismiss="modal">
+                    <i class="bi bi-x-lg me-1"></i> Fermer
+                </button>
             </div>
         </div>
     </div>
-
+</div>
 {% endblock %}
