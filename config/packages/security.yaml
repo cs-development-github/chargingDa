@@ -28,8 +28,8 @@ security:
         - { path: ^/register$, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_USER }
         - { path: ^/client/complete-info, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: ROLE_USER }
 
 
     role_hierarchy:
