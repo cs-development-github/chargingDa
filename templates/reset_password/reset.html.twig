@@ -3,8 +3,8 @@
 {% block title %}Réinitialisation du mot de passe{% endblock %}
 
 {% block stylesheet %}
-  {{ parent() }}
-  {{ encore_entry_link_tags("carousel") }}
+{{ parent() }}
+{{ encore_entry_link_tags("carousel") }}
 {% endblock %}
 
 {% block body %}
@@ -66,11 +66,13 @@
     .semi-overlay {
       display: none;
     }
+
     .container-fluid.login-bg {
       background-image: none !important;
       padding: 2rem 0;
       min-height: auto;
     }
+
     .main-card {
       position: static !important;
       transform: none !important;
@@ -78,12 +80,14 @@
       width: 90%;
       box-shadow: none;
     }
+
     .main-card .row.g-0 {
       background-color: transparent !important;
       box-shadow: none;
       border-radius: 0;
       min-height: auto;
     }
+
     .col-md-6:last-child {
       display: none !important;
     }
@@ -93,13 +97,12 @@
 <div class="container-fluid p-0 login-bg position-relative">
   <div class="semi-overlay"></div>
 
-  <!-- Tarjeta centrada -->
   <div class="card main-card position-absolute top-50 start-50 translate-middle w-100">
     <div class="row g-0">
-      <!-- Panel Izquierdo -->
       <div class="col-md-6 p-4">
         <div class="d-flex align-items-center justify-content-center mb-4">
-          <div style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: inline-flex; align-items: center; justify-content: center;">
+          <div
+            style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.2); display: inline-flex; align-items: center; justify-content: center;">
             <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi" style="width: 100%; height: auto;">
           </div>
           <div class="ms-3">
@@ -111,16 +114,15 @@
         <div style="max-width: 400px; margin: 0 auto;">
           {{ form_start(resetForm) }}
 
-          {# Campo 1: Nouveau mot de passe #}
           <div class="mb-3">
             <label for="plainPassword_first" class="form-label">Nouveau mot de passe</label>
             <div class="input-group">
               {{ form_widget(resetForm.plainPassword.first, {
-                'attr': {
-                  'class': 'form-control form-input',
-                  'id': 'plainPassword_first',
-                  'required': true
-                }
+              'attr': {
+              'class': 'form-control form-input',
+              'id': 'plainPassword_first',
+              'required': true
+              }
               }) }}
               <span class="input-group-text" onclick="togglePassword('plainPassword_first', 'toggleIconFirst')">
                 <i class="bi bi-eye" id="toggleIconFirst"></i>
@@ -128,16 +130,15 @@
             </div>
           </div>
 
-          {# Campo 2: Confirmation mot de passe #}
           <div class="mb-3">
             <label for="plainPassword_second" class="form-label">Confirmer le mot de passe</label>
             <div class="input-group">
               {{ form_widget(resetForm.plainPassword.second, {
-                'attr': {
-                  'class': 'form-control form-input',
-                  'id': 'plainPassword_second',
-                  'required': true
-                }
+              'attr': {
+              'class': 'form-control form-input',
+              'id': 'plainPassword_second',
+              'required': true
+              }
               }) }}
               <span class="input-group-text" onclick="togglePassword('plainPassword_second', 'toggleIconSecond')">
                 <i class="bi bi-eye" id="toggleIconSecond"></i>
@@ -150,13 +151,15 @@
         </div>
       </div>
 
-      <!-- Panel Derecho -->
-      <div class="col-md-6 d-flex flex-column justify-content-center text-start" style="background-color: #fff; padding: 3rem">
+      <div class="col-md-6 d-flex flex-column justify-content-center text-start"
+        style="background-color: #fff; padding: 3rem">
         <h1 style="font-size: 2.5rem; font-weight: 900; font-family: 'Poppins', sans-serif; color: #000; margin: 0;">
           Sécurisez votre compte !
         </h1>
-        <p class="mt-3" style="color: #555; font-size: 1rem; max-width: 450px; text-align: left; font-family: 'Poppins', sans-serif; margin: 0;">
-          Choisissez un mot de passe fort pour protéger votre compte. Veillez à ne pas partager vos informations avec d'autres personnes.
+        <p class="mt-3"
+          style="color: #555; font-size: 1rem; max-width: 450px; text-align: left; font-family: 'Poppins', sans-serif; margin: 0;">
+          Choisissez un mot de passe fort pour protéger votre compte. Veillez à ne pas partager vos informations avec
+          d'autres personnes.
         </p>
       </div>
     </div>
@@ -164,19 +167,19 @@
 </div>
 
 <script>
-function togglePassword(fieldId, iconId) {
-  let passwordInput = document.getElementById(fieldId);
-  let toggleIcon = document.getElementById(iconId);
+  function togglePassword(fieldId, iconId) {
+    let passwordInput = document.getElementById(fieldId);
+    let toggleIcon = document.getElementById(iconId);
 
-  if (passwordInput.type === 'password') {
-    passwordInput.type = 'text';
-    toggleIcon.classList.remove('bi-eye');
-    toggleIcon.classList.add('bi-eye-slash');
-  } else {
-    passwordInput.type = 'password';
-    toggleIcon.classList.remove('bi-eye-slash');
-    toggleIcon.classList.add('bi-eye');
+    if (passwordInput.type === 'password') {
+      passwordInput.type = 'text';
+      toggleIcon.classList.remove('bi-eye');
+      toggleIcon.classList.add('bi-eye-slash');
+    } else {
+      passwordInput.type = 'password';
+      toggleIcon.classList.remove('bi-eye-slash');
+      toggleIcon.classList.add('bi-eye');
+    }
   }
-}
 </script>
 {% endblock %}
