@@ -21,7 +21,8 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 fixed-top" style="height: 70px; z-index: 1050;">
     <div class="container-fluid d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <button class="btn me-3" id="sidebarToggle">
+            <!-- Se agrega d-md-none para ocultar el botón en PC -->
+            <button class="btn me-3 d-md-none" id="sidebarToggle">
                 <i class="bi bi-list"></i>
             </button>
             <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
