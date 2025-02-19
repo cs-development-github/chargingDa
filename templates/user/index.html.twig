@@ -3,46 +3,162 @@
 {% block title %}Liste des Utilisateurs{% endblock %}
 
 {% block body %}
-    <div class="container mt-4">
-        <h1 class="mb-4">Liste des Utilisateurs</h1>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prénom</th>
-                    <th>Email</th>
-                    <th>Rôle</th>
-                    <th>Actif</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.lastname }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.roles|join(', ') }}</td>
-                        <td>
-                            {% if user.isActive %}
-                                <span class="badge bg-success">Oui</span>
-                            {% else %}
-                                <span class="badge bg-danger">Non</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            <a href="#" class="btn btn-primary btn-sm">Voir</a>
-                            <a href="#" class="btn btn-warning btn-sm">Modifier</a>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="7" class="text-center">Aucun utilisateur trouvé.</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<style>
+  .container {
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 40px;
+    background-color: #fff;
+  }
+  /* Desktop View Styles */
+  .users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f8f9fa;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 12px;
+    border-radius: 9px;
+    margin-bottom: 20px;
+  }
+  .users-header div {
+    flex: 1;
+    text-align: center;
+  }
+  .user-card {
+    background-color: #fff;
+    border-radius: 9px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  .user-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+  }
+  .user-row > div {
+    flex: 1;
+  }
+  .user-row > div.email {
+    flex: 2;
+  }
+  .btn-gradient {
+    background: linear-gradient(45deg, #ec008c, #f6941f);
+    border: none;
+    border-radius: 9px;
+    color: #fff;
+    font-weight: bold;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .btn-gradient:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  .badge {
+    font-size: 0.85rem;
+    padding: 0.4em 0.8em;
+    border-radius: 4px;
+  }
+  .badge.bg-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+  .badge.bg-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  /* Mobile View Styles */
+  .card-user {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border: none;
+    border-radius: 9px;
+    margin-bottom: 15px;
+  }
+  .card-user .card-body {
+    padding: 15px;
+  }
+  /* Responsive Display Classes */
+  .d-md-block { display: block !important; }
+  .d-md-none { display: none !important; }
+  @media (max-width: 767.98px) {
+    .d-md-block { display: none !important; }
+    .d-md-none { display: block !important; }
+  }
+</style>
+
+<div class="container">
+  <h1 class="mb-4 text-center">Liste des Utilisateurs</h1>
+
+  {# Desktop View: Header Row and User Cards #}
+  <div class="d-none d-md-block">
+    <div class="users-header">
+      <div>ID</div>
+      <div>Nom</div>
+      <div>Prénom</div>
+      <div class="email">Email</div>
+      <div>Rôle</div>
+      <div>Actif</div>
+      <div>Actions</div>
     </div>
+    {% for user in users %}
+      <div class="user-card">
+        <div class="user-row">
+          <div>{{ user.id }}</div>
+          <div>{{ user.name }}</div>
+          <div>{{ user.lastname }}</div>
+          <div class="email">{{ user.email }}</div>
+          <div>{{ user.roles|join(', ') }}</div>
+          <div>
+            {% if user.isActive %}
+              <span class="badge bg-success">Oui</span>
+            {% else %}
+              <span class="badge bg-danger">Non</span>
+            {% endif %}
+          </div>
+          <div>
+            <a href="#" class="btn-gradient btn-sm"><i class="bi bi-eye"></i></a>
+            <a href="#" class="btn-gradient btn-sm"><i class="bi bi-pencil-square"></i></a>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="text-center text-muted">Aucun utilisateur trouvé.</div>
+    {% endfor %}
+  </div>
+
+  {# Mobile View: Each User as a Card #}
+  <div class="d-md-none">
+    <div class="row">
+      {% for user in users %}
+        <div class="col-12">
+          <div class="card card-user">
+            <div class="card-body text-center">
+              <h5 class="card-title">ID: {{ user.id }} - {{ user.name }} {{ user.lastname }}</h5>
+              <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
+              <p class="card-text"><strong>Rôle:</strong> {{ user.roles|join(', ') }}</p>
+              <p class="card-text"><strong>Actif:</strong>
+                {% if user.isActive %}
+                  <span class="badge bg-success">Oui</span>
+                {% else %}
+                  <span class="badge bg-danger">Non</span>
+                {% endif %}
+              </p>
+              <div>
+                <a href="#" class="btn-gradient btn-sm"><i class="bi bi-eye"></i></a>
+                <a href="#" class="btn-gradient btn-sm"><i class="bi bi-pencil-square"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="col-12 text-center">Aucun utilisateur trouvé.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% endblock %}

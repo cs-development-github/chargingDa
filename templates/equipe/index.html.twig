@@ -1,125 +1,148 @@
-{% extends 'base.html.twig' %} {% block title %}Mes Équipes{% endblock %} 
+{% extends 'base.html.twig' %}
+{% block title %}Mes Équipes{% endblock %}
 
 {% block body %}
-<div class="container mt-10" style="margin-top: 100px">
-  <div class="d-flex flex-column align-items-end gap-2 mb-3">
-    <button
-      class="btn btn-sm text-white fw-bold px-3 py-2"
-      style="
-        border-radius: 10px;
-        background: linear-gradient(45deg, #ec008c, #f6941f);
-        border: none;
-      "
-      data-bs-toggle="modal"
-      data-bs-target="#addInstallateurModal"
-    >
+<div class="container my-5" style="margin-top: 100px;">
+  <div class="d-flex flex-wrap gap-2 mb-3 justify-content-end">
+    <button class="btn btn-sm text-white fw-bold px-3 py-2"
+      style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;"
+      data-bs-toggle="modal" data-bs-target="#addInstallateurModal">
       AJOUTER UN INSTALLATEUR <i class="bi bi-plus"></i>
     </button>
-    <button
-      class="btn btn-sm text-white fw-bold px-3 py-2"
-      style="
-        border-radius: 10px;
-        background: linear-gradient(45deg, #ec008c, #f6941f);
-        border: none;
-      "
-      data-bs-toggle="modal"
-      data-bs-target="#addSimModal"
-    >
+    <button class="btn btn-sm text-white fw-bold px-3 py-2"
+      style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;"
+      data-bs-toggle="modal" data-bs-target="#addSimModal">
       AJOUTER UNE CARTE SIM <i class="bi bi-plus"></i>
+    </button>
+    <button class="btn btn-sm text-white fw-bold px-3 py-2"
+      style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;"
+      data-bs-toggle="modal" data-bs-target="#addEquipeModal">
+      AJOUTER UNE ÉQUIPE <i class="bi bi-plus"></i>
     </button>
   </div>
 
-  <div class="d-flex align-items-center mb-3">
+  <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
     <h3 class="fw-bold mb-0 me-3">MES ÉQUIPES</h3>
-    <div class="d-flex align-items-center">
-      <input
-        type="text"
-        class="form-control rounded-pill"
-        placeholder="Rechercher"
-        style="max-width: 200px; border: 1px solid #ddd"
-      />
-      <button
-        class="btn btn-sm"
-        style="margin-left: -40px; background: none; border: none"
-      >
+    <div class="d-flex align-items-center mt-2 mt-md-0">
+      <input type="text" class="form-control rounded-pill" placeholder="Rechercher"
+        style="max-width: 200px; border: 1px solid #ddd" />
+      <button class="btn btn-sm" style="margin-left: -40px; background: none; border: none">
         <i class="bi bi-search" style="color: #ec008c"></i>
       </button>
     </div>
   </div>
 
-  <div class="row">
+  <div class="row d-none d-md-flex">
     <div class="col-md-8">
-      <div
-        class="row text-center mb-3"
-        style="font-weight: bold; color: #6c757d"
-      >
+      <div class="row text-center mb-3" style="font-weight: bold; color: #6c757d">
         <div class="col-3">DÉNOMINATION</div>
         <div class="col-3">CHEF D’ÉQUIPE</div>
         <div class="col-3">INSTALLATEUR</div>
-        <div class="col-3">NOMBRE DE SIM</div>
+        <div class="col-2">NOMBRE DE SIM</div>
+        <div class="col-1 text-end">ACTION</div>
       </div>
 
       {% for team in teams %}
-      <div class="card mb-3 p-3 d-flex align-items-center" style="border-radius: 15px; box-shadow: inset 0 0 8px rgba(0,0,0,0.07); min-height: 80px;">
-          <div class="row w-100 text-center align-items-center">
-              <div class="col-3">
-                  <span class="fw-bold text-dark">{{ team.name }}</span>
-              </div>
-              <div class="col-3">
-                  {% set chef = null %}
-                  {% for installateur in teamInstallateurs[team.id] %}
-                      {% if installateur.isChefEffectif %}
-                          {% set chef = installateur %} 
-                      {% endif %}
-                  {% endfor %}
-                  {% if chef %}
-                      <span class="fw-bold text-dark">{{ chef.name }} {{ chef.lastName }}</span>
-                  {% else %}
-                      <span class="text-muted">Aucun</span>
-                  {% endif %}
-              </div>
-              <div class="col-3">
-                  <span class="fw-bold text-dark">{{ teamInstallateurs[team.id]|length }}</span>
-              </div>
-              <div class="col-2">
-                  <span class="fw-bold text-dark">{{ teamSims[team.id] is defined ? teamSims[team.id] : 0 }}</span>
-              </div>
-              <div class="col-1 text-end">
-                  <a href="{{ path('app_equipes_show', {'slug': team.slug}) }}" class="text-decoration-none">
-                      <i class="bi bi-eye fs-5 text-primary"></i>
-                  </a>
-              </div>
+      <div class="card mb-3 p-3 d-flex align-items-center"
+        style="border-radius: 15px; box-shadow: inset 0 0 8px rgba(0,0,0,0.07); min-height: 80px;">
+        <div class="row w-100 text-center align-items-center">
+          <div class="col-3">
+            <span class="fw-bold text-dark">{{ team.name }}</span>
           </div>
+          <div class="col-3">
+            {% set chef = null %}
+            {% for installateur in teamInstallateurs[team.id] %}
+            {% if installateur.isChefEffectif %}
+            {% set chef = installateur %}
+            {% endif %}
+            {% endfor %}
+            {% if chef %}
+            <span class="fw-bold text-dark">{{ chef.name }} {{ chef.lastName }}</span>
+            {% else %}
+            <span class="text-muted">Aucun</span>
+            {% endif %}
+          </div>
+          <div class="col-3">
+            <span class="fw-bold text-dark">{{ teamInstallateurs[team.id]|length }}</span>
+          </div>
+          <div class="col-2">
+            <span class="fw-bold text-dark">{{ teamSims[team.id] is defined ? teamSims[team.id] : 0 }}</span>
+          </div>
+          <div class="col-1 text-end">
+            <a href="{{ path('app_equipes_show', {'slug': team.slug}) }}" class="text-decoration-none">
+              <i class="bi bi-eye fs-5 text-primary"></i>
+            </a>
+          </div>
+        </div>
       </div>
-  {% else %}
+      {% else %}
       <p class="text-muted text-center">Aucune équipe enregistrée.</p>
-  {% endfor %}
-  
+      {% endfor %}
     </div>
 
     <div class="col-md-4">
-      <div
-        class="card p-3 border-0"
-        style="border-radius: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3)"
-      >
+      <div class="card p-3 border-0" style="border-radius: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3)">
         <div class="card-body text-center">
-          <p class="card-text"> {{ totalTeams}} </p>
+          <p class="card-text">{{ totalTeams }}</p>
         </div>
         <div class="card-footer bg-transparent border-0">
-          <button
-            class="btn btn-sm text-white fw-bold px-3 py-2"
-            style="
-              border-radius: 10px;
-              background: linear-gradient(45deg, #ec008c, #f6941f);
-              border: none;
-            "
-            data-bs-toggle="modal"
-            data-bs-target="#addEquipeModal"
-          >
+          <button class="btn btn-sm text-white fw-bold px-3 py-2"
+            style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;"
+            data-bs-toggle="modal" data-bs-target="#addEquipeModal">
             AJOUTER UNE ÉQUIPE <i class="bi bi-plus"></i>
           </button>
         </div>
+      </div>
+    </div>
+  </div>
 
+  <div class="d-block d-md-none">
+    {% for team in teams %}
+    <div class="card mb-3" style="border-radius: 15px; box-shadow: 0 0 8px rgba(0,0,0,0.07);">
+      <div class="card-body">
+        <h5 class="card-title fw-bold text-dark">{{ team.name }}</h5>
+        <p class="card-text mb-1">
+          <strong>Chef d’équipe:</strong>
+          {% set chef = null %}
+          {% for installateur in teamInstallateurs[team.id] %}
+          {% if installateur.isChefEffectif %}
+          {% set chef = installateur %}
+          {% endif %}
+          {% endfor %}
+          {% if chef %}
+          {{ chef.name }} {{ chef.lastName }}
+          {% else %}
+          <span class="text-muted">Aucun</span>
+          {% endif %}
+        </p>
+        <p class="card-text mb-1">
+          <strong>Installateur:</strong>
+          <span class="fw-bold text-dark">{{ teamInstallateurs[team.id]|length }}</span>
+        </p>
+        <p class="card-text mb-2">
+          <strong>Nombre de SIM:</strong>
+          <span class="fw-bold text-dark">{{ teamSims[team.id] is defined ? teamSims[team.id] : 0 }}</span>
+        </p>
+        <a href="{{ path('app_equipes_show', {'slug': team.slug}) }}" class="btn text-white fw-bold px-3 py-2"
+          style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;">
+          Voir <i class="bi bi-eye"></i>
+        </a>
+      </div>
+    </div>
+    {% else %}
+    <p class="text-muted text-center">Aucune équipe enregistrée.</p>
+    {% endfor %}
+
+    <div class="card p-3 border-0" style="border-radius: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3)">
+      <div class="card-body text-center">
+        <p class="card-text">{{ totalTeams }}</p>
+      </div>
+      <div class="card-footer bg-transparent border-0">
+        <button class="btn btn-sm text-white fw-bold px-3 py-2"
+          style="border-radius: 10px; background: linear-gradient(45deg, #ec008c, #f6941f); border: none;"
+          data-bs-toggle="modal" data-bs-target="#addEquipeModal">
+          AJOUTER UNE ÉQUIPE <i class="bi bi-plus"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -128,5 +151,4 @@
 {% include 'modals/add_team.html.twig' %}
 {% include 'modals/add_installator.html.twig' %}
 {% include 'modals/add_sim.html.twig' %}
-
 {% endblock %}

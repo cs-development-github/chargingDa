@@ -3,57 +3,101 @@
 {% block title %}Détails de la borne - {{ station.model }}{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Détails de la borne</h2>
+<style>
+    .station-card {
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+        background-color: #fff;
+        padding: 20px;
+        margin-top: 90px;
+    }
 
-    <table class="table table-bordered">
-        <tbody>
-            <tr>
-                <th>Modèle</th>
-                <td>{{ station.model }}</td>
-            </tr>
-            <tr>
-                <th>Fabricant</th>
-                <td>{{ station.manufacturer.name }}</td>
-            </tr>
-            <tr>
-                <th>PDC</th>
-                <td>{{ station.connectors }}</td>
-            </tr>
-            <tr>
-                <th>Logo Fabricant</th>
-                <td>
-                    {% if station.manufacturer.image %}
-                        <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo" width="100">
-                    {% else %}
-                        <span class="text-muted">Non disponible</span>
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <th>Photo</th>
-                <td>
-                    {% if station.image %}
-                        <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image Borne" width="100">
-                    {% else %}
-                        <span class="text-muted">Non disponible</span>
-                    {% endif %}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    .station-card h4 {
+        font-weight: bold;
+        text-transform: uppercase;
+    }
 
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
-        <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
-            Modifier la borne
-        </button>
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStationModal">
-            Supprimer la borne
-        </button>
-    {% endif %}
+    .modal-content {
+        border-radius: 12px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 30px;
+        border: none;
+    }
+
+    .modal-header {
+        background: linear-gradient(to right, #ff4081, #ff8c00);
+        color: white;
+        border-top-left-radius: 12px;
+        border-top-right-radius: 12px;
+    }
+
+    .btn-close {
+        filter: invert(1);
+    }
+
+    .btn-save {
+        background: linear-gradient(to right, #ff4081, #ff8c00);
+        border-radius: 10px;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+    }
+</style>
+
+<div class="container">
+    <div class="station-card">
+        <h4 class="text-center mb-4">Détails de la borne</h4>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <p class="fw-bold mb-1">Modèle</p>
+                <p class="text-dark">{{ station.model }}</p>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <p class="fw-bold mb-1">Fabricant</p>
+                <p class="text-dark">
+                    {{ station.manufacturer.name }}
+                </p>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <p class="fw-bold mb-1">PDC</p>
+                <p class="text-dark">{{ station.connectors }}</p>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <p class="fw-bold mb-1">Logo Fabricant</p>
+                {% if station.manufacturer.image %}
+                <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo Fabricant" width="120"
+                    style="border-radius: 8px;">
+                {% else %}
+                <span class="text-muted">Non disponible</span>
+                {% endif %}
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <p class="fw-bold mb-1">Photo</p>
+                {% if station.image %}
+                <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image Borne" width="120"
+                    style="border-radius: 8px;">
+                {% else %}
+                <span class="text-muted">Non disponible</span>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="d-flex justify-content-center gap-3 mt-4">
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
+                Modifier la borne
+            </button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStationModal">
+                Supprimer la borne
+            </button>
+        </div>
+        {% endif %}
+    </div>
 </div>
 
-<!-- MODAL D'ÉDITION -->
 {% if is_granted('ROLE_SUPER_ADMIN') %}
 <div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -63,7 +107,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
-                <form action="{{ path('charging_station_edit', { slug: station.slug }) }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ path('charging_station_edit', { slug: station.slug }) }}" method="POST"
+                    enctype="multipart/form-data">
                     {{ form_start(editForm) }}
 
                     <div class="mb-3">
@@ -87,7 +132,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-success">Enregistrer les modifications</button>
+                        <button type="submit" class="btn btn-save">Enregistrer les modifications</button>
                     </div>
 
                     {{ form_end(editForm) }}
@@ -96,11 +141,9 @@
         </div>
     </div>
 </div>
-{% endif %}
 
-<!-- MODAL DE SUPPRESSION -->
-{% if is_granted('ROLE_SUPER_ADMIN') %}
-<div class="modal fade" id="deleteStationModal" tabindex="-1" aria-labelledby="deleteStationModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteStationModal" tabindex="-1" aria-labelledby="deleteStationModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
@@ -120,5 +163,4 @@
     </div>
 </div>
 {% endif %}
-
 {% endblock %}
