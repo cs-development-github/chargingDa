@@ -1,68 +1,63 @@
-<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3" style="
-    height: 70px;
-    z-index: 1050;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    left: 0;
-">
-    <div class="d-flex align-items-center">
-        <button class="navbar-toggler me-3" id="sidebarToggle">
-            <i class="bi bi-list"></i> 
-        </button>
+<style>
+    #sidebarToggle {
+        background: linear-gradient(to right, #ff4081, #ff8c00);
+        border: none;
+        color: #fff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    #sidebarToggle:hover {
+        opacity: 0.9;
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+</style>
 
-        <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo" class="img-fluid me-2"
-            style="height: 50px; border-radius: 10px;">
-        <h4 class="fw-bold mb-0" style="
-                background: linear-gradient(to right, #ff4081, #ff8c00);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-            ">
-            PARTENAIRE
-        </h4>
-    </div>
-
-    <form class="d-flex mx-auto">
-        <input class="form-control border-0 shadow-sm" type="search" placeholder="Rechercher" style="
-            width: 300px;
-            border-top-left-radius: 30px;
-            border-bottom-left-radius: 30px;
-            border: 2px solid transparent;
-            background: linear-gradient(white, white) padding-box,
-                        linear-gradient(to right, #ff4081, #ff8c00) border-box;
-        ">
-        <button class="btn text-white px-3" type="submit" style="
-            background: linear-gradient(to right, #ff4081, #ff8c00);
-            border-top-right-radius: 30px;
-            border-bottom-right-radius: 30px;
-        ">
-            <i class="bi bi-search"></i>
-        </button>
-    </form>
-
-    <a href="{{ path('app_account') }}" class="d-block text-decoration-none text-dark">
+<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 fixed-top" style="height: 70px; z-index: 1050;">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <div class="position-relative">
-                <img src="{{ asset('/build/images/avatar.png') }}" alt="User" class="rounded-circle"
-                    style="width: 45px; height: 45px;">
-            </div>
-            <div class="ms-2">
+            <button class="btn me-3" id="sidebarToggle">
+                <i class="bi bi-list"></i>
+            </button>
+            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
+                <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo" class="img-fluid me-2 d-none d-md-block"
+                    style="height: 50px; border-radius: 10px;">
+                <img src="{{ asset('build/images/logosmall.png') }}" alt="Logo" class="img-fluid me-2 d-block d-md-none"
+                    style="height: 40px; border-radius: 10px;">
+                <h4 class="fw-bold mb-0 d-none d-md-block" style="
+                  background: linear-gradient(to right, #ff4081, #ff8c00);
+                  -webkit-background-clip: text;
+                  -webkit-text-fill-color: transparent;
+                ">
+                    PARTENAIRE
+                </h4>
+            </a>
+        </div>
+
+        <a href="{{ path('app_account') }}" class="d-flex align-items-center text-decoration-none">
+            <img src="{{ asset('/build/images/avatar.png') }}" alt="User" class="rounded-circle"
+                style="width: 45px; height: 45px;">
+            <div class="ms-2 d-none d-lg-block text-black">
                 <strong>{{ app.user.name }} {{ app.user.lastname }}</strong><br>
                 <span class="text-danger fw-bold">ADMIN</span>
             </div>
-        </div>
-    </a>
+        </a>
+    </div>
 </nav>
-
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const sidebar = document.querySelector(".sidebar");
         const toggleButton = document.getElementById("sidebarToggle");
-    
-        toggleButton.addEventListener("click", function () {
-            sidebar.classList.toggle("collapsed");
-        });
+        if (toggleButton && sidebar) {
+            toggleButton.addEventListener("click", function () {
+                sidebar.classList.toggle("collapsed");
+            });
+        }
     });
-    </script>
-    
+</script>
