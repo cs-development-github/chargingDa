@@ -17,11 +17,6 @@
     }
 </style>
 <div class="container mt-10" style="margin-top: 100px">
-    <div class="d-flex justify-content-end mb-3">
-        <button class="btn text-white fw-bold px-4 py-2 me-2 btn-custom">
-            AJOUTER UN CLIENT <i class="bi bi-plus"></i>
-        </button>
-    </div>
 
     <div class="d-flex align-items-center mb-3">
         <h3 class="fw-bold mb-0 me-3">MES CLIENTS</h3>
@@ -49,7 +44,7 @@
                     <div class="row align-items-center text-center">
                         <div class="col-2 fw-bold text-dark">{{ client.societyName }}</div>
                         <div class="col-2 fw-bold text-dark">AC 230300</div>
-                        <div class="col-2 fw-bold text-dark">Paul le roublard</div>
+                        <div class="col-2 fw-bold text-dark">{{ client.createdBy.name }} {{ client.createdBy.lastname }}  </div>
                         <div class="col-2 d-flex justify-content-center gap-3">
                             <i class="bi bi-eye-fill" style="font-size: 1.2rem; cursor: pointer;"></i>
                             <i class="bi bi-download" style="font-size: 1.2rem; cursor: pointer;"></i>

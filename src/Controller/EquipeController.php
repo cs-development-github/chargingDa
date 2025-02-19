@@ -93,13 +93,12 @@ final class EquipeController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            // Vérification de l'utilisateur connecté
             $user = $security->getUser();
             if (!$user) {
                 throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter une carte SIM.');
             }
     
-            // 🔥 Récupération de l'équipe depuis la requête
+            $team = null; // Déclaration explicite de $team
             $teamId = $request->request->all('sim')['team'] ?? null;
             if ($teamId) {
                 $team = $entityManager->getRepository(Team::class)->find($teamId);
@@ -116,7 +115,7 @@ final class EquipeController extends AbstractController
     
             $this->addFlash('success', 'Carte SIM ajoutée avec succès !');
     
-            return $team 
+            return $team !== null 
                 ? $this->redirectToRoute('app_equipes_show', ['slug' => $team->getSlug()])
                 : $this->redirectToRoute('app_equipes');
         }

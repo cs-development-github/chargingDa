@@ -49,12 +49,44 @@
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-12">
-                                {% for i in 1..10 %}
+                                {% for i in 1..9 %}
                                     <img src="{{ asset('build/images/Documentation/Autel_' ~ i ~ '.png') }}" 
-                                         class="img-fluid w-100 d-block" 
-                                         alt="Autel {{ i }}">
+                                        class="img-fluid w-100 d-block" 
+                                        alt="Autel {{ i }}">
+                            
+                                    {% if i == 3 %}
+                                        <!-- Boutons de téléchargement après la troisième image -->
+                                        <div class="d-flex justify-content-center gap-3 mt-3">
+                                            <a href="https://play.google.com/store/apps/details?id=com.autel.charge&hl=fr" 
+                                               class="btn btn-success d-flex align-items-center" 
+                                               target="_blank">
+                                                📱 Télécharger sur Google Play
+                                            </a>
+                                            <a href="https://apps.apple.com/tr/app/autel-charge/id1578454464" 
+                                               class="btn btn-secondary d-flex align-items-center" 
+                                               target="_blank">
+                                                🍏 Télécharger sur l'App Store
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                            
+                                    {% if i == 8 %}
+                                        <div class="d-flex justify-content-center">
+                                            <button class="btn btn-primary mt-2" onclick="copyToClipboard()">Copier la clé OCPP</button>
+                                        </div>
+                                    {% endif %}
                                 {% endfor %}
+                            
+                                <script>
+                                    function copyToClipboard() {
+                                        navigator.clipboard.writeText("ws://charge-angels.com:80/OCPP16/6290a6cb64eeeee47dd59abe/662a71bfba21fea8c9b6b288/")
+                                        .catch(function(err) {
+                                            console.error("Erreur lors de la copie : ", err);
+                                        });
+                                    }
+                                </script>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
