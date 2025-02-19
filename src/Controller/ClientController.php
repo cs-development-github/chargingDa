@@ -32,6 +32,8 @@ final class ClientController extends AbstractController
         }
     
         $clients = $em->getRepository(Client::class)->findByUserOrTeam($user);
+
+        // dd($clients);
     
         return $this->render('client/index.html.twig', [
             'clients' => $clients,
