@@ -1,9 +1,100 @@
-<h1>Hi!</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réinitialisation de mot de passe</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
 
-<p>To reset your password, please visit the following link</p>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-<a href="{{ url('app_reset_password', {token: resetToken.token}) }}">{{ url('app_reset_password', {token: resetToken.token}) }}</a>
+        .header {
+            background-color: #ff0080;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
 
-<p>This link will expire in {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</p>
+        .header img {
+            height: 40px;
+        }
 
-<p>Cheers!</p>
+        .content {
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            color: #333333;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #ff0080;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .footer {
+            background-color: #2e2e3a;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ff8000;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:logo_lodmi_mail" alt="LODMI PARTENAIRE">
+            <h2>Réinitialisation de mot de passe</h2>
+        </div>
+        <div class="content">
+            <h1>Bonjour !</h1>
+            <p>Pour réinitialiser votre mot de passe, veuillez cliquer sur le lien ci-dessous :</p>
+            <p>
+                <a class="button" href="{{ url('app_reset_password', {token: resetToken.token}) }}">
+                    Réinitialiser mon mot de passe
+                </a>
+            </p>
+            <p>Ce lien expirera dans 
+                {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+            </p>
+            <p>Merci !</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 LODMI. Tous droits réservés.</p>
+            <p><a href="https://votre-site.com">Visitez notre site</a></p>
+        </div>
+    </div>
+</body>
+</html>
