@@ -169,4 +169,105 @@
         </div>
     </div>
 </div>
+
+
+<button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal"
+    style="background: linear-gradient(45deg, #ec008c, #f6941f); border: none; color: #fff;">
+    Ouvrir
+</button>
+
+<div class="modal fade" id="progressModal" tabindex="-1" aria-labelledby="progressModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: linear-gradient(45deg, #ec008c, #f6941f); color: #fff;">
+                <h5 class="modal-title" id="progressModalLabel">Modal Test</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="progress mb-3">
+                    <div id="progressBar" class="progress-bar bg-success" role="progressbar" style="width: 33%;"
+                        aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">Test 1</div>
+                </div>
+                <form id="stepForm">
+                    <div class="form-step" id="step1">
+                        <div class="mb-3">
+                            <label for="campo1" class="form-label">Test 1</label>
+                            <input type="text" class="form-control" id="campo1" placeholder="Test text">
+                        </div>
+                    </div>
+                    <div class="form-step d-none" id="step2">
+                        <div class="mb-3">
+                            <label for="campo2" class="form-label">Test 2</label>
+                            <input type="text" class="form-control" id="campo2" placeholder="Test text">
+                        </div>
+                    </div>
+                    <div class="form-step d-none" id="step3">
+                        <div class="mb-3">
+                            <label for="campo3" class="form-label">Test 3</label>
+                            <input type="text" class="form-control" id="campo3" placeholder="Test text">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédente</button>
+                <button type="button" id="nextBtn" class="btn"
+                    style="background: linear-gradient(45deg, #ec008c, #f6941f); border: none; color: #fff;">Suivant</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 3;
+
+    function updateStep() {
+        document.querySelectorAll('.form-step').forEach(step => step.classList.add('d-none'));
+        document.getElementById('step' + currentStep).classList.remove('d-none');
+
+        const progress = (currentStep / totalSteps) * 100;
+        const progressBar = document.getElementById('progressBar');
+        progressBar.style.width = progress + '%';
+        progressBar.setAttribute('aria-valuenow', progress);
+        progressBar.textContent = "Progrès " + currentStep;
+
+        document.getElementById('prevBtn').classList.toggle('d-none', currentStep === 1);
+        document.getElementById('nextBtn').textContent = (currentStep === totalSteps) ? "Fin" : "Suivant";
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateStep();
+        } else {
+            let modalElement = document.getElementById('progressModal');
+            let modalInstance = bootstrap.Modal.getInstance(modalElement);
+            if (modalInstance) {
+                modalInstance.hide();
+            }
+
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+
+            currentStep = 1;
+            updateStep();
+        }
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStep();
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        updateStep();
+
+        let modalElement = document.getElementById('progressModal');
+        new bootstrap.Modal(modalElement, { backdrop: 'static', keyboard: false });
+    });
+</script>
+
+
 {% endblock %}
