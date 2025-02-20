@@ -23,52 +23,60 @@
           </div>
         </div>
         <form method="post" style="max-width: 400px; margin: 0 auto">
-          {% if error is not empty %}
-          <div class="alert alert-danger">
-            {{ error|raw }}
+          {{ form_start(registrationForm) }}
+      
+          <div class="mb-3">
+              <label for="inputEmail" class="form-label">Adresse email</label>
+              {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' is-invalid' : ''), 'id': 'inputEmail', 'required': true} }) }}
+              {{ form_errors(registrationForm.email, {'attr': {'class': 'invalid-feedback'}}) }}
           </div>
-          {% endif %}
-        {{ form_start(registrationForm) }}
-            <div class="mb-3">
-            <label for="inputEmail" class="form-label">Adresse email</label>
-            {{ form_widget(registrationForm.email, { 'attr': {'class': 'form-control form-input', 'id': 'inputEmail', 'required': true, 'autofocus': true} }) }}
-            </div>
-            <div class="mb-3">
-            <label for="inputSocietyName" class="form-label">Nom de l'entreprise</label>
-            {{ form_widget(registrationForm.societyName, { 'attr': {'class': 'form-control form-input', 'id': 'inputSocietyName', 'required': true, 'autofocus': true} }) }}
-            </div>
-            <div class="mb-3">
-            <label for="inputSiret" class="form-label">Numéro SIRET</label>
-            {{ form_widget(registrationForm.siret, { 'attr': {'class': 'form-control form-input', 'id': 'inputSiret', 'required': true} }) }}
-            </div>
-            <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="inputName" class="form-label">Prénom</label>
-                {{ form_widget(registrationForm.name, { 'attr': {'class': 'form-control form-input', 'id': 'inputName', 'required': true} }) }}
-            </div>
-            <div class="col-md-6">
-                <label for="inputLastname" class="form-label">Nom</label>
-                {{ form_widget(registrationForm.lastname, { 'attr': {'class': 'form-control form-input', 'id': 'inputLastname', 'required': true} }) }}
-            </div>
-            </div>
-            <div class="mb-3">
-                <label for="inputPassword" class="form-label">Mot de passe</label>
-                {{ form_widget(registrationForm.password.first, { 'attr': {'class': 'form-control form-input', 'id': 'inputPassword', 'required': true} }) }}
-            </div>
-            <div class="mb-3">
-                <label for="inputPasswordConfirm" class="form-label">Confirmer le mot de passe</label>
-                {{ form_widget(registrationForm.password.second, { 'attr': {'class': 'form-control form-input', 'id': 'inputPasswordConfirm', 'required': true} }) }}
-            </div>
-            <div class="mb-3 d-flex align-items-center">
-                {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input me-2'} }) }}
-                <label class="form-check-label" for="agreeTerms">J'accepte les conditions générales</label>
-            </div>
-            <button type="submit" class="btn form-button">S'INSCRIRE</button>
-        {{ form_end(registrationForm) }}
-            <div class="mt-3 text-center">
-                <p class="mb-0">Vous avez un compte ? <a href="{{ path('app_login') }}" class="text-primary">Se connecter</a></p>
-            </div>
-        </form>
+      
+          <div class="mb-3">
+              <label for="inputSocietyName" class="form-label">Nom de l'entreprise</label>
+              {{ form_widget(registrationForm.societyName, { 'attr': {'class': 'form-control' ~ (registrationForm.societyName.vars.errors|length > 0 ? ' is-invalid' : ''), 'id': 'inputSocietyName', 'required': true} }) }}
+              {{ form_errors(registrationForm.societyName, {'attr': {'class': 'invalid-feedback'}}) }}
+          </div>
+      
+          <div class="row mb-3">
+              <div class="col-md-6">
+                  <label for="inputName" class="form-label">Prénom</label>
+                  {{ form_widget(registrationForm.name, { 'attr': {'class': 'form-control' ~ (registrationForm.name.vars.errors|length > 0 ? ' is-invalid' : ''), 'id': 'inputName', 'required': true} }) }}
+                  {{ form_errors(registrationForm.name, {'attr': {'class': 'invalid-feedback'}}) }}
+              </div>
+              <div class="col-md-6">
+                  <label for="inputLastname" class="form-label">Nom</label>
+                  {{ form_widget(registrationForm.lastname, { 'attr': {'class': 'form-control' ~ (registrationForm.lastname.vars.errors|length > 0 ? ' is-invalid' : ''), 'id': 'inputLastname', 'required': true} }) }}
+                  {{ form_errors(registrationForm.lastname, {'attr': {'class': 'invalid-feedback'}}) }}
+              </div>
+          </div>
+      
+          <div class="mb-3">
+              <label for="inputPassword" class="form-label">Mot de passe</label>
+              {{ form_widget(registrationForm.password.first, { 'attr': {'class': 'form-control' ~ (registrationForm.password.first.vars.errors|length > 0 ? ' is-invalid' : ''), 'id': 'inputPassword', 'required': true} }) }}
+              {{ form_errors(registrationForm.password.first, {'attr': {'class': 'invalid-feedback'}}) }}
+          </div>
+      
+          <div class="mb-3">
+              <label for="inputPasswordConfirm" class="form-label">Confirmer le mot de passe</label>
+              {{ form_widget(registrationForm.password.second, { 'attr': {'class': 'form-control' ~ (registrationForm.password.second.vars.errors|length > 0 ? ' is-invalid' : ''), 'id': 'inputPasswordConfirm', 'required': true} }) }}
+              {{ form_errors(registrationForm.password.second, {'attr': {'class': 'invalid-feedback'}}) }}
+          </div>
+      
+          <div class="mb-3 d-flex align-items-center">
+              {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input me-2' ~ (registrationForm.agreeTerms.vars.errors|length > 0 ? ' is-invalid' : '')} }) }}
+              <label class="form-check-label" for="agreeTerms">J'accepte les conditions générales</label>
+              {{ form_errors(registrationForm.agreeTerms, {'attr': {'class': 'invalid-feedback'}}) }}
+          </div>
+      
+          <button type="submit" class="btn form-button">S'INSCRIRE</button>
+      
+          {{ form_end(registrationForm) }}
+      
+          <div class="mt-3 text-center">
+              <p class="mb-0">Vous avez un compte ? <a href="{{ path('app_login') }}" class="text-primary">Se connecter</a></p>
+          </div>
+      </form>
+      
       </div>
       <div class="col-md-6 d-flex flex-column justify-content-center text-start" style="background-color: #fff; padding: 3rem">
         <h1 style="font-size: 2.5rem; font-weight: 900; font-family: 'Poppins', sans-serif; color: #000; margin: 0;">
