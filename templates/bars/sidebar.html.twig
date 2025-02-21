@@ -88,6 +88,17 @@
     .sidebar .logout:hover {
         transform: scale(1.03);
     }
+
+    .btn-add-client:hover {
+        background: linear-gradient(to right, #ff5c8a, #ffa733);
+        transform: scale(1.05);
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    }
+    .btn-profile:hover {
+        background: linear-gradient(to right, #3b8aff, #00e1ff);
+        transform: scale(1.05);
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    }
 </style>
 
 <div class="sidebar">
@@ -104,10 +115,17 @@
             <i class="bi bi-collection-fill me-2"></i> <span>DOC. BORNE</span>
         </a>
         <a href="{{ path('app_add_client') }}"
-            class="btn text-white fw-bold d-flex align-items-center justify-content-between px-3 py-2 rounded-3 mb-3"
-            style="background: linear-gradient(to right, #ff4081, #ff8c00);">
-            <span class="text-truncate">AJOUTER UN CLIENT</span> <i class="bi bi-plus-lg"></i>
+            class="btn text-white fw-bold d-flex align-items-center justify-content-between px-4 py-2 rounded-3 shadow-sm mb-3 btn-add-client"
+            style="background: linear-gradient(to right, #ff4081, #ff8c00);
+           border: none;
+           font-size: 14px;
+           white-space: nowrap;
+           transition: all 0.3s ease-in-out;
+           box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);">
+            <i class="bi bi-plus-lg me-2"></i>
+            <span class="text-truncate">AJOUTER UN CLIENT</span>
         </a>
+
         {% if is_granted('ROLE_ADMIN') %}
         <a href="{{ path('app_user') }}"
             class="btn btn-light mb-4 d-flex align-items-center px-3 py-2 rounded-3 text-truncate"
@@ -117,12 +135,21 @@
         {% endif %}
     </div>
 
-    <a href="{{ path('app_account') }}" class="btn profile d-flex align-items-center px-3 py-2 rounded-3 mb-3">
+    <a href="{{ path('app_account') }}"
+        class="btn profile d-flex align-items-center px-3 py-2 rounded-3 mb-3 btn-profile" style="border: 1px solid rgba(0, 0, 0, 0.1);
+           background: linear-gradient(to right, #4facfe, #00f2fe);
+           color: #fff;
+           font-size: 14px;
+           transition: all 0.3s ease-in-out;
+           box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);">
         <i class="bi bi-person-circle me-2"></i> <span class="text-truncate">Mon Profil</span>
     </a>
 
-    <a href="{{ path('app_logout') }}" class="btn logout text-white fw-bold px-3 py-2 rounded-3"
-        style="background: linear-gradient(to right, #ff4081, #ff8c00);">
+    <a href="{{ path('app_logout') }}" class="btn logout text-white fw-bold px-3 py-2 rounded-3" style="background: linear-gradient(to right, #ff4081, #ff8c00);
+           border: none;
+           font-size: 14px;
+           box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);">
         <i class="bi bi-box-arrow-right me-2"></i> DÉCONNEXION
     </a>
+
 </div>
