@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Badge;
 use App\Entity\Client;
 use App\Entity\Intervention;
 use App\Form\ClientContractFormType;
@@ -120,25 +121,33 @@ final class ClientController extends AbstractController
     public function completeClientInfo(Request $request, EntityManagerInterface $em): Response
     {
         $token = $request->query->get('token');
-
+    
         if (!$token) {
             throw $this->createAccessDeniedException('Token manquant.');
         }
-
+    
+        // Récupération du client via le token
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-
+    
         if (!$client) {
             throw $this->createNotFoundException('Lien invalide ou client introuvable.');
         }
-
-        $form = $this->createForm(ClientContractFormType::class, $client, [
-            'action' => $this->generateUrl('client_update_info'),
-            'method' => 'POST'
-        ]);
-
+    
+        // Récupération des bornes associées au client via la table Intervention
+        $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
+    
+        $chargingStations = [];
+        foreach ($interventions as $intervention) {
+            $chargingStations[] = $intervention->getChargingStation();
+        }
+    
+        // Création du formulaire ClientContractFormType
+        $form = $this->createForm(ClientContractFormType::class, $client);
+    
         return $this->render('client/complete_form.html.twig', [
             'form' => $form->createView(),
-            'client' => $client
+            'client' => $client,
+            'chargingStations' => $chargingStations, // 🔥 On passe les bornes au template
         ]);
     }
 

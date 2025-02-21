@@ -58,108 +58,65 @@
 </head>
 <body>
 
-<div class="form-container">
-
-    {{ form_start(form, { 'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'} }) }}
-    <!-- Étape 1 : Informations -->
-    <div id="step-1" class="step active">
-        <h3 class="text-center">Complétez vos informations</h3>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.siret, 'Siret', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.siret, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.societyName, 'Entreprise *', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.societyName, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.legalForm, 'Forme juridique', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.legalForm, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.adress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.adress, {'attr': {'class': 'form-control'}}) }}
-                </div>
+    <div class="form-container">
+        {{ form_start(form, { 'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'} }) }}
+    
+        <!-- Étape 1 : Informations Client -->
+        <div id="step-1" class="step active">
+            <h3 class="text-center">Complétez vos informations</h3>
+            <div class="mb-3">
+                {{ form_widget(form) }}
             </div>
-
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_label(form.lastname, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.numberTva, 'Numéro de TVA', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.numberTva, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.codeNaf, 'Code NAF', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.codeNaf, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.email, 'Email *', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-                </div>
-                <div class="mb-3">
-                    {{ form_label(form.phone, 'Numéro de téléphone', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
-                </div>
+    
+            <div class="step-navigation d-flex justify-content-end">
+                <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
             </div>
         </div>
-
-        <!-- Alignement à droite du bouton "Suivant" -->
-        <div class="step-navigation d-flex justify-content-end">
-            <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+    
+        <!-- Étape 2 : Tarification -->
+        <div id="step-2" class="step">
+            <h3 class="text-center">Tarification</h3>
+    
+            {% for station in chargingStations %}
+                <h5>Borne : {{ station.model }}</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Prix achat kW</label>
+                            <input type="number" class="form-control" name="priceKwh_{{ station.id }}" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label class="form-label">Prix revente kW</label>
+                            <input type="number" class="form-control" name="priceResale_{{ station.id }}" required>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    
+            <div class="step-navigation d-flex justify-content-between">
+                <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
+                <button type="submit" class="btn-submit">Valider</button>
+            </div>
         </div>
+    
+        {{ form_end(form) }}
     </div>
-
-    <!-- Étape 2 : Tarification -->
-    <div id="step-2" class="step">
-        <h3 class="text-center">Tarification</h3>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_label(form.priceKwh, 'Prix achat kW', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.priceKwh, {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="mb-3">
-                    {{ form_label(form.priceResale, 'Prix revente kW', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.priceResale, {'attr': {'class': 'form-control'}}) }}
-                </div>
-            </div>
-        </div>
-
-        <div class="step-navigation d-flex justify-content-between">
-            <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
-            <button type="submit" class="btn-submit">Valider</button>
-        </div>
-    </div>
-
-    {{ form_end(form) }}
-</div>
-
-<script>
-    let currentStep = 1;
-
-    function nextStep() {
-        document.getElementById(`step-${currentStep}`).classList.remove('active');
-        currentStep++;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-    }
-
-    function prevStep() {
-        document.getElementById(`step-${currentStep}`).classList.remove('active');
-        currentStep--;
-        document.getElementById(`step-${currentStep}`).classList.add('active');
-    }
-</script>
+    
+    <script>
+        let currentStep = 1;
+        function nextStep() {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep++;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+        }
+        function prevStep() {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            currentStep--;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
