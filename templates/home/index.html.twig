@@ -1,142 +1,289 @@
 {% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+<style>
+    .modal-header {
+        background: linear-gradient(to right, #ff4081, #ff8c00);
+        color: #fff;
+    }
+
+    .progress {
+        background: #e0e0e0;
+        height: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-bar.bg-success {
+        background: linear-gradient(to right, #00b09b, #96c93d);
+    }
+
+    .progress-bar.bg-secondary {
+        background: #ccc;
+    }
+
+    .intervention-item {
+        background: #f9f9f9;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .gradient-input {
+        background: linear-gradient(to right, #f0f0f0, #ffffff);
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .btn-primary {
+        background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+    }
+
+    .btn-success {
+        background: linear-gradient(to right, #56ab2f, #a8e063);
+        border: none;
+        color: #fff;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(to right, #a8e063, #56ab2f);
+    }
+
+    .btn-danger {
+        background: linear-gradient(to right, #ff5858, #f09819);
+        border: none;
+        color: #fff;
+    }
+
+    .btn-danger:hover {
+        background: linear-gradient(to right, #f09819, #ff5858);
+    }
+
+    .btn-add-borne {
+        background: linear-gradient(to right, #f6d365, #fda085) !important;
+        border: none !important;
+        color: #fff !important;
+    }
+
+    .btn-add-borne:hover {
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 <div class="container">
-  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal">
-    Ajouter un client
-  </button>
+    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal">
+        Ajouter un client
+    </button>
 
-  <div class="modal fade" id="progressModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalTitle">Information du client</h5>
-        </div>
-        <div class="modal-body">
-          <div class="progress mb-3">
-            <div id="progressStep1" class="progress-bar bg-success" style="width: 50%;"></div>
-            <div id="progressStep2" class="progress-bar bg-secondary" style="width: 50%;"></div>
-          </div>
+    <div class="modal fade" id="progressModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
-          {# Stockage du prototype pour éviter le rendu multiple #}
-          {% set prototype_intervention = form_widget(interventionForm.interventions.vars.prototype) %}
-
-          <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
-            {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
-
-            <div class="form-step mb-4" id="step1">
-              {{ form_widget(clientForm) }}
-            </div>
-
-            <div class="form-step d-none mb-4" id="step2">
-              {{ form_widget(interventionForm) }}
-
-              <div id="interventionContainer" data-prototype="{{ prototype_intervention|e('html_attr') }}">
-                {% for intervention in interventionForm.interventions %}
-                <div class="intervention-item">
-                  {{ form_widget(intervention) }}
-                  <button type="button" class="btn btn-danger btn-sm remove-intervention">Supprimer</button>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">Information du client</h5>
                 </div>
-                {% endfor %}
-              </div>
-              <button type="button" class="btn btn-primary btn-sm" id="addIntervention">+ Ajouter une borne</button>
-            </div>
 
-            <div class="modal-footer">
-              <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédent</button>
-              <button type="button" id="nextBtn" class="btn btn-primary">Suivant</button>
-              <button type="submit" id="submitBtn" class="btn btn-success d-none">Envoyer</button>
-            </div>
+                <div class="modal-body">
+                    <div class="progress mb-3">
+                        <div id="progressStep1" class="progress-bar bg-success" style="width: 50%;"></div>
+                        <div id="progressStep2" class="progress-bar bg-secondary" style="width: 50%;"></div>
+                    </div>
 
-            {{ form_end(clientForm) }}
-          </form>
+                    {% set prototype_intervention %}
+                    <div class="intervention-item row align-items-center">
+                        <div class="col-md-5 d-flex flex-column justify-content-center">
+                            <label class="form-label mb-0">
+                                {{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
+                            </label>
+                            {{ form_widget(interventionForm.interventions.vars.prototype.sim, {
+                            'attr': {'class': 'form-control gradient-input'}
+                            }) }}
+                            {{ form_errors(interventionForm.interventions.vars.prototype.sim) }}
+                        </div>
+
+                        <div class="col-md-7 d-flex align-items-end">
+                            <div class="flex-grow-1">
+                                <label class="form-label mb-0">
+                                    {{ form_label(interventionForm.interventions.vars.prototype.chargingStation, 'Borne
+                                    de recharge') }}
+                                </label>
+                                <div class="d-flex align-items-center">
+                                    {{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
+                                    'attr': {'class': 'form-select gradient-input'}
+                                    }) }}
+                                    {{ form_errors(interventionForm.interventions.vars.prototype.chargingStation) }}
+
+                                    <button type="button"
+                                        class="btn btn-danger btn-sm remove-intervention ms-2 h-100 px-3">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endset %}
+
+
+                    <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
+                        {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
+
+                        <div class="form-step mb-4" id="step1">
+                            {{ form_widget(clientForm) }}
+                        </div>
+
+                        <div class="form-step d-none mb-4" id="step2">
+                            {{ form_widget(interventionForm) }}
+
+                            <div class="mb-3 text-end">
+                                <button type="button" id="addIntervention"
+                                    class="btn text-white fw-bold d-flex align-items-center justify-content-between px-3 py-2 rounded-3 mb-3"
+                                    style="background: linear-gradient(to right, #ff4081, #ff8c00);">
+                                    + Ajouter une borne
+                                </button>
+                            </div>
+
+                            <div id="interventionContainer"
+                                data-prototype="{{ prototype_intervention|e('html_attr') }}">
+
+                                {% for intervention in interventionForm.interventions %}
+                                <div class="intervention-item row d-flex align-items-center">
+                                    <div class="col-md-5">
+                                        {{ form_label(intervention.sim, 'Numéro de SIM', {
+                                        'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        {{ form_widget(intervention.sim, {
+                                        'attr': {'class': 'form-control gradient-input'}
+                                        }) }}
+                                        {{ form_errors(intervention.sim) }}
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        {{ form_label(intervention.chargingStation, 'Borne de recharge', {
+                                        'label_attr': {'class': 'form-label'}
+                                        }) }}
+                                        {{ form_widget(intervention.chargingStation, {
+                                        'attr': {'class': 'form-select gradient-input'}
+                                        }) }}
+                                        {{ form_errors(intervention.chargingStation) }}
+                                    </div>
+
+                                    <div class="col-md-2 h-100 d-flex align-items-center justify-content-end">
+                                        <button type="button" class="btn btn-danger btn-sm remove-intervention">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédent</button>
+                            <button type="button" id="nextBtn" class="btn btn-primary">Suivant</button>
+                            <button type="submit" id="submitBtn" class="btn btn-success d-none">Envoyer</button>
+                        </div>
+
+                        {{ form_end(clientForm) }}
+                    </form>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
-
 <script>
-  let currentStep = 1;
-  const totalSteps = 2;
+    let currentStep = 1;
+    const totalSteps = 2;
 
-  function updateStep() {
-    document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
-    document.getElementById("step" + currentStep).classList.remove("d-none");
+    function updateStep() {
+        document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
+        document.getElementById("step" + currentStep).classList.remove("d-none");
 
-    document.getElementById("progressStep1").classList.add("bg-success");
-    document.getElementById("progressStep2").classList.toggle("bg-success", currentStep === 2);
+        document.getElementById("progressStep1").classList.add("bg-success");
+        document.getElementById("progressStep2").classList.toggle("bg-success", currentStep === 2);
 
-    document.getElementById("modalTitle").textContent =
-      currentStep === 1 ? "Information du client" : "Information de l'installation";
+        document.getElementById("modalTitle").textContent =
+            currentStep === 1 ? "Information du client" : "Information de l'installation";
 
-    document.getElementById("prevBtn").classList.toggle("d-none", currentStep === 1);
-    document.getElementById("nextBtn").classList.toggle("d-none", currentStep === totalSteps);
-    document.getElementById("submitBtn").classList.toggle("d-none", currentStep !== totalSteps);
-  }
-
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    if (currentStep < totalSteps) {
-      currentStep++;
-      updateStep();
-    }
-  });
-
-  document.getElementById("prevBtn").addEventListener("click", () => {
-    if (currentStep > 1) {
-      currentStep--;
-      updateStep();
-    }
-  });
-
-  document.getElementById("submitBtn").addEventListener("click", function (event) {
-    event.preventDefault(); 
-    let form = document.getElementById("multiStepForm");
-    if (!form) return;
-    document.getElementById("submitBtn").disabled = true;
-    form.submit();
-  });
-
-  document.getElementById("multiStepForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-    setTimeout(() => {
-      this.submit();
-    }, 1000);
-  });
-
-  document.addEventListener("DOMContentLoaded", function () {
-    let addInterventionButton = document.getElementById("addIntervention");
-    let interventionContainer = document.getElementById("interventionContainer");
-
-    if (!interventionContainer.dataset.prototype) {
-      console.error("data-prototype is missing on #interventionContainer");
-      return;
+        document.getElementById("prevBtn").classList.toggle("d-none", currentStep === 1);
+        document.getElementById("nextBtn").classList.toggle("d-none", currentStep === totalSteps);
+        document.getElementById("submitBtn").classList.toggle("d-none", currentStep !== totalSteps);
     }
 
-    let prototype = interventionContainer.dataset.prototype;
-
-    addInterventionButton.addEventListener("click", function () {
-      let newIndex = interventionContainer.children.length;
-      let newElement = document.createElement("div");
-      newElement.innerHTML = prototype.replace(/__name__/g, newIndex);
-      newElement.classList.add("intervention-item");
-
-      let removeButton = document.createElement("button");
-      removeButton.type = "button";
-      removeButton.className = "btn btn-danger btn-sm remove-intervention";
-      removeButton.textContent = "Supprimer";
-      removeButton.addEventListener("click", function () {
-        newElement.remove();
-      });
-
-      newElement.appendChild(removeButton);
-      interventionContainer.appendChild(newElement);
+    document.getElementById("nextBtn").addEventListener("click", () => {
+        if (currentStep < totalSteps) {
+            currentStep++;
+            updateStep();
+        }
     });
 
-    document.addEventListener("click", function (event) {
-      if (event.target.classList.contains("remove-intervention")) {
-        event.target.closest(".intervention-item").remove();
-      }
+    document.getElementById("prevBtn").addEventListener("click", () => {
+        if (currentStep > 1) {
+            currentStep--;
+            updateStep();
+        }
     });
-  });
+
+    document.getElementById("submitBtn").addEventListener("click", function (event) {
+        event.preventDefault();
+        let form = document.getElementById("multiStepForm");
+        if (!form) return;
+        document.getElementById("submitBtn").disabled = true;
+        form.submit();
+    });
+
+    document.getElementById("multiStepForm").addEventListener("submit", function (event) {
+        event.preventDefault();
+        setTimeout(() => {
+            this.submit();
+        }, 1000);
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        let addInterventionButton = document.getElementById("addIntervention");
+        let interventionContainer = document.getElementById("interventionContainer");
+
+        if (!interventionContainer.dataset.prototype) {
+            console.error("data-prototype is missing on #interventionContainer");
+            return;
+        }
+
+        let prototype = interventionContainer.dataset.prototype;
+
+        addInterventionButton.addEventListener("click", function () {
+            let newIndex = interventionContainer.querySelectorAll('.intervention-item').length;
+            let newElement = document.createElement("div");
+            newElement.classList.add("intervention-item", "row", "align-items-center");
+            newElement.innerHTML = prototype.replace(/__name__/g, newIndex);
+
+            let removeButton = newElement.querySelector(".remove-intervention");
+            removeButton.addEventListener("click", function () {
+                newElement.remove();
+            });
+
+            interventionContainer.appendChild(newElement);
+        });
+
+        document.addEventListener("click", function (event) {
+            if (event.target.classList.contains("remove-intervention") ||
+                (event.target.tagName === "I" && event.target.parentNode.classList.contains("remove-intervention"))) {
+                event.target.closest(".intervention-item").remove();
+            }
+        });
+    });
 </script>
 {% endblock %}

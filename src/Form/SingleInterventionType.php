@@ -16,7 +16,7 @@ class SingleInterventionType extends AbstractType
     {
         $builder
             ->add('sim', TextType::class, [
-                'label' => 'Numéro de la carte SIM',
+                'label' => 'Numéro de SIM',
                 'constraints' => [
                     new NotBlank(['message' => 'Le numéro de carte SIM est obligatoire.']),
                 ],
