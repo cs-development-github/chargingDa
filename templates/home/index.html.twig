@@ -1,112 +1,163 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
 <div class="container">
-    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal">Ouvrir</button>
+  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal">
+    Ajouter un client
+  </button>
 
-    <div class="modal fade" id="progressModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Information du client</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="progress mb-3">
-                        <div id="progressBar" class="progress-bar" style="width: 0%;">0%</div>
-                    </div>
-
-                    <form id="multiStepForm" method="post">
-                        <!-- Étape 1 : Client -->
-                        <div class="form-step" id="step1">
-                            {{ form_start(clientForm) }}
-                            {{ form_widget(clientForm) }}
-                            {{ form_end(clientForm) }}
-                        </div>
-
-                        <!-- Étape 2 : Interventions dynamiques -->
-                        <div class="form-step d-none" id="step2">
-                            {{ form_start(interventionForm) }}
-                            <div id="interventionContainer" data-prototype="{{ form_widget(interventionForm.interventions.vars.prototype)|e('html_attr') }}">
-                                {% for intervention in interventionForm.interventions %}
-                                    <div class="intervention-item">
-                                        {{ form_widget(intervention) }}
-                                        <button type="button" class="btn btn-danger btn-sm remove-intervention">Supprimer</button>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                            <button type="button" class="btn btn-primary btn-sm" id="addIntervention">+ Ajouter</button>
-                            {{ form_end(interventionForm) }}
-                        </div>
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédent</button>
-                    <button type="button" id="nextBtn" class="btn btn-primary">Suivant</button>
-                </div>
-            </div>
+  <div class="modal fade" id="progressModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Information du client</h5>
         </div>
+        <div class="modal-body">
+          <div class="progress mb-3">
+            <div id="progressBar" class="progress-bar" style="width: 0%">0%</div>
+          </div>
+
+          {# On stocke le rendu du prototype dans une variable pour éviter de le rendre plusieurs fois #}
+          {% set prototype_intervention = form_widget(interventionForm.interventions.vars.prototype) %}
+
+          {# Formulaire multi-étapes : on garde la structure existante avec deux étapes #}
+          <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
+            {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
+
+            <!-- Étape 1 : Client -->
+            <div class="form-step" id="step1">
+              {{ form_widget(clientForm) }}
+            </div>
+
+            <!-- Étape 2 : Interventions -->
+            <div class="form-step d-none" id="step2">
+              {{ form_widget(interventionForm) }}
+
+              <div id="interventionContainer" data-prototype="{{ prototype_intervention|e('html_attr') }}">
+                {% for intervention in interventionForm.interventions %}
+                <div class="intervention-item">
+                  {{ form_widget(intervention) }}
+                  <button type="button" class="btn btn-danger btn-sm remove-intervention">Supprimer</button>
+                </div>
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" id="addIntervention">+ Ajouter</button>
+            </div>
+
+            <!-- Boutons de navigation -->
+            <div class="modal-footer">
+              <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédent</button>
+              <button type="button" id="nextBtn" class="btn btn-primary">Suivant</button>
+              <button type="submit" id="submitBtn" class="btn btn-success d-none">Envoyer</button>
+            </div>
+
+            {{ form_end(clientForm) }}
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script>
-    let currentStep = 1;
-    const totalSteps = 2;
+  let currentStep = 1;
+  const totalSteps = 2;
 
-    function updateStep() {
-        document.querySelectorAll('.form-step').forEach(step => step.classList.add('d-none'));
-        document.getElementById('step' + currentStep).classList.remove('d-none');
+  function updateStep() {
+    document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
+    document.getElementById("step" + currentStep).classList.remove("d-none");
 
-        const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-        document.getElementById('progressBar').style.width = progress + '%';
-        document.getElementById('progressBar').textContent = Math.round(progress) + "%";
+    const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+    document.getElementById("progressBar").style.width = progress + "%";
+    document.getElementById("progressBar").textContent = Math.round(progress) + "%";
 
-        document.getElementById('modalTitle').textContent = currentStep === 1 ? "Information du client" : "Information de l'installation";
+    document.getElementById("modalTitle").textContent =
+      currentStep === 1 ? "Information du client" : "Information de l'installation";
 
-        document.getElementById('prevBtn').classList.toggle('d-none', currentStep === 1);
-        document.getElementById('nextBtn').textContent = (currentStep === totalSteps) ? "Envoyer" : "Suivant";
+    document.getElementById("prevBtn").classList.toggle("d-none", currentStep === 1);
+    document.getElementById("nextBtn").classList.toggle("d-none", currentStep === totalSteps);
+    document.getElementById("submitBtn").classList.toggle("d-none", currentStep !== totalSteps);
+
+    console.log("Bouton Envoyer actif ? ", !document.getElementById("submitBtn").classList.contains("d-none"));
+  }
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (currentStep < totalSteps) {
+      currentStep++;
+      updateStep();
+    }
+  });
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    if (currentStep > 1) {
+      currentStep--;
+      updateStep();
+    }
+  });
+
+  document.getElementById("submitBtn").addEventListener("click", function (event) {
+    event.preventDefault(); // Empêche la soumission multiple par défaut
+
+    console.log("🚀 Bouton 'Envoyer' cliqué ! Tentative d'envoi...");
+
+    let form = document.getElementById("multiStepForm");
+    if (!form) {
+        console.error("❌ Formulaire introuvable !");
+        return;
     }
 
-    document.getElementById('nextBtn').addEventListener('click', () => {
-        if (currentStep < totalSteps) {
-            currentStep++;
-            updateStep();
-        } else {
-            document.getElementById('multiStepForm').submit();
-        }
-    });
+    document.getElementById("submitBtn").disabled = true;
 
-    document.getElementById('prevBtn').addEventListener('click', () => {
-        if (currentStep > 1) {
-            currentStep--;
-            updateStep();
-        }
-    });
+    console.log("📤 Envoi du formulaire avec action :", form.action);
+    form.submit();
+});
 
-    document.addEventListener('DOMContentLoaded', function () {
-    let addInterventionButton = document.getElementById('addIntervention');
-    let interventionContainer = document.getElementById('interventionContainer');
+
+  // Gestion du bouton "Envoyer"
+  document.getElementById("multiStepForm").addEventListener("submit", function (event) {
+    event.preventDefault(); // Empêche le rechargement automatique pour voir si l'événement est capté
+    console.log("Événement submit capté !");
+    console.log(new FormData(this)); // Vérifie les données envoyées
+    setTimeout(() => {
+      console.log("Tentative d'envoi du formulaire...");
+      this.submit(); // Force un envoi classique
+    }, 1000);
+  });
+
+  // Gestion des interventions dynamiques
+  document.addEventListener("DOMContentLoaded", function () {
+    let addInterventionButton = document.getElementById("addIntervention");
+    let interventionContainer = document.getElementById("interventionContainer");
 
     if (!interventionContainer.dataset.prototype) {
-        console.error("data-prototype is missing on #interventionContainer");
-        return;
+      console.error("data-prototype is missing on #interventionContainer");
+      return;
     }
 
     let prototype = interventionContainer.dataset.prototype;
 
-    addInterventionButton.addEventListener('click', function () {
-        let newIndex = interventionContainer.children.length;
-        let newElement = document.createElement('div');
-        newElement.innerHTML = prototype.replace(/__name__/g, newIndex);
-        newElement.classList.add('intervention-item');
-        interventionContainer.appendChild(newElement);
+    addInterventionButton.addEventListener("click", function () {
+      let newIndex = interventionContainer.children.length;
+      let newElement = document.createElement("div");
+      newElement.innerHTML = prototype.replace(/__name__/g, newIndex);
+      newElement.classList.add("intervention-item");
+
+      let removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "btn btn-danger btn-sm remove-intervention";
+      removeButton.textContent = "Supprimer";
+      removeButton.addEventListener("click", function () {
+        newElement.remove();
+      });
+
+      newElement.appendChild(removeButton);
+      interventionContainer.appendChild(newElement);
     });
 
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove-intervention')) {
-            event.target.closest('.intervention-item').remove();
-        }
+    document.addEventListener("click", function (event) {
+      if (event.target.classList.contains("remove-intervention")) {
+        event.target.closest(".intervention-item").remove();
+      }
     });
-});
+  });
 </script>
 {% endblock %}
