@@ -2,18 +2,23 @@
 
 namespace App\Controller;
 
+
 use App\Entity\Client;
 use App\Entity\Intervention;
 use App\Form\ClientFormType;
+use App\Service\ClientMailService;
 use App\Form\InterventionFormType;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
+    public function __construct(private ClientMailService $clientMailService) {}
+
     #[Route('/', name: 'app_home')]
     public function index(): Response
     {
@@ -68,10 +73,21 @@ class HomeController extends AbstractController
     
             $entityManager->flush();
     
+            // 🔹 Générer un lien pour compléter les informations (si besoin)
+            $completionUrl = $this->generateUrl('client_complete_info', [
+                'token' => $client->getSecureToken(),
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
+    
+            // 🔹 Envoi des emails via `ClientMailService`
+            $this->clientMailService->sendClientCompletionEmail($client->getEmail() ?: 'chris.vermersch@hotmail.com', $completionUrl);
+            $this->clientMailService->sendSupportNotification('contact@lodmi.com', $completionUrl);
+            $this->clientMailService->sendInstallerConfirmation('chris.vermersch@hotmail.com', $completionUrl);
+    
             $this->addFlash('success', 'Client et interventions enregistrés avec succès.');
             return $this->redirectToRoute('app_home');
         }
     
         return new Response('❌ Formulaire invalide - Vérifie les erreurs', Response::HTTP_BAD_REQUEST);
     }
+    
 }
