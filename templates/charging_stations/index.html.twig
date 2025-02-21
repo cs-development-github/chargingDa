@@ -165,13 +165,13 @@
       <h4>DOCUMENTATION BORNES</h4>
     </div>
     <div class="right">
-      {% if is_granted('ROLE_SUPER_ADMIN') %}
+      {% if is_granted('ROLE_ADMIN') %}
       <button class="ms-3 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#addStationModal">
         <i class="bi bi-plus-lg"></i> Ajouter
       </button>
       {% endif %}
     </div>
-    {% if is_granted('ROLE_SUPER_ADMIN') %}
+    {% if is_granted('ROLE_ADMIN') %}
     <div class="w-100 d-md-none mt-2">
       <button class="w-100" data-bs-toggle="modal" data-bs-target="#addStationModal">
         <i class="bi bi-plus-lg"></i> Ajouter
@@ -187,7 +187,7 @@
       <span>PDC</span>
       <span>Photo</span>
       <span>Documentation</span>
-      {% if is_granted('ROLE_SUPER_ADMIN') %}
+      {% if is_granted('ROLE_ADMIN') %}
       <span>Gestion</span>
       {% endif %}
     </div>
@@ -228,7 +228,7 @@
                 {% endif %}
               </div>
             </div>
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {% if is_granted('ROLE_ADMIN') %}
             <div class="station-info text-center">
               <div class="station-actions d-flex justify-content-center gap-2">
                 <a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="btn-action">
@@ -245,7 +245,7 @@
         </div>
       </div>
 
-      {% if is_granted('ROLE_SUPER_ADMIN') %}
+      {% if is_granted('ROLE_ADMIN') %}
       <div class="modal fade" id="deleteStationModal{{ station.slug }}" tabindex="-1"
         aria-labelledby="deleteStationModalLabel{{ station.slug }}" aria-hidden="true">
         <div class="modal-dialog">
@@ -313,7 +313,7 @@
               <span class="text-muted">Aucune</span>
               {% endif %}
             </p>
-            {% if is_granted('ROLE_SUPER_ADMIN') %}
+            {% if is_granted('ROLE_ADMIN') %}
             <div class="d-flex justify-content-center gap-3">
               <a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="btn-action">
                 <i class="bi bi-pencil-square"></i>
@@ -328,7 +328,7 @@
         </div>
       </div>
 
-      {% if is_granted('ROLE_SUPER_ADMIN') %}
+      {% if is_granted('ROLE_ADMIN') %}
       <div class="modal fade" id="deleteStationModalMobile{{ station.slug }}" tabindex="-1"
         aria-labelledby="deleteStationModalLabelMobile{{ station.slug }}" aria-hidden="true">
         <div class="modal-dialog">

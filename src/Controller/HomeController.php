@@ -1,26 +1,44 @@
 <?php
-
 namespace App\Controller;
 
-use App\Repository\InterventionRepository;
+use App\Entity\Client;
+use App\Entity\Intervention;
+use App\Form\ClientFormType;
+use App\Form\InterventionFormType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    #[IsGranted('ROLE_USER')] // S'assure que l'utilisateur est connecté
-    public function index(InterventionRepository $interventionRepository): Response
+    public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $user = $this->getUser();
+        $client = new Client();
+        $interventionForm = $this->createForm(InterventionFormType::class);
+        $clientForm = $this->createForm(ClientFormType::class, $client);
 
-        // Récupérer la prochaine intervention de l'utilisateur
-        $nextIntervention = $interventionRepository->findNextInterventionByUser($user);
+        $clientForm->handleRequest($request);
+        $interventionForm->handleRequest($request);
+
+        if ($clientForm->isSubmitted() && $clientForm->isValid() && 
+            $interventionForm->isSubmitted() && $interventionForm->isValid()) {
+
+            $entityManager->persist($client);
+            foreach ($interventionForm->get('interventions')->getData() as $intervention) {
+                $intervention->setClient($client);
+                $entityManager->persist($intervention);
+            }
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
 
         return $this->render('home/index.html.twig', [
-            'nextIntervention' => $nextIntervention,
+            'clientForm' => $clientForm->createView(),
+            'interventionForm' => $interventionForm->createView(),
         ]);
     }
 }

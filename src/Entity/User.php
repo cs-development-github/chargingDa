@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Entity\Trait\TimestampableTrait;
@@ -42,8 +44,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $societyName = null;
 
+    /**
+     * @var Collection<int, Intervention>
+     */
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'installator')]
+    private Collection $interventions;
+
     public function __construct()
     {
+        $this->interventions = new ArrayCollection();
     }
 
     use TimestampableTrait;
@@ -170,6 +179,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSocietyName(string $societyName): static
     {
         $this->societyName = $societyName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setInstallator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getInstallator() === $this) {
+                $intervention->setInstallator(null);
+            }
+        }
 
         return $this;
     }
