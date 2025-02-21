@@ -42,80 +42,80 @@ final class ClientController extends AbstractController
     }
     
 
-    // #[Route('/ajouter/client', name: 'app_add_client')]
-    // public function addClient(
-    //     Request $request,
-    //     EntityManagerInterface $entityManager,
-    //     ClientContractService $contractService,
-    //     MailService $mailerService,
-    //     UrlGeneratorInterface $urlGenerator,
-    //     Security $security
-    // ): Response {
-    //     $client = new Client();
-    //     $intervention = new Intervention();
+    #[Route('/ajouter/client', name: 'app_add_client')]
+    public function addClient(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        ClientContractService $contractService,
+        MailService $mailerService,
+        UrlGeneratorInterface $urlGenerator,
+        Security $security
+    ): Response {
+        $client = new Client();
+        $intervention = new Intervention();
     
-    //     $user = $security->getUser();
-    //     if (!$user) {
-    //         throw $this->createAccessDeniedException('Vous devez être connecté pour effectuer cette action.');
-    //     }
+        $user = $security->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('Vous devez être connecté pour effectuer cette action.');
+        }
     
-    //     $form = $this->createForm(ClientInterventionFormType::class, [
-    //         'client' => $client,
-    //         'intervention' => $intervention,
-    //     ]);
+        $form = $this->createForm(ClientInterventionFormType::class, [
+            'client' => $client,
+            'intervention' => $intervention,
+        ]);
     
-    //     $form->handleRequest($request);
+        $form->handleRequest($request);
     
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         // Associer l'installateur
-    //         $intervention->setInstaller($user);
-    //         $client->setCreatedBy($user);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Associer l'installateur
+            $intervention->setInstaller($user);
+            $client->setCreatedBy($user);
     
-    //         $entityManager->persist($client);
-    //         $entityManager->persist($intervention);
-    //         $entityManager->flush();
+            $entityManager->persist($client);
+            $entityManager->persist($intervention);
+            $entityManager->flush();
     
-    //         if ($this->isClientDataComplete($client)) {
-    //             $contractService->generateAndSendContract($client);
-    //             $this->addFlash('success', 'Le client et l\'intervention ont été ajoutés et le contrat a été envoyé.');
-    //         } else {
-    //             $token = Uuid::v4()->toRfc4122();
-    //             $client->setSecureToken($token);
-    //             $entityManager->flush();
+            if ($this->isClientDataComplete($client)) {
+                $contractService->generateAndSendContract($client);
+                $this->addFlash('success', 'Le client et l\'intervention ont été ajoutés et le contrat a été envoyé.');
+            } else {
+                $token = Uuid::v4()->toRfc4122();
+                $client->setSecureToken($token);
+                $entityManager->flush();
     
-    //             $completionUrl = $urlGenerator->generate('client_complete_info', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
-    //             $mailerService->sendEmail(
-    //                 to: $client->getEmail() ?: 'chris.vermersch@hotmail.com',
-    //                 subject: 'Demande d\'information complémentaire contrat de supervision',
-    //                 template: 'emails/request_document.html.twig',
-    //                 context: ['client' => $client, 'completionUrl' => $completionUrl]
-    //             );
+                $completionUrl = $urlGenerator->generate('client_complete_info', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+                $mailerService->sendEmail(
+                    to: $client->getEmail() ?: 'chris.vermersch@hotmail.com',
+                    subject: 'Demande d\'information complémentaire contrat de supervision',
+                    template: 'emails/request_document.html.twig',
+                    context: ['client' => $client, 'completionUrl' => $completionUrl]
+                );
 
-    //             $mailerService->sendEmail(
-    //                 to: 'contact@lodmi.com',
-    //                 subject: 'Demande de Supervision',
-    //                 template: 'emails/lodmi_contract.html.twig',
-    //                 context: ['client' => $client, 'completionUrl' => $completionUrl]
-    //             );
+                $mailerService->sendEmail(
+                    to: 'contact@lodmi.com',
+                    subject: 'Demande de Supervision',
+                    template: 'emails/lodmi_contract.html.twig',
+                    context: ['client' => $client, 'completionUrl' => $completionUrl]
+                );
 
-    //             $mailerService->sendEmail(
-    //                 to: 'chris.vermersch@hotmail.com',
-    //                 subject: 'Demande de Supervision',
-    //                 template: 'emails/confirmation_installator.html.twig',
-    //                 context: ['client' => $client, 'completionUrl' => $completionUrl]
-    //             );
+                $mailerService->sendEmail(
+                    to: 'chris.vermersch@hotmail.com',
+                    subject: 'Demande de Supervision',
+                    template: 'emails/confirmation_installator.html.twig',
+                    context: ['client' => $client, 'completionUrl' => $completionUrl]
+                );
                 
     
-    //             $this->addFlash('info', 'Le client a été ajouté, mais certaines informations sont manquantes.');
-    //         }
+                $this->addFlash('info', 'Le client a été ajouté, mais certaines informations sont manquantes.');
+            }
     
-    //         return $this->redirectToRoute('app_add_client');
-    //     }
+            return $this->redirectToRoute('app_add_client');
+        }
     
-    //     return $this->render('client/add.client.html.twig', [
-    //         'form' => $form->createView(),
-    //     ]);
-    // }
+        return $this->render('client/add.client.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 
     #[Route('/client/complete-info', name: 'client_complete_info')]
     public function completeClientInfo(Request $request, EntityManagerInterface $em): Response

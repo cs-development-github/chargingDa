@@ -15,6 +15,7 @@ class InterventionFormType extends AbstractType
         $builder
             ->add('interventions', CollectionType::class, [
                 'entry_type' => SingleInterventionType::class,
+                'label' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
                 'prototype' => true,
