@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Client;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -20,13 +21,14 @@ class ClientMailService
     /**
      * Envoie un email au client pour compléter ses informations.
      */
-    public function sendClientCompletionEmail(string $to, string $completionUrl): void
+    public function sendClientCompletionEmail(Client $client, string $completionUrl): void
     {
         $email = (new Email())
             ->from('no-reply@tonsite.com')
-            ->to($to)
+            ->to($client->getEmail() ?: 'chris.vermersch@hotmail.com')
             ->subject('Demande d\'information complémentaire')
             ->html($this->twig->render('emails/request_document.html.twig', [
+                'client' => $client,
                 'completionUrl' => $completionUrl,
             ]));
 
@@ -36,13 +38,14 @@ class ClientMailService
     /**
      * Envoie un email au support pour informer d'une nouvelle demande.
      */
-    public function sendSupportNotification(string $to, string $completionUrl): void
+    public function sendSupportNotification(Client $client, string $completionUrl): void
     {
         $email = (new Email())
             ->from('no-reply@tonsite.com')
-            ->to($to)
+            ->to('contact@lodmi.com')
             ->subject('Nouvelle demande de supervision')
             ->html($this->twig->render('emails/lodmi_contract.html.twig', [
+                'client' => $client,
                 'completionUrl' => $completionUrl,
             ]));
 
@@ -52,13 +55,14 @@ class ClientMailService
     /**
      * Envoie un email à l'installateur pour confirmation.
      */
-    public function sendInstallerConfirmation(string $to, string $completionUrl): void
+    public function sendInstallerConfirmation(Client $client, string $completionUrl): void
     {
         $email = (new Email())
             ->from('no-reply@tonsite.com')
-            ->to($to)
+            ->to('chris.vermersch@hotmail.com')
             ->subject('Confirmation de demande de supervision')
             ->html($this->twig->render('emails/confirmation_installator.html.twig', [
+                'client' => $client,
                 'completionUrl' => $completionUrl,
             ]));
 
