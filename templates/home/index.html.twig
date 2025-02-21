@@ -5,12 +5,20 @@
     .modal-header {
         background: linear-gradient(to right, #ff4081, #ff8c00);
         color: #fff;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .modal-content {
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        background: linear-gradient(to bottom, #ffffff, #f8f8f8);
     }
 
     .progress {
         background: #e0e0e0;
-        height: 20px;
-        border-radius: 10px;
+        height: 8px;
+        border-radius: 5px;
         overflow: hidden;
     }
 
@@ -22,13 +30,6 @@
         background: #ccc;
     }
 
-    .intervention-item {
-        background: #f9f9f9;
-        border-radius: 5px;
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-
     .gradient-input {
         background: linear-gradient(to right, #f0f0f0, #ffffff);
         border: 1px solid #ccc;
@@ -36,18 +37,13 @@
         margin-bottom: 10px;
     }
 
-    .form-label {
-        font-weight: bold;
-        margin-bottom: 5px;
-    }
-
     .btn-primary {
-        background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+        background: linear-gradient(to right, #4facfe, #00f2fe);
         border: none;
     }
 
     .btn-primary:hover {
-        background: linear-gradient(to right, #c2e9fb, #a1c4fd);
+        background: linear-gradient(to right, #00f2fe, #4facfe);
     }
 
     .btn-success {
@@ -64,6 +60,11 @@
         background: linear-gradient(to right, #ff5858, #f09819);
         border: none;
         color: #fff;
+        height: 38px;
+        width: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .btn-danger:hover {
@@ -79,21 +80,28 @@
     .btn-add-borne:hover {
         opacity: 0.9;
     }
+
+    .btn i {
+        margin-right: 5px;
+    }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="container">
-    <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal">
-        Ajouter un client
+    <button type="button" class="btn btn-primary text-white fw-bold" data-bs-toggle="modal"
+        data-bs-target="#progressModal">
+        <i class="bi bi-person-plus"></i> Ajouter un client
     </button>
 
     <div class="modal fade" id="progressModal">
         <div class="modal-dialog">
             <div class="modal-content">
-
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">Information du client</h5>
+                    <h5 class="modal-title" id="modalTitle">
+                        <i class="bi bi-gear"></i> Information du client
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
                 <div class="modal-body">
@@ -111,7 +119,6 @@
                             {{ form_widget(interventionForm.interventions.vars.prototype.sim, {
                             'attr': {'class': 'form-control gradient-input'}
                             }) }}
-                            {{ form_errors(interventionForm.interventions.vars.prototype.sim) }}
                         </div>
 
                         <div class="col-md-7 d-flex align-items-end">
@@ -124,10 +131,9 @@
                                     {{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
                                     'attr': {'class': 'form-select gradient-input'}
                                     }) }}
-                                    {{ form_errors(interventionForm.interventions.vars.prototype.chargingStation) }}
 
-                                    <button type="button"
-                                        class="btn btn-danger btn-sm remove-intervention ms-2 h-100 px-3">
+                                    <button type="button" class="btn text-white remove-intervention ms-2"
+                                        style="background: linear-gradient(to right, #ff4081, #ff8c00);">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </div>
@@ -135,7 +141,6 @@
                         </div>
                     </div>
                     {% endset %}
-
 
                     <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
                         {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
@@ -148,54 +153,31 @@
                             {{ form_widget(interventionForm) }}
 
                             <div class="mb-3 text-end">
-                                <button type="button" id="addIntervention"
-                                    class="btn text-white fw-bold d-flex align-items-center justify-content-between px-3 py-2 rounded-3 mb-3"
-                                    style="background: linear-gradient(to right, #ff4081, #ff8c00);">
-                                    + Ajouter une borne
-                                </button>
+                                <div class="d-flex justify-content-end mb-3">
+                                    <button type="button" id="addIntervention" class="btn text-white fw-bold"
+                                        style="background: linear-gradient(to right, #ff4081, #ff8c00);">
+                                        <i class="bi bi-plus-circle mr-2"></i> Ajouter une borne
+                                    </button>
+                                </div>
+
+
                             </div>
 
                             <div id="interventionContainer"
                                 data-prototype="{{ prototype_intervention|e('html_attr') }}">
-
-                                {% for intervention in interventionForm.interventions %}
-                                <div class="intervention-item row d-flex align-items-center">
-                                    <div class="col-md-5">
-                                        {{ form_label(intervention.sim, 'Numéro de SIM', {
-                                        'label_attr': {'class': 'form-label'}
-                                        }) }}
-                                        {{ form_widget(intervention.sim, {
-                                        'attr': {'class': 'form-control gradient-input'}
-                                        }) }}
-                                        {{ form_errors(intervention.sim) }}
-                                    </div>
-
-                                    <div class="col-md-5">
-                                        {{ form_label(intervention.chargingStation, 'Borne de recharge', {
-                                        'label_attr': {'class': 'form-label'}
-                                        }) }}
-                                        {{ form_widget(intervention.chargingStation, {
-                                        'attr': {'class': 'form-select gradient-input'}
-                                        }) }}
-                                        {{ form_errors(intervention.chargingStation) }}
-                                    </div>
-
-                                    <div class="col-md-2 h-100 d-flex align-items-center justify-content-end">
-                                        <button type="button" class="btn btn-danger btn-sm remove-intervention">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-
-
-                                {% endfor %}
                             </div>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédent</button>
-                            <button type="button" id="nextBtn" class="btn btn-primary">Suivant</button>
-                            <button type="submit" id="submitBtn" class="btn btn-success d-none">Envoyer</button>
+                            <button type="button" id="prevBtn" class="btn btn-secondary d-none">
+                                <i class="bi bi-arrow-left"></i> Précédent
+                            </button>
+                            <button type="button" id="nextBtn" class="btn btn-primary">
+                                Suivant <i class="bi bi-arrow-right"></i>
+                            </button>
+                            <button type="submit" id="submitBtn" class="btn btn-success d-none">
+                                <i class="bi bi-check-circle"></i> Envoyer
+                            </button>
                         </div>
 
                         {{ form_end(clientForm) }}
@@ -205,6 +187,7 @@
         </div>
     </div>
 </div>
+
 <script>
     let currentStep = 1;
     const totalSteps = 2;
