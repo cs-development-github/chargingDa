@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Intervention;
+use App\Form\ClientContractFormType;
 use App\Form\ClientFormType;
 use App\Form\ClientInterventionFormType;
 use App\Form\InterventionFormType;
@@ -131,7 +132,7 @@ final class ClientController extends AbstractController
             throw $this->createNotFoundException('Lien invalide ou client introuvable.');
         }
 
-        $form = $this->createForm(ClientFormType::class, $client, [
+        $form = $this->createForm(ClientContractFormType::class, $client, [
             'action' => $this->generateUrl('client_update_info'),
             'method' => 'POST'
         ]);
@@ -160,7 +161,7 @@ final class ClientController extends AbstractController
             throw $this->createNotFoundException('Client introuvable.');
         }
     
-        $form = $this->createForm(ClientFormType::class, $client);
+        $form = $this->createForm(ClientContractFormType::class, $client);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
@@ -172,7 +173,7 @@ final class ClientController extends AbstractController
     
             $this->addFlash('success', 'Les informations ont été mises à jour et le contrat a été envoyé.');
     
-            return $this->redirectToRoute('app_clients');
+            // return $this->redirectToRoute('app_home');
         }
     
         return $this->render('client/complete_form.html.twig', [

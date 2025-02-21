@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ChargingStationsRepository;
@@ -41,6 +43,17 @@ class ChargingStations
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
+
+    /**
+     * @var Collection<int, Intervention>
+     */
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'chargingStation')]
+    private Collection $interventions;
+
+    public function __construct()
+    {
+        $this->interventions = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -129,5 +142,35 @@ class ChargingStations
     {
         $slug = $slugger->slug($this->model)->lower();
         $this->setSlug($slug);
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setChargingStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getChargingStation() === $this) {
+                $intervention->setChargingStation(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -85,7 +85,7 @@
             </div>
         </div>
 
-        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        {% if is_granted('ROLE_ADMIN') %}
         <div class="d-flex justify-content-center gap-3 mt-4">
             <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
                 Modifier la borne
@@ -98,7 +98,7 @@
     </div>
 </div>
 
-{% if is_granted('ROLE_SUPER_ADMIN') %}
+{% if is_granted('ROLE_ADMIN') %}
 <div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

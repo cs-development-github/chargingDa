@@ -34,8 +34,10 @@
     </style>
 
     {% include 'bars/navbar.html.twig' %}
-    {% include 'bars/sidebar.html.twig' %}
 
+    {% if is_granted('ROLE_ADMIN') %}
+        {% include 'bars/sidebar.html.twig' %}
+    {% endif %}
     <main class="main-content">
         {% block body %}{% endblock %}
     </main>

@@ -1,141 +1,142 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Accueil{% endblock %}
-
 {% block body %}
-<style>
-    .btn-gradient {
-        background: linear-gradient(45deg, #ec008c, #f6941f);
-        border: none;
-        border-radius: 9px;
-        color: #fff;
-        font-weight: bold;
-        padding: 10px 20px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        text-decoration: none;
-    }
-    .btn-gradient:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-    .container {
-        background-color: #fff;
-        border-radius: 10px;
-    }
-    .card {
-        margin-bottom: 20px;
-    }
-    .modal-body img {
-        margin-bottom: 15px;
-    }
-    @media (max-width: 576px) {
-        .container {
-            padding: 10px;
-        }
-        .btn-gradient {
-            padding: 8px 16px;
-            font-size: 0.85rem;
-        }
-    }
-</style>
-
 <div class="container">
-    <h2 class="mb-3">
-        <i class="bi bi-calendar-check me-1"></i> Prochaine intervention prévue
-    </h2>
+  <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#progressModal">
+    Ajouter un client
+  </button>
 
-    {% if nextIntervention %}
-        <div class="card shadow">
-            <div class="card-body">
-                <h5 class="card-title text-primary">
-                    <i class="bi bi-wrench me-1"></i> Intervention sur {{ nextIntervention.chargingStation.model }}
-                </h5>
-                <p class="card-text">
-                    <i class="bi bi-calendar-event me-1"></i>
-                    <strong>Date prévue :</strong> 21/04/2025
-                </p>
-                <div class="d-flex flex-wrap gap-2">
-                    {% if nextIntervention.chargingStation.documentation %}
-                        <a href="{{ asset('uploads/' ~ nextIntervention.chargingStation.documentation) }}" 
-                           target="_blank" 
-                           class="btn-gradient">
-                            <i class="bi bi-file-earmark-text me-1"></i> Voir la documentation
-                        </a>
-                    {% endif %}
-                    <button type="button" class="btn-gradient" data-bs-toggle="modal" data-bs-target="#imageModal">
-                        <i class="bi bi-image me-1"></i> Notice de supervision
-                    </button>
-                </div>
-            </div>
+  <div class="modal fade" id="progressModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Information du client</h5>
         </div>
-    {% else %}
-        <div class="alert alert-warning d-flex align-items-center" role="alert">
-            <i class="bi bi-envelope me-2"></i> Aucune intervention prévue pour le moment.
-        </div>
-    {% endif %}
-</div>
+        <div class="modal-body">
+          <div class="progress mb-3">
+            <div id="progressStep1" class="progress-bar bg-success" style="width: 50%;"></div>
+            <div id="progressStep2" class="progress-bar bg-secondary" style="width: 50%;"></div>
+          </div>
 
+          {# Stockage du prototype pour éviter le rendu multiple #}
+          {% set prototype_intervention = form_widget(interventionForm.interventions.vars.prototype) %}
 
-<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imageModalLabel">
-                    <i class="bi bi-images me-1"></i> Images de la Documentation
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
+            {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
+
+            <div class="form-step mb-4" id="step1">
+              {{ form_widget(clientForm) }}
             </div>
-            <div class="modal-body p-0">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12">
-                                {% for i in 1..9 %}
-                                    <img src="{{ asset('build/images/Documentation/Autel_' ~ i ~ '.png') }}" 
-                                        class="img-fluid w-100 d-block" 
-                                        alt="Autel {{ i }}">
-                            
-                                    {% if i == 3 %}
-                                        <!-- Boutons de téléchargement après la troisième image -->
-                                        <div class="d-flex justify-content-center gap-3 mt-3">
-                                            <a href="https://play.google.com/store/apps/details?id=com.autel.charge&hl=fr" 
-                                               class="btn btn-success d-flex align-items-center" 
-                                               target="_blank">
-                                                📱 Télécharger sur Google Play
-                                            </a>
-                                            <a href="https://apps.apple.com/tr/app/autel-charge/id1578454464" 
-                                               class="btn btn-secondary d-flex align-items-center" 
-                                               target="_blank">
-                                                🍏 Télécharger sur l'App Store
-                                            </a>
-                                        </div>
-                                    {% endif %}
-                            
-                                    {% if i == 8 %}
-                                        <div class="d-flex justify-content-center">
-                                            <button class="btn btn-primary mt-2" onclick="copyToClipboard()">Copier la clé OCPP</button>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            
-                                <script>
-                                    function copyToClipboard() {
-                                        navigator.clipboard.writeText("ws://charge-angels.com:80/OCPP16/6290a6cb64eeeee47dd59abe/662a71bfba21fea8c9b6b288/")
-                                        .catch(function(err) {
-                                            console.error("Erreur lors de la copie : ", err);
-                                        });
-                                    }
-                                </script>
-                            </div>
-                        </div>
-                    </div>
+
+            <div class="form-step d-none mb-4" id="step2">
+              {{ form_widget(interventionForm) }}
+
+              <div id="interventionContainer" data-prototype="{{ prototype_intervention|e('html_attr') }}">
+                {% for intervention in interventionForm.interventions %}
+                <div class="intervention-item">
+                  {{ form_widget(intervention) }}
+                  <button type="button" class="btn btn-danger btn-sm remove-intervention">Supprimer</button>
                 </div>
+                {% endfor %}
+              </div>
+              <button type="button" class="btn btn-primary btn-sm" id="addIntervention">+ Ajouter une borne</button>
             </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn-gradient" data-bs-dismiss="modal">
-                    <i class="bi bi-x-lg me-1"></i> Fermer
-                </button>
+              <button type="button" id="prevBtn" class="btn btn-secondary d-none">Précédent</button>
+              <button type="button" id="nextBtn" class="btn btn-primary">Suivant</button>
+              <button type="submit" id="submitBtn" class="btn btn-success d-none">Envoyer</button>
             </div>
+
+            {{ form_end(clientForm) }}
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
+
+<script>
+  let currentStep = 1;
+  const totalSteps = 2;
+
+  function updateStep() {
+    document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
+    document.getElementById("step" + currentStep).classList.remove("d-none");
+
+    document.getElementById("progressStep1").classList.add("bg-success");
+    document.getElementById("progressStep2").classList.toggle("bg-success", currentStep === 2);
+
+    document.getElementById("modalTitle").textContent =
+      currentStep === 1 ? "Information du client" : "Information de l'installation";
+
+    document.getElementById("prevBtn").classList.toggle("d-none", currentStep === 1);
+    document.getElementById("nextBtn").classList.toggle("d-none", currentStep === totalSteps);
+    document.getElementById("submitBtn").classList.toggle("d-none", currentStep !== totalSteps);
+  }
+
+  document.getElementById("nextBtn").addEventListener("click", () => {
+    if (currentStep < totalSteps) {
+      currentStep++;
+      updateStep();
+    }
+  });
+
+  document.getElementById("prevBtn").addEventListener("click", () => {
+    if (currentStep > 1) {
+      currentStep--;
+      updateStep();
+    }
+  });
+
+  document.getElementById("submitBtn").addEventListener("click", function (event) {
+    event.preventDefault(); 
+    let form = document.getElementById("multiStepForm");
+    if (!form) return;
+    document.getElementById("submitBtn").disabled = true;
+    form.submit();
+  });
+
+  document.getElementById("multiStepForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    setTimeout(() => {
+      this.submit();
+    }, 1000);
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    let addInterventionButton = document.getElementById("addIntervention");
+    let interventionContainer = document.getElementById("interventionContainer");
+
+    if (!interventionContainer.dataset.prototype) {
+      console.error("data-prototype is missing on #interventionContainer");
+      return;
+    }
+
+    let prototype = interventionContainer.dataset.prototype;
+
+    addInterventionButton.addEventListener("click", function () {
+      let newIndex = interventionContainer.children.length;
+      let newElement = document.createElement("div");
+      newElement.innerHTML = prototype.replace(/__name__/g, newIndex);
+      newElement.classList.add("intervention-item");
+
+      let removeButton = document.createElement("button");
+      removeButton.type = "button";
+      removeButton.className = "btn btn-danger btn-sm remove-intervention";
+      removeButton.textContent = "Supprimer";
+      removeButton.addEventListener("click", function () {
+        newElement.remove();
+      });
+
+      newElement.appendChild(removeButton);
+      interventionContainer.appendChild(newElement);
+    });
+
+    document.addEventListener("click", function (event) {
+      if (event.target.classList.contains("remove-intervention")) {
+        event.target.closest(".intervention-item").remove();
+      }
+    });
+  });
+</script>
 {% endblock %}
