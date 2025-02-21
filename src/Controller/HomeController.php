@@ -6,6 +6,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\Intervention;
 use App\Form\ClientFormType;
+use Symfony\Component\Uid\Uuid;
 use App\Service\ClientMailService;
 use App\Form\InterventionFormType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -30,9 +31,9 @@ class HomeController extends AbstractController
             'interventionForm' => $interventionForm->createView(),
         ]);
     }
-
+    
     #[Route('/submit-form', name: 'app_submit_form', methods: ['POST'])]
-    public function submitForm(Request $request, EntityManagerInterface $entityManager): Response
+    public function submitForm(Request $request, EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator): Response
     {
         $client = new Client();
         $clientForm = $this->createForm(ClientFormType::class, $client);
@@ -44,14 +45,24 @@ class HomeController extends AbstractController
         if ($clientForm->isSubmitted() && $clientForm->isValid() &&
             $interventionForm->isSubmitted() && $interventionForm->isValid()) {
     
-            $entityManager->persist($client);
-            $entityManager->flush(); 
-    
             $user = $this->getUser();
+    
             if (!$user) {
                 return new Response("Utilisateur non authentifié", Response::HTTP_UNAUTHORIZED);
             }
     
+            // 🔹 Associer l'utilisateur créateur du client
+            $client->setCreatedBy($user);
+    
+            // 🔹 Générer un token UUID unique
+            $token = Uuid::v4()->toRfc4122();
+            $client->setSecureToken($token); // ✅ Enregistrement du token
+    
+            // 🔹 Sauvegarde du client en base
+            $entityManager->persist($client);
+            $entityManager->flush(); 
+    
+            // 🔹 Associer les interventions au client et utilisateur
             foreach ($interventionForm->get('interventions')->getData() as $intervention) {
                 $intervention->setClient($client);
                 $intervention->setInstallator($user);
@@ -60,10 +71,12 @@ class HomeController extends AbstractController
     
             $entityManager->flush();
     
-            $completionUrl = $this->generateUrl('client_complete_info', [
-                'token' => $client->getSecureToken(),
+            // 🔹 Générer l'URL avec le token
+            $completionUrl = $urlGenerator->generate('client_complete_info', [
+                'token' => $token,
             ], UrlGeneratorInterface::ABSOLUTE_URL);
     
+            // 🔹 Envoi des emails avec le token dans l'URL
             $this->clientMailService->sendClientCompletionEmail($client, $completionUrl);
             $this->clientMailService->sendSupportNotification($client, $completionUrl);
             $this->clientMailService->sendInstallerConfirmation($client, $completionUrl);
@@ -74,6 +87,4 @@ class HomeController extends AbstractController
     
         return new Response('❌ Formulaire invalide - Vérifie les erreurs', Response::HTTP_BAD_REQUEST);
     }
-    
-    
 }
