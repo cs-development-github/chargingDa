@@ -61,9 +61,23 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Intervention::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $interventions;
 
+    /**
+     * @var Collection<int, Tarification>
+     */
+    #[ORM\OneToMany(targetEntity: Tarification::class, mappedBy: 'client')]
+    private Collection $tarifications;
+
+    /**
+     * @var Collection<int, Badge>
+     */
+    #[ORM\OneToMany(targetEntity: Badge::class, mappedBy: 'client')]
+    private Collection $badges;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
+        $this->tarifications = new ArrayCollection();
+        $this->badges = new ArrayCollection();
     }
 
     public function getSecureToken(): ?string
@@ -258,6 +272,66 @@ class Client
         if ($this->interventions->removeElement($intervention)) {
             if ($intervention->getClient() === $this) {
                 $intervention->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tarification>
+     */
+    public function getTarifications(): Collection
+    {
+        return $this->tarifications;
+    }
+
+    public function addTarification(Tarification $tarification): static
+    {
+        if (!$this->tarifications->contains($tarification)) {
+            $this->tarifications->add($tarification);
+            $tarification->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarification(Tarification $tarification): static
+    {
+        if ($this->tarifications->removeElement($tarification)) {
+            // set the owning side to null (unless already changed)
+            if ($tarification->getClient() === $this) {
+                $tarification->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Badge>
+     */
+    public function getBadges(): Collection
+    {
+        return $this->badges;
+    }
+
+    public function addBadge(Badge $badge): static
+    {
+        if (!$this->badges->contains($badge)) {
+            $this->badges->add($badge);
+            $badge->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBadge(Badge $badge): static
+    {
+        if ($this->badges->removeElement($badge)) {
+            // set the owning side to null (unless already changed)
+            if ($badge->getClient() === $this) {
+                $badge->setClient(null);
             }
         }
 

@@ -40,7 +40,6 @@ final class ClientController extends AbstractController
             'clients' => $clients,
         ]);
     }
-    
 
     #[Route('/ajouter/client', name: 'app_add_client')]
     public function addClient(
