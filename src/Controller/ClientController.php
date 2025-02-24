@@ -274,7 +274,7 @@ final class ClientController extends AbstractController
         public function tankYou(): Response
         {
             // Ici, vous pouvez ajouter de la logique supplémentaire si besoin (ex : envoi d'email, etc.)
-            return $this->render('thank_you.html.twig');
+            return $this->render('client/thank_you.html.twig');
         }
 
 }
