@@ -7,7 +7,7 @@ Encore
 
     .addEntry('app', './assets/app.js')
     .addEntry('carousel', './assets/carousel.js')
-
+    .addEntry('landing', './assets/landing.js')
     .enableSingleRuntimeChunk()
 
     // Activer Sass/SCSS pour Bootstrap
