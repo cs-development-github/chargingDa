@@ -61,21 +61,41 @@
     <div class="form-container">
         {{ form_start(form, { 'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'} }) }}
     
-        <!-- Étape 1 : Informations Client -->
+
         <div id="step-1" class="step active">
+            <h3 class="text-center">Complétez vos informations</h3>
+            <div class="mb-3">
+            </div>
+            En poursuivant, vous certifiez que toutes les informations que vous allez renseigner sont exactes, 
+            véridiques et conformes à la réalité. Toute tentative de fournir des informations erronées, falsifiées 
+            ou trompeuses pourrait entraîner des mesures appropriées, y compris l’annulation de votre demande 
+            ou la restriction de l’accès à nos services.            
+            <div class="step-navigation d-flex justify-content-end">
+                <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+            </div>
+        </div>
+
+        <!-- Étape 1 : Informations Client -->
+        <div id="step-2" class="step">
             <h3 class="text-center">Complétez vos informations</h3>
             <div class="mb-3">
                 {{ form_widget(form) }}
             </div>
     
             <div class="step-navigation d-flex justify-content-end">
+                <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
                 <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
             </div>
         </div>
     
         <!-- Étape 2 : Tarification -->
-        <div id="step-2" class="step">
+        <div id="step-3" class="step">
             <h3 class="text-center">Tarification</h3>
+
+            <div class="mb-3">
+                <label class="form-label">Nombre de badges gratuits</label>
+                <input type="number" class="form-control" name="freeBadges" min="0" required>
+            </div>
     
             {% for station in chargingStations %}
                 <h5>Borne : {{ station.model }}</h5>
@@ -97,8 +117,18 @@
     
             <div class="step-navigation d-flex justify-content-between">
                 <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
-                <button type="submit" class="btn-submit">Valider</button>
+                <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
             </div>
+        </div>
+
+        <div id="step-4" class="step">
+            <h3 class="text-center">Information de la borne</h3>
+
+            <h1>L'addresse de chaque borne </h1>
+            a récupérer nom de la société 
+            Si la borne et publique chaque borne
+            <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
+            <button type="submit" class="btn-submit">Valider</button>
         </div>
     
         {{ form_end(form) }}

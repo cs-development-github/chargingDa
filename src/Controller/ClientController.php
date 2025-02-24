@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Badge;
 use App\Entity\Client;
 use App\Entity\Intervention;
+use App\Entity\Tarification;
 use App\Form\ClientContractFormType;
 use App\Form\ClientFormType;
 use App\Form\ClientInterventionFormType;
@@ -126,14 +127,12 @@ final class ClientController extends AbstractController
             throw $this->createAccessDeniedException('Token manquant.');
         }
     
-        // Récupération du client via le token
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
     
         if (!$client) {
             throw $this->createNotFoundException('Lien invalide ou client introuvable.');
         }
-    
-        // Récupération des bornes associées au client via la table Intervention
+
         $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
     
         $chargingStations = [];
@@ -141,15 +140,56 @@ final class ClientController extends AbstractController
             $chargingStations[] = $intervention->getChargingStation();
         }
     
-        // Création du formulaire ClientContractFormType
         $form = $this->createForm(ClientContractFormType::class, $client);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $request->request->all(); // Récupère toutes les valeurs du formulaire
+            
+            $freeBadges = isset($data['freeBadges']) ? (int) $data['freeBadges'] : 0;
+    
+            $badge = $em->getRepository(Badge::class)->findOneBy(['client' => $client]);
+    
+            if (!$badge) {
+                $badge = new Badge();
+                $badge->setClient($client);
+            }
+    
+            $badge->setNumber($freeBadges);
+            $em->persist($badge);
+            // Mise à jour des prix des bornes et association avec Tarification
+            foreach ($chargingStations as $station) {
+                $stationId = $station->getId();
+                if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"])) {
+                    $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
+    
+                    if (!$tarification) {
+                        $tarification = new Tarification();
+                        $tarification->setChargingStation($station);
+                    }
+    
+                    $tarification->setClient($client);
+                    $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
+                    $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
+                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
+    
+                    $em->persist($tarification);
+                }
+            }
+    
+            $em->flush();
+    
+            $this->addFlash('success', 'Informations mises à jour avec succès !');
+            return $this->redirectToRoute('client_complete_info', ['token' => $token]);
+        }
     
         return $this->render('client/complete_form.html.twig', [
             'form' => $form->createView(),
             'client' => $client,
-            'chargingStations' => $chargingStations, // 🔥 On passe les bornes au template
+            'chargingStations' => $chargingStations,
         ]);
     }
+    
 
     #[Route('/client/update-info', name: 'client_update_info', methods: ['POST'])]
     public function updateClientInfo(
