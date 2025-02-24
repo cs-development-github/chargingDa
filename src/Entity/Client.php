@@ -40,12 +40,6 @@ class Client
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $priceKwh = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $priceResale = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adress = null;
 
@@ -195,30 +189,6 @@ class Client
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getPriceKwh(): ?string
-    {
-        return $this->priceKwh;
-    }
-
-    public function setPriceKwh(string $priceKwh): static
-    {
-        $this->priceKwh = $priceKwh;
-
-        return $this;
-    }
-
-    public function getPriceResale(): ?string
-    {
-        return $this->priceResale;
-    }
-
-    public function setPriceResale(string $priceResale): static
-    {
-        $this->priceResale = $priceResale;
 
         return $this;
     }

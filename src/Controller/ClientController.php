@@ -70,17 +70,13 @@ final class ClientController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             // Associer l'installateur
-            $intervention->setInstaller($user);
+            $intervention->setInstallator($user);
             $client->setCreatedBy($user);
     
             $entityManager->persist($client);
             $entityManager->persist($intervention);
             $entityManager->flush();
     
-            if ($this->isClientDataComplete($client)) {
-                $contractService->generateAndSendContract($client);
-                $this->addFlash('success', 'Le client et l\'intervention ont été ajoutés et le contrat a été envoyé.');
-            } else {
                 $token = Uuid::v4()->toRfc4122();
                 $client->setSecureToken($token);
                 $entityManager->flush();
@@ -109,7 +105,6 @@ final class ClientController extends AbstractController
                 
     
                 $this->addFlash('info', 'Le client a été ajouté, mais certaines informations sont manquantes.');
-            }
     
             return $this->redirectToRoute('app_add_client');
         }
@@ -120,7 +115,7 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/client/complete-info', name: 'client_complete_info')]
-    public function completeClientInfo(Request $request, EntityManagerInterface $em): Response
+    public function completeClientInfo(Request $request, EntityManagerInterface $em, ClientContractService $contractService): Response
     {
         $token = $request->query->get('token');
     
@@ -198,10 +193,12 @@ final class ClientController extends AbstractController
             }
         }
     
+            // $client->setSecureToken(null);
             $em->flush();
+
+            if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);
     
-            $this->addFlash('success', 'Informations mises à jour avec succès !');
-            return $this->redirectToRoute('client_complete_info', ['token' => $token]);
+            return $this->redirectToRoute('thank_you');
         }
     
         return $this->render('client/complete_form.html.twig', [
@@ -211,46 +208,6 @@ final class ClientController extends AbstractController
         ]);
     }
     
-
-    #[Route('/client/update-info', name: 'client_update_info', methods: ['POST'])]
-    public function updateClientInfo(
-        Request $request,
-        EntityManagerInterface $em,
-        ClientContractService $contractService
-    ): Response {
-        $token = $request->request->get('token');
-    
-        if (!$token) {
-            throw $this->createAccessDeniedException('Token manquant.');
-        }
-    
-        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-    
-        if (!$client) {
-            throw $this->createNotFoundException('Client introuvable.');
-        }
-    
-        $form = $this->createForm(ClientContractFormType::class, $client);
-        $form->handleRequest($request);
-    
-        if ($form->isSubmitted() && $form->isValid()) {
-            $client->setSecureToken(null);
-            $em->persist($client);
-            $em->flush();
-    
-            $contractService->generateAndSendContract($client);
-    
-            $this->addFlash('success', 'Les informations ont été mises à jour et le contrat a été envoyé.');
-    
-            // return $this->redirectToRoute('app_home');
-        }
-    
-        return $this->render('client/complete_form.html.twig', [
-            'form' => $form->createView(),
-            'client' => $client
-        ]);
-    }
-
     /**
      * Vérifie si tous les champs obligatoires sont remplis.
      */
@@ -264,8 +221,6 @@ final class ClientController extends AbstractController
             && !empty($client->getLastname())
             && !empty($client->getSiret())
             && !empty($client->getCodeNaf())
-            && !empty($client->getPriceKwh())
-            && !empty($client->getPriceResale())
             && !empty($client->getLegalForm());
     }
 
@@ -273,7 +228,6 @@ final class ClientController extends AbstractController
         #[Route('/thank-you', name: 'thank_you')]
         public function tankYou(): Response
         {
-            // Ici, vous pouvez ajouter de la logique supplémentaire si besoin (ex : envoi d'email, etc.)
             return $this->render('client/thank_you.html.twig');
         }
 
