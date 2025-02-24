@@ -60,7 +60,6 @@
     </style>
 </head>
 <body>
-
     <div class="container">
         <h1>ANNEXE 1 – FORFAIT D’ABONNEMENT</h1>
 
@@ -79,22 +78,40 @@
                     <tr>
                         <td><strong>Offre Boost</strong></td>
                         <td>19.90€ HT / mois / point de charge</td>
-                        <td>-</td>
-                        <td>-</td>
+                        <td>{{ totalConnectors }}</td>
+                        <td>{{ (19.90 * totalConnectors)|number_format(2, '.', ' ') }} € HT</td>
                     </tr>
                     <tr>
                         <td>Frais de kWh délivré</td>
-                        <td>10% du chiffre d'affaire</td>
-                        <td>-</td>
+                        <td colspan="3">10% du chiffre d'affaires</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="section">
+            <h2>2. Tarification par bornes</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Modèle de la borne</th>
+                        <th>Prix d'achat du kWh</th>
+                        <th>Prix de revente du kWh</th>
+                        <th>Prix réduit du kWh</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tarif in tarifications %}
+                    <tr>
+                        <td>{{ tarif.chargingStationModel }}</td>
+                        <td>{{ tarif.purchasePrice }} €</td>
+                        <td>{{ tarif.resalePrice }} €</td>
+                        <td>{{ tarif.reducedPrice }} €</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
             <p><strong>Toute modification des nouveaux prix sera effective sous 1 mois.</strong></p>
-            <p><strong>Prix d'achat du kWh en € :</strong> {{ client.priceKwh }}</p>
-            <p><strong>Prix de revente du kWh en € :</strong> {{ client.priceResale }} </p>
         </div>
 
         <div class="signature">
@@ -118,6 +135,5 @@
             <p><a href="https://www.lodmi.com" target="_blank">www.lodmi.com</a></p>
         </div>
     </div>
-
 </body>
 </html>

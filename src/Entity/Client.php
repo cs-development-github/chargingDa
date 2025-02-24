@@ -40,12 +40,6 @@ class Client
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $priceKwh = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $priceResale = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $adress = null;
 
@@ -61,9 +55,30 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Intervention::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $interventions;
 
+    /**
+     * @var Collection<int, Tarification>
+     */
+    #[ORM\OneToMany(targetEntity: Tarification::class, mappedBy: 'client')]
+    private Collection $tarifications;
+
+    /**
+     * @var Collection<int, Badge>
+     */
+    #[ORM\OneToMany(targetEntity: Badge::class, mappedBy: 'client')]
+    private Collection $badges;
+
+    /**
+     * @var Collection<int, ChargingStationSetting>
+     */
+    #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'client')]
+    private Collection $chargingStationSettings;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
+        $this->tarifications = new ArrayCollection();
+        $this->badges = new ArrayCollection();
+        $this->chargingStationSettings = new ArrayCollection();
     }
 
     public function getSecureToken(): ?string
@@ -178,30 +193,6 @@ class Client
         return $this;
     }
 
-    public function getPriceKwh(): ?string
-    {
-        return $this->priceKwh;
-    }
-
-    public function setPriceKwh(string $priceKwh): static
-    {
-        $this->priceKwh = $priceKwh;
-
-        return $this;
-    }
-
-    public function getPriceResale(): ?string
-    {
-        return $this->priceResale;
-    }
-
-    public function setPriceResale(string $priceResale): static
-    {
-        $this->priceResale = $priceResale;
-
-        return $this;
-    }
-
     public function getAdress(): ?string
     {
         return $this->adress;
@@ -258,6 +249,96 @@ class Client
         if ($this->interventions->removeElement($intervention)) {
             if ($intervention->getClient() === $this) {
                 $intervention->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tarification>
+     */
+    public function getTarifications(): Collection
+    {
+        return $this->tarifications;
+    }
+
+    public function addTarification(Tarification $tarification): static
+    {
+        if (!$this->tarifications->contains($tarification)) {
+            $this->tarifications->add($tarification);
+            $tarification->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarification(Tarification $tarification): static
+    {
+        if ($this->tarifications->removeElement($tarification)) {
+            // set the owning side to null (unless already changed)
+            if ($tarification->getClient() === $this) {
+                $tarification->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Badge>
+     */
+    public function getBadges(): Collection
+    {
+        return $this->badges;
+    }
+
+    public function addBadge(Badge $badge): static
+    {
+        if (!$this->badges->contains($badge)) {
+            $this->badges->add($badge);
+            $badge->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBadge(Badge $badge): static
+    {
+        if ($this->badges->removeElement($badge)) {
+            // set the owning side to null (unless already changed)
+            if ($badge->getClient() === $this) {
+                $badge->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChargingStationSetting>
+     */
+    public function getChargingStationSettings(): Collection
+    {
+        return $this->chargingStationSettings;
+    }
+
+    public function addChargingStationSetting(ChargingStationSetting $chargingStationSetting): static
+    {
+        if (!$this->chargingStationSettings->contains($chargingStationSetting)) {
+            $this->chargingStationSettings->add($chargingStationSetting);
+            $chargingStationSetting->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChargingStationSetting(ChargingStationSetting $chargingStationSetting): static
+    {
+        if ($this->chargingStationSettings->removeElement($chargingStationSetting)) {
+            // set the owning side to null (unless already changed)
+            if ($chargingStationSetting->getClient() === $this) {
+                $chargingStationSetting->setClient(null);
             }
         }
 

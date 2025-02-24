@@ -2,11 +2,13 @@
 
 namespace App\Form;
 
+use App\Entity\Badge;
 use App\Entity\Client;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -30,6 +32,13 @@ class ClientContractFormType extends AbstractType
                     new NotBlank(['message' => 'Le prénom est obligatoire']),
                 ],
             ])
+            ->add('numberTva', TextType::class, [
+                'label' => 'Numéro de TVA',
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Le numéro de TVA est obligatoire']),
+                ],
+            ])
             ->add('societyName', TextType::class, [
                 'label' => 'Entreprise',
                 'attr' => ['class' => 'form-control'],
@@ -41,32 +50,20 @@ class ClientContractFormType extends AbstractType
                 'label' => 'Siret',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('numberTva', TextType::class, [
-                'label' => 'Numéro de TVA',
-                'attr' => ['class' => 'form-control'],
-            ])
             ->add('codeNaf', TextType::class, [
-                'label' => 'Code NAF',
+                'label' => 'Code Naf',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('email', EmailType::class, [
+            ->add('phone', TextType::class, [
+                'label' => 'Numéro de téléphone',
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('email', TextType::class, [
                 'label' => 'Email',
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
                     new NotBlank(['message' => 'L\'email est obligatoire']),
                 ],
-            ])
-            ->add('phone', TextType::class, [
-                'label' => 'Téléphone',
-                'attr' => ['class' => 'form-control'],
-            ])
-            ->add('priceKwh', TextType::class, [
-                'label' => 'Prix d\'achat kWh',
-                'attr' => ['class' => 'form-control'],
-            ])
-            ->add('priceResale', TextType::class, [
-                'label' => 'Prix de revente kWh',
-                'attr' => ['class' => 'form-control'],
             ])
             ->add('adress', TextType::class, [
                 'label' => 'Adresse de facturation',
