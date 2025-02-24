@@ -16,9 +16,6 @@ class SimCard
     #[ORM\Column(length: 255)]
     private ?string $activateCode = null;
 
-    #[ORM\ManyToOne(inversedBy: 'simCards')]
-    private ?Team $team = null;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -36,15 +33,4 @@ class SimCard
         return $this;
     }
 
-    public function getTeam(): ?Team
-    {
-        return $this->team;
-    }
-
-    public function setTeam(?Team $team): static
-    {
-        $this->team = $team;
-
-        return $this;
-    }
 }

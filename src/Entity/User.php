@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use App\Entity\Trait\TimestampableTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
@@ -36,37 +35,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
-    #[ORM\Column(length: 14, nullable: true)]
-    private ?string $siret = null;
-
     #[ORM\Column]
     private ?bool $isActive = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $societyName = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(type: "boolean", options: ["default" => false])]
-    private bool $isChefEffectif = false;
-
-    #[ORM\ManyToOne(targetEntity: self::class)]
-    #[ORM\JoinColumn(onDelete: "SET NULL")]
-    private ?User $createdBy = null;
-
-    #[ORM\ManyToOne(inversedBy: 'user')]
-    private ?Team $team = null;
+    #[ORM\Column(length: 255)]
+    private ?string $societyName = null;
 
     /**
-     * @var Collection<int, Team>
+     * @var Collection<int, Intervention>
      */
-    #[ORM\OneToMany(targetEntity: Team::class, mappedBy: 'createdBy')]
-    private Collection $teams;
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'installator')]
+    private Collection $interventions;
 
     public function __construct()
     {
-        $this->teams = new ArrayCollection();
+        $this->interventions = new ArrayCollection();
     }
 
     use TimestampableTrait;
@@ -163,17 +149,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getSiret(): ?string
-    {
-        return $this->siret;
-    }
-
-    public function setSiret(?string $siret): static
-    {
-        $this->siret = $siret;
-        return $this;
-    }
-
     public function isActive(): ?bool
     {
         return $this->isActive;
@@ -182,17 +157,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsActive(bool $isActive): static
     {
         $this->isActive = $isActive;
-        return $this;
-    }
-
-    public function getSocietyName(): ?string
-    {
-        return $this->societyName;
-    }
-
-    public function setSocietyName(?string $societyName): static
-    {
-        $this->societyName = $societyName;
         return $this;
     }
 
@@ -207,64 +171,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function isChefEffectif(): bool
+    public function getSocietyName(): ?string
     {
-        return $this->isChefEffectif;
+        return $this->societyName;
     }
 
-    public function setIsChefEffectif(bool $isChefEffectif): static
+    public function setSocietyName(string $societyName): static
     {
-        $this->isChefEffectif = $isChefEffectif;
-        return $this;
-    }
-
-    public function getCreatedBy(): ?User
-    {
-        return $this->createdBy;
-    }
-
-    public function setCreatedBy(?User $createdBy): static
-    {
-        $this->createdBy = $createdBy;
-        return $this;
-    }
-
-    public function getTeam(): ?Team
-    {
-        return $this->team;
-    }
-
-    public function setTeam(?Team $team): static
-    {
-        $this->team = $team;
+        $this->societyName = $societyName;
 
         return $this;
     }
 
     /**
-     * @return Collection<int, Team>
+     * @return Collection<int, Intervention>
      */
-    public function getTeams(): Collection
+    public function getInterventions(): Collection
     {
-        return $this->teams;
+        return $this->interventions;
     }
 
-    public function addTeam(Team $team): static
+    public function addIntervention(Intervention $intervention): static
     {
-        if (!$this->teams->contains($team)) {
-            $this->teams->add($team);
-            $team->setCreatedBy($this);
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setInstallator($this);
         }
 
         return $this;
     }
 
-    public function removeTeam(Team $team): static
+    public function removeIntervention(Intervention $intervention): static
     {
-        if ($this->teams->removeElement($team)) {
+        if ($this->interventions->removeElement($intervention)) {
             // set the owning side to null (unless already changed)
-            if ($team->getCreatedBy() === $this) {
-                $team->setCreatedBy(null);
+            if ($intervention->getInstallator() === $this) {
+                $intervention->setInstallator(null);
             }
         }
 

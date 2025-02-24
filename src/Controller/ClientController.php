@@ -2,8 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Badge;
+use App\Entity\ChargingStationSetting;
 use App\Entity\Client;
 use App\Entity\Intervention;
+use App\Entity\Tarification;
+use App\Form\ClientContractFormType;
 use App\Form\ClientFormType;
 use App\Form\ClientInterventionFormType;
 use App\Form\InterventionFormType;
@@ -39,7 +43,6 @@ final class ClientController extends AbstractController
             'clients' => $clients,
         ]);
     }
-    
 
     #[Route('/ajouter/client', name: 'app_add_client')]
     public function addClient(
@@ -67,17 +70,13 @@ final class ClientController extends AbstractController
     
         if ($form->isSubmitted() && $form->isValid()) {
             // Associer l'installateur
-            $intervention->setInstaller($user);
+            $intervention->setInstallator($user);
             $client->setCreatedBy($user);
     
             $entityManager->persist($client);
             $entityManager->persist($intervention);
             $entityManager->flush();
     
-            if ($this->isClientDataComplete($client)) {
-                $contractService->generateAndSendContract($client);
-                $this->addFlash('success', 'Le client et l\'intervention ont été ajoutés et le contrat a été envoyé.');
-            } else {
                 $token = Uuid::v4()->toRfc4122();
                 $client->setSecureToken($token);
                 $entityManager->flush();
@@ -106,7 +105,6 @@ final class ClientController extends AbstractController
                 
     
                 $this->addFlash('info', 'Le client a été ajouté, mais certaines informations sont manquantes.');
-            }
     
             return $this->redirectToRoute('app_add_client');
         }
@@ -117,70 +115,99 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/client/complete-info', name: 'client_complete_info')]
-    public function completeClientInfo(Request $request, EntityManagerInterface $em): Response
+    public function completeClientInfo(Request $request, EntityManagerInterface $em, ClientContractService $contractService): Response
     {
         $token = $request->query->get('token');
-
+    
         if (!$token) {
             throw $this->createAccessDeniedException('Token manquant.');
         }
-
+    
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-
+    
         if (!$client) {
             throw $this->createNotFoundException('Lien invalide ou client introuvable.');
         }
 
-        $form = $this->createForm(ClientFormType::class, $client, [
-            'action' => $this->generateUrl('client_update_info'),
-            'method' => 'POST'
-        ]);
-
-        return $this->render('client/complete_form.html.twig', [
-            'form' => $form->createView(),
-            'client' => $client
-        ]);
-    }
-
-    #[Route('/client/update-info', name: 'client_update_info', methods: ['POST'])]
-    public function updateClientInfo(
-        Request $request,
-        EntityManagerInterface $em,
-        ClientContractService $contractService
-    ): Response {
-        $token = $request->request->get('token');
+        $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
     
-        if (!$token) {
-            throw $this->createAccessDeniedException('Token manquant.');
+        $chargingStations = [];
+        foreach ($interventions as $intervention) {
+            $chargingStations[] = $intervention->getChargingStation();
         }
     
-        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-    
-        if (!$client) {
-            throw $this->createNotFoundException('Client introuvable.');
-        }
-    
-        $form = $this->createForm(ClientFormType::class, $client);
+        $form = $this->createForm(ClientContractFormType::class, $client);
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            $client->setSecureToken(null);
-            $em->persist($client);
+            $data = $request->request->all();
+            
+            $freeBadges = isset($data['freeBadges']) ? (int) $data['freeBadges'] : 0;
+    
+            $badge = $em->getRepository(Badge::class)->findOneBy(['client' => $client]);
+    
+            if (!$badge) {
+                $badge = new Badge();
+                $badge->setClient($client);
+            }
+    
+            $badge->setNumber($freeBadges);
+            $em->persist($badge);
+            // Mise à jour des prix des bornes et association avec Tarification
+            foreach ($chargingStations as $station) {
+                $stationId = $station->getId();
+                if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"])) {
+                    $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
+    
+                    if (!$tarification) {
+                        $tarification = new Tarification();
+                        $tarification->setChargingStation($station);
+                    }
+    
+                    $tarification->setClient($client);
+                    $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
+                    $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
+                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
+    
+                    $em->persist($tarification);
+                }
+            }
+
+        foreach ($chargingStations as $station) {
+            $stationId = $station->getId();
+            if (isset($data["public_$stationId"]) && isset($data["adress_$stationId"])) {
+                $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
+
+                if (!$setting) {
+                    $setting = new ChargingStationSetting();
+                    $setting->setChargingStation($station);
+                    $setting->setClient($client);
+                }
+
+                $setting->setPublic((bool) $data["public_$stationId"]);
+                $setting->setAdress($data["adress_$stationId"]);
+                $setting->setInstalledAt(new \DateTime($data["installedAt_$stationId"] ?? 'now'));
+                $setting->setSupervisedAt(new \DateTime($data["supervisedAt_$stationId"] ?? 'now'));
+
+                $em->persist($setting);
+            }
+        }
+    
+            // $client->setSecureToken(null);
             $em->flush();
+
+            if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);
     
-            $contractService->generateAndSendContract($client);
-    
-            $this->addFlash('success', 'Les informations ont été mises à jour et le contrat a été envoyé.');
-    
-            return $this->redirectToRoute('app_clients');
+            return $this->redirectToRoute('thank_you');
         }
     
         return $this->render('client/complete_form.html.twig', [
             'form' => $form->createView(),
-            'client' => $client
+            'client' => $client,
+            'chargingStations' => $chargingStations,
         ]);
     }
-
+    
     /**
      * Vérifie si tous les champs obligatoires sont remplis.
      */
@@ -194,8 +221,14 @@ final class ClientController extends AbstractController
             && !empty($client->getLastname())
             && !empty($client->getSiret())
             && !empty($client->getCodeNaf())
-            && !empty($client->getPriceKwh())
-            && !empty($client->getPriceResale())
             && !empty($client->getLegalForm());
     }
+
+
+        #[Route('/thank-you', name: 'thank_you')]
+        public function tankYou(): Response
+        {
+            return $this->render('client/thank_you.html.twig');
+        }
+
 }

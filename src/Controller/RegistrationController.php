@@ -21,18 +21,11 @@ class RegistrationController extends AbstractController
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-        $errorMessages = [];
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            foreach ($form->getErrors(true) as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
             $plainPassword = $form->get('password')->getData();
-
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
-
-            $user->setRoles(['ROLE_ADMIN']);
+            $user->setRoles(['ROLE_USER']);
             $user->setIsActive(true);
 
             $entityManager->persist($user);
@@ -43,7 +36,6 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
-            'error' => count($errorMessages) > 0 ? implode('<br>', $errorMessages) : null
         ]);
     }
 }

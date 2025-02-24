@@ -102,7 +102,7 @@ final class ChargingStationsController extends AbstractController
     #[Route('/manufacturer/add', name: 'manufacturer_add', methods: ['POST'])]
     public function addManufacturer(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit d\'ajouter un propriétaire.');
         }
 
@@ -167,7 +167,7 @@ final class ChargingStationsController extends AbstractController
     #[Route('/charging/stations/{slug}/delete', name: 'charging_station_delete', methods: ['POST'])]
     public function deleteChargingStation(ChargingStations $station, EntityManagerInterface $entityManager): Response
     {
-        if (!$this->isGranted('ROLE_SUPER_ADMIN')) {
+        if (!$this->isGranted('ROLE_ADMIN')) {
             throw $this->createAccessDeniedException('Vous n\'avez pas le droit de supprimer cette borne.');
         }
 

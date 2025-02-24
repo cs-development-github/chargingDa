@@ -24,18 +24,6 @@ class MailService
         $this->twig = $twig;
     }
 
-    public function sendWelcomeEmail(string $toEmail, string $name): void
-    {
-        $email = (new TemplatedEmail())
-            ->from($this->adminEmail)
-            ->to($toEmail)
-            ->subject('Bienvenue chez nous !')
-            ->htmlTemplate('emails/welcome_email.html.twig')
-            ->context(['name' => $name]);
-
-        $this->mailer->send($email);
-    }
-
     public function sendEmail(string $to, string $subject, string $template, array $context): void
     {
         $htmlContent = $this->twig->render($template, $context);

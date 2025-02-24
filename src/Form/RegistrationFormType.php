@@ -47,23 +47,6 @@ class RegistrationFormType extends AbstractType
             ->add('societyName', TextType::class, [
                 'label' => 'Nom de l\'entreprise'
             ])
-            ->add('siret', TextType::class, [
-                'label' => 'Numéro SIRET',
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer votre numéro SIRET.',
-                    ]),
-                    new Length([
-                        'min' => 14,
-                        'max' => 14,
-                        'exactMessage' => 'Le numéro SIRET doit contenir exactement 14 chiffres.',
-                    ]),
-                    new Regex([
-                        'pattern' => '/^\d{14}$/',
-                        'message' => 'Le numéro SIRET doit être composé uniquement de 14 chiffres.',
-                    ]),
-                ],
-            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'J\'accepte les conditions générales',

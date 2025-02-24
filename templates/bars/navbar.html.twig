@@ -21,9 +21,14 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 fixed-top" style="height: 70px; z-index: 1050;">
     <div class="container-fluid d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
+            {% if is_granted('ROLE_ADMIN') %}
+
             <button class="btn me-3 d-md-none" id="sidebarToggle">
+
                 <i class="bi bi-list"></i>
             </button>
+
+            {% endif %}
             <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
                 <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo" class="img-fluid me-2 d-none d-md-block"
                     style="height: 50px; border-radius: 10px;">

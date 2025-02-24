@@ -14,54 +14,67 @@ class Intervention
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
-    private ?ChargingStations $ChargingStation = null;
+    private ?Client $Client = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
-    private ?User $installer = null;
+    private ?User $installator = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?SimCard $sim = null;
+    #[ORM\Column(length: 255)]
+    private ?string $sim = null;
+
+    #[ORM\ManyToOne(inversedBy: 'interventions')]
+    private ?ChargingStations $chargingStation = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getChargingStation(): ?ChargingStations
+    public function getClient(): ?Client
     {
-        return $this->ChargingStation;
+        return $this->Client;
     }
 
-    public function setChargingStation(?ChargingStations $ChargingStation): static
+    public function setClient(?Client $Client): static
     {
-        $this->ChargingStation = $ChargingStation;
+        $this->Client = $Client;
 
         return $this;
     }
 
-    public function getInstaller(): ?User
+    public function getInstallator(): ?User
     {
-        return $this->installer;
+        return $this->installator;
     }
 
-    public function setInstaller(?User $installer): static
+    public function setInstallator(?User $installator): static
     {
-        $this->installer = $installer;
+        $this->installator = $installator;
 
         return $this;
     }
 
-    public function getSim(): ?SimCard
+    public function getSim(): ?string
     {
         return $this->sim;
     }
 
-    public function setSim(SimCard $sim): static
+    public function setSim(string $sim): static
     {
         $this->sim = $sim;
 
         return $this;
     }
 
+    public function getChargingStation(): ?ChargingStations
+    {
+        return $this->chargingStation;
+    }
+
+    public function setChargingStation(?ChargingStations $chargingStation): static
+    {
+        $this->chargingStation = $chargingStation;
+
+        return $this;
+    }
 }

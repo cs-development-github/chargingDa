@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\ChargingStationsRepository;
@@ -41,6 +43,31 @@ class ChargingStations
 
     #[ORM\Column(length: 255, unique: true)]
     private ?string $slug = null;
+
+    /**
+     * @var Collection<int, Intervention>
+     */
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'chargingStation')]
+    private Collection $interventions;
+
+    /**
+     * @var Collection<int, Tarification>
+     */
+    #[ORM\OneToMany(targetEntity: Tarification::class, mappedBy: 'chargingStation')]
+    private Collection $tarifications;
+
+    /**
+     * @var Collection<int, ChargingStationSetting>
+     */
+    #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'chargingStation')]
+    private Collection $chargingStationSettings;
+
+    public function __construct()
+    {
+        $this->interventions = new ArrayCollection();
+        $this->tarifications = new ArrayCollection();
+        $this->chargingStationSettings = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -129,5 +156,95 @@ class ChargingStations
     {
         $slug = $slugger->slug($this->model)->lower();
         $this->setSlug($slug);
+    }
+
+    /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setChargingStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getChargingStation() === $this) {
+                $intervention->setChargingStation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tarification>
+     */
+    public function getTarifications(): Collection
+    {
+        return $this->tarifications;
+    }
+
+    public function addTarification(Tarification $tarification): static
+    {
+        if (!$this->tarifications->contains($tarification)) {
+            $this->tarifications->add($tarification);
+            $tarification->setChargingStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTarification(Tarification $tarification): static
+    {
+        if ($this->tarifications->removeElement($tarification)) {
+            // set the owning side to null (unless already changed)
+            if ($tarification->getChargingStation() === $this) {
+                $tarification->setChargingStation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChargingStationSetting>
+     */
+    public function getChargingStationSettings(): Collection
+    {
+        return $this->chargingStationSettings;
+    }
+
+    public function addChargingStationSetting(ChargingStationSetting $chargingStationSetting): static
+    {
+        if (!$this->chargingStationSettings->contains($chargingStationSetting)) {
+            $this->chargingStationSettings->add($chargingStationSetting);
+            $chargingStationSetting->setChargingStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChargingStationSetting(ChargingStationSetting $chargingStationSetting): static
+    {
+        if ($this->chargingStationSettings->removeElement($chargingStationSetting)) {
+            // set the owning side to null (unless already changed)
+            if ($chargingStationSetting->getChargingStation() === $this) {
+                $chargingStationSetting->setChargingStation(null);
+            }
+        }
+
+        return $this;
     }
 }
