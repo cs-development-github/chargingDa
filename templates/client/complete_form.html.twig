@@ -1,152 +1,276 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Formulaire en 2 étapes</title>
-
     <!-- Bootstrap & FontAwesome -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
+    <script
+      src="https://kit.fontawesome.com/a076d05399.js"
+      crossorigin="anonymous"
+    ></script>
     <!-- Encore + CSS personnalisé -->
-    {{ encore_entry_link_tags('app') }}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-
+    {{ encore_entry_link_tags("app") }}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
     <style>
-        body {
-            background-color: #f8f9fa;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 700px;
-        }
-
-        .step { display: none; }
-        .step.active { display: block; }
-
-        .step-navigation {
-            display: flex;
-            margin-top: 20px;
-        }
-
-        .btn-next, .btn-prev, .btn-submit {
-            background: linear-gradient(45deg, #ec008c, #f6941f);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .btn-prev { background: gray; }
+      body {
+        background-color: #f8f9fa;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+      .form-container {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 700px;
+      }
+      .step {
+        display: none;
+      }
+      .step.active {
+        display: block;
+      }
+      .step-navigation {
+        display: flex;
+        margin-top: 20px;
+      }
+      .btn-next,
+      .btn-prev,
+      .btn-submit {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        color: white;
+        border: none;
+        padding: 12px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+      }
+      .btn-prev {
+        background: gray;
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <div class="form-container">
-        {{ form_start(form, { 'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'} }) }}
-    
+      {{ form_start(form, { attr: { class: "needs-validation", novalidate: "novalidate" } }) }}
 
-        <div id="step-1" class="step active">
-            <h3 class="text-center">Complétez vos informations</h3>
+      <div id="step-1" class="step active">
+        <h3 class="text-center">Complétez vos informations</h3>
+        <div class="mb-3"></div>
+        En poursuivant, vous certifiez que toutes les informations que vous allez renseigner sont exactes, véridiques et conformes à la réalité.
+        Toute tentative de fournir des informations erronées, falsifiées ou trompeuses pourrait entraîner des mesures appropriées, y compris l’annulation de votre demande ou la restriction de l’accès à nos services.
+        <div class="step-navigation d-flex justify-content-end">
+          <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Étape 2 : Informations Client -->
+      <div id="step-2" class="step">
+        <h3 class="text-center">Complétez vos informations</h3>
+        <div class="mb-3">
+          {{ form_widget(form) }}
+        </div>
+        <div class="step-navigation d-flex justify-content-between">
+          <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
+          <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
+
+      <!-- Étape 3 : Tarification -->
+      <div id="step-3" class="step">
+        <h3 class="text-center">Tarification</h3>
+        <div class="mb-3">
+          <label class="form-label">Nombre de badges gratuits</label>
+          <input type="number" class="form-control" name="freeBadges" min="0" required />
+        </div>
+        {% for station in chargingStations %}
+        <h5>Borne : {{ station.model }}</h5>
+        <img src="{{ asset('uploads/' ~ station.image) }}" alt="Logo Fabricant" width="90" />
+        <div class="row">
+          <div class="col-md-6">
             <div class="mb-3">
+              <label class="form-label">Prix achat kW</label>
+              <input type="number" class="form-control" name="priceKwh_{{ station.id }}" required />
             </div>
-            En poursuivant, vous certifiez que toutes les informations que vous allez renseigner sont exactes, 
-            véridiques et conformes à la réalité. Toute tentative de fournir des informations erronées, falsifiées 
-            ou trompeuses pourrait entraîner des mesures appropriées, y compris l’annulation de votre demande 
-            ou la restriction de l’accès à nos services.            
-            <div class="step-navigation d-flex justify-content-end">
-                <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
-            </div>
-        </div>
-
-        <!-- Étape 1 : Informations Client -->
-        <div id="step-2" class="step">
-            <h3 class="text-center">Complétez vos informations</h3>
+          </div>
+          <div class="col-md-6">
             <div class="mb-3">
-                {{ form_widget(form) }}
+              <label class="form-label">Prix revente kW</label>
+              <input type="number" class="form-control" name="priceResale_{{ station.id }}" required />
             </div>
-    
-            <div class="step-navigation d-flex justify-content-end">
-                <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
-                <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
-            </div>
+          </div>
         </div>
-    
-        <!-- Étape 2 : Tarification -->
-        <div id="step-3" class="step">
-            <h3 class="text-center">Tarification</h3>
+        {% endfor %}
+        {% if chargingStations|length > 1 %}
+        <div class="mb-3 text-center">
+          <button type="button" class="btn btn-secondary" onclick="applyPriceToAll()">
+            Affecter le prix à toutes les bornes
+          </button>
+        </div>
+        {% endif %}
+        <div class="step-navigation d-flex justify-content-between">
+          <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
+          <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+        </div>
+      </div>
 
+      <!-- Étape 4 : Informations de la borne -->
+      <div id="step-4" class="step">
+        <h3 class="text-center">Informations de la borne</h3>
+        {% for station in chargingStations %}
+        <h5>Borne : {{ station.model }}</h5>
+        <div class="row">
+          <div class="col-md-6">
             <div class="mb-3">
-                <label class="form-label">Nombre de badges gratuits</label>
-                <input type="number" class="form-control" name="freeBadges" min="0" required>
+              <label class="form-label">Public</label>
+              <select class="form-control" name="public_{{ station.id }}">
+                <option value="1">Oui</option>
+                <option value="0">Non</option>
+              </select>
             </div>
-    
-            {% for station in chargingStations %}
-                <h5>Borne : {{ station.model }}</h5>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Prix achat kW</label>
-                            <input type="number" class="form-control" name="priceKwh_{{ station.id }}" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label class="form-label">Prix revente kW</label>
-                            <input type="number" class="form-control" name="priceResale_{{ station.id }}" required>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-    
-            <div class="step-navigation d-flex justify-content-between">
-                <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
-                <button type="button" class="btn-next" onclick="nextStep()">Suivant</button>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Adresse</label>
+              <input type="text" class="form-control" name="adress_{{ station.id }}" required />
             </div>
+          </div>
         </div>
-
-        <div id="step-4" class="step">
-            <h3 class="text-center">Information de la borne</h3>
-
-            <h1>L'addresse de chaque borne </h1>
-            a récupérer nom de la société 
-            Si la borne et publique chaque borne
-            <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
-            <button type="submit" class="btn-submit">Valider</button>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Date d'installation</label>
+              <input type="date" class="form-control" name="installedAt_{{ station.id }}" required />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Date de supervision</label>
+              <input type="date" class="form-control" name="supervisedAt_{{ station.id }}" required />
+            </div>
+          </div>
         </div>
-    
-        {{ form_end(form) }}
+        {% endfor %}
+        {% if chargingStations|length > 1 %}
+        <div class="mb-3 text-center">
+          <button type="button" class="btn btn-secondary" onclick="applyStationInfoToAll()">
+            Affecter les informations à toutes les bornes
+          </button>
+        </div>
+        {% endif %}
+        <div class="step-navigation d-flex justify-content-between">
+          <button type="button" class="btn-prev" onclick="prevStep()">Précédent</button>
+          <button type="submit" class="btn-submit">Valider</button>
+        </div>
+      </div>
+
+      {{ form_end(form) }}
     </div>
-    
-    <script>
-        let currentStep = 1;
-        function nextStep() {
-            document.getElementById(`step-${currentStep}`).classList.remove('active');
-            currentStep++;
-            document.getElementById(`step-${currentStep}`).classList.add('active');
-        }
-        function prevStep() {
-            document.getElementById(`step-${currentStep}`).classList.remove('active');
-            currentStep--;
-            document.getElementById(`step-${currentStep}`).classList.add('active');
-        }
-    </script>
 
-</body>
+    <script>
+      let currentStep = 1;
+      function nextStep() {
+        document.getElementById(`step-${currentStep}`).classList.remove("active");
+        currentStep++;
+        document.getElementById(`step-${currentStep}`).classList.add("active");
+      }
+      function prevStep() {
+        document.getElementById(`step-${currentStep}`).classList.remove("active");
+        currentStep--;
+        document.getElementById(`step-${currentStep}`).classList.add("active");
+      }
+
+      /**
+       * Applique les valeurs du prix d'achat et du prix de revente de la première borne
+       * à tous les champs correspondants de toutes les bornes.
+       */
+      function applyPriceToAll() {
+        try {
+          const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
+          const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
+          if (!sourcePurchaseInput || !sourceResaleInput) {
+            alert("Impossible de trouver les champs de prix pour la première borne.");
+            return;
+          }
+          const sourcePurchase = sourcePurchaseInput.value;
+          const sourceResale = sourceResaleInput.value;
+          if (sourcePurchase === "" || sourceResale === "") {
+            alert("Veuillez remplir le prix d'achat et le prix de revente pour la première borne.");
+            return;
+          }
+          document.querySelectorAll('input[name^="priceKwh_"]').forEach(input => {
+            input.value = sourcePurchase;
+          });
+          document.querySelectorAll('input[name^="priceResale_"]').forEach(input => {
+            input.value = sourceResale;
+          });
+        } catch (error) {
+          console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
+          alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
+        }
+      }
+
+      /**
+       * Applique les informations de la première borne (public, adresse, date d'installation,
+       * date de supervision) à tous les champs correspondants de toutes les bornes.
+       */
+      function applyStationInfoToAll() {
+        try {
+          const firstPublic = document.querySelector('select[name^="public_"]');
+          const firstAddress = document.querySelector('input[name^="adress_"]');
+          const firstInstalled = document.querySelector('input[name^="installedAt_"]');
+          const firstSupervised = document.querySelector('input[name^="supervisedAt_"]');
+          if (!firstPublic || !firstAddress || !firstInstalled || !firstSupervised) {
+            alert("Impossible de trouver les informations de la première borne.");
+            return;
+          }
+          const valuePublic = firstPublic.value;
+          const valueAddress = firstAddress.value;
+          const valueInstalled = firstInstalled.value;
+          const valueSupervised = firstSupervised.value;
+          if (valueAddress === "" || valueInstalled === "" || valueSupervised === "") {
+            alert("Veuillez remplir toutes les informations de la première borne.");
+            return;
+          }
+          document.querySelectorAll('select[name^="public_"]').forEach((select, index) => {
+            if (index > 0) {
+              select.value = valuePublic;
+            }
+          });
+          document.querySelectorAll('input[name^="adress_"]').forEach((input, index) => {
+            if (index > 0) {
+              input.value = valueAddress;
+            }
+          });
+          document.querySelectorAll('input[name^="installedAt_"]').forEach((input, index) => {
+            if (index > 0) {
+              input.value = valueInstalled;
+            }
+          });
+          document.querySelectorAll('input[name^="supervisedAt_"]').forEach((input, index) => {
+            if (index > 0) {
+              input.value = valueSupervised;
+            }
+          });
+        } catch (error) {
+          console.error("Erreur lors de l'application des informations à toutes les bornes :", error);
+          alert("Une erreur est survenue lors de l'application des informations. Veuillez réessayer.");
+        }
+      }
+    </script>
+  </body>
 </html>

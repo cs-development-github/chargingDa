@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Badge;
+use App\Entity\ChargingStationSetting;
 use App\Entity\Client;
 use App\Entity\Intervention;
 use App\Entity\Tarification;
@@ -144,7 +145,7 @@ final class ClientController extends AbstractController
         $form->handleRequest($request);
     
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $request->request->all(); // Récupère toutes les valeurs du formulaire
+            $data = $request->request->all();
             
             $freeBadges = isset($data['freeBadges']) ? (int) $data['freeBadges'] : 0;
     
@@ -176,6 +177,26 @@ final class ClientController extends AbstractController
                     $em->persist($tarification);
                 }
             }
+
+        foreach ($chargingStations as $station) {
+            $stationId = $station->getId();
+            if (isset($data["public_$stationId"]) && isset($data["adress_$stationId"])) {
+                $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
+
+                if (!$setting) {
+                    $setting = new ChargingStationSetting();
+                    $setting->setChargingStation($station);
+                    $setting->setClient($client);
+                }
+
+                $setting->setPublic((bool) $data["public_$stationId"]);
+                $setting->setAdress($data["adress_$stationId"]);
+                $setting->setInstalledAt(new \DateTime($data["installedAt_$stationId"] ?? 'now'));
+                $setting->setSupervisedAt(new \DateTime($data["supervisedAt_$stationId"] ?? 'now'));
+
+                $em->persist($setting);
+            }
+        }
     
             $em->flush();
     
@@ -247,4 +268,13 @@ final class ClientController extends AbstractController
             && !empty($client->getPriceResale())
             && !empty($client->getLegalForm());
     }
+
+
+        #[Route('/thank-you', name: 'thank_you')]
+        public function tankYou(): Response
+        {
+            // Ici, vous pouvez ajouter de la logique supplémentaire si besoin (ex : envoi d'email, etc.)
+            return $this->render('thank_you.html.twig');
+        }
+
 }

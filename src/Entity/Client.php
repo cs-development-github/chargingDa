@@ -73,11 +73,18 @@ class Client
     #[ORM\OneToMany(targetEntity: Badge::class, mappedBy: 'client')]
     private Collection $badges;
 
+    /**
+     * @var Collection<int, ChargingStationSetting>
+     */
+    #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'client')]
+    private Collection $chargingStationSettings;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
         $this->tarifications = new ArrayCollection();
         $this->badges = new ArrayCollection();
+        $this->chargingStationSettings = new ArrayCollection();
     }
 
     public function getSecureToken(): ?string
@@ -332,6 +339,36 @@ class Client
             // set the owning side to null (unless already changed)
             if ($badge->getClient() === $this) {
                 $badge->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChargingStationSetting>
+     */
+    public function getChargingStationSettings(): Collection
+    {
+        return $this->chargingStationSettings;
+    }
+
+    public function addChargingStationSetting(ChargingStationSetting $chargingStationSetting): static
+    {
+        if (!$this->chargingStationSettings->contains($chargingStationSetting)) {
+            $this->chargingStationSettings->add($chargingStationSetting);
+            $chargingStationSetting->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChargingStationSetting(ChargingStationSetting $chargingStationSetting): static
+    {
+        if ($this->chargingStationSettings->removeElement($chargingStationSetting)) {
+            // set the owning side to null (unless already changed)
+            if ($chargingStationSetting->getClient() === $this) {
+                $chargingStationSetting->setClient(null);
             }
         }
 
