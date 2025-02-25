@@ -277,7 +277,12 @@
         document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
         document.getElementById("step" + currentStep).classList.remove("d-none");
 
-        document.getElementById("progressStep1").classList.add("bg-success");
+        // 🔹 Actualizar la barra de progreso dinámicamente
+        let progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+        document.getElementById("progressStep1").style.width = `${progressPercentage}%`;
+        document.getElementById("progressStep2").style.width = `${100 - progressPercentage}%`;
+
+        document.getElementById("progressStep1").classList.toggle("bg-success", currentStep >= 1);
         document.getElementById("progressStep2").classList.toggle("bg-success", currentStep === 2);
 
         document.getElementById("modalTitle").textContent =
@@ -287,6 +292,12 @@
         document.getElementById("nextBtn").classList.toggle("d-none", currentStep === totalSteps);
         document.getElementById("submitBtn").classList.toggle("d-none", currentStep !== totalSteps);
     }
+
+    // ✅ Resetear la barra cuando se abre el modal
+    document.getElementById("progressModal").addEventListener("show.bs.modal", function () {
+        currentStep = 1;
+        updateStep();
+    });
 
     document.getElementById("nextBtn").addEventListener("click", () => {
         if (currentStep < totalSteps) {
