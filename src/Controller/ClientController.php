@@ -155,10 +155,10 @@ final class ClientController extends AbstractController
 
             $badge->setNumber($freeBadges);
             $em->persist($badge);
-            // Mise à jour des prix des bornes et association avec Tarification
+
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
-                if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"])) {
+                if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"]) && isset($data["pricePublic_$stationId"])) {
                     $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
 
                     if (!$tarification) {
@@ -168,6 +168,7 @@ final class ClientController extends AbstractController
 
                     $tarification->setClient($client);
                     $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
+                    $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
                     $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
                     $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
 

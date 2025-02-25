@@ -28,6 +28,9 @@ class Tarification
     #[ORM\Column(length: 255)]
     private ?string $reducedPrice = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?string $publicPrice = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,18 @@ class Tarification
     public function setReducedPrice(string $reducedPrice): static
     {
         $this->reducedPrice = $reducedPrice;
+
+        return $this;
+    }
+
+    public function getPublicPrice(): ?string
+    {
+        return $this->publicPrice;
+    }
+
+    public function setPublicPrice(?string $publicPrice): static
+    {
+        $this->publicPrice = $publicPrice;
 
         return $this;
     }

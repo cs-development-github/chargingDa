@@ -120,18 +120,17 @@ class ClientContractService
                 throw new \RuntimeException("Aucune borne associée pour le client ID {$client->getId()} dans la tarification ID {$tarification->getId()}");
             }
     
-            // On récupère le nombre de connecteurs via getConnectors()
             $pdc = $chargingStation->getConnectors();
             $connectorsCount = is_countable($pdc) ? count($pdc) : (int) $pdc;
             $totalConnectors += $connectorsCount;
     
             $chargingStationsNames[] = $chargingStation->getModel();
 
-            // Récupération des prix depuis la tarification
             $tarifsData[] = [
                 'chargingStationModel' => $chargingStation->getModel(),
                 'purchasePrice' => $tarification->getPurcharsePrice(),
                 'resalePrice'   => $tarification->getResalePrice(),
+                'publicPrice'   => $tarification->getPublicPrice(),
                 'reducedPrice'  => $tarification->getReducedPrice(),
             ];
         }
