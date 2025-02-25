@@ -1,201 +1,274 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-<style>
-    .modal-header {
-        background: linear-gradient(to right, #ff4081, #ff8c00);
-        color: #fff;
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
-    }
-
-    .modal-content {
-        border-radius: 10px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        background: linear-gradient(to bottom, #ffffff, #f8f8f8);
-    }
-
-    .progress {
-        background: #e0e0e0;
-        height: 8px;
-        border-radius: 5px;
-        overflow: hidden;
-    }
-
-    .progress-bar.bg-success {
-        background: linear-gradient(to right, #00b09b, #96c93d);
-    }
-
-    .progress-bar.bg-secondary {
-        background: #ccc;
-    }
-
-    .gradient-input {
-        background: linear-gradient(to right, #f0f0f0, #ffffff);
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-bottom: 10px;
-    }
-
-    .btn-primary {
-        background: linear-gradient(to right, #4facfe, #00f2fe);
-        border: none;
-    }
-
-    .btn-primary:hover {
-        background: linear-gradient(to right, #00f2fe, #4facfe);
-    }
-
-    .btn-success {
-        background: linear-gradient(to right, #56ab2f, #a8e063);
-        border: none;
-        color: #fff;
-    }
-
-    .btn-success:hover {
-        background: linear-gradient(to right, #a8e063, #56ab2f);
-    }
-
-    .btn-danger {
-        background: linear-gradient(to right, #ff5858, #f09819);
-        border: none;
-        color: #fff;
-        height: 38px;
-        width: 38px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .btn-danger:hover {
-        background: linear-gradient(to right, #f09819, #ff5858);
-    }
-
-    .btn-add-borne {
-        background: linear-gradient(to right, #f6d365, #fda085) !important;
-        border: none !important;
-        color: #fff !important;
-    }
-
-    .btn-add-borne:hover {
-        opacity: 0.9;
-    }
-
-    .btn i {
-        margin-right: 5px;
-    }
-</style>
-{% endblock %}
 
 {% block body %}
-<div class="container">
-    <button type="button" class="btn btn-primary text-white fw-bold" data-bs-toggle="modal"
-        data-bs-target="#progressModal">
-        <i class="bi bi-person-plus"></i> Ajouter un client
-    </button>
 
-    <div class="modal fade" id="progressModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle">
-                        <i class="bi bi-gear"></i> Information du client
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+<style>
+    .btn-gradient {
+        padding: 12px 25px;
+        font-size: 16px;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        background: linear-gradient(90deg, #ff7e5f, #ff3f81);
+        transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+        cursor: pointer;
+        position: relative;
+        z-index: 2;
+    }
+
+    .btn-gradient:hover {
+        background: linear-gradient(90deg, #ff3f81, #ff7e5f);
+        transform: translateY(-5px) scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+        #stepImage {
+            max-height: 80vh !important;
+            width: auto !important;
+        }
+
+        .image-container {
+            overflow: hidden;
+        }
+
+        .image-container img {
+            touch-action: none;
+            cursor: zoom-in;
+        }
+    }
+</style>
+<div class="container">
+    <h1 class="text-center mb-4 text-dark">Supervision des Bornes</h1>
+    <hr class="mx-auto mb-4" style="width: 80%; border: 2px solid #ddd;">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-2 mb-4">
+        <span class="fw-bold text-dark fs-5 mb-3 mb-md-0">Prochaine intervention</span>
+
+        <button type="button" data-bs-toggle="modal" data-bs-target="#progressModal"
+            style="padding: 12px 25px; font-size: 16px; color: #fff; border: none; border-radius: 5px; background: linear-gradient(90deg, #ff7e5f, #ff3f81); transition: background 0.3s, box-shadow 0.3s, transform 0.3s; cursor: pointer; position: relative; z-index: 2;"
+            onmouseover="this.style.background='linear-gradient(90deg, #ff3f81, #ff7e5f)'; this.style.transform='translateY(-5px) scale(1.05)';"
+            onmouseout="this.style.background='linear-gradient(90deg, #ff7e5f, #ff3f81)'; this.style.transform='translateY(0) scale(1)';">
+            <i class="bi bi-person-plus"></i> Ajouter un client
+        </button>
+    </div>
+</div>
+
+
+
+
+<div class="borne-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+    {% for station in chargingStations %}
+    <div class="borne-card"
+        style="position: relative; width: 250px; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; overflow: hidden;">
+        <span
+            style="position: absolute; top: 10px; right: 10px; font-size: 0.75rem; background: #eee; color: #333; padding: 2px 6px; border-radius: 5px; z-index: 2;">{{
+            station.model }}</span>
+        <div
+            style="width: 100%; height: 150px; display: flex; justify-content: center; align-items: center; background-color: #f8f8f8; overflow: hidden;">
+            <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image de la Borne"
+                style="max-width: 100%; max-height: 100%; object-fit: contain;">
+        </div>
+        <div style="padding: 15px; text-align: center;">
+            <h2 style="margin: 0 0 10px; font-size: 18px; color: #333;">{{ station.model }}</h2>
+            <a href="#" class="start-supervision-btn" data-bs-toggle="modal" data-bs-target="#stepByStepModal"
+                data-id="{{ station.id }}" data-model="{{ station.model }}"
+                style="display: block; margin-top: 10px; font-size: 2rem; color: #28a745; transition: color 0.3s; position: relative; z-index: 2;"
+                onmouseover="this.style.color='#218838';" onmouseout="this.style.color='#28a745';">
+                <i class="bi bi-play-circle-fill"></i>
+            </a>
+        </div>
+    </div>
+    {% else %}
+    <p>Aucune borne à superviser.</p>
+    {% endfor %}
+</div>
+
+
+<div class="modal fade" id="stepByStepModal" tabindex="-1" aria-labelledby="stepByStepModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down">
+        <div class="modal-content">
+
+            <div class="modal-header" style="background: linear-gradient(90deg, #ff7e5f, #ff3f81); color: white;">
+                <h5 class="modal-title" id="stepByStepModalLabel">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i> Documentation Autel
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <div class="progress mb-3" style="height: 5px;">
+                    <div id="stepProgressBar" class="progress-bar bg-success"
+                        style="width: 0%; transition: width 0.3s;"></div>
                 </div>
 
-                <div class="modal-body">
-                    <div class="progress mb-3">
-                        <div id="progressStep1" class="progress-bar bg-success" style="width: 50%;"></div>
-                        <div id="progressStep2" class="progress-bar bg-secondary" style="width: 50%;"></div>
-                    </div>
+                <div class="image-container text-center position-relative">
+                    <img id="stepImage" src="" alt="Documentation Image" class="img-fluid"
+                        style="max-width: 100%; max-height: 500px; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer;">
+                </div>
 
-                    {% set prototype_intervention %}
-                    <div class="intervention-item row align-items-center">
-                        <div class="col-md-5 d-flex flex-column justify-content-center">
-                            <label class="form-label mb-0">
-                                {{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
-                            </label>
-                            {{ form_widget(interventionForm.interventions.vars.prototype.sim, {
-                            'attr': {'class': 'form-control gradient-input'}
-                            }) }}
-                        </div>
-
-                        <div class="col-md-7 d-flex align-items-end">
-                            <div class="flex-grow-1">
-                                <label class="form-label mb-0">
-                                    {{ form_label(interventionForm.interventions.vars.prototype.chargingStation, 'Borne
-                                    de recharge') }}
-                                </label>
-                                <div class="d-flex align-items-center">
-                                    {{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
-                                    'attr': {'class': 'form-select gradient-input'}
-                                    }) }}
-
-                                    <button type="button" class="btn text-white remove-intervention ms-2" style="background: linear-gradient(to right, #ff4081, #ff8c00);
-           border: none;
-           border-radius: 8px;
-           box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endset %}
-
-                    <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
-                        {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
-
-                        <div class="form-step mb-4" id="step1">
-                            {{ form_widget(clientForm) }}
-                        </div>
-
-                        <div class="form-step d-none mb-4" id="step2">
-                            {{ form_widget(interventionForm) }}
-
-                            <div class="mb-3 text-end">
-                                <div class="d-flex justify-content-end mb-3">
-                                    <button type="button" id="addIntervention" class="btn text-white fw-bold" style="background: linear-gradient(to right, #ff4081, #ff8c00);
-                                               border: none;
-                                               border-radius: 8px;
-                                               padding: 10px 16px;
-                                               font-size: 14px;
-                                               box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
-                                        <i class="bi bi-plus-circle me-2"></i> Ajouter une borne
-                                    </button>
-                                </div>
-
-
-
-                            </div>
-
-                            <div id="interventionContainer"
-                                data-prototype="{{ prototype_intervention|e('html_attr') }}">
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="button" id="prevBtn" class="btn btn-secondary d-none">
-                                <i class="bi bi-arrow-left"></i> Précédent
-                            </button>
-                            <button type="button" id="nextBtn" class="btn btn-primary">
-                                Suivant <i class="bi bi-arrow-right"></i>
-                            </button>
-                            <button type="submit" id="submitBtn" class="btn btn-success d-none">
-                                <i class="bi bi-check-circle"></i> Envoyer
-                            </button>
-                        </div>
-
-                        {{ form_end(clientForm) }}
-                    </form>
+                <div class="d-flex justify-content-between mt-3">
+                    <button class="btn btn-secondary prev-step">
+                        <i class="bi bi-arrow-left"></i> Précédent
+                    </button>
+                    <button class="btn btn-primary next-step">
+                        Suivant <i class="bi bi-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="modal fade" id="progressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">
+                    <i class="bi bi-gear"></i> Information du client
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="progress mb-3">
+                    <div id="progressStep1" class="progress-bar bg-success" style="width: 50%;"></div>
+                    <div id="progressStep2" class="progress-bar bg-secondary" style="width: 50%;"></div>
+                </div>
+
+                {% set prototype_intervention %}
+                <div class="intervention-item row align-items-center">
+                    <div class="col-md-5 d-flex flex-column justify-content-center">
+                        <label class="form-label mb-0">
+                            {{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
+                        </label>
+                        {{ form_widget(interventionForm.interventions.vars.prototype.sim, {
+                        'attr': {'class': 'form-control gradient-input'}
+                        }) }}
+                    </div>
+
+                    <div class="col-md-7 d-flex align-items-end">
+                        <div class="flex-grow-1">
+                            <label class="form-label mb-0">
+                                {{ form_label(interventionForm.interventions.vars.prototype.chargingStation, 'Borne
+                                de recharge') }}
+                            </label>
+                            <div class="d-flex align-items-center">
+                                {{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
+                                'attr': {'class': 'form-select gradient-input'}
+                                }) }}
+
+                                <button type="button" class="btn text-white remove-intervention ms-2" style="background: linear-gradient(to right, #ff4081, #ff8c00);
+           border: none;
+           border-radius: 8px;
+           box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endset %}
+
+                <form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
+                    {{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
+
+                    <div class="form-step mb-4" id="step1">
+                        {{ form_widget(clientForm) }}
+                    </div>
+
+                    <div class="form-step d-none mb-4" id="step2">
+                        {{ form_widget(interventionForm) }}
+
+                        <div class="mb-3 text-end">
+                            <div class="d-flex justify-content-end mb-3">
+                                <button type="button" id="addIntervention" class="btn text-white fw-bold" style="background: linear-gradient(to right, #ff4081, #ff8c00);
+                                               border: none;
+                                               border-radius: 8px;
+                                               padding: 10px 16px;
+                                               font-size: 14px;
+                                               box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
+                                    <i class="bi bi-plus-circle me-2"></i> Ajouter une borne
+                                </button>
+                            </div>
+
+
+
+                        </div>
+
+                        <div id="interventionContainer" data-prototype="{{ prototype_intervention|e('html_attr') }}">
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="prevBtn" class="btn btn-secondary d-none">
+                            <i class="bi bi-arrow-left"></i> Précédent
+                        </button>
+                        <button type="button" id="nextBtn" class="btn btn-primary">
+                            Suivant <i class="bi bi-arrow-right"></i>
+                        </button>
+                        <button type="submit" id="submitBtn" class="btn btn-success d-none">
+                            <i class="bi bi-check-circle"></i> Envoyer
+                        </button>
+                    </div>
+
+                    {{ form_end(clientForm) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById('stepByStepModal');
+        const progressBar = document.getElementById('stepProgressBar');
+        const stepImage = document.getElementById('stepImage');
+        const steps = [
+            "{{ asset('documentation/Autel_1.png') }}",
+            "{{ asset('documentation/Autel_2.png') }}",
+            "{{ asset('documentation/Autel_3.png') }}",
+            "{{ asset('documentation/Autel_4.png') }}",
+            "{{ asset('documentation/Autel_5.png') }}",
+            "{{ asset('documentation/Autel_6.png') }}",
+            "{{ asset('documentation/Autel_7.png') }}",
+            "{{ asset('documentation/Autel_8.png') }}",
+            "{{ asset('documentation/Autel_9.png') }}"
+        ];
+
+        let currentStep = 0;
+
+        function showStep(index) {
+            stepImage.src = steps[index];
+
+            const progressPercentage = (index / (steps.length - 1)) * 100;
+            progressBar.style.width = progressPercentage + "%";
+
+            document.querySelector('.prev-step').disabled = index === 0;
+            document.querySelector('.next-step').disabled = index === steps.length - 1;
+        }
+
+        modal.addEventListener('show.bs.modal', function () {
+            currentStep = 0;
+            showStep(currentStep);
+        });
+
+        document.querySelector('.next-step').addEventListener('click', function () {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                showStep(currentStep);
+            }
+        });
+
+        document.querySelector('.prev-step').addEventListener('click', function () {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+    });
+</script>
 <script>
     let currentStep = 1;
     const totalSteps = 2;
