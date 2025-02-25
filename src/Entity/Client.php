@@ -55,6 +55,12 @@ class Client
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Intervention::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection $interventions;
 
+    #[ORM\Column(type: 'string', length: 6, nullable: true)]
+    private ?string $otpCode = null;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private ?\DateTimeInterface $otpExpiresAt = null;
+
     /**
      * @var Collection<int, Tarification>
      */
@@ -72,6 +78,9 @@ class Client
      */
     #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'client')]
     private Collection $chargingStationSettings;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isOtpVerified = false;
 
     public function __construct()
     {
@@ -342,6 +351,44 @@ class Client
             }
         }
 
+        return $this;
+    }
+
+    public function getOtpCode(): ?string
+    {
+        return $this->otpCode;
+    }
+
+    public function setOtpCode(?string $otpCode): self
+    {
+        $this->otpCode = $otpCode;
+        return $this;
+    }
+
+    public function getOtpExpiresAt(): ?\DateTimeInterface
+    {
+        return $this->otpExpiresAt;
+    }
+
+    public function setOtpExpiresAt(?\DateTimeInterface $otpExpiresAt): self
+    {
+        $this->otpExpiresAt = $otpExpiresAt;
+        return $this;
+    }
+
+    public function isOtpValid(string $code): bool
+    {
+        return $this->otpCode === $code && $this->otpExpiresAt > new \DateTime();
+    }
+
+    public function getIsOtpVerified(): bool
+    {
+        return $this->isOtpVerified;
+    }
+
+    public function setIsOtpVerified(bool $isOtpVerified): self
+    {
+        $this->isOtpVerified = $isOtpVerified;
         return $this;
     }
 }
