@@ -79,6 +79,9 @@ class Client
     #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'client')]
     private Collection $chargingStationSettings;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isOtpVerified = false;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -376,5 +379,16 @@ class Client
     public function isOtpValid(string $code): bool
     {
         return $this->otpCode === $code && $this->otpExpiresAt > new \DateTime();
+    }
+
+    public function getIsOtpVerified(): bool
+    {
+        return $this->isOtpVerified;
+    }
+
+    public function setIsOtpVerified(bool $isOtpVerified): self
+    {
+        $this->isOtpVerified = $isOtpVerified;
+        return $this;
     }
 }

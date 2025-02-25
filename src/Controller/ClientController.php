@@ -293,26 +293,28 @@ final class ClientController extends AbstractController
     {
         $token = $request->request->get('token');
         $otp = $request->request->get('otp');
-
+    
         if (!$token || !$otp) {
             return new JsonResponse(['error' => 'Données manquantes.'], 400);
         }
-
+    
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-
+    
         if (!$client) {
             return new JsonResponse(['error' => 'Client introuvable.'], 404);
         }
-
+    
         if (!$client->isOtpValid($otp)) {
             return new JsonResponse(['error' => 'Code invalide ou expiré.'], 403);
         }
-
+    
+        $client->setIsOtpVerified(true);
         $client->setOtpCode(null);
         $client->setOtpExpiresAt(null);
         $em->persist($client);
         $em->flush();
-
-        return new JsonResponse(['success' => true]);
+    
+        return new JsonResponse(['success' => true, 'message' => 'OTP validé avec succès.']);
     }
+    
 }
