@@ -196,6 +196,17 @@
               />
             </div>
           </div>
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Prix publique kW</label>
+              <input
+                type="number"
+                class="form-control"
+                name="pricePublic_{{ station.id }}"
+                required
+              />
+            </div>
+          </div>
         </div>
         {% endfor %} {% if chargingStations|length > 1 %}
         <div class="mb-3 text-center">
@@ -290,46 +301,42 @@
     </div>
 
     <script>
-/**
- * Applique les valeurs du prix d'achat et du prix de revente de la première borne
- * à tous les champs correspondants de toutes les bornes.
- */
+
 function applyPriceToAll() {
   try {
-    const sourcePurchaseInput = document.querySelector(
-      'input[name^="priceKwh_"]'
-    );
-    const sourceResaleInput = document.querySelector(
-      'input[name^="priceResale_"]'
-    );
-    if (!sourcePurchaseInput || !sourceResaleInput) {
+    const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
+    const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
+    const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
+
+    if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
       alert("Impossible de trouver les champs de prix pour la première borne.");
       return;
     }
+
     const sourcePurchase = sourcePurchaseInput.value;
     const sourceResale = sourceResaleInput.value;
-    if (sourcePurchase === "" || sourceResale === "") {
-      alert(
-        "Veuillez remplir le prix d'achat et le prix de revente pour la première borne."
-      );
+    const sourcePublic = sourcePublicInput.value;
+
+    if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
+      alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
       return;
     }
+
     document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
       input.value = sourcePurchase;
     });
-    document
-      .querySelectorAll('input[name^="priceResale_"]')
-      .forEach((input) => {
-        input.value = sourceResale;
-      });
+
+    document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
+      input.value = sourceResale;
+    });
+
+    document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
+      input.value = sourcePublic;
+    });
+
   } catch (error) {
-    console.error(
-      "Erreur lors de l'application des prix à toutes les bornes :",
-      error
-    );
-    alert(
-      "Une erreur est survenue lors de l'application des prix. Veuillez réessayer."
-    );
+    console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
+    alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
   }
 }
 
@@ -491,7 +498,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 break;
 
             case "codeNaf":
-                if (!/^\d{2}\.\d{2}[A-Z]?$/.test(value)) {
+                if (!/^\d{2}\d{2}[A-Z]?$/.test(value)) {
                     return "Format du Code NAF invalide (ex: 62.01Z)";
                 }
                 break;
@@ -522,6 +529,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             case "priceKwh":
             case "priceResale":
+            case "pricePublic":
                 if (!/^\d+(\.\d{1,2})?$/.test(value) || parseFloat(value) < 0) {
                     return "Le prix doit être un nombre positif avec maximum 2 décimales";
                 }

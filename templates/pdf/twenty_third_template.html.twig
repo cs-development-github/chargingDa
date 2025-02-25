@@ -97,6 +97,7 @@
                         <th>Modèle de la borne</th>
                         <th>Prix d'achat du kWh</th>
                         <th>Prix de revente du kWh</th>
+                        <th>Prix public du kWh</th>
                         <th>Prix réduit du kWh</th>
                     </tr>
                 </thead>
@@ -106,6 +107,7 @@
                         <td>{{ tarif.chargingStationModel }}</td>
                         <td>{{ tarif.purchasePrice }} €</td>
                         <td>{{ tarif.resalePrice }} €</td>
+                        <td>{{ tarif.publicPrice }} €</td>
                         <td>{{ tarif.reducedPrice }} €</td>
                     </tr>
                     {% endfor %}
