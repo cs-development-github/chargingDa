@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 final class LandingPageController extends AbstractController
 {
-    #[Route('/landing', name: 'app_landing_page')]
+    #[Route('/', name: 'app_landing_page')]
     public function index(): Response
     {
         return $this->render('landing_page/index.html.twig', [
