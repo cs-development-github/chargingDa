@@ -20,7 +20,7 @@ class HomeController extends AbstractController
 {
     public function __construct(private ClientMailService $clientMailService) {}
 
-    #[Route('/', name: 'app_home')]
+    #[Route('/dashboard', name: 'app_home')]
     public function index(): Response
     {
         $clientForm = $this->createForm(ClientFormType::class);
