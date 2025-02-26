@@ -22,6 +22,12 @@
         .p-montserrat {
             font-family: 'Montserrat', sans-serif;
         }
+
+        html,
+        body {
+            overflow-x: hidden;
+            max-width: 100vw;
+        }
     </style>
 </head>
 
@@ -50,9 +56,9 @@
             <div class="w-full flex-grow lg:flex lg:items-center lg:w-auto hidden mt-2 lg:mt-0 bg-white lg:bg-transparent text-black p-4 lg:p-0 z-20"
                 id="nav-content">
                 <ul class="list-reset lg:flex justify-end flex-1 items-center">
- 
+
                 </ul>
-                <a  href="{{ path('app_login') }}"
+                <a href="{{ path('app_login') }}"
                     class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
                     Se connecter
                 </a>
