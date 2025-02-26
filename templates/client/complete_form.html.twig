@@ -1,235 +1,246 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Formulaire en 2 étapes</title>
-    <!-- Bootstrap & FontAwesome -->
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script
-      src="https://kit.fontawesome.com/a076d05399.js"
-      crossorigin="anonymous"
-    ></script>
-    <!-- Encore + CSS personnalisé -->
-    {{
-      encore_entry_link_tags("app")
-    }}
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
-    <style>
-      body {
-        background-color: #f8f9fa;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
-      .form-container {
-        background: white;
-        padding: 30px;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        width: 100%;
-        max-width: 700px;
-      }
-      .step {
-        display: none;
-      }
-      .step.active {
-        display: block;
-      }
-      .step-navigation {
-        display: flex;
-        margin-top: 20px;
-      }
-      .btn-next,
-      .btn-prev,
-      .btn-submit {
-        background: linear-gradient(45deg, #ec008c, #f6941f);
-        color: white;
-        border: none;
-        padding: 12px 20px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 1rem;
-        font-weight: bold;
-      }
-      .btn-prev {
-        background: gray;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="form-container">
-      {{
-        form_start(form, {
-          attr: { class: "needs-validation", novalidate: "novalidate" }
-        })
-      }}
 
-      <div id="step-1" class="step active">
-        <h3 class="text-center">Complétez vos informations</h3>
-        <div class="mb-3"></div>
-        En poursuivant, vous certifiez que toutes les informations que vous
-        allez renseigner sont exactes, véridiques et conformes à la réalité.
-        Toute tentative de fournir des informations erronées, falsifiées ou
-        trompeuses pourrait entraîner des mesures appropriées, y compris
-        l’annulation de votre demande ou la restriction de l’accès à nos
-        services.
-        <div class="step-navigation d-flex justify-content-end">
-          <button type="button" class="btn-next" data-step="1">
-            Suivant
-          </button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Formulaire en 2 étapes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  {{
+  encore_entry_link_tags("app")
+  }}
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
+  <style>
+    body {
+      background: url('../build/images/background.png') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    .container-form-steps {
+      width: 90%;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .step {
+      display: none;
+    }
+
+    .step.active {
+      display: block;
+    }
+
+    .step-navigation {
+      display: flex;
+      margin-top: 20px;
+    }
+
+    .btn-next,
+    .btn-prev,
+    .btn-submit {
+      background: linear-gradient(45deg, #ec008c, #f6941f);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 40px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .progress-bar-gradient {
+      background: linear-gradient(45deg, #ec008c, #f6941f);
+    }
+
+
+    .btn-prev {
+      background: gray;
+    }
+
+    .btn-next:hover,
+    .btn-prev:hover,
+    .btn-submit:hover {
+      opacity: 0.8;
+    }
+
+    @media (max-width: 576px) {
+      .form-container {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  {% block body %}
+  <div class="container-form-steps">
+    <div class="form-container">
+
+      <h3 class="text-center mb-3">Complétez vos informations</h3>
+
+      <div class="progress mb-4" style="height: 4px;">
+        <div id="progress-bar" class="progress-bar progress-bar-gradient" role="progressbar" style="width: 25%;"
+          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
         </div>
       </div>
 
-      <!-- Étape 2 : Informations Client -->
+      {{ form_start(form, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+      <div id="step-1" class="step active">
+        <h4>Bienvenue</h4>
+        <div class="mb-3">
+          En poursuivant, vous certifiez que toutes les informations que vous
+          allez renseigner sont exactes, véridiques et conformes à la réalité.
+          Toute tentative de fournir des informations erronées, falsifiées ou
+          trompeuses pourrait entraîner des mesures appropriées, y compris
+          l’annulation de votre demande ou la restriction de l’accès à nos services.
+        </div>
+        <div class="step-navigation d-flex justify-content-end">
+          <button type="button" class="btn-next btn btn-primary" data-step="1">
+            Suivant <i class="bi bi-arrow-right"></i>
+          </button>
+        </div>
+
+      </div>
+
       <div id="step-2" class="step">
-        <h3 class="text-center">Complétez vos informations</h3>
+        <h4>Vos informations</h4>
 
-        <div class="mb-3">
-          {{ form_label(form.name) }}
-          {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.lastname) }}
+            {{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+          </div>
         </div>
 
-        <div class="mb-3">
-          {{ form_label(form.lastname) }}
-          {{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.numberTva) }}
+            {{ form_widget(form.numberTva, {'attr': {'class': 'form-control'}}) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.societyName) }}
+            {{ form_widget(form.societyName, {'attr': {'class': 'form-control'}}) }}
+          </div>
         </div>
 
-        <div class="mb-3">
-          {{ form_label(form.numberTva) }}
-          {{ form_widget(form.numberTva, {'attr': {'class': 'form-control'}}) }}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.siret) }}
+            {{ form_widget(form.siret, {'attr': {'class': 'form-control'}}) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.codeNaf) }}
+            {{ form_widget(form.codeNaf, {'attr': {'class': 'form-control'}}) }}
+          </div>
         </div>
 
-        <div class="mb-3">
-          {{ form_label(form.societyName) }}
-          {{ form_widget(form.societyName, {'attr': {'class': 'form-control'}})
-          }}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+          </div>
         </div>
 
-        <div class="mb-3">
-          {{ form_label(form.siret) }}
-          {{ form_widget(form.siret, {'attr': {'class': 'form-control'}}) }}
-        </div>
-
-        <div class="mb-3">
-          {{ form_label(form.codeNaf) }}
-          {{ form_widget(form.codeNaf, {'attr': {'class': 'form-control'}}) }}
-        </div>
-
-        <div class="mb-3">
-          {{ form_label(form.phone) }}
-          {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
-        </div>
-
-        <div class="mb-3">
-          {{ form_label(form.email) }}
-          {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-        </div>
-
-        <div class="mb-3">
-          {{ form_label(form.adress) }}
-          {{ form_widget(form.adress, {'attr': {'class': 'form-control'}}) }}
-        </div>
-
-        <div class="mb-3">
-          {{ form_label(form.legalForm) }}
-          {{ form_widget(form.legalForm, {'attr': {'class': 'form-control'}}) }}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.adress) }}
+            {{ form_widget(form.adress, {'attr': {'class': 'form-control'}}) }}
+          </div>
+          <div class="col-md-6 mb-3">
+            {{ form_label(form.legalForm) }}
+            {{ form_widget(form.legalForm, {'attr': {'class': 'form-control'}}) }}
+          </div>
         </div>
 
         <div class="step-navigation d-flex justify-content-between">
-          <button type="button" class="btn-prev" onclick="prevStep()">
-            Précédent
+          <button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+            <i class="bi bi-arrow-left"></i> Précédent
           </button>
-          <button type="button" class="btn-next" data-step="2">Suivant</button>
+          <button type="button" class="btn-next btn btn-primary" data-step="2">
+            Suivant <i class="bi bi-arrow-right"></i>
+          </button>
         </div>
+
       </div>
 
-      <!-- Étape 3 : Tarification -->
       <div id="step-3" class="step">
-        <h3 class="text-center">Tarification</h3>
+        <h4>Tarification</h4>
         <div class="mb-3">
           <label class="form-label">Nombre de badges gratuits</label>
-          <input
-            type="number"
-            class="form-control"
-            name="freeBadges"
-            min="0"
-            required
-          />
+          <input type="number" class="form-control" name="freeBadges" min="0" required />
         </div>
+
         {% for station in chargingStations %}
         <h5>Borne : {{ station.model }}</h5>
-        <img
-          src="{{ asset('uploads/' ~ station.image) }}"
-          alt="Logo Fabricant"
-          width="90"
-        />
+        <img src="{{ asset('uploads/' ~ station.image) }}" alt="Logo Fabricant" width="90" />
         <div class="row">
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">Prix achat kW</label>
-              <input
-                type="number"
-                class="form-control"
-                name="priceKwh_{{ station.id }}"
-                required
-              />
+              <input type="number" class="form-control" name="priceKwh_{{ station.id }}" required />
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">Prix revente kW</label>
-              <input
-                type="number"
-                class="form-control"
-                name="priceResale_{{ station.id }}"
-                required
-              />
+              <input type="number" class="form-control" name="priceResale_{{ station.id }}" required />
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">Prix publique kW</label>
-              <input
-                type="number"
-                class="form-control"
-                name="pricePublic_{{ station.id }}"
-                required
-              />
+              <input type="number" class="form-control" name="pricePublic_{{ station.id }}" required />
             </div>
           </div>
         </div>
-        {% endfor %} {% if chargingStations|length > 1 %}
+        {% endfor %}
+        {% if chargingStations|length > 1 %}
         <div class="mb-3 text-center">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            onclick="applyPriceToAll()"
-          >
+          <button type="button" class="btn btn-secondary" onclick="applyPriceToAll()">
             Affecter le prix à toutes les bornes
           </button>
         </div>
         {% endif %}
+
         <div class="step-navigation d-flex justify-content-between">
-          <button type="button" class="btn-prev" onclick="prevStep()">
-            Précédent
+          <button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+            <i class="bi bi-arrow-left"></i> Précédent
           </button>
-          <button type="button" class="btn-next" data-step="3">Suivant</button>
+          <button type="button" class="btn-next btn btn-primary" data-step="3">
+            Suivant <i class="bi bi-arrow-right"></i>
+          </button>
         </div>
+
       </div>
 
-      <!-- Étape 4 : Informations de la borne -->
       <div id="step-4" class="step">
-        <h3 class="text-center">Informations de la borne</h3>
+        <h4>Informations de la borne</h4>
         {% for station in chargingStations %}
         <h5>Borne : {{ station.model }}</h5>
         <div class="row">
@@ -245,12 +256,7 @@
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">Adresse</label>
-              <input
-                type="text"
-                class="form-control"
-                name="adress_{{ station.id }}"
-                required
-              />
+              <input type="text" class="form-control" name="adress_{{ station.id }}" required />
             </div>
           </div>
         </div>
@@ -258,375 +264,219 @@
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">Date d'installation</label>
-              <input
-                type="date"
-                class="form-control"
-                name="installedAt_{{ station.id }}"
-                required
-              />
+              <input type="date" class="form-control" name="installedAt_{{ station.id }}" required />
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
               <label class="form-label">Date de supervision</label>
-              <input
-                type="date"
-                class="form-control"
-                name="supervisedAt_{{ station.id }}"
-                required
-              />
+              <input type="date" class="form-control" name="supervisedAt_{{ station.id }}" required />
             </div>
           </div>
         </div>
-        {% endfor %} {% if chargingStations|length > 1 %}
+        {% endfor %}
+        {% if chargingStations|length > 1 %}
         <div class="mb-3 text-center">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            onclick="applyStationInfoToAll()"
-          >
+          <button type="button" class="btn btn-secondary" onclick="applyStationInfoToAll()">
             Affecter les informations à toutes les bornes
           </button>
         </div>
         {% endif %}
+
         <div class="step-navigation d-flex justify-content-between">
           <button type="button" class="btn-prev" onclick="prevStep()">
-            Précédent
+            <i class="bi bi-arrow-left"></i> Précédent
           </button>
-          <button type="submit" class="btn-submit">Valider</button>
+          <button type="submit" class="btn-submit btn btn-success">
+            Valider <i class="bi bi-check"></i>
+          </button>
         </div>
+
       </div>
 
       {{ form_end(form) }}
     </div>
+  </div>
+  {% endblock %}
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+  <script>
+    function applyPriceToAll() {
+      try {
+        const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
+        const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
+        const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
 
-    <script>
+        if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
+          alert("Impossible de trouver les champs de prix pour la première borne.");
+          return;
+        }
 
-function applyPriceToAll() {
-  try {
-    const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
-    const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
-    const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
+        const sourcePurchase = sourcePurchaseInput.value;
+        const sourceResale = sourceResaleInput.value;
+        const sourcePublic = sourcePublicInput.value;
 
-    if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
-      alert("Impossible de trouver les champs de prix pour la première borne.");
-      return;
+        if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
+          alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
+          return;
+        }
+
+        document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
+          input.value = sourcePurchase;
+        });
+        document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
+          input.value = sourceResale;
+        });
+        document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
+          input.value = sourcePublic;
+        });
+      } catch (error) {
+        console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
+        alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
+      }
     }
 
-    const sourcePurchase = sourcePurchaseInput.value;
-    const sourceResale = sourceResaleInput.value;
-    const sourcePublic = sourcePublicInput.value;
+    function applyStationInfoToAll() {
+      try {
+        const firstPublic = document.querySelector('select[name^="public_"]');
+        const firstAddress = document.querySelector('input[name^="adress_"]');
+        const firstInstalled = document.querySelector('input[name^="installedAt_"]');
+        const firstSupervised = document.querySelector('input[name^="supervisedAt_"]');
 
-    if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
-      alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
-      return;
+        if (!firstPublic || !firstAddress || !firstInstalled || !firstSupervised) {
+          alert("Impossible de trouver les informations de la première borne.");
+          return;
+        }
+        const valuePublic = firstPublic.value;
+        const valueAddress = firstAddress.value;
+        const valueInstalled = firstInstalled.value;
+        const valueSupervised = firstSupervised.value;
+
+        if (valueAddress === "" || valueInstalled === "" || valueSupervised === "") {
+          alert("Veuillez remplir toutes les informations de la première borne.");
+          return;
+        }
+        document.querySelectorAll('select[name^="public_"]').forEach((select, index) => {
+          if (index > 0) {
+            select.value = valuePublic;
+          }
+        });
+        document.querySelectorAll('input[name^="adress_"]').forEach((input, index) => {
+          if (index > 0) {
+            input.value = valueAddress;
+          }
+        });
+        document.querySelectorAll('input[name^="installedAt_"]').forEach((input, index) => {
+          if (index > 0) {
+            input.value = valueInstalled;
+          }
+        });
+        document.querySelectorAll('input[name^="supervisedAt_"]').forEach((input, index) => {
+          if (index > 0) {
+            input.value = valueSupervised;
+          }
+        });
+      } catch (error) {
+        console.error("Erreur lors de l'application des informations à toutes les bornes :", error);
+        alert("Une erreur est survenue lors de l'application des informations. Veuillez réessayer.");
+      }
     }
 
-    document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
-      input.value = sourcePurchase;
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+      let currentStep = parseInt(localStorage.getItem("currentStep")) || 1;
+      const totalSteps = 4;
 
-    document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
-      input.value = sourceResale;
-    });
-
-    document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
-      input.value = sourcePublic;
-    });
-
-  } catch (error) {
-    console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
-    alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
-  }
-}
-
-function applyStationInfoToAll() {
-  try {
-    const firstPublic = document.querySelector('select[name^="public_"]');
-    const firstAddress = document.querySelector('input[name^="adress_"]');
-    const firstInstalled = document.querySelector(
-      'input[name^="installedAt_"]'
-    );
-    const firstSupervised = document.querySelector(
-      'input[name^="supervisedAt_"]'
-    );
-    if (!firstPublic || !firstAddress || !firstInstalled || !firstSupervised) {
-      alert("Impossible de trouver les informations de la première borne.");
-      return;
-    }
-    const valuePublic = firstPublic.value;
-    const valueAddress = firstAddress.value;
-    const valueInstalled = firstInstalled.value;
-    const valueSupervised = firstSupervised.value;
-    if (
-      valueAddress === "" ||
-      valueInstalled === "" ||
-      valueSupervised === ""
-    ) {
-      alert("Veuillez remplir toutes les informations de la première borne.");
-      return;
-    }
-    document
-      .querySelectorAll('select[name^="public_"]')
-      .forEach((select, index) => {
-        if (index > 0) {
-          select.value = valuePublic;
-        }
-      });
-    document
-      .querySelectorAll('input[name^="adress_"]')
-      .forEach((input, index) => {
-        if (index > 0) {
-          input.value = valueAddress;
-        }
-      });
-    document
-      .querySelectorAll('input[name^="installedAt_"]')
-      .forEach((input, index) => {
-        if (index > 0) {
-          input.value = valueInstalled;
-        }
-      });
-    document
-      .querySelectorAll('input[name^="supervisedAt_"]')
-      .forEach((input, index) => {
-        if (index > 0) {
-          input.value = valueSupervised;
-        }
-      });
-  } catch (error) {
-    console.error(
-      "Erreur lors de l'application des informations à toutes les bornes :",
-      error
-    );
-    alert(
-      "Une erreur est survenue lors de l'application des informations. Veuillez réessayer."
-    );
-  }
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const step = "2";
-  const form = document.querySelector(".form-container form");
-  const nextButton = document.querySelector(`.btn-next[data-step="${step}"]`);
-
-  if (!form) {
-    return;
-  }
-
-  if (!nextButton) {
-    return;
-  }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    console.log("Script chargé et prêt !");
-
-    let currentStep = 1;
-
-    function showStep(step) {
+      function showStep(step) {
         document.querySelectorAll(".step").forEach((stepDiv) => stepDiv.classList.remove("active"));
         document.getElementById(`step-${step}`).classList.add("active");
-        localStorage.setItem("currentStep", step); // Sauvegarde l'étape
-    }
+        localStorage.setItem("currentStep", step);
+        updateProgressBar(step);
+      }
 
-    function nextStep() {
+      function nextStep() {
         if (!validateStep(currentStep)) {
-            console.log(`❌ Erreurs détectées à l'étape ${currentStep}, passage bloqué.`);
-            return;
+          console.log(`❌ Erreurs détectées à l'étape ${currentStep}.`);
+          return;
         }
-        document.getElementById(`step-${currentStep}`).classList.remove("active");
-        currentStep++;
-        document.getElementById(`step-${currentStep}`).classList.add("active");
-        localStorage.setItem("currentStep", currentStep); // Sauvegarde l'étape
-    }
+        if (currentStep < totalSteps) {
+          currentStep++;
+          showStep(currentStep);
+        }
+      }
 
-    function prevStep() {
-        document.getElementById(`step-${currentStep}`).classList.remove("active");
-        currentStep--;
-        document.getElementById(`step-${currentStep}`).classList.add("active");
-        localStorage.setItem("currentStep", currentStep); // Sauvegarde l'étape
-    }
+      function prevStep() {
+        if (currentStep > 1) {
+          currentStep--;
+          showStep(currentStep);
+        }
+      }
 
-    function validateStep(step) {
+      window.nextStep = nextStep;
+      window.prevStep = prevStep;
+
+      function validateStep(step) {
         let isValid = true;
         const fields = document.querySelectorAll(`#step-${step} input, #step-${step} select`);
-
-        fields.forEach(field => {
-            removeError(field);
-            let errorMessage = validateField(field);
-            if (errorMessage) {
-                isValid = false;
-                showError(field, errorMessage);
-            }
+        fields.forEach((field) => {
+          field.classList.remove("is-invalid");
+          let errorMessage = validateField(field);
+          if (errorMessage) {
+            isValid = false;
+            showError(field, errorMessage);
+          }
         });
-
-        console.log(`Validation de l'étape ${step} :`, isValid);
+        console.log(`Validation de l'étape ${step}: ${isValid}`);
         return isValid;
-    }
+      }
 
-    function validateField(field) {
-        if (!field) return null;
-
+      function validateField(field) {
         const value = field.value.trim();
-        const name = field.name.replace(/.*\[(.*?)\]$/, '$1'); // Extrait le vrai nom du champ
-        console.log(`🔍 Validation du champ : ${name} -> Valeur : "${value}"`);
-
         if (!value) {
-            console.warn(`⚠️ Champ "${name}" vide`);
-            return "Ce champ est obligatoire";
+          return "Ce champ est obligatoire";
         }
-
-        switch (name) {
-            case "name":
-            case "lastname":
-                if (!/^[a-zA-ZÀ-ÿ\s-]+$/.test(value)) {
-                    return "Seules les lettres sont autorisées";
-                }
-                break;
-
-            case "numberTva":
-                if (!/^[0-9A-Z]{9,13}$/.test(value)) {
-                    return "Numéro de TVA invalide (9-13 caractères, chiffres ou lettres)";
-                }
-                break;
-
-            case "siret":
-                if (!/^\d{14}$/.test(value)) {
-                    return "Le SIRET doit contenir 14 chiffres";
-                }
-                break;
-
-            case "codeNaf":
-                if (!/^\d{2}\d{2}[A-Z]?$/.test(value)) {
-                    return "Format du Code NAF invalide (ex: 62.01Z)";
-                }
-                break;
-
-            case "phone":
-                if (!/^(\+33|0)[1-9](\d{2}){4}$/.test(value)) {
-                    return "Numéro de téléphone invalide (ex: 0612345678 ou +33612345678)";
-                }
-                break;
-
-            case "email":
-                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-                    return "Adresse e-mail invalide";
-                }
-                break;
-
-            case "legalForm":
-                if (!["SARL", "SAS", "EI", "EURL"].includes(value)) {
-                    return "Veuillez sélectionner une forme juridique";
-                }
-                break;
-
-            case "freeBadges":
-                if (!/^\d+$/.test(value) || parseInt(value) < 0) {
-                    return "Le nombre de badges doit être un nombre positif";
-                }
-                break;
-
-            case "priceKwh":
-            case "priceResale":
-            case "pricePublic":
-                if (!/^\d+(\.\d{1,2})?$/.test(value) || parseFloat(value) < 0) {
-                    return "Le prix doit être un nombre positif avec maximum 2 décimales";
-                }
-                break;
-                case "public":
-              if (!["1", "0"].includes(value)) {
-                  return "Veuillez sélectionner Oui ou Non";
-              }
-              break;
-            case "adress":
-                if (value.length < 5) {
-                    return "L'adresse doit contenir au moins 5 caractères";
-                }
-                break;
-
-            case "installedAt":
-            case "supervisedAt":
-                if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-                    return "Veuillez entrer une date valide (YYYY-MM-DD)";
-                }
-                break;
-
-        }
-
         return null;
-    }
+      }
 
-    function showError(field, message) {
+      function showError(field, message) {
         field.classList.add("is-invalid");
-
-        let parent = field.closest(".mb-3");
-        if (!parent) {
-            parent = field.parentNode;
-        }
-
-        console.log(`🔴 Ajout du message d'erreur sous :`, parent);
-
+        let parent = field.closest(".mb-3") || field.parentNode;
         let errorDiv = parent.querySelector(".error-message");
-
         if (!errorDiv) {
-            errorDiv = document.createElement("div");
-            errorDiv.className = "error-message text-danger mt-1";
-            errorDiv.innerText = message;
-            parent.appendChild(errorDiv);
+          errorDiv = document.createElement("div");
+          errorDiv.className = "error-message text-danger mt-1";
+          errorDiv.innerText = message;
+          parent.appendChild(errorDiv);
         } else {
-            errorDiv.innerText = message;
+          errorDiv.innerText = message;
         }
-    }
+      }
 
-    function removeError(field) {
-        field.classList.remove("is-invalid");
-
-        let parent = field.closest(".mb-3");
-        if (!parent) {
-            parent = field.parentNode;
+      function updateProgressBar(step) {
+        const progress = (step / totalSteps) * 100;
+        const progressBar = document.getElementById("progress-bar");
+        if (progressBar) {
+          progressBar.style.width = `${progress}%`;
+          progressBar.setAttribute("aria-valuenow", progress);
         }
+      }
 
-        let errorDiv = parent.querySelector(".error-message");
-
-        if (errorDiv) {
-            console.log(`🟢 Suppression du message d'erreur pour :`, parent);
-            errorDiv.remove();
-        }
-    }
-
-    // Attache les événements aux boutons "Suivant"
-    document.querySelectorAll(".btn-next").forEach(button => {
+      document.querySelectorAll(".btn-next").forEach((button) => {
         button.addEventListener("click", function (event) {
-            event.preventDefault(); // Empêche la navigation immédiate
-
-            let step = this.getAttribute("data-step"); // Récupère l’étape actuelle
-            let isValid = validateStep(step);
-
-            console.log(`✅ Validation de l'étape ${step} :`, isValid);
-
-            if (isValid) {
-                nextStep();
-            } else {
-                console.warn(`❌ Erreurs à l'étape ${step}, blocage.`);
-            }
+          event.preventDefault();
+          nextStep();
         });
+      });
+
+      document.querySelectorAll(".btn-prev").forEach((button) => {
+        button.addEventListener("click", function (event) {
+          event.preventDefault();
+          prevStep();
+        });
+      });
+
+      showStep(currentStep);
     });
+  </script>
+</body>
 
-    document.querySelector(".btn-submit").addEventListener("click", function (event) {
-        let lastStep = 4;
-        let isValid = validateStep(lastStep);
-
-        if (!isValid) {
-            console.warn("❌ Échec de la validation, envoi du formulaire bloqué.");
-            event.preventDefault();
-        }
-    });
-
-    // Afficher la bonne étape après un refresh
-    showStep(currentStep);
-});
-
-    </script>
-  </body>
 </html>
