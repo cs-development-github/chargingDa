@@ -19,25 +19,8 @@
 </head>
 
 <body>
-    <style>
-        .main-content {
-            flex-grow: 1;
-            margin-left: 260px;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        body {
-            padding-top: 70px;
-            /* Ajusta según la altura del navbar */
-        }
-    </style>
-
     {% include 'bars/navbar.html.twig' %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        {% include 'bars/sidebar.html.twig' %}
-    {% endif %}
     <main class="main-content">
         {% block body %}{% endblock %}
     </main>
