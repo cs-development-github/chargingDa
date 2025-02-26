@@ -50,14 +50,18 @@
               </div>
           </div>
       
-         <div class="mb-3 position-relative">
-              <label for="inputPassword" id="" class="form-label">Mot de passe</label>
+          <div class="mb-3 position-relative">
+              <label for="inputPassword" class="form-label">Mot de passe</label>
               <div class="input-group">
-                  {{ form_widget(registrationForm.password.first, { 'attr': {'class': 'form-control', 'id': 'inputPassword', 'required': true} }) }}
+                  {{ form_widget(registrationForm.password.first, { 'attr': {'class': 'form-control', 'id': 'inputPassword', 'required': true, 'onkeyup': 'checkPasswordStrength()'} }) }}
                   <button type="button" class="btn btn-outline-secondary toggle-password" data-target="registration_form_password_first">
                       <i class="bi bi-eye"></i>
                   </button>
               </div>
+              <div class="progress mt-2" style="height: 5px;">
+                  <div id="passwordStrengthBar" class="progress-bar" role="progressbar" style="width: 0%;"></div>
+              </div>
+              <small id="passwordStrengthText" class="text-muted">Le mot de passe doit contenir au moins 8 caractères.</small>
           </div>
 
           <div class="mb-3 position-relative">
@@ -123,6 +127,43 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function checkPasswordStrength() {
+    let password = document.getElementById("registration_form_password_first").value;
+    let strengthBar = document.getElementById("passwordStrengthBar");
+    let strengthText = document.getElementById("passwordStrengthText");
+    let strength = 0;
+
+    // Vérifie la longueur minimale de 8 caractères
+    if (password.length >= 8) strength += 1;
+
+    // Vérifie la présence de lettres majuscules
+    if (/[A-Z]/.test(password)) strength += 1;
+
+    // Vérifie la présence de chiffres
+    if (/[0-9]/.test(password)) strength += 1;
+
+    // Vérifie la présence de caractères spéciaux
+    if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+
+    // Définition de la force en fonction des critères remplis
+    let strengthPercentage = (strength / 4) * 100;
+    strengthBar.style.width = strengthPercentage + "%";
+
+    // Changer la couleur de la barre en fonction de la robustesse
+    if (strengthPercentage < 25) {
+        strengthBar.className = "progress-bar bg-danger";
+        strengthText.innerText = "Mot de passe trop faible !";
+    } else if (strengthPercentage < 50) {
+        strengthBar.className = "progress-bar bg-warning";
+        strengthText.innerText = "Mot de passe moyen.";
+    } else if (strengthPercentage < 75) {
+        strengthBar.className = "progress-bar bg-info";
+        strengthText.innerText = "Mot de passe sécurisé.";
+    } else {
+        strengthBar.className = "progress-bar bg-success";
+        strengthText.innerText = "Mot de passe très sécurisé !";
+    }
+}
 
     </script>
 {% endblock %}
