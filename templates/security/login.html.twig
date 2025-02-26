@@ -38,9 +38,14 @@
             <label for="inputEmail" class="form-label">Email</label>
             <input type="text" name="email" value="{{ last_username }}" id="inputEmail" class="form-control form-input" required autofocus />
           </div>
-          <div class="mb-3">
-            <label for="inputPassword" class="form-label">Mot de passe</label>
-            <input type="password" name="password" id="inputPassword" class="form-control form-input" required />
+          <div class="mb-3 position-relative">
+              <label for="inputPassword" class="form-label">Mot de passe</label>
+              <div class="input-group">
+                  <input type="password" name="password" id="inputPassword" class="form-control form-input" required />
+                  <button type="button" class="btn btn-outline-secondary toggle-password" data-target="inputPassword">
+                      <i class="bi bi-eye"></i>
+                  </button>
+              </div>
           </div>
           <div class="mb-3 d-flex align-items-center">
             <input type="checkbox" class="form-check-input me-2" id="rememberMe" />
@@ -78,4 +83,33 @@
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".toggle-password").forEach(button => {
+        button.addEventListener("click", function () {
+            let targetId = this.getAttribute("data-target");
+            let input = document.getElementById(targetId);
+            let icon = this.querySelector("i");
+
+            if (!input) {
+                console.error("⚠️ Champ password non trouvé pour :", targetId);
+                return;
+            }
+
+            if (input.type === "password") {
+                input.type = "text";
+                icon.classList.replace("bi-eye", "bi-eye-slash");
+            } else {
+                input.type = "password";
+                icon.classList.replace("bi-eye-slash", "bi-eye");
+            }
+        });
+    });
+});
+
+
+</script>
+
+
 {% endblock %}
