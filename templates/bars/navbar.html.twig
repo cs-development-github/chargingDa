@@ -1,32 +1,7 @@
-<style>
-    #sidebarToggle {
-        background: linear-gradient(to right, #ff4081, #ff8c00);
-        border: none;
-        color: #fff;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    #sidebarToggle:hover {
-        opacity: 0.9;
-        transform: scale(1.1);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-    }
-</style>
-
 <nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 fixed-top" style="height: 70px; z-index: 1050;">
     <div class="container-fluid d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             {% if is_granted('ROLE_ADMIN') %}
-
-            <button class="btn me-3 d-md-none" id="sidebarToggle">
-
-                <i class="bi bi-list"></i>
-            </button>
 
             {% endif %}
             <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
@@ -53,15 +28,3 @@
         </a>
     </div>
 </nav>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const sidebar = document.querySelector(".sidebar");
-        const toggleButton = document.getElementById("sidebarToggle");
-        if (toggleButton && sidebar) {
-            toggleButton.addEventListener("click", function () {
-                sidebar.classList.toggle("collapsed");
-            });
-        }
-    });
-</script>
