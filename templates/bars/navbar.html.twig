@@ -14,12 +14,16 @@
             </a>
         </div>
 
-        <a href="{{ path('app_account') }}" class="d-flex align-items-center text-decoration-none">
-            <img src="{{ asset('/build/images/avatar.png') }}" alt="User" class="rounded-circle"
-                style="width: 45px; height: 45px;">
-            <div class="ms-2 d-none d-lg-block text-black">
-                <strong>{{ app.user.name }} {{ app.user.lastname }}</strong><br>
-            </div>
-        </a>
+        <div class="dropdown">
+            <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="ms-2 d-none d-lg-block text-black">
+                    <strong>{{ app.user.name }} {{ app.user.lastname }}</strong>
+                </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="{{ path('app_account') }}">Mon compte</a></li>
+                <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
