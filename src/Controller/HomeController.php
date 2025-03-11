@@ -27,31 +27,45 @@ class HomeController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-
+    
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-
-
+    
+        // Récupération des interventions de l'installateur connecté
         $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user]);
-
-        $chargingStations = [];
+    
+        $clientsData = [];
+    
         foreach ($interventions as $intervention) {
-            if ($intervention->getChargingStation()) {
-                $chargingStations[] = $intervention->getChargingStation();
+            $client = $intervention->getClient(); // On récupère directement le client depuis Intervention
+    
+            if ($client) {
+                $clientId = $client->getId();
+                if (!isset($clientsData[$clientId])) {
+                    $clientsData[$clientId] = [
+                        'email' => $client->getEmail(),
+                        'societyName' => $client->getSocietyName(),
+                        'stations' => []
+                    ];
+                }
+                
+                if ($intervention->getChargingStation()) {
+                    $clientsData[$clientId]['stations'][] = $intervention->getChargingStation();
+                }
             }
         }
-
+    
         $clientForm = $this->createForm(ClientFormType::class);
         $interventionForm = $this->createForm(InterventionFormType::class);
-
+    
         return $this->render('home/index.html.twig', [
-            'chargingStations' => $chargingStations,
+            'clientsData' => $clientsData,
             'clientForm' => $clientForm->createView(),
             'interventionForm' => $interventionForm->createView(),
         ]);
     }
-
+    
 
     #[Route('/supervision/{id}', name: 'start_supervision')]
     public function startSupervision($id, EntityManagerInterface $entityManager): Response
