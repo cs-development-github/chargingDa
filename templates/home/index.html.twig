@@ -164,7 +164,7 @@
                         <input type="text" id="chargingStationName" class="form-control mb-2" placeholder="Nom de la borne" required oninput="checkInput()">
 
                         <button id="startSupervision" class="btn btn-primary">
-                            <i class="bi bi-play-circle"></i> Démarrer la supervision
+                            <i class="bi bi-play-circle"></i> Démarrer les test
                         </button>
 
                         <div class="step-icons d-flex justify-content-center mb-4 d-none">
@@ -529,12 +529,12 @@ document.addEventListener("DOMContentLoaded", function () {
             // 🔹 Étape 3 : Désactivation de la borne
             updateStep(2, "Finalisation...");
             const isDisabled = await disableChargingStation(token, stationName);
-            if (!isDisabled) throw new Error("Échec de la désactivation");
+            if (!isDisabled) throw new Error("Échec de la supervisions");
 
             // 🎉 Supervision terminée
             stepContent.classList.add("d-none");
             finalStepContent.classList.remove("d-none");
-            showNotification("Borne désactivée avec succès !", "success");
+            showNotification("Borne supervisée avec succès !", "success");
 
         } catch (error) {
             console.error("Erreur:", error);
