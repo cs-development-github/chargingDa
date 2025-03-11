@@ -155,6 +155,10 @@
 					</div>
 
                     <div class="form-step" id="customStepSupervision">
+
+					<div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+					</div>
+
                         <h3>Finalisation de la supervision</h3>
 
                         <input type="text" id="chargingStationName" class="form-control mb-2" placeholder="Nom de la borne" required oninput="checkInput()">
@@ -186,8 +190,6 @@
                             <p>Supervision terminée avec succès !</p>
                         </div>
                     </div>
-
-
 
 					<div class="d-flex justify-content-between mt-3">
 						<button class="btn btn-secondary prev-step rounded-3 rounded-pill">
@@ -488,79 +490,155 @@ document.addEventListener("DOMContentLoaded", function () {
     const finalStepContent = document.getElementById("finalStepContent");
     const stepIconsContainer = document.querySelector(".step-icons");
     const stepIcons = [
-        document.getElementById("stepIcon1"),
-        document.getElementById("stepIcon2"),
-        document.getElementById("stepIcon3")
+        document.getElementById("stepIcon1"), // 🔌 Connexion
+        document.getElementById("stepIcon2"), // ✅ Vérification
+        document.getElementById("stepIcon3")  // 🔴 Désactivation
     ];
     const stepLines = document.querySelectorAll(".step-line");
     const modal = document.getElementById("stepByStepModal");
+    const notificationContainer = document.getElementById("notificationContainer");
 
     const stepsText = [
         "Connexion à la borne...",
         "Vérification des informations...",
-        "Finalisation..."
+        "Finalisation de la supervision..."
     ];
 
-    let currentStep = 0;
+    async function startSupervisionProcess() {
+        const stationName = document.getElementById("chargingStationName").value.trim();
+        if (!stationName) {
+            showNotification("Veuillez entrer le nom de la borne.", "warning");
+            return;
+        }
 
-    function resetProcess() {
-        // Réafficher le bouton de départ
-        startButton.classList.remove("d-none");
-        stepIconsContainer.classList.add("d-none");
-        stepContent.classList.add("d-none");
-        finalStepContent.classList.add("d-none");
+        try {
+            stepIconsContainer.classList.remove("d-none"); // Afficher les icônes
+            stepContent.classList.remove("d-none");
+            finalStepContent.classList.add("d-none");
 
-        // Réinitialiser les icônes et la barre de progression
-        stepIcons.forEach(icon => icon.classList.remove("active"));
-        stepLines.forEach(line => line.style.backgroundColor = "#ddd");
+            // 🔹 Étape 1 : Connexion
+            updateStep(0, "Connexion à la borne...");
+            const token = await authenticateUser();
+            if (!token) throw new Error("Échec de l'authentification");
 
-        // Réinitialiser le compteur d'étapes
-        currentStep = 0;
-    }
+            // 🔹 Étape 2 : Vérification de la borne
+            updateStep(1, "Vérification des informations...");
+            const isBorneValid = await checkChargingStation(token, stationName);
+            if (!isBorneValid) throw new Error("Borne introuvable");
 
-    function updateStep() {
-        if (currentStep < stepIcons.length) {
-            // Activer l'icône et la ligne précédente
-            stepIcons[currentStep].classList.add("active");
-            if (currentStep > 0) {
-                stepLines[currentStep - 1].style.backgroundColor = "#28a745";
-            }
+            // 🔹 Étape 3 : Désactivation de la borne
+            updateStep(2, "Finalisation...");
+            const isDisabled = await disableChargingStation(token, stationName);
+            if (!isDisabled) throw new Error("Échec de la désactivation");
 
-            // Mettre à jour le texte et le loader
-            stepContent.innerHTML = `<p>${stepsText[currentStep]}</p><div class="loader"></div>`;
-
-            // Passer à l'étape suivante après un délai
-            setTimeout(() => {
-                currentStep++;
-                updateStep();
-            }, 2000);
-        } else {
-            // Masquer les étapes et afficher le contenu final
+            // 🎉 Supervision terminée
             stepContent.classList.add("d-none");
             finalStepContent.classList.remove("d-none");
+            showNotification("Borne désactivée avec succès !", "success");
+
+        } catch (error) {
+            console.error("Erreur:", error);
+            showNotification(error.message, "danger");
         }
     }
 
-    // Démarrer la séquence uniquement lorsque l'utilisateur clique sur "Démarrer la supervision"
-    startButton.addEventListener("click", function () {
-        startButton.classList.add("d-none"); // Cache le bouton
-        stepIconsContainer.classList.remove("d-none"); // Affiche les icônes
-        stepContent.classList.remove("d-none"); // Affiche le contenu
-        finalStepContent.classList.add("d-none"); // Cache l’étape finale
-        currentStep = 0;
-        updateStep();
-    });
+    // 🔄 Fonction pour afficher l'étape en cours
+    function updateStep(stepIndex, message) {
+        stepIcons[stepIndex].classList.add("active");
+        if (stepIndex > 0) {
+            stepLines[stepIndex - 1].style.backgroundColor = "#28a745";
+        }
 
-    // Réinitialiser le processus uniquement lorsque la modal se ferme
+        stepContent.innerHTML = `<p>${message}</p><div class="loader"></div>`;
+    }
+
+    // 🔔 Fonction pour afficher une notification Bootstrap
+    function showNotification(message, type) {
+        const notification = document.createElement("div");
+        notification.className = `alert alert-${type} alert-dismissible fade show`;
+        notification.role = "alert";
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        `;
+
+        notificationContainer.appendChild(notification);
+
+        // Supprime la notification après 5 secondes
+        setTimeout(() => {
+            notification.classList.remove("show");
+            setTimeout(() => notification.remove(), 500);
+        }, 5000);
+    }
+
+    // 🔐 Fonction 1 : Authentification
+    async function authenticateUser() {
+        const response = await fetch("https://lodmi.charge-angels.com/v1/auth/signin", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                email: "partenaire@partenaire.com",
+                password: "aDTQE83e2XkBaxTU@@",
+                acceptEula: true,
+                acceptPrivacy: true,
+                tenant: "lodmi"
+            })
+        });
+
+        if (!response.ok) {
+            console.error("Erreur d'authentification:", response.status);
+            return null;
+        }
+
+        const data = await response.json();
+        return data.token;
+    }
+
+    // ✅ Fonction 2 : Vérifier la borne
+    async function checkChargingStation(token, stationName) {
+        const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}`, {
+            method: "GET",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        return response.status === 200;
+    }
+
+    // ❌ Fonction 3 : Désactiver la borne
+    async function disableChargingStation(token, stationName) {
+        const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}/availability/change`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "status": "accepted",
+                "args": {
+                    "connectorId": 0,
+                    "type": "Inoperative"
+                }
+            })
+        });
+
+        return response.ok;
+    }
+
+    // 🎬 Événement sur le bouton de démarrage
+    startButton.addEventListener("click", startSupervisionProcess);
+
+    // 🆕 Réinitialiser quand la modal se ferme
     modal.addEventListener("hidden.bs.modal", resetProcess);
+
+    function resetProcess() {
+        stepIcons.forEach(icon => icon.classList.remove("active"));
+        stepLines.forEach(line => line.style.backgroundColor = "#ddd");
+        stepIconsContainer.classList.add("d-none");
+        stepContent.classList.add("d-none");
+        finalStepContent.classList.add("d-none");
+    }
 });
 
-</script>
-<script>
-    function checkInput() {
-        const input = document.getElementById("chargingStationName").value;
-        document.getElementById("startSupervision").disabled = input.trim() === "";
-    }
 </script>
 
 {% endblock %}
