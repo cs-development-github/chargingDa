@@ -490,9 +490,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const finalStepContent = document.getElementById("finalStepContent");
     const stepIconsContainer = document.querySelector(".step-icons");
     const stepIcons = [
-        document.getElementById("stepIcon1"), // 🔌 Connexion
-        document.getElementById("stepIcon2"), // ✅ Vérification
-        document.getElementById("stepIcon3")  // 🔴 Désactivation
+        document.getElementById("stepIcon1"),
+        document.getElementById("stepIcon2"),
+        document.getElementById("stepIcon3")
     ];
     const stepLines = document.querySelectorAll(".step-line");
     const modal = document.getElementById("stepByStepModal");
@@ -512,26 +512,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         try {
-            stepIconsContainer.classList.remove("d-none"); // Afficher les icônes
+            stepIconsContainer.classList.remove("d-none");
             stepContent.classList.remove("d-none");
             finalStepContent.classList.add("d-none");
 
-            // 🔹 Étape 1 : Connexion
             updateStep(0, "Connexion à la borne...");
             const token = await authenticateUser();
             if (!token) throw new Error("Échec de l'authentification");
 
-            // 🔹 Étape 2 : Vérification de la borne
             updateStep(1, "Vérification des informations...");
             const isBorneValid = await checkChargingStation(token, stationName);
             if (!isBorneValid) throw new Error("Borne introuvable");
 
-            // 🔹 Étape 3 : Désactivation de la borne
             updateStep(2, "Finalisation...");
             const isDisabled = await disableChargingStation(token, stationName);
             if (!isDisabled) throw new Error("Échec de la supervisions");
 
-            // 🎉 Supervision terminée
             stepContent.classList.add("d-none");
             finalStepContent.classList.remove("d-none");
             showNotification("Borne supervisée avec succès !", "success");
@@ -542,7 +538,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // 🔄 Fonction pour afficher l'étape en cours
     function updateStep(stepIndex, message) {
         stepIcons[stepIndex].classList.add("active");
         if (stepIndex > 0) {
@@ -552,7 +547,6 @@ document.addEventListener("DOMContentLoaded", function () {
         stepContent.innerHTML = `<p>${message}</p><div class="loader"></div>`;
     }
 
-    // 🔔 Fonction pour afficher une notification Bootstrap
     function showNotification(message, type) {
         const notification = document.createElement("div");
         notification.className = `alert alert-${type} alert-dismissible fade show`;
@@ -564,14 +558,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         notificationContainer.appendChild(notification);
 
-        // Supprime la notification après 5 secondes
         setTimeout(() => {
             notification.classList.remove("show");
             setTimeout(() => notification.remove(), 500);
         }, 5000);
     }
 
-    // 🔐 Fonction 1 : Authentification
     async function authenticateUser() {
         const response = await fetch("https://lodmi.charge-angels.com/v1/auth/signin", {
             method: "POST",
@@ -594,17 +586,32 @@ document.addEventListener("DOMContentLoaded", function () {
         return data.token;
     }
 
-    // ✅ Fonction 2 : Vérifier la borne
-    async function checkChargingStation(token, stationName) {
-        const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}`, {
-            method: "GET",
-            headers: { "Authorization": `Bearer ${token}` }
-        });
+	async function checkChargingStation(token, stationName) {
+		updateStep(1, "Vérification des informations...");
 
-        return response.status === 200;
-    }
+		const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}`, {
+			method: "GET",
+			headers: { "Authorization": `Bearer ${token}` }
+		});
 
-    // ❌ Fonction 3 : Désactiver la borne
+		if (!response.ok) {
+			updateStep(1, "Un problème est survenu");
+			showNotification("Merci de vérifier que la borne est bien connectée à Internet.", "warning");
+			throw new Error("Borne déconnectée");
+		}
+
+		const data = await response.json();
+
+		// Vérifier si la borne est inactive
+		if (data.inactive === true) {
+			updateStep(1, "Un problème est survenu");
+			showNotification("Merci de vérifier que la borne est bien connectée à Internet.", "warning");
+			throw new Error("Borne déconnectée");
+		}
+
+		return true;
+	}
+
     async function disableChargingStation(token, stationName) {
         const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}/availability/change`, {
             method: "PUT",
