@@ -14,7 +14,7 @@
     <header class="bg-white shadow-sm">
         <div class="container d-flex justify-content-between align-items-center py-3">
             <div class="d-flex align-items-center">
-                <img src="{{ asset('build/landing/logosmall.png') }}" alt="Logo" class="me-2" style="height: 40px;">
+                <img src="{{ asset('build/images/logosmall.png') }}" alt="Logo" class="me-2" style="height: 40px;">
                 <h3 class="mb-0 fw-bold text-gradient">PARTENAIRE</h3>
             </div>
             <a href="#" class="btn btn-gradient">Se connecter</a>
@@ -27,58 +27,60 @@
             <div class="info-text">
                 <div class="text-container">
                     <h2 class="info-title">
-                        NEQUE PORRO <span class="highlight">QUISQUAM</span> PORRO
-                    </h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consectetur Lorem ipsum dolor sit
-                        amet.</p>
+                        La plateforme qui <span class="highlight">Facilite</span> les professionnels de L'IRVE
+                    </h2> 
+                        <p>Sublimez votre prestation et finalisez votre installation en proposant à vos clients nos solutions de supervision 
+                    </p>
                     <ul class="info-list">
-                        <li>Lorem ipsum dolor sit amet, consectetur</li>
-                        <li>Lorem ipsum dolor sit amet, consectetur</li>
-                        <li>Lorem ipsum dolor sit amet, consectetur</li>
+                        <li>Facile</li>
+                        <li>Rapide</li>
+                        <li>Sécurisé</li>
                     </ul>
-                    <a href="#" class="btn-gradient">Lorem Ipsum</a>
+                    <a href="#" class="btn-gradient">Commencer</a>
                 </div>
             </div>
             <div class="info-image">
-                <img class="right_image" src="{{ asset('build/landing/hero_banner.png') }}" alt="Illustration principale">
-                <img class="left_image" src="{{ asset('build/landing/left_hero_banner.png') }}" alt="Illustration secondaire">
+                <img class="right_image" src="{{ asset('build/images/hero_banner.png') }}" alt="Illustration principale">
+                <img class="left_image" src="{{ asset('build/images/left_hero_banner.png') }}" alt="Illustration secondaire">
             </div>
         </div>
     </section>
 
     <section class="content-section">
         <h2 class="section-title">
-            Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur
+            Découvrez nos offres
         </h2>
 
         <div class="content-wrapper">
-            <div class="content-block">
-                <div class="text-box">
-                    <img src="{{ asset('build/landing/corner_left_top.svg') }}" alt="Coin haut gauche" class="corner corner-left-top">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consectetur congue consequat.
-                        Praesent sagittis eros enim, eu vehicula nunc venenatis nec. Vivamus ultricies, dui a porta
-                        mollis, ligula diam iaculis dui, ut tempus sem ex et lectus. Vestibulum tincidunt odio sed
-                        ornare fermentum. Suspendisse potenti. Sed porttitor sed lorem ut facilisis.</p>
-                    <img src="{{ asset('build/landing/corner_right_bottom.svg') }}" alt="Coin bas droite"
-                        class="corner corner-right-bottom">
-                </div>
-
+            <div class="content-block left">
                 <div class="image-box">
-                    <img src="{{ asset('build/landing/image_place.png') }}" alt="Illustration">
+                    <img src="./images/image_place.png" alt="Illustration produit standard">
                 </div>
             </div>
-            <div class="content-block">
+    
+            <div class="content-block right">
                 <div class="image-box">
-                    <img src="{{ asset('build/landing/image_place.png') }}" alt="Illustration">
+                    <img src="./images/image_place.png" alt="Illustration produit premium">
                 </div>
-                <div class="text-box">
-                    <img src="{{ asset('build/landing/corner_left_top.svg') }}" alt="Coin haut gauche" class="corner corner-left-top">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consectetur congue consequat.
-                        Praesent sagittis eros enim, eu vehicula nunc venenatis nec. Vivamus ultricies, dui a porta
-                        mollis, ligula diam iaculis dui, ut tempus sem ex et lectus. Vestibulum tincidunt odio sed
-                        ornare fermentum. Suspendisse potenti. Sed porttitor sed lorem ut facilisis.</p>
-                    <img src="{{ asset('build/landing/corner_right_bottom.svg') }}" alt="Coin bas droite"
-                        class="corner corner-right-bottom">
+            </div>
+        </div>
+    </section>
+
+        <section class="process-steps">
+        <div class="steps-container">
+
+            <img src="{{ asset('build/images/steps_icons.svg') }}" alt="">
+            <div class="step-item">
+                <div class="step-text">
+                    <h3>Je m'identifie</h3>
+                </div>
+
+                <div class="step-text">
+                    <h3>Je suis les étapes de la documentation</h3>
+                </div>
+
+                <div class="step-text">
+                    <h3>Je mets en supervision</h3>
                 </div>
             </div>
         </div>
@@ -86,132 +88,53 @@
 
     <section class="partner-section">
         <h2 class="section-title">
-            Nos Partenaires
+            Compatible avec
         </h2>
 
-        <div class="partner-content">
-            <div class="partner-item">
-                <img src="{{ asset('build/landing/partner1.png') }}" alt="Partenaire 1" class="brand-partner">
-                <span class="dot"></span>
-            </div>
-            <div class="partner-item">
-                <img src="{{ asset('build/landing/partner2.png') }}" alt="Partenaire 2" class="brand-partner">
-                <span class="dot"></span>
-            </div>
-            <div class="partner-item">
-                <img src="{{ asset('build/landing/partner3.png') }}" alt="Partenaire 3" class="brand-partner">
-                <span class="dot"></span>
-            </div>
-            <div class="partner-item">
-                <img src="{{ asset('build/landing/partner4.png') }}" alt="Partenaire 4" class="brand-partner">
-                <span class="dot"></span>
-            </div>
-            <div class="partner-item">
-                <img src="{{ asset('build/landing/partner5.png') }}" alt="Partenaire 5" class="brand-partner">
-            </div>
-        </div>
-    </section>
-
-    <section class="process-steps">
-        <div class="steps-container">
-
-            <img src="{{ asset('build/landing/steps_icons.svg') }}" alt="">
-            <!-- Étape 1 -->
-            <div class="step-item">
-                <div class="step-text">
-                    <h3>Lorem ipsum</h3>
-                    <p>Description courte de cette étape.</p>
-                </div>
-
-                <!-- Étape 2 -->
-                <div class="step-text">
-                    <h3>Lorem ipsum</h3>
-                    <p>Description courte de cette étape.</p>
-                </div>
-
-                <!-- Étape 3 -->
-                <div class="step-text">
-                    <h3>Lorem ipsum</h3>
-                    <p>Description courte de cette étape.</p>
-                </div>
+                {# <img src="{{ asset('build/images/partner5.png') }}" alt="Partenaire 5" class="brand-partner"> #}
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/abb.png')}}" alt="ABB" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/alpitronic.png')}}" alt="Alpitronic" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/autel.png')}}" alt="Autel" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/hager.png')}}" alt="Hager" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/logo-legrand-sa.svg')}}" alt="Legrand" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/ohme.png')}}" alt="Ohme" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/schneider.png')}}" alt="Schneider" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/wallbox.jpg')}}" alt="Wallbox" class="brand-partner"></div>
+    
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/abb.png')}}" alt="ABB" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/alpitronic.png')}}" alt="Alpitronic" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/autel.png')}}" alt="Autel" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/hager.png')}}" alt="Hager" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/logo-legrand-sa.svg')}}" alt="Legrand" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/ohme.png')}}" alt="Ohme" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/schneider.png')}}" alt="Schneider" class="brand-partner"></div>
+                <div class="partner-item"><img src="{{ asset('build/images/Brand/wallbox.jpg')}}" alt="Wallbox" class="brand-partner"></div>
             </div>
         </div>
     </section>
-
-    <section class="blog-section">
-        <h2 class="section-title">
-            Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur
-        </h2>
-
-        <div class="blog-container">
-
-            <div class="blog">
-                <img src="{{ asset('build/landing/corner_left_top.svg') }}" alt="Coin haut gauche" class="corner corner-left-top">
-                <div class="blog-content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consectetur congue consequat.
-                    Praesent sagittis eros enim, eu vehicula.
-                </div>
-                <a class="btn-gradient">Lorem</a>
-                <img src="{{ asset('build/landing/corner_right_bottom.svg') }}" alt="Coin bas droit" class="corner corner-right-bottom">
-            </div>
-
-            <div class="blog">
-                <img src="{{ asset('build/landing/corner_left_top.svg') }}" alt="Coin haut gauche" class="corner corner-left-top">
-                <div class="blog-content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consectetur congue consequat.
-                    Praesent sagittis eros enim, eu vehicula.
-                </div>
-                <a class="btn-gradient">Lorem</a>
-                <img src="{{ asset('build/landing/corner_right_bottom.svg') }}" alt="Coin bas droit" class="corner corner-right-bottom">
-            </div>
-
-            <div class="blog">
-                <img src="{{ asset('build/landing/corner_left_top.svg') }}" alt="Coin haut gauche" class="corner corner-left-top">
-                <div class="blog-content">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam consectetur congue consequat.
-                    Praesent sagittis eros enim, eu vehicula.
-                </div>
-                <a class="btn-gradient">Lorem</a>
-                <img src="{{ asset('build/landing/corner_right_bottom.svg') }}" alt="Coin bas droit" class="corner corner-right-bottom">
-            </div>
-
-        </div>
-    </section>
-
-
 
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h4>LOREM IPSUM</h4>
+                <h4>Liens</h4>
                 <ul>
-                    <li>lorem</li>
-                    <li>lorem</li>
-                    <li>lorem</li>
+                    <li>FAQ</li>
+                    <li>Aide</li>
+                    <li>Support</li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>LOREM</h4>
+                <h4>Légal</h4>
                 <ul>
-                    <li>lorem</li>
-                    <li>lorem</li>
-                    <li>lorem</li>
+                    <li>Conditions générales</li>
+                    <li>Confidentialité</li>
                 </ul>
             </div>
             <div class="footer-section">
-                <h4>LOREM IPSUM</h4>
+                <h4>Entreprise</h4>
                 <ul>
-                    <li>lorem</li>
-                    <li>lorem</li>
-                    <li>lorem</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>LOREM</h4>
-                <ul>
-                    <li>lorem</li>
-                    <li>lorem</li>
-                    <li>lorem</li>
+                    <li>À propos</li>
+                    <li>Contact</li>
                 </ul>
             </div>
         </div>
@@ -219,7 +142,7 @@
         <div class="footer-divider"></div>
 
         <div class="footer-bottom">
-            <img src="{{ asset('build/landing/logosmall.png') }}" alt="Logo" class="footer-logo">
+            <img src="./images/logo_footer.png" alt="Logo" class="footer-logo">
             <span>copyright 2025</span>
         </div>
     </footer>

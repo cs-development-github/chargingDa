@@ -365,7 +365,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-image: url('../images/partner-banner.svg');
+    background-image: url('../landing/partner-banner.svg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -693,7 +693,7 @@ footer {
 
  /* ✅ Changement du SVG pour mobile */
  .steps-container img {
-    content: url("../images/steps-icons-mobile.svg");
+    content: url("../landing/steps-icons-mobile.svg");
     max-width: 100%;
     height: auto;
 }
