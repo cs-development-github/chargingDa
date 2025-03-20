@@ -22,13 +22,42 @@
         <div class="header-gradient"></div>
     </header>
 
+ <section class="info-section">
+        <div class="info-container">
+            <div class="info-text">
+                <div class="text-container">
+                    <h2 class="info-title">
+                        La plateforme qui <span class="highlight">Facilite</span> les professionnels de L'IRVE
+                    </h2> 
+                        <p>Sublimez votre prestation et finalisez votre installation en proposant à vos clients nos solutions de supervision 
+                    </p>
+                    <ul class="info-list">
+                        <li>Facile</li>
+                        <li>Rapide</li>
+                        <li>Sécurisé</li>
+                    </ul>
+                    <a href="#" class="btn-gradient">Commencer</a>
+                </div>
+            </div>
+            <div class="info-image">
+                <img class="right_image" src="{{ asset('build/images/hero_banner.png') }}" alt="Illustration principale">
+                <img class="left_image" src="{{ asset('build/images/left_hero_banner.png') }}" alt="Illustration secondaire">
+            </div>
+        </div>
+    </section>
+
     <section class="kits-section">
+
+            <h2 class="section-title">
+            Découvrez nos offres
+        </h2>
+
         <div class="container">
             <div class="kits-container">
 
                 <div class="kit-card ms-4">
                     <h2 class="card-title">KIT DE SUPERVISIONS</h2>
-                    <img src="{{ asset('build/images/landing/kit.png') }}" alt="Kit de supervisions" class="kit-image">
+                    <img src="{{ asset('build/images/landing/kit_basic.png') }}" alt="Kit de supervisions" class="kit-image">
                     <ul class="info-list">
                         <li>1 carte sim M2M</li>
                         <li>Un Qr Code sécuriser</li>
@@ -56,30 +85,13 @@
         </div>
     </section>
 
-    <section class="content-section">
-        <h2 class="section-title">
-            Découvrez nos offres
-        </h2>
-
-        <div class="content-wrapper">
-            <div class="content-block left">
-                <div class="image-box">
-                    <img src="./images/image_place.png" alt="Illustration produit standard">
-                </div>
-            </div>
-
-            <div class="content-block right">
-                <div class="image-box">
-                    <img src="./images/image_place.png" alt="Illustration produit premium">
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="process-steps">
         <div class="steps-container">
 
-            <img src="{{ asset('build/images/steps_icons.svg') }}" alt="">
+            <img src="{{ asset('build/images/landing/connect.png')}}" alt="">
+            <img src="{{ asset('build/images/landing/read_the_doc.png')}}" alt="">
+            <img src="{{ asset('build/images/landing/supervision.png')}}" alt="">
+
             <div class="step-item">
                 <div class="step-text">
                     <h3>Je m'identifie</h3>
@@ -100,42 +112,24 @@
         <h2 class="section-title">
             Compatible avec
         </h2>
-
-        {# <img src="{{ asset('build/images/partner5.png') }}" alt="Partenaire 5" class="brand-partner"> #}
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/abb.png')}}" alt="ABB"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/alpitronic.png')}}" alt="Alpitronic"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/autel.png')}}" alt="Autel"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/hager.png')}}" alt="Hager"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg')}}" alt="Legrand"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/ohme.png')}}" alt="Ohme"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/schneider.png')}}" alt="Schneider"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/wallbox.jpg')}}" alt="Wallbox"
-                class="brand-partner"></div>
-
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/abb.png')}}" alt="ABB"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/alpitronic.png')}}" alt="Alpitronic"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/autel.png')}}" alt="Autel"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/hager.png')}}" alt="Hager"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg')}}" alt="Legrand"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/ohme.png')}}" alt="Ohme"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/schneider.png')}}" alt="Schneider"
-                class="brand-partner"></div>
-        <div class="partner-item"><img src="{{ asset('build/images/landing/Brand/wallbox.jpg')}}" alt="Wallbox"
-                class="brand-partner"></div>
-        </div>
+    
+    <div class="partner-item">
+        <img src="{{ asset('build/images/landing/Brand/abb.png')}}" alt="ABB"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/alpitronic.png')}}" alt="Alpitronic"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/autel.png')}}" alt="Autel"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/hager.png')}}" alt="Hager"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg')}}" alt="Legrand"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/ohme.png')}}" alt="Ohme"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/schneider.png')}}" alt="Schneider"
+                class="brand-partner">
+        <img src="{{ asset('build/images/landing/Brand/wallbox.jpg')}}" alt="Wallbox"
+                class="brand-partner">
         </div>
     </section>
 
@@ -168,7 +162,7 @@
         <div class="footer-divider"></div>
 
         <div class="footer-bottom">
-            <img src="./images/logo_footer.png" alt="Logo" class="footer-logo">
+            <img src="{{ asset('build/images/landing/logo_footer.png')}}" alt="Logo" class="footer-logo">
             <span>copyright 2025</span>
         </div>
     </footer>
