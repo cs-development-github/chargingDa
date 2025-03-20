@@ -29,7 +29,7 @@ class MailService
         $htmlContent = $this->twig->render($template, $context);
 
         $email = (new Email())
-            ->from('nepasrepondrelodmi@gmail.com')
+            ->from('nepasrepondrelodmi@lodmi.com')
             ->to($to)
             ->subject($subject)
             ->html($htmlContent);

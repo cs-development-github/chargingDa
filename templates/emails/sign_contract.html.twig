@@ -1,3 +1,97 @@
-{{signatureUrl}}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email LODMI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
 
-oé oé oé 
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background-color: #ff0080;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header img {
+            height: 40px;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .content h1 {
+            font-size: 24px;
+            color: #333333;
+        }
+
+        .content p {
+            font-size: 16px;
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff8000;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .footer {
+            background-color: #2e2e3a;
+            color: #ffffff;
+            text-align: center;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .footer a {
+            color: #ff8000;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="https://srv.mobi-gest.com:4443/assets/logo_lodmi_mail.png" alt="LODMI PARTENAIRE">
+            <h2>Signature de votre contrat</h2>
+        </div>
+        <div class="content">
+            <p>Bonjour,</p>
+            <p>Votre contrat de supervision est prêt à être signé !</p>
+            <p>Cliquez sur le bouton ci-dessous pour accéder à votre contrat et le signer en ligne :</p>
+            <a href="{{signatureUrl}}" class="btn">Signer mon contrat</a>
+            <p>Une fois signé, votre contrat sera automatiquement pris en compte.</p>
+            <p>À bientôt,</p>
+            <p>L'équipe LODMI</p>
+        </div>
+        <div class="footer">
+            <p>&copy; 2024 LODMI. Tous droits réservés.</p>
+            <p><a href="https://lodmi.com">Visitez notre site</a></p>
+        </div>
+    </div>
+</body>
+</html>
