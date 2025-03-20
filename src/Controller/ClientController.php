@@ -17,6 +17,7 @@ use App\Service\PdfEditorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,6 +29,22 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class ClientController extends AbstractController
 {
+    private HttpClientInterface $httpClient;
+    private string $universignApiUrl;
+    private string $universignApiKey;
+    private EntityManagerInterface $em;
+
+    public function __construct(
+        HttpClientInterface $httpClient,
+        ParameterBagInterface $params,
+        EntityManagerInterface $em
+    ) {
+        $this->httpClient = $httpClient;
+        $this->universignApiUrl = $params->get('universign_api_url');
+        $this->universignApiKey = $params->get('universign_api_key');
+        $this->em = $em;
+    }
+
     #[Route('/clients', name: 'app_clients')]
     public function index(EntityManagerInterface $em, Security $security): Response
     {
@@ -38,8 +55,6 @@ final class ClientController extends AbstractController
         }
 
         $clients = $em->getRepository(Client::class)->findByUserOrTeam($user);
-
-        // dd($clients);
 
         return $this->render('client/index.html.twig', [
             'clients' => $clients,
@@ -245,4 +260,169 @@ final class ClientController extends AbstractController
             'client' => $client
         ]);
     }
+
+    #[Route('/sign-contract', name: 'sign_contract')]
+    public function signContract(Request $request, EntityManagerInterface $em, MailService $mailerService): Response
+    {
+        $token = $request->query->get('token');
+    
+        if (!$token) {
+            return new JsonResponse(['error' => 'Token manquant.'], 400);
+        }
+    
+        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
+    
+        if (!$client) {
+            return new JsonResponse(['error' => 'Client introuvable.'], 404);
+        }
+    
+        $pdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_final_{$client->getId()}.pdf";
+    
+        if (!file_exists($pdfPath)) {
+            return new JsonResponse(['error' => "Le fichier PDF du contrat est introuvable."], 404);
+        }
+    
+        try {
+            // 1️⃣ Création de la transaction
+            error_log("🛠 Création de la transaction Universign...");
+            $transactionResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions", [
+                'auth_basic' => [$this->universignApiKey, ''],
+                'headers' => ['Content-Type' => 'application/json'],
+                'json' => ['name' => "Signature Contrat - {$client->getName()}", 'language' => 'fr'],
+            ]);
+    
+            $transactionData = $transactionResponse->toArray();
+            $transactionId = $transactionData['id'] ?? null;
+            error_log("✅ Transaction créée avec ID : " . $transactionId);
+    
+            if (!$transactionId) {
+                throw new \RuntimeException("Échec de la création de la transaction Universign.");
+            }
+    
+            // 🕐 Attente pour s'assurer que la transaction est bien enregistrée
+            sleep(3);
+    
+            // 2️⃣ Envoi du fichier PDF à Universign
+            error_log("📄 Envoi du fichier PDF...");
+            $fileResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/files", [
+                'auth_basic' => [$this->universignApiKey, ''],
+                'body' => ['file' => fopen($pdfPath, 'r')],
+            ]);
+    
+            $fileData = $fileResponse->toArray();
+            $fileId = $fileData['id'] ?? null;
+            error_log("✅ Fichier envoyé avec ID : " . $fileId);
+    
+            if (!$fileId) {
+                throw new \RuntimeException("Échec de l'envoi du fichier à Universign.");
+            }
+    
+            // 3️⃣ Ajout du fichier à la transaction
+            error_log("📌 Ajout du document à la transaction...");
+            $docResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/documents", [
+                'auth_basic' => [$this->universignApiKey, ''],
+                'body' => ['document' => $fileId],
+            ]);
+    
+            $docData = $docResponse->toArray();
+            error_log("✅ Document ajouté : " . json_encode($docData));
+    
+            // Vérification après ajout du document
+            sleep(3);
+    
+            // 4️⃣ Récupération de la transaction pour obtenir le document ID
+            error_log("🔎 Vérification de la transaction après ajout du document...");
+            $documentResponse = $this->httpClient->request('GET', "{$this->universignApiUrl}/v1/transactions/{$transactionId}", [
+                'auth_basic' => [$this->universignApiKey, ''],
+            ]);
+            $documentData = $documentResponse->toArray();
+            error_log("✅ Transaction mise à jour : " . json_encode($documentData));
+    
+            $documentId = $documentData['documents'][0]['id'] ?? null;
+            if (!$documentId) {
+                throw new \RuntimeException("Le document ne semble pas avoir été correctement ajouté.");
+            }
+    
+            // 5️⃣ Ajout du champ de signature
+            error_log("✍️ Ajout du champ de signature...");
+            $signatureResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/documents/{$documentId}/fields", [
+                'auth_basic' => [$this->universignApiKey, ''],
+                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+                'body' => http_build_query(['type' => 'signature']),
+            ]);
+    
+            $signatureData = $signatureResponse->toArray();
+            error_log("✅ Champ de signature ajouté : " . json_encode($signatureData));
+    
+            $signatureFieldId = $signatureData['id'] ?? null;
+            if (!$signatureFieldId) {
+                throw new \RuntimeException("Échec de l'ajout du champ de signature.");
+            }
+    
+            // 6️⃣ Ajout du signataire
+            error_log("👤 Ajout du signataire ({$client->getEmail()})...");
+            $signerResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/signatures", [
+                'auth_basic' => [$this->universignApiKey, ''],
+                'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
+                'body' => http_build_query([
+                    'signer' => $client->getEmail(),
+                    'field'  => $signatureFieldId, // ✅ Lien avec le champ signature
+                ]),
+            ]);
+    
+            $signerData = $signerResponse->toArray();
+            error_log("✅ Signataire ajouté : " . json_encode($signerData));
+    
+            // 7️⃣ Démarrer la transaction
+            error_log("🚀 Démarrage de la transaction...");
+            $startResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/start", [
+                'auth_basic' => [$this->universignApiKey, ''],
+            ]);
+            error_log("✅ Transaction démarrée.");
+    
+            // 8️⃣ Récupération du lien de signature
+            error_log("🔎 Récupération de l'URL de signature...");
+            sleep(3);
+            $finalTransactionResponse = $this->httpClient->request('GET', "{$this->universignApiUrl}/v1/transactions/{$transactionId}", [
+                'auth_basic' => [$this->universignApiKey, ''],
+            ]);
+            $finalTransactionData = $finalTransactionResponse->toArray();
+            error_log("✅ Transaction finale récupérée.");
+    
+            // Extraction de l'URL de signature
+            $signatureUrl = $finalTransactionData['actions'][0]['url'] ?? null;
+    
+            if (!$signatureUrl) {
+                throw new \RuntimeException("Impossible de récupérer l'URL de signature.");
+            }
+            error_log("🔗 Lien de signature récupéré : " . $signatureUrl);
+    
+            // 📧 Envoi de l'e-mail avec le lien de signature
+            error_log("📧 Envoi de l'email au client...");
+            $mailerService->sendEmail(
+                to: $client->getEmail(),
+                subject: "Signature électronique de votre contrat",
+                template: 'emails/sign_contract.html.twig',
+                context: [
+                    'client' => $client,
+                    'signatureUrl' => $signatureUrl
+                ]
+            );
+            error_log("✅ Email envoyé avec succès !");
+    
+            // 🔗 Sauvegarde en base de données
+            $client->setSignatureTransactionId($transactionId);
+            $em->persist($client);
+            $em->flush();
+    
+        return $this->redirectToRoute('thank_you', ['token' => $token]);
+    
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'error' => 'Erreur Universign',
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
 }

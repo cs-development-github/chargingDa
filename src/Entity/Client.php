@@ -73,6 +73,9 @@ class Client
     #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'client')]
     private Collection $chargingStationSettings;
 
+    #[ORM\Column(length: 255)]
+    private ?string $signatureTransactionId = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -341,6 +344,18 @@ class Client
                 $chargingStationSetting->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSignatureTransactionId(): ?string
+    {
+        return $this->signatureTransactionId;
+    }
+
+    public function setSignatureTransactionId(string $signatureTransactionId): static
+    {
+        $this->signatureTransactionId = $signatureTransactionId;
 
         return $this;
     }
