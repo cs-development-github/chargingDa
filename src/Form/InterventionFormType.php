@@ -26,7 +26,7 @@ class InterventionFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null, // Pas de liaison directe avec une seule intervention
+            'data_class' => null,
         ]);
     }
 }

@@ -18,7 +18,8 @@
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.3",
     "npx": "^3.0.0",
-    "postcss-loader": "^8.1.1"
+    "postcss-loader": "^8.1.1",
+    "wkhtmltopdf": "^0.4.0"
   },
   "scripts": {
     "dev": "encore dev",

@@ -15,4 +15,11 @@ final class LandingPageController extends AbstractController
             'controller_name' => 'LandingPageController',
         ]);
     }
+
+    #[Route('/cgu', name: 'app_cgu')]
+    public function cgu(): Response
+    {
+        return $this->render('landing_page/cgu.html.twig', [
+        ]);
+    }
 }

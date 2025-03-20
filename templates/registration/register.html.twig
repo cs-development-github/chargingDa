@@ -76,7 +76,7 @@
       
           <div class="mb-3 d-flex align-items-center">
               {{ form_widget(registrationForm.agreeTerms, { 'attr': {'class': 'form-check-input me-2' ~ (registrationForm.agreeTerms.vars.errors|length > 0 ? ' is-invalid' : '')} }) }}
-              <label class="form-check-label" for="agreeTerms">J'accepte les conditions générales</label>
+              <label class="form-check-label" for="agreeTerms">J'accepte les <a href={{path('app_cgu')}}> conditions générales </a> </label>
               {{ form_errors(registrationForm.agreeTerms, {'attr': {'class': 'invalid-feedback'}}) }}
           </div>
       

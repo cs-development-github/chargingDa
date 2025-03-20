@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class AccountController extends AbstractController
 {
-    #[Route('/compte', name: 'app_account')]
+    #[Route('/mon-compte', name: 'app_account')]
     public function index(Security $security): Response
     {
 

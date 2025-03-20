@@ -18,61 +18,62 @@ class ClientContractService
         private Environment $twig
     ) {}
 
-    public function generateAndSendContract(Client $client, bool $sendEmail = true): ?string
+    public function generateAndSendContract(Client $client, bool $sendEmail = true, bool $requestSignature = true): ?string
     {
         $projectDir = $this->kernel->getProjectDir() . "/public/pdf";
         $clientId = $client->getId();
 
-        // Génération des pages PDF standards
-        $firstPagePath = "$projectDir/first_page_{$clientId}.pdf";
-        $this->pdfEditorService->createCustomPdf(
-            $firstPagePath,
-            $this->renderPdf('pdf/first_page_template.html.twig', $client)
-        );
-
-        $thirdPagePath = "$projectDir/third_page_{$clientId}.pdf";
-        $this->pdfEditorService->createCustomPdf(
-            $thirdPagePath,
-            $this->renderPdf('pdf/third_page_template.html.twig', $client)
-        );
-
-        $twentySecondPath = "$projectDir/twenty_second_{$clientId}.pdf";
-        $this->pdfEditorService->createCustomPdf(
-            $twentySecondPath,
-            $this->renderPdf('pdf/twenty_second_template.html.twig', $client)
-        );
-
-        // Récupération des informations liées à la borne de recharge
-        $chargingData = $this->getChargingStationData($client);
-        $htmlTwentyThird = $this->renderPdf(
-            'pdf/twenty_third_template.html.twig',
-            $client,
-            $chargingData
-        );
-        $twentyThirdPath = "$projectDir/twenty_third_{$clientId}.pdf";
-        $this->pdfEditorService->createCustomPdf($twentyThirdPath, $htmlTwentyThird);
-
-        // Chemins des PDF existants à fusionner
-        $existingPdfPath2 = "$projectDir/contrat_exploitation-2.pdf";
-        $existingPdfPath4 = "$projectDir/contrat_exploitation-4-21.pdf";
-        $existingPdfPath5 = "$projectDir/contrat_exploitation-24-27.pdf";
-
-        $mergedPdfPath = "$projectDir/contrat_final_{$clientId}.pdf";
-        $success = $this->pdfEditorService->mergePdfs([
-            $firstPagePath,
-            $existingPdfPath2,
-            $thirdPagePath,
-            $existingPdfPath4,
-            $twentySecondPath,
-            $twentyThirdPath,
-            $existingPdfPath5
-        ], $mergedPdfPath);
-
-        if (!$success || !file_exists($mergedPdfPath)) {
-            // Vous pouvez logger l'erreur ou lancer une exception personnalisée ici
-            return null;
+        // Vérification et création du dossier PDF
+        if (!is_dir($projectDir)) {
+            mkdir($projectDir, 0777, true);
         }
 
+        // Génération des pages PDF
+        $pdfFiles = [];
+        $templates = [
+            'first_page' => 'pdf/first_page_template.html.twig',
+            'third_page' => 'pdf/third_page_template.html.twig',
+            'twenty_second' => 'pdf/twenty_second_template.html.twig'
+        ];
+
+        foreach ($templates as $key => $template) {
+            $pdfPath = "$projectDir/{$key}_{$clientId}.pdf";
+            $htmlContent = $this->renderPdf($template, $client);
+            file_put_contents("$projectDir/debug_{$key}.html", $htmlContent);
+            
+            $this->pdfEditorService->createCustomPdf($pdfPath, $htmlContent);
+            if (file_exists($pdfPath) && filesize($pdfPath) > 0) {
+                $pdfFiles[] = $pdfPath;
+            }
+        }
+
+        // Récupération des informations de la borne de recharge
+        $chargingData = $this->getChargingStationData($client);
+        $twentyThirdPath = "$projectDir/twenty_third_{$clientId}.pdf";
+        $htmlTwentyThird = $this->renderPdf('pdf/twenty_third_template.html.twig', $client, $chargingData);
+        file_put_contents("$projectDir/debug_twenty_third.html", $htmlTwentyThird);
+        $this->pdfEditorService->createCustomPdf($twentyThirdPath, $htmlTwentyThird);
+        if (file_exists($twentyThirdPath) && filesize($twentyThirdPath) > 0) {
+            $pdfFiles[] = $twentyThirdPath;
+        }
+
+        // Chemins des fichiers PDF fixes
+        $existingPdfPaths = [
+            "$projectDir/contrat_exploitation-2.pdf",
+            "$projectDir/contrat_exploitation-4-21.pdf",
+            "$projectDir/contrat_exploitation-24-27.pdf"
+        ];
+        $pdfFiles = array_merge($pdfFiles, array_filter($existingPdfPaths, 'file_exists'));
+
+        // Fusion des fichiers PDF
+        $mergedPdfPath = "$projectDir/contrat_final_{$clientId}.pdf";
+        $success = $this->pdfEditorService->mergePdfs($pdfFiles, $mergedPdfPath);
+
+        if (!$success || !file_exists($mergedPdfPath) || filesize($mergedPdfPath) === 0) {
+            throw new \RuntimeException("Échec de la fusion des PDFs pour le client ID {$clientId}");
+        }
+
+        // Envoi de l'email si demandé
         if ($sendEmail) {
             $emailHtml = $this->renderPdf('emails/full_pdf.html.twig', $client);
             $this->mailService->sendEmailWithAttachment(
@@ -82,48 +83,37 @@ class ClientContractService
                 pdfPath: $mergedPdfPath
             );
         }
-
         return $mergedPdfPath;
     }
 
-    /**
-     * Rendu d'un template Twig en y injectant le client et des données additionnelles.
-     */
     private function renderPdf(string $template, Client $client, array $data = []): string
     {
         $context = array_merge(['client' => $client], $data);
         return $this->twig->render($template, $context);
     }
 
-    /**
-     * Récupère les informations de la borne de recharge à partir de la tarification liée au client.
-     *
-     * @throws \RuntimeException si aucune tarification ou borne n'est trouvée.
-     */
     private function getChargingStationData(Client $client): array
     {
-        $tarifications = $this->entityManager
-            ->getRepository(Tarification::class)
-            ->findBy(['client' => $client]);
-    
+        $tarifications = $this->entityManager->getRepository(Tarification::class)->findBy(['client' => $client]);
+
         if (empty($tarifications)) {
             throw new \RuntimeException("Aucune tarification trouvée pour le client ID {$client->getId()}");
         }
-    
+
         $totalConnectors = 0;
         $chargingStationsNames = [];
         $tarifsData = [];
-    
+
         foreach ($tarifications as $tarification) {
             $chargingStation = $tarification->getChargingStation();
             if (!$chargingStation) {
                 throw new \RuntimeException("Aucune borne associée pour le client ID {$client->getId()} dans la tarification ID {$tarification->getId()}");
             }
-    
+
             $pdc = $chargingStation->getConnectors();
             $connectorsCount = is_countable($pdc) ? count($pdc) : (int) $pdc;
             $totalConnectors += $connectorsCount;
-    
+
             $chargingStationsNames[] = $chargingStation->getModel();
 
             $tarifsData[] = [
@@ -134,14 +124,11 @@ class ClientContractService
                 'reducedPrice'  => $tarification->getReducedPrice(),
             ];
         }
-    
-        $chargingStationsNames = implode(', ', array_unique($chargingStationsNames));
-    
+
         return [
-            'chargingStationName' => $chargingStationsNames,
+            'chargingStationName' => implode(', ', array_unique($chargingStationsNames)),
             'totalConnectors'     => $totalConnectors,
             'tarifications'       => $tarifsData,
         ];
     }
-    
 }
