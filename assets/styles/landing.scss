@@ -179,6 +179,42 @@ header img {
   object-fit: contain;
 }
 
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  max-width: 800px;
+  margin: auto;
+}
+
+.progress-container::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 5px;
+  background: linear-gradient(to right, #ff3c7f, #ff914d);
+  z-index: 0;
+  transform: translateY(-50%);
+}
+
+.progress-step {
+  position: relative;
+  background: white;
+  border-radius: 50%;
+  padding: 15px;
+  z-index: 1;
+  border: 3px solid #ff3c7f;
+}
+
+.step-title {
+  text-align: center;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
 .header-gradient {
   height: 4px;
   background: linear-gradient(to right, #ec008c, #f6941f);
