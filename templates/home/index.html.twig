@@ -631,10 +631,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.ok;
     }
 
-    // 🎬 Événement sur le bouton de démarrage
     startButton.addEventListener("click", startSupervisionProcess);
 
-    // 🆕 Réinitialiser quand la modal se ferme
     modal.addEventListener("hidden.bs.modal", resetProcess);
 
     function resetProcess() {
