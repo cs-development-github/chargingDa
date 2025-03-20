@@ -14,7 +14,6 @@ use App\Form\InterventionFormType;
 use App\Service\ClientContractService;
 use App\Service\MailService;
 use App\Service\PdfEditorService;
-use App\Service\UniversignService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -246,98 +245,4 @@ final class ClientController extends AbstractController
             'client' => $client
         ]);
     }
-
-    #[Route('/send-otp', name: 'send_otp', methods: ['POST'])]
-    public function sendOtp(Request $request, EntityManagerInterface $em, HttpClientInterface $httpClient): JsonResponse
-    {
-        $token = $request->request->get('token');
-
-        if (!$token) {
-            return new JsonResponse(['error' => 'Token manquant.'], 400);
-        }
-
-        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-
-        if (!$client) {
-            return new JsonResponse(['error' => 'Client introuvable.'], 404);
-        }
-
-        $otpCode = random_int(100000, 999999);
-        $client->setOtpCode((string) $otpCode);
-        $client->setOtpExpiresAt(new \DateTime('+10 minutes'));
-        $em->persist($client);
-        $em->flush();
-
-        try {
-            $response = $httpClient->request('POST', 'https://srv.mobi-gest.com:4443/api/send-otp', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
-                'json' => [
-                    'phone' => $client->getPhone(),
-                    'otpCode' => $otpCode,
-                ],
-            ]);
-
-            $statusCode = $response->getStatusCode();
-            if ($statusCode !== 200) {
-                return new JsonResponse(['error' => 'Erreur lors de l\'envoi du SMS.'], 500);
-            }
-
-            return new JsonResponse(['success' => true]);
-        } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Service SMS indisponible.', 'details' => $e->getMessage()], 500);
-        }
-    }
-
-    #[Route('/verify-otp', name: 'verify_otp', methods: ['POST'])]
-    public function verifyOtp(Request $request, EntityManagerInterface $em): JsonResponse
-    {
-        $token = $request->request->get('token');
-        $otp = $request->request->get('otp');
-    
-        if (!$token || !$otp) {
-            return new JsonResponse(['error' => 'Données manquantes.'], 400);
-        }
-    
-        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-    
-        if (!$client) {
-            return new JsonResponse(['error' => 'Client introuvable.'], 404);
-        }
-    
-        if (!$client->isOtpValid($otp)) {
-            return new JsonResponse(['error' => 'Code invalide ou expiré.'], 403);
-        }
-    
-        $client->setIsOtpVerified(true);
-        $client->setOtpCode(null);
-        $client->setOtpExpiresAt(null);
-        $em->persist($client);
-        $em->flush();
-    
-        return new JsonResponse(['success' => true, 'message' => 'OTP validé avec succès.']);
-    }
-    
-    #[Route('/sign-contract', name: 'sign_contract')]
-    public function signContract(Request $request, EntityManagerInterface $em, UniversignService $universignService): Response
-    {
-        $token = $request->query->get('token');
-    
-        if (!$token) {
-            throw $this->createAccessDeniedException('Token manquant.');
-        }
-    
-        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-    
-        if (!$client || !$client->getSignatureTransactionId()) {
-            throw $this->createNotFoundException('Aucune demande de signature trouvée.');
-        }
-    
-        $signUrl = "https://sign.universign.com/sign?id=" . $client->getSignatureTransactionId();
-    
-        return $this->redirect($signUrl);
-    }
-    
-
 }

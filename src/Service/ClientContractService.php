@@ -13,7 +13,6 @@ class ClientContractService
     public function __construct(
         private PdfEditorService $pdfEditorService,
         private MailService $mailService,
-        private UniversignService $universignService,
         private EntityManagerInterface $entityManager,
         private KernelInterface $kernel,
         private Environment $twig
@@ -84,16 +83,6 @@ class ClientContractService
                 pdfPath: $mergedPdfPath
             );
         }
-
-        if ($requestSignature) {
-            $transactionId = $this->universignService->createSignatureRequest(
-                $mergedPdfPath, 
-                $client->getEmail(), 
-                $client->getName()
-            );
-        }
-        
-
         return $mergedPdfPath;
     }
 
