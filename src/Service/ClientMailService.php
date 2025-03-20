@@ -24,7 +24,7 @@ class ClientMailService
     public function sendClientCompletionEmail(Client $client, string $completionUrl): void
     {
         $email = (new Email())
-            ->from('no-reply@tonsite.com')
+            ->from('nepasrepondre@lodmi.com')
             ->to($client->getEmail() ?: 'chris.vermersch@hotmail.com')
             ->subject('Demande d\'information complémentaire')
             ->html($this->twig->render('emails/request_document.html.twig', [
@@ -41,7 +41,7 @@ class ClientMailService
     public function sendSupportNotification(Client $client, string $completionUrl): void
     {
         $email = (new Email())
-            ->from('no-reply@tonsite.com')
+            ->from('nepasrepondre@lodmi.com')
             ->to('contact@lodmi.com')
             ->subject('Nouvelle demande de supervision')
             ->html($this->twig->render('emails/lodmi_contract.html.twig', [
@@ -58,7 +58,7 @@ class ClientMailService
     public function sendInstallerConfirmation(Client $client, string $completionUrl): void
     {
         $email = (new Email())
-            ->from('no-reply@tonsite.com')
+            ->from('nepasrepondre@lodmi.com')
             ->to('chris.vermersch@hotmail.com')
             ->subject('Confirmation de demande de supervision')
             ->html($this->twig->render('emails/confirmation_installator.html.twig', [
@@ -69,3 +69,4 @@ class ClientMailService
         $this->mailer->send($email);
     }
 }
+

@@ -219,7 +219,7 @@
 				</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
-			<div class="step-indicator mb-2">
+			<div class="step-indicator mb-2" style="display: none;">
 				<strong>Étape
 					<span id="currentStepForm">1</span>
 					/
@@ -631,10 +631,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return response.ok;
     }
 
-    // 🎬 Événement sur le bouton de démarrage
     startButton.addEventListener("click", startSupervisionProcess);
 
-    // 🆕 Réinitialiser quand la modal se ferme
     modal.addEventListener("hidden.bs.modal", resetProcess);
 
     function resetProcess() {
@@ -644,6 +642,43 @@ document.addEventListener("DOMContentLoaded", function () {
         stepContent.classList.add("d-none");
         finalStepContent.classList.add("d-none");
     }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const addButton = document.getElementById("addIntervention");
+    const container = document.getElementById("interventionContainer");
+
+    if (!addButton || !container) {
+        console.error("❌ Élément(s) introuvable(s) !");
+        return;
+    }
+
+    addButton.addEventListener("click", function () {
+        console.log("✅ Bouton cliqué !");
+        
+        const prototype = container.dataset.prototype;
+        if (!prototype) {
+            console.error("❌ Pas de prototype pour l'ajout d'intervention !");
+            return;
+        }
+
+        // Remplace __name__ par un index unique
+        const index = container.children.length;
+        const newForm = prototype.replace(/__name__/g, index);
+
+        const div = document.createElement("div");
+        div.classList.add("intervention-item", "row", "align-items-center");
+        div.innerHTML = newForm;
+
+        container.appendChild(div);
+
+        // Débug : Vérifier si le formulaire s'ajoute bien
+        console.log("✅ Nouvelle borne ajoutée :", div);
+        console.log("📜 Contenu après ajout :", container.innerHTML);
+
+        // Assure que le conteneur est visible
+        container.classList.remove("d-none");
+    });
 });
 
 </script>

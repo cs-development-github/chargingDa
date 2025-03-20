@@ -1,10 +1,18 @@
 parameters:
     uploads_directory: '%kernel.project_dir%/public/uploads'
+    universign_api_url: '%env(UNIVERSIGN_API_URL)%'
+    universign_api_key: '%env(UNIVERSIGN_API_KEY)%'
 
 services:
+    App\Service\UniversignService:
+        arguments:
+            $universignApiUrl: '%universign_api_url%'
+            $apiKey: '%universign_api_key%'
+            
     App\EventListener\RedirectToLoginListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 10 }
+
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.

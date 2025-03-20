@@ -29,7 +29,7 @@ class MailService
         $htmlContent = $this->twig->render($template, $context);
 
         $email = (new Email())
-            ->from('nepasrepondrelodmi@gmail.com')
+            ->from('nepasrepondrelodmi@lodmi.com')
             ->to($to)
             ->subject($subject)
             ->html($htmlContent);
@@ -40,7 +40,7 @@ class MailService
     public function sendEmailWithAttachment(string $to, string $subject, string $htmlTemplate, string $pdfPath)
     {
         $email = (new Email())
-            ->from('nepasrepondrelodmi@gmail.com')
+            ->from('nepasrepondre@lodmi.com')
             ->to($to)
             ->subject($subject)
             ->html($htmlTemplate)

@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Formulaire en 2 étapes</title>
+  <title>Contrat de supervision</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -300,39 +300,39 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
   <script>
     function applyPriceToAll() {
-      try {
-        const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
-        const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
-        const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
- 
-        if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
-          alert("Impossible de trouver les champs de prix pour la première borne.");
-          return;
+        try {
+          const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
+          const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
+          const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
+
+          if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
+            alert("Impossible de trouver les champs de prix pour la première borne.");
+            return;
+          }
+
+          const sourcePurchase = sourcePurchaseInput.value;
+          const sourceResale = sourceResaleInput.value;
+          const sourcePublic = sourcePublicInput.value;
+
+          if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
+            alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
+            return;
+          }
+
+          document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
+            input.value = sourcePurchase;
+          });
+          document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
+            input.value = sourceResale;
+          });
+          document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
+            input.value = sourcePublic;
+          });
+        } catch (error) {
+          console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
+          alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
         }
- 
-        const sourcePurchase = sourcePurchaseInput.value;
-        const sourceResale = sourceResaleInput.value;
-        const sourcePublic = sourcePublicInput.value;
- 
-        if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
-          alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
-          return;
-        }
- 
-        document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
-          input.value = sourcePurchase;
-        });
-        document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
-          input.value = sourceResale;
-        });
-        document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
-          input.value = sourcePublic;
-        });
-      } catch (error) {
-        console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
-        alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
       }
-    }
  
     function applyStationInfoToAll() {
       try {
@@ -381,13 +381,12 @@
     }
  
     document.addEventListener("DOMContentLoaded", function () {
-      let currentStep = parseInt(localStorage.getItem("currentStep")) || 1;
       const totalSteps = 4;
+      let currentStep = 1;
  
       function showStep(step) {
         document.querySelectorAll(".step").forEach((stepDiv) => stepDiv.classList.remove("active"));
         document.getElementById(`step-${step}`).classList.add("active");
-        localStorage.setItem("currentStep", step);
         updateProgressBar(step);
       }
  
