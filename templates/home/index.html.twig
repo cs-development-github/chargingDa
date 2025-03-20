@@ -644,6 +644,43 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const addButton = document.getElementById("addIntervention");
+    const container = document.getElementById("interventionContainer");
+
+    if (!addButton || !container) {
+        console.error("❌ Élément(s) introuvable(s) !");
+        return;
+    }
+
+    addButton.addEventListener("click", function () {
+        console.log("✅ Bouton cliqué !");
+        
+        const prototype = container.dataset.prototype;
+        if (!prototype) {
+            console.error("❌ Pas de prototype pour l'ajout d'intervention !");
+            return;
+        }
+
+        // Remplace __name__ par un index unique
+        const index = container.children.length;
+        const newForm = prototype.replace(/__name__/g, index);
+
+        const div = document.createElement("div");
+        div.classList.add("intervention-item", "row", "align-items-center");
+        div.innerHTML = newForm;
+
+        container.appendChild(div);
+
+        // Débug : Vérifier si le formulaire s'ajoute bien
+        console.log("✅ Nouvelle borne ajoutée :", div);
+        console.log("📜 Contenu après ajout :", container.innerHTML);
+
+        // Assure que le conteneur est visible
+        container.classList.remove("d-none");
+    });
+});
+
 </script>
 
 {% endblock %}
