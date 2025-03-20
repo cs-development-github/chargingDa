@@ -14,6 +14,7 @@ use App\Form\InterventionFormType;
 use App\Service\ClientContractService;
 use App\Service\MailService;
 use App\Service\PdfEditorService;
+use App\Service\UniversignService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -318,4 +319,25 @@ final class ClientController extends AbstractController
         return new JsonResponse(['success' => true, 'message' => 'OTP validé avec succès.']);
     }
     
+    #[Route('/sign-contract', name: 'sign_contract')]
+    public function signContract(Request $request, EntityManagerInterface $em, UniversignService $universignService): Response
+    {
+        $token = $request->query->get('token');
+    
+        if (!$token) {
+            throw $this->createAccessDeniedException('Token manquant.');
+        }
+    
+        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
+    
+        if (!$client || !$client->getSignatureTransactionId()) {
+            throw $this->createNotFoundException('Aucune demande de signature trouvée.');
+        }
+    
+        $signUrl = "https://sign.universign.com/sign?id=" . $client->getSignatureTransactionId();
+    
+        return $this->redirect($signUrl);
+    }
+    
+
 }

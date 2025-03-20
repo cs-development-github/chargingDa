@@ -43,13 +43,17 @@
     </style>
   </head>
   <body>
-    <div class="container">
-      <h1>Félicitations !</h1>
-      <p>Vous avez terminé de remplir votre dossier.</p>
-      <p>Nous vous l'avons envoyé par email.</p>
-      <p>Merci d'avoir choisi les services Lodmi !</p>
+<div class="container">
+  <h1>Félicitations !</h1>
+  <p>Votre contrat a été envoyé par email.</p>
+  <p>Il ne vous reste plus qu'à le signer.</p>
 
-    </div>
+  <a href="{{ path('sign_contract', { token: client.secureToken }) }}" class="btn btn-primary">
+    <i class="bi bi-pencil"></i> Signer le contrat
+  </a>
+</div>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
