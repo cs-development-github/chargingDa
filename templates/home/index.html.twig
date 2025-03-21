@@ -701,4 +701,44 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const addButton = document.getElementById('addIntervention');
+		const container = document.getElementById('interventionContainer');
+
+		if (!addButton || !container) {
+			console.error("addButton ou container manquant.");
+			return;
+		}
+
+		let index = 0;
+
+		addButton.addEventListener('click', function () {
+			const prototype = container.dataset.prototype;
+			if (!prototype) {
+				console.error("Prototype manquant dans data-prototype.");
+				return;
+			}
+
+			const newForm = prototype.replace(/__name__/g, index);
+			const newDiv = document.createElement('div');
+			newDiv.innerHTML = newForm;
+			container.appendChild(newDiv);
+
+			index++;
+		});
+
+		// (optionnel) supprimer une borne si un bouton trash est cliqué
+		container.addEventListener('click', function (e) {
+			if (e.target.closest('.remove-intervention')) {
+				e.preventDefault();
+				const item = e.target.closest('.intervention-item');
+				if (item) {
+					item.remove();
+				}
+			}
+		});
+	});
+</script>
+
 {% endblock %}
