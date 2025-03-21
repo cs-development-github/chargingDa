@@ -152,13 +152,24 @@
         box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
+
+        /* Evitar conflicto con min-width: 768px */
         .arrow {
             display: none;
         }
 
         .col-step {
             margin-bottom: 30px;
+        }
+
+        /* Ajustar el texto en móvil */
+        .typing-animation {
+            border-right: none;
+            white-space: normal;
+            /* Permite que el texto se divida en líneas */
+            overflow: visible;
+            /* Evita recortes */
         }
     }
 
@@ -172,33 +183,28 @@
                 typing 3.5s steps(40, end),
                 blink-caret .75s step-end infinite;
         }
+    }
 
-        @keyframes typing {
-            from {
-                width: 0
-            }
-
-            to {
-                width: 100%
-            }
+    /* Keyframes de la animación de texto */
+    @keyframes typing {
+        from {
+            width: 0
         }
 
-        @keyframes blink-caret {
-
-            from,
-            to {
-                border-color: transparent
-            }
-
-            50% {
-                border-color: #f97316
-            }
+        to {
+            width: 100%
         }
     }
 
-    @media (max-width: 767px) {
-        .typing-animation {
-            border-right: none;
+    @keyframes blink-caret {
+
+        from,
+        to {
+            border-color: transparent;
+        }
+
+        50% {
+            border-color: #f97316;
         }
     }
 
@@ -208,14 +214,16 @@
         }
 
         .hero-text {
-            font-size: 2rem;
-            line-height: 1.2;
+            font-size: clamp(1.8rem, 5vw, 2.5rem);
+            /* Ajuste dinámico de tamaño */
+            line-height: 1.3;
         }
 
         .feature-grid {
             padding: 0 12px;
         }
     }
+
 
     .btn-orange-gradient {
         background-color: #f97316;
@@ -234,6 +242,12 @@
         transform: translateY(-2px);
         box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
         cursor: pointer;
+    }
+
+    html,
+    body {
+        overflow-x: hidden;
+        max-width: 100vw;
     }
 </style>
 
@@ -345,8 +359,7 @@
                 style="animation-delay: 0.3s">
                 Lore ipsum lore ipsum lore ipsum Lore ipsum
             </p>
-            <a href="{{ path('app_login') }}" class="btn-orange-gradient mt-2"
-                style="animation-delay: 0.5s;">
+            <a href="{{ path('app_login') }}" class="btn-orange-gradient mt-2" style="animation-delay: 0.5s;">
                 <span class="fw-bold">Login!</span>
             </a>
 
