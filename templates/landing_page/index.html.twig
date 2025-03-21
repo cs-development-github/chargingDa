@@ -6,11 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lodmi partenaires</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+
     {{ encore_entry_link_tags('landing') }}
 </head>
 <style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .nexa-bold {
+        font-family: 'Nexa Bold', sans-serif;
+    }
+
+    .navbar {
+        background-color: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+    }
+
+    .navbar.scrolled {
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link {
+        position: relative;
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -4px;
+        left: 0;
+        background-color: #f97316;
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .btn-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+    }
+
+    .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .check-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .feature-item:hover .check-icon {
+        transform: scale(1.2);
+    }
+
     .steps-section {
         text-align: center;
         padding: 50px 20px;
@@ -78,6 +143,15 @@
         margin: 0 10px;
     }
 
+    .btn-hover {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-hover:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+    }
+
     @media (max-width: 768px) {
         .arrow {
             display: none;
@@ -86,6 +160,80 @@
         .col-step {
             margin-bottom: 30px;
         }
+    }
+
+    @media (min-width: 768px) {
+        .typing-animation {
+            overflow: hidden;
+            border-right: .15em solid #f97316;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation:
+                typing 3.5s steps(40, end),
+                blink-caret .75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0
+            }
+
+            to {
+                width: 100%
+            }
+        }
+
+        @keyframes blink-caret {
+
+            from,
+            to {
+                border-color: transparent
+            }
+
+            50% {
+                border-color: #f97316
+            }
+        }
+    }
+
+    @media (max-width: 767px) {
+        .typing-animation {
+            border-right: none;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .hero-content {
+            padding: 0 16px;
+        }
+
+        .hero-text {
+            font-size: 2rem;
+            line-height: 1.2;
+        }
+
+        .feature-grid {
+            padding: 0 12px;
+        }
+    }
+
+    .btn-orange-gradient {
+        background-color: #f97316;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-orange-gradient:hover {
+        background-image: linear-gradient(to right, #fb923c, #f97316);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(249, 115, 22, 0.3);
+        cursor: pointer;
     }
 </style>
 
@@ -99,42 +247,156 @@
     </script>
 
 
-    <header class="bg-white shadow-sm">
-        <div class="container d-flex justify-content-between align-items-center py-3">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('build/images/logosmall.png') }}" alt="Logo" class="me-2" style="height: 40px;">
-                <h3 class="mb-0 fw-bold text-gradient">PARTENAIRE</h3>
-            </div>
-            <a href="{{path('app_login')}}" class="btn btn-gradient">Se connecter</a>
-        </div>
-        <div class="header-gradient"></div>
-    </header>
+    <nav id="navbar"
+        class="navbar fixed top-0 left-0 w-full py-3 md:py-4 px-4 md:px-6 flex justify-between items-center shadow-md transition-all z-50 bg-white">
 
-    <section class="info-section">
-        <div class="info-container">
-            <div class="info-text" data-aos="fade-up-right">
-                <div class="text-container">
-                    <h2 class="info-title">
-                        La plateforme qui<span class="highlight">Facilite</span> les professionnels de L'IRVE
-                    </h2>
-                    <p>Sublimez votre prestation et finalisez votre installation en proposant à vos clients nos
-                        solutions de supervision
-                    </p>
-                    <ul class="info-list">
-                        <li>Facile</li>
-                        <li>Rapide</li>
-                        <li>Sécurisé</li>
-                    </ul>
-                    <a href="#" class="btn-gradient">Commencer</a>
-                </div>
-            </div>
-            <div class="info-image">
-                <img class="right_image" src="{{ asset('build/images/landing/hero_banner.jpg') }}"
-                    alt="Illustration principale">
-                <img class="left_image" src="{{ asset('build/images/left_hero_banner.png') }}"
-                    alt="Illustration secondaire">
-            </div>
+        <div class="d-flex align-items-center animate__animated animate__fadeIn">
+            <img src="{{ asset('build/images/logosmall.png') }}" alt="Logo" class="me-2" style="height: 30px;">
+            <h3 class="mb-0 fw-bold text-gradient text-2xl md:text-3xl lg:text-3xl">PARTENAIRE</h3>
         </div>
+
+        <ul class="hidden md:flex space-x-4 lg:space-x-6 text-gray-700">
+            <li class="animate__animated animate__fadeInDown" style="animation-delay: 0.1s">
+                <a href="{{ path('app_login') }}" class="nav-link hover:text-orange-500 nexa-bold text-sm lg:text-base">
+                    Se connecter
+                </a>
+            </li>
+        </ul>
+
+        <div class="md:hidden animate__animated animate__fadeInRight">
+            <button id="menuBtn" class="text-gray-700 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <div id="mobileMenu"
+        class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center transform translate-x-full transition-transform duration-300 ease-in-out">
+
+        <button id="closeMenuBtn" class="absolute top-4 right-6 text-gray-700 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+
+        <ul class="flex flex-col space-y-6 text-xl text-center animate__animated animate__fadeInDown">
+            <li>
+                <a href="{{ path('app_login') }}" class="block py-2 text-gray-700 hover:text-orange-500 nexa-bold">
+                    Se connecter
+                </a>
+            </li>
+        </ul>
+    </div>
+
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const menuBtn = document.getElementById('menuBtn');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('translate-x-full');
+        });
+
+        closeMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.add('translate-x-full');
+        });
+
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('translate-x-full');
+            });
+        });
+
+        const parallaxImage = document.getElementById('parallaxImage');
+        window.addEventListener('scroll', () => {
+            const scrollPosition = window.pageYOffset;
+            if (parallaxImage) {
+                parallaxImage.style.transform = `translateY(${scrollPosition * 0.15}px) scale(1.1)`;
+            }
+        });
+    </script>
+
+    <section id="hero" class="relative w-full h-screen flex items-center justify-center text-white text-center">
+        <div class="absolute inset-0">
+            <img src="{{ asset('build/images/landing/hero_banner.jpg') }}" alt="Cleaning Service"
+                class="w-full h-full object-cover animate__animated animate__fadeIn">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+        </div>
+        <div class="relative z-10 px-4 sm:px-6 max-w-lg md:max-w-2xl lg:max-w-3xl hero-content">
+            <h2 id="hero-text"
+                class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 sm:mb-6 animate__animated animate__fadeInUp nexa-bold typing-animation hero-text">
+                ¡Lore Ipsum Lore Ipsum!
+            </h2>
+            <p class="text-lg sm:text-xl mb-6 sm:mb-8 animate__animated animate__fadeInUp"
+                style="animation-delay: 0.3s">
+                Lore ipsum lore ipsum lore ipsum Lore ipsum
+            </p>
+            <a href="{{ path('app_login') }}" class="btn-orange-gradient mt-2"
+                style="animation-delay: 0.5s;">
+                <span class="fw-bold">Login!</span>
+            </a>
+
+
+
+
+        </div>
+    </section>
+
+    <style>
+        #hero {
+            min-height: 100vh;
+        }
+
+        .hero-content {
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 640px) {
+            h2 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 640px) {
+            h2 {
+                font-size: 3rem;
+            }
+
+            p {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+
+
+    <div class="absolute bottom-8 sm:bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+        <svg class="w-6 h-6 sm:w-8 sm:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+        </svg>
+    </div>
     </section>
 
     <section class="kits-section">
