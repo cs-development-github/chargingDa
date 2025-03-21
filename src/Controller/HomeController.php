@@ -32,13 +32,12 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
     
-        // Récupération des interventions de l'installateur connecté
-        $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user]);
+        $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user], ['id' => 'DESC']);
     
         $clientsData = [];
     
         foreach ($interventions as $intervention) {
-            $client = $intervention->getClient(); // On récupère directement le client depuis Intervention
+            $client = $intervention->getClient();
     
             if ($client) {
                 $clientId = $client->getId();
@@ -49,9 +48,11 @@ class HomeController extends AbstractController
                         'stations' => []
                     ];
                 }
-                
                 if ($intervention->getChargingStation()) {
-                    $clientsData[$clientId]['stations'][] = $intervention->getChargingStation();
+                    $clientsData[$clientId]['stations'][] = [
+                        'station' => $intervention->getChargingStation(),
+                        'borneName' => $intervention->getBorneName(),
+                    ];
                 }
             }
         }
@@ -107,7 +108,7 @@ class HomeController extends AbstractController
             $client->setCreatedBy($user);
 
             $token = Uuid::v4()->toRfc4122();
-            $client->setSecureToken($token); // ✅ Enregistrement du token
+            $client->setSecureToken($token);
 
             $entityManager->persist($client);
             $entityManager->flush();

@@ -30,6 +30,12 @@
 
 		}
 
+		.fade-out {
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+
 .step-icons {
     display: flex;
     align-items: center;
@@ -103,13 +109,13 @@
 					{% for station in client.stations %}
 						<div class="borne-card" style="position: relative; width: 250px; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: transform 0.3s, box-shadow 0.3s; cursor: pointer; overflow: hidden;">
 							<span style="position: absolute; top: 10px; right: 10px; font-size: 0.75rem; background: #eee; color: #333; padding: 2px 6px; border-radius: 5px; z-index: 2;">{{
-                            station.model }}</span>
+                            station.station.model }}</span>
 							<div style="width: 100%; height: 150px; display: flex; justify-content: center; align-items: center; background-color: #f8f8f8; overflow: hidden;">
-								<img src="{{ asset('uploads/' ~ station.image) }}" alt="Image de la Borne" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+								<img src="{{ asset('uploads/' ~ station.station.image) }}" alt="Image de la Borne" style="max-width: 100%; max-height: 100%; object-fit: contain;">
 							</div>
 							<div style="padding: 15px; text-align: center;">
-								<h2 style="margin: 0 0 10px; font-size: 18px; color: #333;">{{ station.model }}</h2>
-								<a href="#" class="start-supervision-btn" data-bs-toggle="modal" data-bs-target="#stepByStepModal" data-id="{{ station.id }}" data-model="{{ station.model }}" style="display: block; margin-top: 10px; font-size: 2rem; color: #28a745; transition: color 0.3s; position: relative; z-index: 2;" onmouseover="this.style.color='#218838';" onmouseout="this.style.color='#28a745';">
+								<h2 style="margin: 0 0 10px; font-size: 18px; color: #333;">{{ station.station.model }}</h2>
+								<a href="#" class="start-supervision-btn" data-bs-toggle="modal" data-bs-target="#stepByStepModal" data-id="{{ station.station.id }}" data-model="{{ station.station.model }}"    data-bornename="{{ station.borneName }}" style="display: block; margin-top: 10px; font-size: 2rem; color: #28a745; transition: color 0.3s; position: relative; z-index: 2;" onmouseover="this.style.color='#218838';" onmouseout="this.style.color='#28a745';">
 									<i class="bi bi-play-circle-fill"></i>
 								</a>
 							</div>
@@ -124,87 +130,86 @@
 		{% endfor %}
 	</div>
 
-	<div class="modal fade" id="stepByStepModal" tabindex="-1" aria-labelledby="stepByStepModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-lg modal-fullscreen-md-down">
-			<div class="modal-content">
+<div class="modal fade" id="stepByStepModal" tabindex="-1" aria-labelledby="stepByStepModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down">
+        <div class="modal-content">
 
-				<div class="modal-header" style="background: linear-gradient(90deg, #ff7e5f, #ff3f81); color: white;">
-					<h5 class="modal-title" id="stepByStepModalLabel">
-						<i class="bi bi-lightning-charge-fill text-warning"></i>
-						Mise en supervision
-					</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-				</div>
+            <div class="modal-header" style="background: linear-gradient(90deg, #ff7e5f, #ff3f81); color: white;">
+                <h5 class="modal-title" id="stepByStepModalLabel">
+                    <i class="bi bi-lightning-charge-fill text-warning"></i>
+                    Mise en supervision
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
 
-				<div class="modal-body text-center">
+            <div class="modal-body text-center">
+                <div class="step-indicator mb-2">
+                    <strong>Étape
+                        <span id="currentStepDoc">1</span> /
+                        <span id="totalStepsDoc">9</span>
+                    </strong>
+                </div>
 
-					<div class="step-indicator mb-2">
-						<strong>Étape
-							<span id="currentStepDoc">1</span>
-							/
-							<span id="totalStepsDoc">9</span>
-						</strong>
-					</div>
+                <div class="progress mb-3" style="height: 5px;">
+                    <div id="stepProgressBar" class="progress-bar bg-success" style="width: 0%; transition: width 0.3s;"></div>
+                </div>
 
-					<div class="progress mb-3" style="height: 5px;">
-						<div id="stepProgressBar" class="progress-bar bg-success" style="width: 0%; transition: width 0.3s;"></div>
-					</div>
+                <div class="image-container text-center position-relative">
+                    <img id="stepImage" src="" alt="Documentation Image" class="img-fluid"
+                         style="max-width: 100%; max-height: 500px; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer;">
+                </div>
 
-					<div class="image-container text-center position-relative">
-						<img id="stepImage" src="" alt="Documentation Image" class="img-fluid" style="max-width: 100%; max-height: 500px; object-fit: contain; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: pointer;">
-					</div>
+                <div class="form-step" id="customStepSupervision">
+                    <div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;"></div>
 
-                    <div class="form-step" id="customStepSupervision">
+                    <h3>Finalisation de la supervision</h3>
 
-					<div id="notificationContainer" class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
-					</div>
+                    <p class="text-muted">
+                        Nom de la borne supervisée :
+                        <strong id="displayBorneName" class="text-dark">—</strong>
+                    </p>
 
-                        <h3>Finalisation de la supervision</h3>
+                    <button id="startSupervision" class="btn btn-primary">
+                        <i class="bi bi-play-circle"></i> Démarrer les tests
+                    </button>
 
-                        <input type="text" id="chargingStationName" class="form-control mb-2" placeholder="Nom de la borne" required oninput="checkInput()">
-
-                        <button id="startSupervision" class="btn btn-primary">
-                            <i class="bi bi-play-circle"></i> Démarrer les test
-                        </button>
-
-                        <div class="step-icons d-flex justify-content-center mb-4 d-none">
-                            <div class="step-circle" id="stepIcon1">
-                                <i class="bi bi-plug"></i>
-                            </div>
-                            <div class="step-line"></div>
-                            <div class="step-circle" id="stepIcon2">
-                                <i class="bi bi-clipboard-check"></i>
-                            </div>
-                            <div class="step-line"></div>
-                            <div class="step-circle" id="stepIcon3">
-                                <i class="bi bi-check-circle"></i>
-                            </div>
+                    <div class="step-icons d-flex justify-content-center mb-4 d-none">
+                        <div class="step-circle" id="stepIcon1">
+                            <i class="bi bi-plug"></i>
                         </div>
-
-                        <div id="stepContent" class="d-none">
-                            <p>Connexion à la borne...</p>
-                            <div class="loader"></div>
+                        <div class="step-line"></div>
+                        <div class="step-circle" id="stepIcon2">
+                            <i class="bi bi-clipboard-check"></i>
                         </div>
-
-                        <div id="finalStepContent" class="d-none">
-                            <p>Supervision terminée avec succès !</p>
+                        <div class="step-line"></div>
+                        <div class="step-circle" id="stepIcon3">
+                            <i class="bi bi-check-circle"></i>
                         </div>
                     </div>
 
-					<div class="d-flex justify-content-between mt-3">
-						<button class="btn btn-secondary prev-step rounded-3 rounded-pill">
-							<i class="bi bi-arrow-left"></i>
-							Précédent
-						</button>
-						<button class="btn btn-primary next-step rounded-3 rounded-pill">
-							Suivant
-							<i class="bi bi-arrow-right"></i>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+                    <div id="stepContent" class="d-none">
+                        <p>Connexion à la borne...</p>
+                        <div class="loader"></div>
+                    </div>
+
+                    <div id="finalStepContent" class="d-none">
+                        <p>Supervision terminée avec succès !</p>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-3">
+                    <button class="btn btn-secondary prev-step rounded-3 rounded-pill">
+                        <i class="bi bi-arrow-left"></i> Précédent
+                    </button>
+                    <button class="btn btn-primary next-step rounded-3 rounded-pill">
+                        Suivant <i class="bi bi-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </div>
 
@@ -234,38 +239,47 @@
 				</div>
 
 				{% set prototype_intervention %}
-				<div class="intervention-item row align-items-center">
-					<div class="col-md-5 d-flex flex-column justify-content-center">
-						<label class="form-label mb-0">
-							{{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
-						</label>
-						{{ form_widget(interventionForm.interventions.vars.prototype.sim, {
-                        'attr': {'class': 'form-control gradient-input'}
-                        }) }}
-					</div>
+<div class="intervention-item mb-3">
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <label class="form-label mb-0">
+                {{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
+            </label>
+            {{ form_widget(interventionForm.interventions.vars.prototype.sim, {
+                'attr': {'class': 'form-control gradient-input'}
+            }) }}
+        </div>
+        <div class="col-md-6">
+            <label class="form-label mb-0">
+                {{ form_label(interventionForm.interventions.vars.prototype.borneName, 'Identifiant de la borne') }}
+            </label>
+            {{ form_widget(interventionForm.interventions.vars.prototype.borneName, {
+                'attr': {'class': 'form-control gradient-input'}
+            }) }}
+        </div>
+    </div>
 
-					<div class="col-md-7 d-flex align-items-end">
-						<div class="flex-grow-1">
-							<label class="form-label mb-0">
-								{{ form_label(interventionForm.interventions.vars.prototype.chargingStation, 'Borne
-                                de recharge') }}
-							</label>
-							<div class="d-flex align-items-center">
-								{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
-                                'attr': {'class': 'form-select gradient-input'}
-                                }) }}
+    <div class="row align-items-end">
+        <div class="col-md-12">
+            <label class="form-label mb-0">
+                {{ form_label(interventionForm.interventions.vars.prototype.chargingStation, 'Borne de recharge') }}
+            </label>
+            <div class="d-flex align-items-center">
+                {{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
+                    'attr': {'class': 'form-select gradient-input'}
+                }) }}
+                <button type="button" class="btn text-white remove-intervention ms-2" style="background: linear-gradient(to right, #ff4081, #ff8c00);
+                                                                                            border: none;
+                                                                                            border-radius: 8px;
+                                                                                            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-								<button type="button" class="btn text-white remove-intervention ms-2" style="background: linear-gradient(to right, #ff4081, #ff8c00);
-																															                                    border: none;
-																															                                    border-radius: 8px;
-																															                                    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
-									<i class="bi bi-trash"></i>
-								</button>
 
-							</div>
-						</div>
-					</div>
-				</div>
 				{% endset %}
 
 				<form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
@@ -317,7 +331,9 @@
 			</div>
 		</div>
 	</div>
-</div></div> <script>
+</div></div> 
+
+<script>
 	document.addEventListener("DOMContentLoaded", function () {
 	    const stepModal = document.getElementById('stepByStepModal');
 	    const progressBarStep = document.getElementById('stepProgressBar');
@@ -329,11 +345,34 @@
 	    const nextBtn = document.querySelector('.next-step');
 	
 	    const steps = [
-	        "{{ asset('build/images/Documentation/Taille_maquette.png') }}",
-	        "{{ asset('build/images/Documentation/Taille_maquette.png') }}",
-	        "{{ asset('build/images/Documentation/Taille_maquette.png') }}",
-            "{{ asset('build/images/Documentation/Taille_maquette.png') }}",
-            "{{ asset('build/images/Documentation/Taille_maquette.png') }}",
+	        "{{ asset('build/images/Documentation/ABB_Terra_.png') }}",
+	        "{{ asset('build/images/Documentation/ABB_Terra_2.png') }}",
+	        "{{ asset('build/images/Documentation/ABB_Terra_3.png') }}",
+            "{{ asset('build/images/Documentation/ABB_Terra_4.png') }}",
+            "{{ asset('build/images/Documentation/ABB_Terra_5.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_6.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_7.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_8.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_9.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_10.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_11.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_12.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_13.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_14.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_15.png') }}",
+			"{{ asset('build/images/Documentation/ABB_Terra_16.png') }}",
+
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_2.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_3.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_4.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_5.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_6.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_7.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_8.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_9.png') }}",
+			// "{{ asset('build/images/Documentation/AUTEL_MAxiCHarger_10.png') }}",
+
 	    ];
 	
 	    let totalSteps = steps.length + 1;
@@ -482,109 +521,124 @@
 		            });
 		        }
 		    });
-		</script>
+</script>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const startButton = document.getElementById("startSupervision");
-    const stepContent = document.getElementById("stepContent");
-    const finalStepContent = document.getElementById("finalStepContent");
-    const stepIconsContainer = document.querySelector(".step-icons");
-    const stepIcons = [
-        document.getElementById("stepIcon1"),
-        document.getElementById("stepIcon2"),
-        document.getElementById("stepIcon3")
-    ];
-    const stepLines = document.querySelectorAll(".step-line");
-    const modal = document.getElementById("stepByStepModal");
-    const notificationContainer = document.getElementById("notificationContainer");
+	const startButton = document.getElementById("startSupervision");
+	const stepContent = document.getElementById("stepContent");
+	const finalStepContent = document.getElementById("finalStepContent");
+	const stepIconsContainer = document.querySelector(".step-icons");
+	const stepIcons = [
+		document.getElementById("stepIcon1"),
+		document.getElementById("stepIcon2"),
+		document.getElementById("stepIcon3")
+	];
+	const stepLines = document.querySelectorAll(".step-line");
+	const modal = document.getElementById("stepByStepModal");
+	const notificationContainer = document.getElementById("notificationContainer");
 
-    const stepsText = [
-        "Connexion à la borne...",
-        "Vérification des informations...",
-        "Finalisation de la supervision..."
-    ];
+	const stepsText = [
+		"Connexion à la borne...",
+		"Vérification des informations...",
+		"Finalisation de la supervision..."
+	];
 
-    async function startSupervisionProcess() {
-        const stationName = document.getElementById("chargingStationName").value.trim();
-        if (!stationName) {
-            showNotification("Veuillez entrer le nom de la borne.", "warning");
-            return;
-        }
+	let selectedBorneName = null;
 
-        try {
-            stepIconsContainer.classList.remove("d-none");
-            stepContent.classList.remove("d-none");
-            finalStepContent.classList.add("d-none");
+	document.querySelectorAll(".start-supervision-btn").forEach(button => {
+		button.addEventListener("click", function () {
+			selectedBorneName = this.dataset.bornename || null;
+			console.log("Nom de la borne reçu :", selectedBorneName);
 
-            updateStep(0, "Connexion à la borne...");
-            const token = await authenticateUser();
-            if (!token) throw new Error("Échec de l'authentification");
+			const displayElement = document.getElementById("displayBorneName");
+			if (displayElement) {
+				displayElement.textContent = selectedBorneName ?? "—";
+			}
+		});
+	});
 
-            updateStep(1, "Vérification des informations...");
-            const isBorneValid = await checkChargingStation(token, stationName);
-            if (!isBorneValid) throw new Error("Borne introuvable");
+	async function startSupervisionProcess() {
+		const stationName = selectedBorneName;
+		console.log("Supervision de :", stationName);
 
-            updateStep(2, "Finalisation...");
-            const isDisabled = await disableChargingStation(token, stationName);
-            if (!isDisabled) throw new Error("Échec de la supervisions");
+		if (!stationName) {
+			showNotification("Nom de la borne introuvable.", "warning");
+			return;
+		}
 
-            stepContent.classList.add("d-none");
-            finalStepContent.classList.remove("d-none");
-            showNotification("Borne supervisée avec succès !", "success");
+		try {
+			stepIconsContainer.classList.remove("d-none");
+			stepContent.classList.remove("d-none");
+			finalStepContent.classList.add("d-none");
 
-        } catch (error) {
-            console.error("Erreur:", error);
-            showNotification(error.message, "danger");
-        }
-    }
+			updateStep(0, "Connexion à la borne...");
+			const token = await authenticateUser();
+			if (!token) throw new Error("Échec de l'authentification");
 
-    function updateStep(stepIndex, message) {
-        stepIcons[stepIndex].classList.add("active");
-        if (stepIndex > 0) {
-            stepLines[stepIndex - 1].style.backgroundColor = "#28a745";
-        }
+			updateStep(1, "Vérification des informations...");
+			const isBorneValid = await checkChargingStation(token, stationName);
+			if (!isBorneValid) throw new Error("Borne introuvable");
 
-        stepContent.innerHTML = `<p>${message}</p><div class="loader"></div>`;
-    }
+			updateStep(2, "Finalisation...");
+			const isDisabled = await disableChargingStation(token, stationName);
+			if (!isDisabled) throw new Error("Échec de la supervision");
 
-    function showNotification(message, type) {
-        const notification = document.createElement("div");
-        notification.className = `alert alert-${type} alert-dismissible fade show`;
-        notification.role = "alert";
-        notification.innerHTML = `
-            ${message}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
+			stepContent.classList.add("d-none");
+			finalStepContent.classList.remove("d-none");
+			showNotification("Borne supervisée avec succès !", "success");
 
-        notificationContainer.appendChild(notification);
+		} catch (error) {
+			console.error("Erreur:", error);
+			showNotification(error.message, "danger");
+		}
+	}
 
-        setTimeout(() => {
-            notification.classList.remove("show");
-            setTimeout(() => notification.remove(), 500);
-        }, 5000);
-    }
+	function updateStep(stepIndex, message) {
+		stepIcons[stepIndex].classList.add("active");
+		if (stepIndex > 0) {
+			stepLines[stepIndex - 1].style.backgroundColor = "#28a745";
+		}
+		stepContent.innerHTML = `<p>${message}</p><div class="loader"></div>`;
+	}
 
-    async function authenticateUser() {
-        const response = await fetch("https://lodmi.charge-angels.com/v1/auth/signin", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                email: "partenaire@partenaire.com",
-                password: "aDTQE83e2XkBaxTU@@",
-                acceptEula: true,
-                acceptPrivacy: true,
-                tenant: "lodmi"
-            })
-        });
+	function showNotification(message, type) {
+		const notification = document.createElement("div");
+		notification.className = `alert alert-${type} alert-dismissible fade show`;
+		notification.role = "alert";
+		notification.innerHTML = `
+			${message}
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		`;
 
-        if (!response.ok) {
-            console.error("Erreur d'authentification:", response.status);
-            return null;
-        }
+		notificationContainer.appendChild(notification);
 
-        const data = await response.json();
-        return data.token;
-    }
+		setTimeout(() => {
+			notification.classList.remove("show");
+			setTimeout(() => notification.remove(), 500);
+		}, 5000);
+	}
+
+	async function authenticateUser() {
+		const response = await fetch("https://lodmi.charge-angels.com/v1/auth/signin", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				email: "partenaire@partenaire.com",
+				password: "aDTQE83e2XkBaxTU@@",
+				acceptEula: true,
+				acceptPrivacy: true,
+				tenant: "lodmi"
+			})
+		});
+
+		if (!response.ok) {
+			console.error("Erreur d'authentification:", response.status);
+			return null;
+		}
+
+		const data = await response.json();
+		return data.token;
+	}
 
 	async function checkChargingStation(token, stationName) {
 		updateStep(1, "Vérification des informations...");
@@ -602,7 +656,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		const data = await response.json();
 
-		// Vérifier si la borne est inactive
 		if (data.inactive === true) {
 			updateStep(1, "Un problème est survenu");
 			showNotification("Merci de vérifier que la borne est bien connectée à Internet.", "warning");
@@ -612,73 +665,38 @@ document.addEventListener("DOMContentLoaded", function () {
 		return true;
 	}
 
-    async function disableChargingStation(token, stationName) {
-        const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}/availability/change`, {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "status": "accepted",
-                "args": {
-                    "connectorId": 0,
-                    "type": "Inoperative"
-                }
-            })
-        });
+	async function disableChargingStation(token, stationName) {
+		const response = await fetch(`https://lodmi.charge-angels.com/v1/api/charging-stations/${stationName}/availability/change`, {
+			method: "PUT",
+			headers: {
+				"Authorization": `Bearer ${token}`,
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				"status": "accepted",
+				"args": {
+					"connectorId": 0,
+					"type": "Inoperative"
+				}
+			})
+		});
 
-        return response.ok;
-    }
+		return response.ok;
+	}
 
-    startButton.addEventListener("click", startSupervisionProcess);
+	startButton.addEventListener("click", startSupervisionProcess);
 
-    modal.addEventListener("hidden.bs.modal", resetProcess);
+	modal.addEventListener("hidden.bs.modal", resetProcess);
 
-    function resetProcess() {
-        stepIcons.forEach(icon => icon.classList.remove("active"));
-        stepLines.forEach(line => line.style.backgroundColor = "#ddd");
-        stepIconsContainer.classList.add("d-none");
-        stepContent.classList.add("d-none");
-        finalStepContent.classList.add("d-none");
-    }
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const addButton = document.getElementById("addIntervention");
-    const container = document.getElementById("interventionContainer");
-
-    if (!addButton || !container) {
-        console.error("❌ Élément(s) introuvable(s) !");
-        return;
-    }
-
-    addButton.addEventListener("click", function () {
-        console.log("✅ Bouton cliqué !");
-        
-        const prototype = container.dataset.prototype;
-        if (!prototype) {
-            console.error("❌ Pas de prototype pour l'ajout d'intervention !");
-            return;
-        }
-
-        // Remplace __name__ par un index unique
-        const index = container.children.length;
-        const newForm = prototype.replace(/__name__/g, index);
-
-        const div = document.createElement("div");
-        div.classList.add("intervention-item", "row", "align-items-center");
-        div.innerHTML = newForm;
-
-        container.appendChild(div);
-
-        // Débug : Vérifier si le formulaire s'ajoute bien
-        console.log("✅ Nouvelle borne ajoutée :", div);
-        console.log("📜 Contenu après ajout :", container.innerHTML);
-
-        // Assure que le conteneur est visible
-        container.classList.remove("d-none");
-    });
+	function resetProcess() {
+		stepIcons.forEach(icon => icon.classList.remove("active"));
+		stepLines.forEach(line => line.style.backgroundColor = "#ddd");
+		stepIconsContainer.classList.add("d-none");
+		stepContent.classList.add("d-none");
+		finalStepContent.classList.add("d-none");
+		selectedBorneName = null;
+		document.getElementById("displayBorneName").textContent = "—";
+	}
 });
 
 </script>

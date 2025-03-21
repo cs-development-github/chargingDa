@@ -73,7 +73,7 @@ class Client
     #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'client')]
     private Collection $chargingStationSettings;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $signatureTransactionId = null;
 
     public function __construct()
