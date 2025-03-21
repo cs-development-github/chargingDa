@@ -28,6 +28,9 @@ class SingleInterventionType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => 'La borne de recharge est obligatoire.']),
                 ],
+            ])
+            ->add('borneName', TextType::class, [
+                'label' => 'Identifiant de la borne'
             ]);
     }
 

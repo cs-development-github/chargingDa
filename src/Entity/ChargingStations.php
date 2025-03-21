@@ -62,11 +62,18 @@ class ChargingStations
     #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'chargingStation')]
     private Collection $chargingStationSettings;
 
+    /**
+     * @var Collection<int, ChargingStationDocumentation>
+     */
+    #[ORM\ManyToMany(targetEntity: ChargingStationDocumentation::class, mappedBy: 'chargingStation')]
+    private Collection $chargingStationDocumentations;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
         $this->tarifications = new ArrayCollection();
         $this->chargingStationSettings = new ArrayCollection();
+        $this->chargingStationDocumentations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -243,6 +250,33 @@ class ChargingStations
             if ($chargingStationSetting->getChargingStation() === $this) {
                 $chargingStationSetting->setChargingStation(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChargingStationDocumentation>
+     */
+    public function getChargingStationDocumentations(): Collection
+    {
+        return $this->chargingStationDocumentations;
+    }
+
+    public function addChargingStationDocumentation(ChargingStationDocumentation $chargingStationDocumentation): static
+    {
+        if (!$this->chargingStationDocumentations->contains($chargingStationDocumentation)) {
+            $this->chargingStationDocumentations->add($chargingStationDocumentation);
+            $chargingStationDocumentation->addChargingStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChargingStationDocumentation(ChargingStationDocumentation $chargingStationDocumentation): static
+    {
+        if ($this->chargingStationDocumentations->removeElement($chargingStationDocumentation)) {
+            $chargingStationDocumentation->removeChargingStation($this);
         }
 
         return $this;

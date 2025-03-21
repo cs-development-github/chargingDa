@@ -25,6 +25,9 @@ class Intervention
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?ChargingStations $chargingStation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $borneName = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -74,6 +77,18 @@ class Intervention
     public function setChargingStation(?ChargingStations $chargingStation): static
     {
         $this->chargingStation = $chargingStation;
+
+        return $this;
+    }
+
+    public function getBorneName(): ?string
+    {
+        return $this->borneName;
+    }
+
+    public function setBorneName(string $borneName): static
+    {
+        $this->borneName = $borneName;
 
         return $this;
     }
