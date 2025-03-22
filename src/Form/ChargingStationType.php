@@ -32,7 +32,6 @@ class ChargingStationType extends AbstractType
                 'label' => 'PDC',
                 'attr' => ['class' => 'form-control'],
             ])
-
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Actif ',
                 'required' => false,

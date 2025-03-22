@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HomeController extends AbstractController
 {
@@ -135,4 +136,23 @@ class HomeController extends AbstractController
 
         return new Response('❌ Formulaire invalide - Vérifie les erreurs', Response::HTTP_BAD_REQUEST);
     }
+
+    #[Route('/charging/stations/{id}/docs', name: 'station_docs_json', methods: ['GET'])]
+    public function getStationDocs(ChargingStations $station): JsonResponse
+    {
+        $docs = $station->getChargingStationDocumentations()->toArray();
+
+        usort($docs, fn($a, $b) => $a->getStep() <=> $b->getStep());
+
+        $data = array_map(function ($doc) {
+            return [
+                'image' => '/uploads/Documentations/' . $doc->getImage(),
+                'ocpp' => $doc->getOcpp(),
+                'napn' => $doc->getNapn(),
+            ];
+        }, $docs);
+
+        return $this->json($data);
+    }
+
 }

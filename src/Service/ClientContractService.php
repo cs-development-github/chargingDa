@@ -23,12 +23,10 @@ class ClientContractService
         $projectDir = $this->kernel->getProjectDir() . "/public/pdf";
         $clientId = $client->getId();
 
-        // Vérification et création du dossier PDF
         if (!is_dir($projectDir)) {
             mkdir($projectDir, 0777, true);
         }
 
-        // Génération des pages PDF
         $pdfFiles = [];
         $templates = [
             'first_page' => 'pdf/first_page_template.html.twig',

@@ -343,8 +343,6 @@ final class ClientController extends AbstractController
                 throw new \RuntimeException("Le document ne semble pas avoir été correctement ajouté.");
             }
     
-            // 5️⃣ Ajout du champ de signature avec position spécifique (page 26, bas à gauche)
-            error_log("✍️ Ajout du champ de signature sur la page 26, bas gauche...");
             $signatureResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/documents/{$documentId}/fields", [
                 'auth_basic' => [$this->universignApiKey, ''],
                 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
