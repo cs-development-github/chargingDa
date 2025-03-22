@@ -31,9 +31,6 @@ class ChargingStations
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $documentation = null;
-
     #[ORM\Column]
     private ?bool $isActive = null;
 
@@ -111,17 +108,6 @@ class ChargingStations
     public function setImage(?string $image): static
     {
         $this->image = $image;
-        return $this;
-    }
-
-    public function getDocumentation(): ?string
-    {
-        return $this->documentation;
-    }
-
-    public function setDocumentation(?string $documentation): static
-    {
-        $this->documentation = $documentation;
         return $this;
     }
 

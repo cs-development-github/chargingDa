@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'installator')]
     private Collection $interventions;
 
+    #[ORM\Column]
+    private ?bool $isVerified = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -209,6 +212,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $intervention->setInstallator(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isVerified(): ?bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }
