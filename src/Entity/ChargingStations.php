@@ -62,7 +62,7 @@ class ChargingStations
     /**
      * @var Collection<int, ChargingStationDocumentation>
      */
-    #[ORM\ManyToMany(targetEntity: ChargingStationDocumentation::class, mappedBy: 'chargingStation')]
+    #[ORM\OneToMany(targetEntity: ChargingStationDocumentation::class, mappedBy: 'ChargingStation')]
     private Collection $chargingStationDocumentations;
 
     public function __construct()
@@ -223,7 +223,7 @@ class ChargingStations
     {
         if (!$this->chargingStationSettings->contains($chargingStationSetting)) {
             $this->chargingStationSettings->add($chargingStationSetting);
-            $chargingStationSetting->setChargingStation($this);
+            // $chargingStationSetting->setChargingStation($this);
         }
 
         return $this;
@@ -253,7 +253,7 @@ class ChargingStations
     {
         if (!$this->chargingStationDocumentations->contains($chargingStationDocumentation)) {
             $this->chargingStationDocumentations->add($chargingStationDocumentation);
-            $chargingStationDocumentation->addChargingStation($this);
+            $chargingStationDocumentation->setChargingStation($this);
         }
 
         return $this;
@@ -262,7 +262,10 @@ class ChargingStations
     public function removeChargingStationDocumentation(ChargingStationDocumentation $chargingStationDocumentation): static
     {
         if ($this->chargingStationDocumentations->removeElement($chargingStationDocumentation)) {
-            $chargingStationDocumentation->removeChargingStation($this);
+            // set the owning side to null (unless already changed)
+            if ($chargingStationDocumentation->getChargingStation() === $this) {
+                $chargingStationDocumentation->setChargingStation(null);
+            }
         }
 
         return $this;

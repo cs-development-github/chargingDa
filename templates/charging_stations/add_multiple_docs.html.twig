@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter des documentations - {{ station.model }}{% endblock %}
+
+{% block body %}
+<div class="container my-5">
+  <h2 class="mb-4">Ajouter plusieurs documentations pour la borne <strong>{{ station.model }}</strong></h2>
+
+  {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+  <div id="doc-collection-wrapper"
+       data-prototype="{{ form_widget(form.docs.vars.prototype)|e('html_attr') }}">
+    {% for docForm in form.docs %}
+      <div class="doc-form-group border rounded p-3 mb-3">
+        {{ form_widget(docForm) }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <button type="button" id="add-doc-btn" class="btn btn-outline-secondary mb-3">
+    ➕ Ajouter une étape
+  </button>
+
+  <div>
+    <button type="submit" class="btn btn-primary">✅ Enregistrer toutes les documentations</button>
+  </div>
+
+  {{ form_end(form) }}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const wrapper = document.getElementById('doc-collection-wrapper');
+    const addBtn = document.getElementById('add-doc-btn');
+
+    let index = wrapper.querySelectorAll('.doc-form-group').length;
+    const prototypeTemplate = wrapper.dataset.prototype;
+
+    addBtn.addEventListener('click', () => {
+      const newForm = prototypeTemplate.replace(/__name__/g, index);
+      const div = document.createElement('div');
+      div.classList.add('doc-form-group', 'border', 'rounded', 'p-3', 'mb-3');
+      div.innerHTML = newForm;
+
+      wrapper.appendChild(div);
+      index++;
+    });
+  });
+</script>
+{% endblock %}

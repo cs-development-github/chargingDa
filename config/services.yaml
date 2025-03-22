@@ -1,5 +1,6 @@
 parameters:
     uploads_directory: '%kernel.project_dir%/public/uploads'
+    uploads_documentation: '%kernel.project_dir%/public/uploads/Documentations'
     universign_api_url: '%env(UNIVERSIGN_API_URL)%'
     universign_api_key: '%env(UNIVERSIGN_API_KEY)%'
 
