@@ -222,9 +222,6 @@
                 <a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="btn-action">
                   <i class="bi bi-pencil-square"></i>
                 </a>
-                <a href="{{ path('charging_station_add_multiple_docs', { slug: station.slug }) }}" class="btn-action" title="Ajouter plusieurs documentations">
-                  <i class="bi bi-files"></i> <!-- icône représentant des fichiers multiples -->
-                </a>
                 <button class="btn-action" data-bs-toggle="modal"
                   data-bs-target="#deleteStationModal{{ station.slug }}">
                   <i class="bi bi-trash"></i>
