@@ -89,46 +89,53 @@
     </div>
 
     {# Documentation liée #}
-    <div class="station-card mt-5">
-        <h4 class="text-center mb-4">Documentation liée</h4>
+<div class="station-card mt-5">
+    <h4 class="text-center mb-4">Documentation liée</h4>
 
-        {% if station.chargingStationDocumentations|length > 0 %}
+    {% if station.chargingStationDocumentations|length > 0 %}
+        <div class="row g-4">
             {% for doc in station.chargingStationDocumentations %}
-                <div class="mb-4 text-center">
-                    {% if doc.image %}
-                        <img src="{{ asset('uploads/Documentations/' ~ doc.image) }}" alt="Étape" width="300" class="mb-2 rounded">
-                    {% endif %}
+                <div class="col-md-4 col-sm-6 text-center">
+                    <div class="card h-100 shadow-sm border-0">
+                        {% if doc.image %}
+                            <img src="{{ asset('uploads/Documentations/' ~ doc.image) }}" class="card-img-top rounded-top" alt="Étape">
+                        {% endif %}
 
-                    {% if doc.ocpp or doc.napn %}
-                        <p><strong>OCPP :</strong> {{ doc.ocpp ?: '—' }}</p>
-                        <p><strong>NAPN :</strong> {{ doc.napn ?: '—' }}</p>
-                    {% endif %}
-
-                    {% if is_granted('ROLE_ADMIN') %}
-                        <div class="mt-2">
-                            <a href="{{ path('charging_station_doc_edit', { id: doc.id }) }}" class="btn btn-sm btn-warning">
-                                Modifier
-                            </a>
-                            <form action="{{ path('charging_station_doc_delete', { id: doc.id }) }}" method="post" class="d-inline" onsubmit="return confirm('Supprimer cette documentation ?')">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ doc.id) }}">
-                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
-                            </form>
+                        <div class="card-body">
+                            {% if doc.ocpp or doc.napn %}
+                                <p class="mb-1"><strong>OCPP :</strong> {{ doc.ocpp ?: '—' }}</p>
+                                <p><strong>NAPN :</strong> {{ doc.napn ?: '—' }}</p>
+                            {% endif %}
                         </div>
-                    {% endif %}
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <div class="card-footer bg-transparent">
+                                <a href="{{ path('charging_station_doc_edit', { id: doc.id }) }}" class="btn btn-sm btn-warning me-1">
+                                    Modifier
+                                </a>
+                                <form action="{{ path('charging_station_doc_delete', { id: doc.id }) }}" method="post" class="d-inline" onsubmit="return confirm('Supprimer cette documentation ?')">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ doc.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
-        {% else %}
-            <p class="text-muted text-center">Aucune documentation disponible.</p>
-        {% endif %}
+        </div>
+    {% else %}
+        <p class="text-muted text-center">Aucune documentation disponible.</p>
+    {% endif %}
 
-        {% if is_granted('ROLE_ADMIN') %}
-            <div class="text-center mt-4">
-                <a href="{{ path('charging_station_add_multiple_docs', { slug: station.slug }) }}" class="btn btn-outline-primary">
-                    Ajouter des étapes de documentation
-                </a>
-            </div>
-        {% endif %}
-    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="text-center mt-4">
+            <a href="{{ path('charging_station_add_multiple_docs', { slug: station.slug }) }}" class="btn btn-outline-primary">
+                Ajouter des étapes de documentation
+            </a>
+        </div>
+    {% endif %}
+</div>
+
 </div>
 
 {# Modals #}
