@@ -223,6 +223,44 @@ final class ChargingStationsController extends AbstractController
             'station' => $station,
         ]);
     }
+
+    #[Route('/documentation/{id}/edit', name: 'charging_station_doc_edit')]
+public function edit(ChargingStationDocumentation $doc, Request $request, EntityManagerInterface $em, ParameterBagInterface $params): Response
+{
+    $form = $this->createForm(ChargingStationsDocumentationType::class, $doc);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $file = $request->files->get('charging_station_documentation')['image'] ?? null;
+
+        if ($file) {
+            $filename = uniqid() . '.' . $file->guessExtension();
+            $file->move($params->get('uploads_directory'), $filename);
+            $doc->setImage($filename);
+        }
+
+        $em->flush();
+        $this->addFlash('success', 'Documentation modifiée avec succès');
+        return $this->redirectToRoute('charging_station_show', ['slug' => $doc->getChargingStation()->getSlug()]);
+    }
+
+    return $this->render('documentation/edit.html.twig', [
+        'form' => $form,
+        'doc' => $doc,
+    ]);
+}
+
+#[Route('/documentation/{id}/delete', name: 'charging_station_doc_delete', methods: ['POST'])]
+public function delete(ChargingStationDocumentation $doc, EntityManagerInterface $em): Response
+{
+    $slug = $doc->getChargingStation()->getSlug();
+    $em->remove($doc);
+    $em->flush();
+
+    $this->addFlash('success', 'Étape de documentation supprimée');
+    return $this->redirectToRoute('charging_station_show', ['slug' => $slug]);
+}
+
     
 
 }
