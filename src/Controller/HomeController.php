@@ -142,8 +142,6 @@ class HomeController extends AbstractController
     {
         $docs = $station->getChargingStationDocumentations()->toArray();
 
-        usort($docs, fn($a, $b) => $a->getStep() <=> $b->getStep());
-
         $data = array_map(function ($doc) {
             return [
                 'image' => '/uploads/Documentations/' . $doc->getImage(),

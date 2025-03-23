@@ -73,6 +73,11 @@ class ChargingStations
         $this->chargingStationDocumentations = new ArrayCollection();
     }
 
+    public function getDocumentations(): Collection
+    {  
+        return $this->chargingStationDocumentations;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
