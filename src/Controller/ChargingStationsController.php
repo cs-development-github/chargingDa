@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\ChargingStationDocumentation;
 use App\Entity\ChargingStations;
 use App\Entity\Manufacturer;
+use App\Form\ChargingStationDocumentationCollectionType;
+use App\Form\ChargingStationsDocumentationType;
 use App\Form\ChargingStationType;
 use App\Form\ManufacturerType;
 use App\Repository\ChargingStationsRepository;
@@ -36,10 +39,13 @@ final class ChargingStationsController extends AbstractController
         $manufacturer = new Manufacturer();
         $manufacturerForm = $this->createForm(ManufacturerType::class, $manufacturer);
 
+        $docForm = $this->createForm(ChargingStationsDocumentationType::class, new ChargingStationDocumentation());
+
         return $this->render('charging_stations/index.html.twig', [
             'chargingStations' => $chargingStations,
             'form' => $form->createView(),
-            'manufacturerForm' => $manufacturerForm->createView()
+            'manufacturerForm' => $manufacturerForm->createView(),
+            'docForm' => $docForm->createView(), // 👈
         ]);
     }
 
@@ -78,7 +84,6 @@ final class ChargingStationsController extends AbstractController
                 $docFilename = uniqid() . '.' . $docFile->guessExtension();
                 try {
                     $docFile->move($this->uploadsDirectory, $docFilename);
-                    $station->setDocumentation($docFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de la documentation.');
                 }
@@ -178,4 +183,84 @@ final class ChargingStationsController extends AbstractController
 
         return $this->redirectToRoute('app_charging_stations');
     }
+
+    #[Route('/charging/stations/{slug}/documentations/add', name: 'charging_station_add_multiple_docs', methods: ['GET', 'POST'])]
+    public function addMultipleDocs(
+        Request $request,
+        ChargingStations $station,
+        EntityManagerInterface $em,
+        ParameterBagInterface $params
+    ): Response {
+        $form = $this->createForm(ChargingStationDocumentationCollectionType::class);
+        $form->handleRequest($request);
+    
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var ChargingStationDocumentation $doc */
+            foreach ($form->get('docs') as $docForm) {
+                $doc = $docForm->getData();
+        
+                $file = $docForm->get('image')->getData();
+        
+                if ($file) {
+                    $filename = uniqid().'.'.$file->guessExtension();
+                    $file->move($params->get('uploads_documentation'), $filename);
+                    $doc->setImage($filename);
+                }
+        
+                $doc->setChargingStation($station);
+                $em->persist($doc);
+            }
+        
+            $em->flush();
+        
+            $this->addFlash('success', 'Documentations ajoutées avec succès !');
+            return $this->redirectToRoute('charging_station_show', ['slug' => $station->getSlug()]);
+        }
+        
+    
+        return $this->render('charging_stations/add_multiple_docs.html.twig', [
+            'form' => $form->createView(),
+            'station' => $station,
+        ]);
+    }
+
+    #[Route('/documentation/{id}/edit', name: 'charging_station_doc_edit')]
+public function edit(ChargingStationDocumentation $doc, Request $request, EntityManagerInterface $em, ParameterBagInterface $params): Response
+{
+    $form = $this->createForm(ChargingStationsDocumentationType::class, $doc);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $file = $request->files->get('charging_station_documentation')['image'] ?? null;
+
+        if ($file) {
+            $filename = uniqid() . '.' . $file->guessExtension();
+            $file->move($params->get('uploads_directory'), $filename);
+            $doc->setImage($filename);
+        }
+
+        $em->flush();
+        $this->addFlash('success', 'Documentation modifiée avec succès');
+        return $this->redirectToRoute('charging_station_show', ['slug' => $doc->getChargingStation()->getSlug()]);
+    }
+
+    return $this->render('documentation/edit.html.twig', [
+        'form' => $form,
+        'doc' => $doc,
+    ]);
+}
+
+#[Route('/documentation/{id}/delete', name: 'charging_station_doc_delete', methods: ['POST'])]
+public function delete(ChargingStationDocumentation $doc, EntityManagerInterface $em): Response
+{
+    $slug = $doc->getChargingStation()->getSlug();
+    $em->remove($doc);
+    $em->flush();
+
+    $this->addFlash('success', 'Étape de documentation supprimée');
+    return $this->redirectToRoute('charging_station_show', ['slug' => $slug]);
+}
+
+    
+
 }

@@ -190,7 +190,13 @@
       <div id="step-3" class="step">
         <h4>Tarification</h4>
         <div class="mb-3">
-          <label class="form-label">Nombre de badges gratuits</label>
+          <label class="form-label">Badges avec accès au tarif coûtant
+            <i class="bi bi-info-circle-fill text-primary"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Le badge permet un accès à l’énergie au tarif d’achat, sans marge commerciale.">
+              </i>
+          </label>
           <input type="number" class="form-control" name="freeBadges" min="0" required />
         </div>
  
@@ -200,19 +206,40 @@
         <div class="row">
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Prix achat kW</label>
+            <label class="form-label">
+              Prix d'achat du kWh
+              <i class="bi bi-info-circle-fill text-primary"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Coût réel du kWh tel qu’il vous est facturé par le fournisseur.">
+              </i>
+            </label>
               <input type="number" class="form-control" name="priceKwh_{{ station.id }}" required />
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Prix revente kW</label>
+            <label class="form-label">
+              Tarif de revente préférentiel
+              <i class="bi bi-info-circle-fill text-primary"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Tarif réduit appliqué à vos bénéficiaires (salariés, clients, abonnés, etc.).">
+              </i>
+            </label>
               <input type="number" class="form-control" name="priceResale_{{ station.id }}" required />
             </div>
           </div>
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Prix publique kW</label>
+            <label class="form-label">
+              Tarif public du kWh
+              <i class="bi bi-info-circle-fill text-primary"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                title="Tarif standard appliqué aux usagers n’ayant pas de tarif préférentiel.">
+              </i>
+            </label>
               <input type="number" class="form-control" name="pricePublic_{{ station.id }}" required />
             </div>
           </div>
@@ -477,3 +504,12 @@
 </body>
  
 </html>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+    new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+})
+</script>

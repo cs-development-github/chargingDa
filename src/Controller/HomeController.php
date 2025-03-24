@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HomeController extends AbstractController
 {
@@ -32,13 +33,12 @@ class HomeController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
     
-        // Récupération des interventions de l'installateur connecté
-        $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user]);
+        $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user], ['id' => 'DESC']);
     
         $clientsData = [];
     
         foreach ($interventions as $intervention) {
-            $client = $intervention->getClient(); // On récupère directement le client depuis Intervention
+            $client = $intervention->getClient();
     
             if ($client) {
                 $clientId = $client->getId();
@@ -49,9 +49,11 @@ class HomeController extends AbstractController
                         'stations' => []
                     ];
                 }
-                
                 if ($intervention->getChargingStation()) {
-                    $clientsData[$clientId]['stations'][] = $intervention->getChargingStation();
+                    $clientsData[$clientId]['stations'][] = [
+                        'station' => $intervention->getChargingStation(),
+                        'borneName' => $intervention->getBorneName(),
+                    ];
                 }
             }
         }
@@ -107,7 +109,7 @@ class HomeController extends AbstractController
             $client->setCreatedBy($user);
 
             $token = Uuid::v4()->toRfc4122();
-            $client->setSecureToken($token); // ✅ Enregistrement du token
+            $client->setSecureToken($token);
 
             $entityManager->persist($client);
             $entityManager->flush();
@@ -134,4 +136,21 @@ class HomeController extends AbstractController
 
         return new Response('❌ Formulaire invalide - Vérifie les erreurs', Response::HTTP_BAD_REQUEST);
     }
+
+    #[Route('/charging/stations/{id}/docs', name: 'station_docs_json', methods: ['GET'])]
+    public function getStationDocs(ChargingStations $station): JsonResponse
+    {
+        $docs = $station->getChargingStationDocumentations()->toArray();
+
+        $data = array_map(function ($doc) {
+            return [
+                'image' => '/uploads/Documentations/' . $doc->getImage(),
+                'ocpp' => $doc->getOcpp(),
+                'napn' => $doc->getNapn(),
+            ];
+        }, $docs);
+
+        return $this->json($data);
+    }
+
 }

@@ -213,8 +213,6 @@ final class ClientController extends AbstractController
             $em->flush();
 
             if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);
-
-            return $this->redirectToRoute('thank_you', ['token' => $client->getSecureToken()]);
         }
 
         return $this->render('client/complete_form.html.twig', [
@@ -261,7 +259,7 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/sign-contract', name: 'sign_contract')]
+    #[Route('/sign-contract', name: 'sign_contract', methods: ['GET'])]
     public function signContract(Request $request, EntityManagerInterface $em, MailService $mailerService): Response
     {
         $token = $request->query->get('token');
@@ -343,8 +341,6 @@ final class ClientController extends AbstractController
                 throw new \RuntimeException("Le document ne semble pas avoir été correctement ajouté.");
             }
     
-            // 5️⃣ Ajout du champ de signature avec position spécifique (page 26, bas à gauche)
-            error_log("✍️ Ajout du champ de signature sur la page 26, bas gauche...");
             $signatureResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/documents/{$documentId}/fields", [
                 'auth_basic' => [$this->universignApiKey, ''],
                 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
