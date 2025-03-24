@@ -213,8 +213,6 @@ final class ClientController extends AbstractController
             $em->flush();
 
             if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);
-
-            return $this->redirectToRoute('thank_you', ['token' => $client->getSecureToken()]);
         }
 
         return $this->render('client/complete_form.html.twig', [
@@ -261,7 +259,7 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/sign-contract', name: 'sign_contract')]
+    #[Route('/sign-contract', name: 'sign_contract', methods: ['GET'])]
     public function signContract(Request $request, EntityManagerInterface $em, MailService $mailerService): Response
     {
         $token = $request->query->get('token');
