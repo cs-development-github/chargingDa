@@ -190,11 +190,11 @@
       <div id="step-3" class="step">
         <h4>Tarification</h4>
         <div class="mb-3">
-          <label class="form-label">Nombre de badges avec accès kwh au prix coûtant
+          <label class="form-label">Badges avec accès au tarif coûtant
             <i class="bi bi-info-circle-fill text-primary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
-                title="Le prix coutant est définis par le prix d'achat.">
+                title="Le badge permet un accès à l’énergie au tarif d’achat, sans marge commerciale.">
               </i>
           </label>
           <input type="number" class="form-control" name="freeBadges" min="0" required />
@@ -207,11 +207,11 @@
           <div class="col-md-6">
             <div class="mb-3">
             <label class="form-label">
-              Prix achat kW
+              Prix d'achat du kWh
               <i class="bi bi-info-circle-fill text-primary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
-                title="Coût auquel vous achetez le kW à votre fournisseur.">
+                title="Coût réel du kWh tel qu’il vous est facturé par le fournisseur.">
               </i>
             </label>
               <input type="number" class="form-control" name="priceKwh_{{ station.id }}" required />
@@ -220,11 +220,11 @@
           <div class="col-md-6">
             <div class="mb-3">
             <label class="form-label">
-              Prix de revente tarif préférentiel
+              Tarif de revente préférentiel
               <i class="bi bi-info-circle-fill text-primary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
-                title="Tarif auquel vous revendez le kW a vos (collaborateurs, clients, ex-femmes, abonnées....)">
+                title="Tarif réduit appliqué à vos bénéficiaires (salariés, clients, abonnés, etc.).">
               </i>
             </label>
               <input type="number" class="form-control" name="priceResale_{{ station.id }}" required />
@@ -233,11 +233,11 @@
           <div class="col-md-6">
             <div class="mb-3">
             <label class="form-label">
-              Prix public kW
+              Tarif public du kWh
               <i class="bi bi-info-circle-fill text-primary"
                 data-bs-toggle="tooltip"
                 data-bs-placement="top"
-                title="Tarif affiché pour les personnes extérieur a votre organisation.">
+                title="Tarif standard appliqué aux usagers n’ayant pas de tarif préférentiel.">
               </i>
             </label>
               <input type="number" class="form-control" name="pricePublic_{{ station.id }}" required />
