@@ -25,9 +25,15 @@ class SingleInterventionType extends AbstractType
                 'class' => ChargingStations::class,
                 'label' => 'Borne de recharge',
                 'choice_label' => 'model',
+                'group_by' => function (ChargingStations $station) {
+                    return $station->getManufacturer()->getName();
+                },
                 'constraints' => [
                     new NotBlank(['message' => 'La borne de recharge est obligatoire.']),
                 ],
+            ])
+            ->add('borneName', TextType::class, [
+                'label' => 'Identifiant de la borne'
             ]);
     }
 

@@ -2,11 +2,14 @@
 
 namespace App\Service;
 
+use Twig\Environment;
 use App\Entity\Client;
 use App\Entity\Tarification;
+use App\Service\ContractSignatureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Twig\Environment;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ClientContractService
 {
@@ -15,7 +18,10 @@ class ClientContractService
         private MailService $mailService,
         private EntityManagerInterface $entityManager,
         private KernelInterface $kernel,
-        private Environment $twig
+        private Environment $twig,
+        private HttpClientInterface $httpClient,
+        private UrlGeneratorInterface $urlGenerator,
+        private ContractSignatureService $contractSignatureService
     ) {}
 
     public function generateAndSendContract(Client $client, bool $sendEmail = true, bool $requestSignature = true): ?string
@@ -23,12 +29,10 @@ class ClientContractService
         $projectDir = $this->kernel->getProjectDir() . "/public/pdf";
         $clientId = $client->getId();
 
-        // Vérification et création du dossier PDF
         if (!is_dir($projectDir)) {
             mkdir($projectDir, 0777, true);
         }
 
-        // Génération des pages PDF
         $pdfFiles = [];
         $templates = [
             'first_page' => 'pdf/first_page_template.html.twig',
@@ -73,16 +77,11 @@ class ClientContractService
             throw new \RuntimeException("Échec de la fusion des PDFs pour le client ID {$clientId}");
         }
 
-        // Envoi de l'email si demandé
-        if ($sendEmail) {
-            $emailHtml = $this->renderPdf('emails/full_pdf.html.twig', $client);
-            $this->mailService->sendEmailWithAttachment(
-                to: $client->getEmail(),
-                subject: "Votre contrat est prêt",
-                htmlTemplate: $emailHtml,
-                pdfPath: $mergedPdfPath
-            );
-        }
+if ($requestSignature) {
+    $this->contractSignatureService->sign($client);
+}
+
+
         return $mergedPdfPath;
     }
 

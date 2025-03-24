@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Documentation Bornes{% endblock %}
+{% block title %} Bornes{% endblock %}
 
 {% block body %}
 <style>
@@ -159,7 +159,7 @@
   }
 </style>
 
-<div class="container mt-10">
+<div class="container mt-10" style="margin-top: 200px;">
   <div class="header-search">
     <div class="left">
       <h4>DOCUMENTATION BORNES</h4>
@@ -186,7 +186,6 @@
       <span>Fabricant</span>
       <span>PDC</span>
       <span>Photo</span>
-      <span>Documentation</span>
       {% if is_granted('ROLE_ADMIN') %}
       <span>Gestion</span>
       {% endif %}
@@ -216,17 +215,6 @@
               {% else %}
               <span class="text-muted">Non disponible</span>
               {% endif %}
-            </div>
-            <div class="station-info">
-              <div class="station-actions">
-                {% if station.documentation %}
-                <a href="{{ asset(station.documentation) }}" class="text-dark" download>
-                  <i class="bi bi-download" style="font-size: 1.4rem;"></i>
-                </a>
-                {% else %}
-                <span class="text-muted">Aucune</span>
-                {% endif %}
-              </div>
             </div>
             {% if is_granted('ROLE_ADMIN') %}
             <div class="station-info text-center">
@@ -302,16 +290,6 @@
             </p>
             <p class="mb-1">
               <strong>PDC:</strong> {{ station.connectors }}
-            </p>
-            <p class="mb-2">
-              <strong>Documentation:</strong>
-              {% if station.documentation %}
-              <a href="{{ asset(station.documentation) }}" download>
-                <i class="bi bi-download" style="font-size: 1.2rem;"></i>
-              </a>
-              {% else %}
-              <span class="text-muted">Aucune</span>
-              {% endif %}
             </p>
             {% if is_granted('ROLE_ADMIN') %}
             <div class="d-flex justify-content-center gap-3">
@@ -400,10 +378,6 @@
               <div class="mb-3">
                 <label class="fw-bold">Photo</label>
                 <input type="file" name="image" class="form-control" />
-              </div>
-              <div class="mb-3">
-                <label class="fw-bold">Documentation</label>
-                <input type="file" name="documentation" class="form-control" />
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-save">Enregistrer</button>

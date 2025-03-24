@@ -1,0 +1,41 @@
+<div class="modal fade" id="editStationModal" tabindex="-1" aria-labelledby="editStationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editStationModalLabel">Modifier la borne</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ path('charging_station_edit', { slug: station.slug }) }}" method="POST" enctype="multipart/form-data">
+                    {{ form_start(editForm) }}
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.model, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.manufacturer, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.connectors, 'PDC', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.connectors, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold">Nouvelle Image de la Borne</label>
+                        <input type="file" name="image" class="form-control">
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-save">Enregistrer les modifications</button>
+                    </div>
+
+                    {{ form_end(editForm) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

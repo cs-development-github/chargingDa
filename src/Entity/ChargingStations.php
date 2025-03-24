@@ -31,9 +31,6 @@ class ChargingStations
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $documentation = null;
-
     #[ORM\Column]
     private ?bool $isActive = null;
 
@@ -62,11 +59,23 @@ class ChargingStations
     #[ORM\OneToMany(targetEntity: ChargingStationSetting::class, mappedBy: 'chargingStation')]
     private Collection $chargingStationSettings;
 
+    /**
+     * @var Collection<int, ChargingStationDocumentation>
+     */
+    #[ORM\OneToMany(targetEntity: ChargingStationDocumentation::class, mappedBy: 'ChargingStation')]
+    private Collection $chargingStationDocumentations;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
         $this->tarifications = new ArrayCollection();
         $this->chargingStationSettings = new ArrayCollection();
+        $this->chargingStationDocumentations = new ArrayCollection();
+    }
+
+    public function getDocumentations(): Collection
+    {  
+        return $this->chargingStationDocumentations;
     }
 
     public function getId(): ?int
@@ -104,17 +113,6 @@ class ChargingStations
     public function setImage(?string $image): static
     {
         $this->image = $image;
-        return $this;
-    }
-
-    public function getDocumentation(): ?string
-    {
-        return $this->documentation;
-    }
-
-    public function setDocumentation(?string $documentation): static
-    {
-        $this->documentation = $documentation;
         return $this;
     }
 
@@ -230,7 +228,7 @@ class ChargingStations
     {
         if (!$this->chargingStationSettings->contains($chargingStationSetting)) {
             $this->chargingStationSettings->add($chargingStationSetting);
-            $chargingStationSetting->setChargingStation($this);
+            // $chargingStationSetting->setChargingStation($this);
         }
 
         return $this;
@@ -242,6 +240,36 @@ class ChargingStations
             // set the owning side to null (unless already changed)
             if ($chargingStationSetting->getChargingStation() === $this) {
                 $chargingStationSetting->setChargingStation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ChargingStationDocumentation>
+     */
+    public function getChargingStationDocumentations(): Collection
+    {
+        return $this->chargingStationDocumentations;
+    }
+
+    public function addChargingStationDocumentation(ChargingStationDocumentation $chargingStationDocumentation): static
+    {
+        if (!$this->chargingStationDocumentations->contains($chargingStationDocumentation)) {
+            $this->chargingStationDocumentations->add($chargingStationDocumentation);
+            $chargingStationDocumentation->setChargingStation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeChargingStationDocumentation(ChargingStationDocumentation $chargingStationDocumentation): static
+    {
+        if ($this->chargingStationDocumentations->removeElement($chargingStationDocumentation)) {
+            // set the owning side to null (unless already changed)
+            if ($chargingStationDocumentation->getChargingStation() === $this) {
+                $chargingStationDocumentation->setChargingStation(null);
             }
         }
 
