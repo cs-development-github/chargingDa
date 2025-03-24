@@ -78,15 +78,15 @@ class ContractSignatureService
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
             'body' => http_build_query([
                 'type' => 'signature',
-                'position[page]' => 26,
-                'position[x]' => 50,
-                'position[y]' => 50,
-                'position[width]' => 200,
-                'position[height]' => 50,
+                'name' => 'SignatureField1',
+                'page' => 26,
+                'x' => 50,
+                'y' => 50,
             ]),
-        ])->toArray();
+        ]);
+        
 
-        $fieldId = $signatureData['id'] ?? null;
+        $fieldId = $signatureData->toArray()['id'] ?? null;
         if (!$fieldId) throw new \RuntimeException("Champ de signature non ajouté.");
 
         // 6️⃣ Ajouter le signataire
