@@ -230,7 +230,7 @@ final class ClientController extends AbstractController
         return !empty($client->getEmail())
             && !empty($client->getSocietyName())
             && !empty($client->getPhone())
-            && !empty($client->getAdress())
+            && !empty($client->getAddress())
             && !empty($client->getName())
             && !empty($client->getLastname())
             && !empty($client->getSiret())

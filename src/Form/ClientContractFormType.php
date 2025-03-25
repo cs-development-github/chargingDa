@@ -65,9 +65,8 @@ class ClientContractFormType extends AbstractType
                     new NotBlank(['message' => 'L\'email est obligatoire']),
                 ],
             ])
-            ->add('adress', TextType::class, [
-                'label' => 'Adresse de facturation',
-                'attr' => ['class' => 'form-control'],
+            ->add('address', AddressType::class, [
+                'label' => false
             ])
             ->add('legalForm', ChoiceType::class, [
                 'label' => 'Forme juridique',
