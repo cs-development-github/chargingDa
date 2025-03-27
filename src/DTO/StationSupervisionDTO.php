@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use App\Entity\Client;
-use App\Entity\ChargingStation;
 use App\Entity\ChargingStations;
 use App\Entity\Intervention;
 use App\Entity\Tarification;
@@ -17,6 +16,10 @@ class StationSupervisionDTO
         public readonly Intervention $intervention,
         public readonly ?Tarification $tarification,
         public readonly ?ChargingStationSetting $setting,
-        public readonly string $borneName
-    ) {}
+        public readonly string $borneName,
+    ) {
+        $this->chargingStationSetting = $setting;
+    }
+
+    public ?ChargingStationSetting $chargingStationSetting = null;
 }

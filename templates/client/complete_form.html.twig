@@ -386,6 +386,12 @@
 									<label class="form-label">Pays</label>
 									<input type="text" class="form-control" name="country_{{ station.id }}" id="country_{{ station.id }}" value="France"/>
 								</div>
+
+								<input type="hidden" name="region_{{ station.id }}" id="region_{{ station.id }}"/>
+								<input type="hidden" name="department_{{ station.id }}" id="department_{{ station.id }}"/>
+								<input type="hidden" name="latitude_{{ station.id }}" id="latitude_{{ station.id }}"/>
+								<input type="hidden" name="longitude_{{ station.id }}" id="longitude_{{ station.id }}"/>
+
 							</div>
 						{% endfor %}
 
@@ -755,6 +761,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 document.getElementById(`postalCode_${stationId}`).value = raw.postcode || '';
                 document.getElementById(`city_${stationId}`).value = raw.city || '';
                 document.getElementById(`country_${stationId}`).value = 'France';
+
+				document.getElementById(`postalCode_${stationId}`).value = raw.postcode || '';
+				document.getElementById(`city_${stationId}`).value = raw.city || '';
+				document.getElementById(`country_${stationId}`).value = 'France';
+
+				const coords = feature.geometry?.coordinates;
+				if (coords) {
+				document.getElementById(`latitude_${stationId}`)?.value = coords[1];
+				document.getElementById(`longitude_${stationId}`)?.value = coords[0];
+				}
+
+				const context = raw.context?.split(',').map(c => c.trim());
+				const department = context?.[1] || '';
+				const region = context?.[2] || '';
+				document.getElementById(`department_${stationId}`)?.value = department;
+				document.getElementById(`region_${stationId}`)?.value = region;
+
 
                 results.style.display = 'none';
               });

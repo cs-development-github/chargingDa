@@ -31,8 +31,8 @@ class ClientSupervisionDataService
         $this->authenticatePartner();
         
         $companyId = $this->createCompany($client);
-        $siteId = $this->createSite($client, $companyId);
-        $siteAreaId = $this->createSiteArea($client, $siteId);
+        $siteId = $this->createSite($dto, $companyId); // <-- dto
+        $siteAreaId = $this->createSiteArea($dto, $siteId); // <-- dto
     
         $this->createPricingDefinition($dto);
         $this->assignSiteAreaToStation($siteAreaId, $station);
@@ -168,20 +168,25 @@ class ClientSupervisionDataService
         }
     }
 
-    private function createSite(Client $client, string $companyId): string
+    private function createSite(StationSupervisionDTO $dto, string $companyId): string
     {
+        $setting = $dto->chargingStationSetting;
+    
         $url = 'https://lodmi.charge-angels.com/v1/api/sites';
-
+    
         $payload = [
             "name" => "Premier lieu",
             "address" => [
-                "address1" => trim($client->getAddress()->getStreetNumber() . ' ' . $client->getAddress()->getStreetName()),
-                "postalCode" => $client->getAddress()->getPostalCode(),
-                "city" => $client->getAddress()->getCity(),
-                "department" => "Alpes Maritimes",
-                "region" => "PACA",
-                "country" => $client->getAddress()->getCountry(),
-                "coordinates" => [43, 7]
+                "address1" => $setting->getAddressLine(),
+                "postalCode" => $setting->getPostalCode(),
+                "city" => $setting->getCity(),
+                "department" => $setting->getDepartment() ?? "Non défini",
+                "region" => $setting->getRegion() ?? "Non défini",
+                "country" => $setting->getCountry(),
+                "coordinates" => [
+                    $setting->getLatitude() ?? 0,
+                    $setting->getLongitude() ?? 0
+                ]
             ],
             "public" => true,
             "autoUserSiteAssignment" => true,
@@ -189,7 +194,7 @@ class ClientSupervisionDataService
             "image" => "",
             "issuer" => true
         ];
-
+    
         try {
             $response = $this->httpClient->request('POST', $url, [
                 'headers' => [
@@ -198,14 +203,14 @@ class ClientSupervisionDataService
                 ],
                 'json' => $payload,
             ]);
-
+    
             if ($response->getStatusCode() >= 300) {
                 throw new \RuntimeException('Erreur création site');
             }
-
+    
             $data = $response->toArray();
             $siteId = $data['id'] ?? throw new \RuntimeException('Site ID manquant');
-
+    
             $this->logger->info('[Supervision] Site créé avec succès');
             return $siteId;
         } catch (\Throwable $e) {
@@ -213,22 +218,28 @@ class ClientSupervisionDataService
             throw $e;
         }
     }
+    
 
-    private function createSiteArea(Client $client, string $siteId): string
+    private function createSiteArea(StationSupervisionDTO $dto, string $siteId): string
     {
+        $setting = $dto->chargingStationSetting;
+    
         $url = 'https://lodmi.charge-angels.com/v1/api/site-areas';
     
         $payload = [
             "accessControl" => true,
             "address" => [
-                "address1" => "wsh la zone 2",
+                "address1" => $setting->getAddressLine(),
                 "address2" => "",
-                "postalCode" => $client->getAddress()->getPostalCode(),
-                "city" => $client->getAddress()->getCity(),
-                "department" => "NPDC",
-                "region" => "PACA",
-                "country" => $client->getAddress()->getCountry(),
-                "coordinates" => [43, 7]
+                "postalCode" => $setting->getPostalCode(),
+                "city" => $setting->getCity(),
+                "department" => $setting->getDepartment() ?? "Non défini",
+                "region" => $setting->getRegion() ?? "Non défini",
+                "country" => $setting->getCountry(),
+                "coordinates" => [
+                    $setting->getLatitude() ?? 0,
+                    $setting->getLongitude() ?? 0
+                ]
             ],
             "issuer" => true,
             "maximumPower" => 22080,
@@ -264,6 +275,7 @@ class ClientSupervisionDataService
         }
     }
     
+    
 
     private function createPricingDefinition(StationSupervisionDTO $dto): void
     {
@@ -271,7 +283,7 @@ class ClientSupervisionDataService
         $client = $dto->client;
         $station = $dto->station;
         $tarification = $dto->tarification;
-        $entityId = $dto->borneName; // ✅ Correct
+        $entityId = $dto->borneName;
     
         if (!$tarification) {
             $this->logger->warning('[Supervision] Pas de tarification pour ' . $entityId);

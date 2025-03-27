@@ -221,15 +221,20 @@ final class ClientController extends AbstractController
                     }
             
                     $setting->setPublic((bool) $data["public_$stationId"]);
-            
                     $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
                     $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
                     $setting->setCity($data["city_$stationId"] ?? '');
                     $setting->setCountry($data["country_$stationId"] ?? '');
             
+                    $setting->setRegion($data["region_$stationId"] ?? null);
+                    $setting->setDepartment($data["department_$stationId"] ?? null);
+                    $setting->setLatitude(isset($data["latitude_$stationId"]) ? (float) $data["latitude_$stationId"] : null);
+                    $setting->setLongitude(isset($data["longitude_$stationId"]) ? (float) $data["longitude_$stationId"] : null);
+            
                     $em->persist($setting);
                 }
             }
+            
             
             $em->flush();
 

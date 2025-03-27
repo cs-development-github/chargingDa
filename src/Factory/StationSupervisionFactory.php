@@ -1,3 +1,4 @@
+
 <?php
 
 // src/Factory/StationSupervisionFactory.php
@@ -22,32 +23,40 @@ class StationSupervisionFactory
     public function createFromInterventions(array $interventions): array
     {
         $uniqueStations = [];
-    
+
         foreach ($interventions as $intervention) {
             $station = $intervention->getChargingStation();
             $stationId = $station->getId();
-    
+
             if (isset($uniqueStations[$stationId])) {
                 continue;
             }
-    
+
+            $client = $intervention->getClient();
+
             $tarification = $this->tarificationRepo->findOneBy([
                 'chargingStation' => $station,
-                'client' => $intervention->getClient()
-            ]);            
-            $setting = $this->settingRepo->findOneBy(['chargingStation' => $station]);
-    
-            $uniqueStations[$stationId] = new StationSupervisionDTO(
-                client: $intervention->getClient(),
+                'client' => $client
+            ]);
+
+            $setting = $this->settingRepo->findOneBy([
+                'chargingStation' => $station
+            ]);
+
+            $dto = new StationSupervisionDTO(
+                client: $client,
                 station: $station,
                 intervention: $intervention,
                 tarification: $tarification,
                 setting: $setting,
                 borneName: $intervention->getBorneName()
             );
-            
+
+            $dto->chargingStationSetting = $setting;
+
+            $uniqueStations[$stationId] = $dto;
         }
-    
+
         return array_values($uniqueStations);
     }
 }
