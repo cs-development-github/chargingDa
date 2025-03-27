@@ -182,6 +182,10 @@
 								{{ form_widget(form.address.postalCode, {'attr': {'id': 'client_contract_form_address_postalCode'}}) }}
 								{{ form_widget(form.address.city, {'attr': {'id': 'client_contract_form_address_city'}}) }}
 								{{ form_widget(form.address.country, {'attr': {'id': 'client_contract_form_address_country'}}) }}
+								{{ form_row(form.address.latitude, {'attr': {'id': 'latitude'}}) }}
+								{{ form_row(form.address.longitude, {'attr': {'id': 'longitude'}}) }}
+								{{ form_row(form.address.region, {'attr': {'id': 'region'}}) }}
+								{{ form_row(form.address.department, {'attr': {'id': 'department'}}) }}
 							</div>
 
 							<div class="col-md-6 mb-3">
@@ -678,6 +682,20 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('client_contract_form_address_postalCode').value = props.postcode || '';
             document.getElementById('client_contract_form_address_city').value = props.city || '';
             document.getElementById('client_contract_form_address_country').value = 'France';
+
+			 // 🔽 Ajout latitude / longitude
+			const coords = data.features.find(f => f.properties.label === raw.label)?.geometry?.coordinates;
+			if (coords) {
+				document.getElementById('latitude')?.value = coords[1]; // latitude
+				document.getElementById('longitude')?.value = coords[0]; // longitude
+			}
+
+			// 🔽 Ajout département et région depuis "context"
+			const context = raw.context?.split(',').map(c => c.trim());
+			const department = context?.[1] || '';
+			const region = context?.[2] || '';
+			document.getElementById('department')?.value = department;
+			document.getElementById('region')?.value = region;
 
             results.style.display = 'none';
           });

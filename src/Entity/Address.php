@@ -31,6 +31,18 @@ class Address
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $country = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $department = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $latitude = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $longitude = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +116,54 @@ class Address
     public function setCountry(?string $country): static
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(string $region): static
+    {
+        $this->region = $region;
+
+        return $this;
+    }
+
+    public function getDepartment(): ?string
+    {
+        return $this->department;
+    }
+
+    public function setDepartment(?string $department): static
+    {
+        $this->department = $department;
+
+        return $this;
+    }
+
+    public function getLatitude(): ?string
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?string $latitude): static
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    public function getLongitude(): ?string
+    {
+        return $this->longitude;
+    }
+
+    public function setLongitude(string $longitude): static
+    {
+        $this->longitude = $longitude;
 
         return $this;
     }

@@ -27,7 +27,12 @@ class AddressType extends AbstractType
             ->add('streetName', HiddenType::class)
             ->add('postalCode', HiddenType::class)
             ->add('city', HiddenType::class)
-            ->add('country', HiddenType::class, ['data' => 'France']);
+            ->add('country', HiddenType::class, ['data' => 'France'])
+            ->add('latitude', HiddenType::class)
+            ->add('longitude', HiddenType::class)
+            ->add('region', HiddenType::class)
+            ->add('department', HiddenType::class);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
