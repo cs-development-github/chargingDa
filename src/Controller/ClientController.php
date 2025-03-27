@@ -173,43 +173,58 @@ final class ClientController extends AbstractController
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
+            
                 if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"]) && isset($data["pricePublic_$stationId"])) {
                     $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
-
+            
                     if (!$tarification) {
                         $tarification = new Tarification();
                         $tarification->setChargingStation($station);
                     }
-
+            
                     $tarification->setClient($client);
                     $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
                     $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
                     $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
-                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
-
+                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]); // ou autre logique
+            
+                    // Public
+                    $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
+                    $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
+                    $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
+            
+                    // Préférentiel
+                    $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
+                    $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
+                    $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
+            
                     $em->persist($tarification);
                 }
             }
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
-                if (isset($data["public_$stationId"]) && isset($data["adress_$stationId"])) {
+            
+                if (isset($data["public_$stationId"]) && isset($data["addressLine_$stationId"])) {
                     $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
-
+            
                     if (!$setting) {
                         $setting = new ChargingStationSetting();
                         $setting->setChargingStation($station);
                         $setting->setClient($client);
                     }
-
+            
                     $setting->setPublic((bool) $data["public_$stationId"]);
-                    $setting->setAdress($data["adress_$stationId"]);
-                    $setting->setInstalledAt(new \DateTime($data["installedAt_$stationId"] ?? 'now'));
-                    $setting->setSupervisedAt(new \DateTime($data["supervisedAt_$stationId"] ?? 'now'));
-
+            
+                    $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
+                    $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
+                    $setting->setCity($data["city_$stationId"] ?? '');
+                    $setting->setCountry($data["country_$stationId"] ?? '');
+            
                     $em->persist($setting);
                 }
             }
+            
             $em->flush();
 
             if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);

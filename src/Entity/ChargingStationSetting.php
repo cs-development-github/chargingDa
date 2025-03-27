@@ -23,14 +23,17 @@ class ChargingStationSetting
     #[ORM\Column(nullable: true)]
     private ?bool $public = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $adress = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $addressLine = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $installedAt = null;
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $postalCode = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $supervisedAt = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $country = null;
 
     public function getId(): ?int
     {
@@ -45,7 +48,6 @@ class ChargingStationSetting
     public function setChargingStation(?ChargingStations $chargingStation): static
     {
         $this->chargingStation = $chargingStation;
-
         return $this;
     }
 
@@ -57,7 +59,6 @@ class ChargingStationSetting
     public function setClient(?Client $client): static
     {
         $this->client = $client;
-
         return $this;
     }
 
@@ -69,43 +70,50 @@ class ChargingStationSetting
     public function setPublic(?bool $public): static
     {
         $this->public = $public;
-
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getAddressLine(): ?string
     {
-        return $this->adress;
+        return $this->addressLine;
     }
 
-    public function setAdress(string $adress): static
+    public function setAddressLine(?string $addressLine): static
     {
-        $this->adress = $adress;
-
+        $this->addressLine = $addressLine;
         return $this;
     }
 
-    public function getInstalledAt(): ?\DateTime
+    public function getPostalCode(): ?string
     {
-        return $this->installedAt;
+        return $this->postalCode;
     }
 
-    public function setInstalledAt(?\DateTime $installedAt): static
+    public function setPostalCode(?string $postalCode): static
     {
-        $this->installedAt = $installedAt;
-
+        $this->postalCode = $postalCode;
         return $this;
     }
 
-    public function getSupervisedAt(): ?\DateTime
+    public function getCity(): ?string
     {
-        return $this->supervisedAt;
+        return $this->city;
     }
 
-    public function setSupervisedAt(?\DateTime $supervisedAt): static
+    public function setCity(?string $city): static
     {
-        $this->supervisedAt = $supervisedAt;
+        $this->city = $city;
+        return $this;
+    }
 
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
         return $this;
     }
 }
