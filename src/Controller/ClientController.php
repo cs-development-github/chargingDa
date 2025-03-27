@@ -7,11 +7,13 @@ use App\Entity\ChargingStationSetting;
 use App\Entity\Client;
 use App\Entity\Intervention;
 use App\Entity\Tarification;
+use App\Factory\StationSupervisionFactory;
 use App\Form\ClientContractFormType;
 use App\Form\ClientFormType;
 use App\Form\ClientInterventionFormType;
 use App\Form\InterventionFormType;
 use App\Service\ClientContractService;
+use App\Service\ClientSupervisionDataService;
 use App\Service\MailService;
 use App\Service\PdfEditorService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,16 +35,22 @@ final class ClientController extends AbstractController
     private string $universignApiUrl;
     private string $universignApiKey;
     private EntityManagerInterface $em;
+    private ClientSupervisionDataService $clientSupervisionDataService;
+    private StationSupervisionFactory $stationSupervisionFactory;
 
     public function __construct(
         HttpClientInterface $httpClient,
         ParameterBagInterface $params,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        ClientSupervisionDataService $clientSupervisionDataService,
+        stationSupervisionFactory $stationSupervisionFactory
     ) {
         $this->httpClient = $httpClient;
         $this->universignApiUrl = $params->get('universign_api_url');
         $this->universignApiKey = $params->get('universign_api_key');
         $this->em = $em;
+        $this->clientSupervisionDataService = $clientSupervisionDataService;
+        $this->stationSupervisionFactory = $stationSupervisionFactory;
     }
 
     #[Route('/clients', name: 'app_clients')]
@@ -186,14 +194,12 @@ final class ClientController extends AbstractController
                     $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
                     $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
                     $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
-                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]); // ou autre logique
+                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
             
-                    // Public
                     $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
                     $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
                     $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
             
-                    // Préférentiel
                     $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
                     $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
                     $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
@@ -227,7 +233,16 @@ final class ClientController extends AbstractController
             
             $em->flush();
 
-            if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);
+            if ($this->isClientDataComplete($client)) {
+
+                $contractService->generateAndSendContract($client);
+
+                $dtos = $this->stationSupervisionFactory->createFromInterventions($interventions);
+
+                foreach ($dtos as $dto) {
+                    $this->clientSupervisionDataService->superviseStation($dto);
+                }
+            } 
         }
 
         return $this->render('client/complete_form.html.twig', [
