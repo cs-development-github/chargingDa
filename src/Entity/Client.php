@@ -40,8 +40,8 @@ class Client
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phone = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $adress = null;
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Address $address = null;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true, unique: true)]
     private ?string $secureToken = null;
@@ -103,6 +103,17 @@ class Client
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?Address $address): static
+    {
+        $this->address = $address;
+        return $this;
     }
 
     public function setName(string $name): static
@@ -192,18 +203,6 @@ class Client
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
-
-        return $this;
-    }
-
-    public function getAdress(): ?string
-    {
-        return $this->adress;
-    }
-
-    public function setAdress(string $adress): static
-    {
-        $this->adress = $adress;
 
         return $this;
     }

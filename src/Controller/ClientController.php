@@ -7,11 +7,13 @@ use App\Entity\ChargingStationSetting;
 use App\Entity\Client;
 use App\Entity\Intervention;
 use App\Entity\Tarification;
+use App\Factory\StationSupervisionFactory;
 use App\Form\ClientContractFormType;
 use App\Form\ClientFormType;
 use App\Form\ClientInterventionFormType;
 use App\Form\InterventionFormType;
 use App\Service\ClientContractService;
+use App\Service\ClientSupervisionDataService;
 use App\Service\MailService;
 use App\Service\PdfEditorService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,16 +35,22 @@ final class ClientController extends AbstractController
     private string $universignApiUrl;
     private string $universignApiKey;
     private EntityManagerInterface $em;
+    private ClientSupervisionDataService $clientSupervisionDataService;
+    private StationSupervisionFactory $stationSupervisionFactory;
 
     public function __construct(
         HttpClientInterface $httpClient,
         ParameterBagInterface $params,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        ClientSupervisionDataService $clientSupervisionDataService,
+        stationSupervisionFactory $stationSupervisionFactory
     ) {
         $this->httpClient = $httpClient;
         $this->universignApiUrl = $params->get('universign_api_url');
         $this->universignApiKey = $params->get('universign_api_key');
         $this->em = $em;
+        $this->clientSupervisionDataService = $clientSupervisionDataService;
+        $this->stationSupervisionFactory = $stationSupervisionFactory;
     }
 
     #[Route('/clients', name: 'app_clients')]
@@ -173,46 +181,73 @@ final class ClientController extends AbstractController
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
+            
                 if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"]) && isset($data["pricePublic_$stationId"])) {
                     $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
-
+            
                     if (!$tarification) {
                         $tarification = new Tarification();
                         $tarification->setChargingStation($station);
                     }
-
+            
                     $tarification->setClient($client);
                     $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
                     $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
                     $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
                     $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
-
+            
+                    $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
+                    $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
+                    $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
+            
+                    $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
+                    $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
+                    $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
+            
                     $em->persist($tarification);
                 }
             }
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
-                if (isset($data["public_$stationId"]) && isset($data["adress_$stationId"])) {
+            
+                if (isset($data["public_$stationId"]) && isset($data["addressLine_$stationId"])) {
                     $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
-
+            
                     if (!$setting) {
                         $setting = new ChargingStationSetting();
                         $setting->setChargingStation($station);
                         $setting->setClient($client);
                     }
-
+            
                     $setting->setPublic((bool) $data["public_$stationId"]);
-                    $setting->setAdress($data["adress_$stationId"]);
-                    $setting->setInstalledAt(new \DateTime($data["installedAt_$stationId"] ?? 'now'));
-                    $setting->setSupervisedAt(new \DateTime($data["supervisedAt_$stationId"] ?? 'now'));
-
+                    $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
+                    $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
+                    $setting->setCity($data["city_$stationId"] ?? '');
+                    $setting->setCountry($data["country_$stationId"] ?? '');
+            
+                    $setting->setRegion($data["region_$stationId"] ?? null);
+                    $setting->setDepartment($data["department_$stationId"] ?? null);
+                    $setting->setLatitude(isset($data["latitude_$stationId"]) ? (float) $data["latitude_$stationId"] : null);
+                    $setting->setLongitude(isset($data["longitude_$stationId"]) ? (float) $data["longitude_$stationId"] : null);
+            
                     $em->persist($setting);
                 }
             }
+            
+            
             $em->flush();
 
-            if ($this->isClientDataComplete($client)) $contractService->generateAndSendContract($client);
+            if ($this->isClientDataComplete($client)) {
+
+                $contractService->generateAndSendContract($client);
+
+                $dtos = $this->stationSupervisionFactory->createFromInterventions($interventions);
+
+                foreach ($dtos as $dto) {
+                    $this->clientSupervisionDataService->superviseStation($dto);
+                }
+            } 
         }
 
         return $this->render('client/complete_form.html.twig', [
@@ -222,15 +257,12 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    /**
-     * Vérifie si tous les champs obligatoires sont remplis.
-     */
     private function isClientDataComplete(Client $client): bool
     {
         return !empty($client->getEmail())
             && !empty($client->getSocietyName())
             && !empty($client->getPhone())
-            && !empty($client->getAdress())
+            && !empty($client->getAddress())
             && !empty($client->getName())
             && !empty($client->getLastname())
             && !empty($client->getSiret())

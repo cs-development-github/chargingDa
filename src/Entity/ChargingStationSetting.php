@@ -23,14 +23,29 @@ class ChargingStationSetting
     #[ORM\Column(nullable: true)]
     private ?bool $public = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $adress = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $addressLine = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $installedAt = null;
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $postalCode = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTime $supervisedAt = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $city = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $country = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $latitude = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $longitude = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $region = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $department = null;
 
     public function getId(): ?int
     {
@@ -45,7 +60,6 @@ class ChargingStationSetting
     public function setChargingStation(?ChargingStations $chargingStation): static
     {
         $this->chargingStation = $chargingStation;
-
         return $this;
     }
 
@@ -57,7 +71,6 @@ class ChargingStationSetting
     public function setClient(?Client $client): static
     {
         $this->client = $client;
-
         return $this;
     }
 
@@ -69,42 +82,97 @@ class ChargingStationSetting
     public function setPublic(?bool $public): static
     {
         $this->public = $public;
+        return $this;
+    }
+
+    public function getAddressLine(): ?string
+    {
+        return $this->addressLine;
+    }
+
+    public function setAddressLine(?string $addressLine): static
+    {
+        $this->addressLine = $addressLine;
+        return $this;
+    }
+
+    public function getPostalCode(): ?string
+    {
+        return $this->postalCode;
+    }
+
+    public function setPostalCode(?string $postalCode): static
+    {
+        $this->postalCode = $postalCode;
+        return $this;
+    }
+
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    public function setCity(?string $city): static
+    {
+        $this->city = $city;
+        return $this;
+    }
+
+    public function getCountry(): ?string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?string $country): static
+    {
+        $this->country = $country;
+        return $this;
+    }
+
+    public function getLatitude(): ?string
+    {
+        return $this->latitude;
+    }
+
+    public function setLatitude(?string $latitude): static
+    {
+        $this->latitude = $latitude;
 
         return $this;
     }
 
-    public function getAdress(): ?string
+    public function getLongitude(): ?string
     {
-        return $this->adress;
+        return $this->longitude;
     }
 
-    public function setAdress(string $adress): static
+    public function setLongitude(?string $longitude): static
     {
-        $this->adress = $adress;
+        $this->longitude = $longitude;
 
         return $this;
     }
 
-    public function getInstalledAt(): ?\DateTime
+    public function getRegion(): ?string
     {
-        return $this->installedAt;
+        return $this->region;
     }
 
-    public function setInstalledAt(?\DateTime $installedAt): static
+    public function setRegion(?string $region): static
     {
-        $this->installedAt = $installedAt;
+        $this->region = $region;
 
         return $this;
     }
 
-    public function getSupervisedAt(): ?\DateTime
+    public function getDepartment(): ?string
     {
-        return $this->supervisedAt;
+        return $this->department;
     }
 
-    public function setSupervisedAt(?\DateTime $supervisedAt): static
+    public function setDepartment(string $department): static
     {
-        $this->supervisedAt = $supervisedAt;
+        $this->department = $department;
 
         return $this;
     }
