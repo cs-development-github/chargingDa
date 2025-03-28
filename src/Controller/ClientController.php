@@ -257,9 +257,6 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    /**
-     * Vérifie si tous les champs obligatoires sont remplis.
-     */
     private function isClientDataComplete(Client $client): bool
     {
         return !empty($client->getEmail())

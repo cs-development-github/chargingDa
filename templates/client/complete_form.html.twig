@@ -104,8 +104,8 @@
 						<h4>Dernière étape pour activer votre supervision !</h4>
 						<div class="mb-3">
 							Vous y êtes presque ! Avant de finaliser, merci de vérifier que toutes les informations saisies sont exactes et conformes à la réalité. Cela nous permet d’assurer une mise en service rapide et sans souci.
-																					          En validant cette étape, vous confirmez l’authenticité de vos données. Toute erreur pourrait entraîner des ajustements ou retarder l’activation de votre supervision.
-																					          Merci pour votre confiance, Lodmi s’occupe du reste !
+																												          En validant cette étape, vous confirmez l’authenticité de vos données. Toute erreur pourrait entraîner des ajustements ou retarder l’activation de votre supervision.
+																												          Merci pour votre confiance, Lodmi s’occupe du reste !
 						</div>
 						<div class="step-navigation d-flex justify-content-end">
 							<button type="button" class="btn-next btn btn-primary" data-step="1">
@@ -165,16 +165,16 @@
 
 						<div class="row">
 
-							<div class="col-md-6 mb-3">
+							<div class="col-md-6 mb-3 position-relative">
 								{{ form_label(form.address.fullAddress) }}
 								{{ form_widget(form.address.fullAddress, {
-                'attr': {
-                  'class': 'form-control',
-                  'id': 'address-autocomplete',
-                  'autocomplete': 'off'
-                }
-            }) }}
-
+								'attr': {
+									'class': 'form-control',
+									'id': 'client_contract_form_address_fullAddress',
+									'name': 'client_contract_form[address][fullAddress]',
+									'autocomplete': 'off'
+								}
+								}) }}
 								<div id="autocomplete-results" class="list-group position-absolute z-3" style="width: 100%; max-height: 200px; overflow-y: auto; display: none;"></div>
 
 								{{ form_widget(form.address.streetNumber, {'attr': {'id': 'client_contract_form_address_streetNumber'}}) }}
@@ -182,10 +182,10 @@
 								{{ form_widget(form.address.postalCode, {'attr': {'id': 'client_contract_form_address_postalCode'}}) }}
 								{{ form_widget(form.address.city, {'attr': {'id': 'client_contract_form_address_city'}}) }}
 								{{ form_widget(form.address.country, {'attr': {'id': 'client_contract_form_address_country'}}) }}
-								{{ form_row(form.address.latitude, {'attr': {'id': 'latitude'}}) }}
-								{{ form_row(form.address.longitude, {'attr': {'id': 'longitude'}}) }}
-								{{ form_row(form.address.region, {'attr': {'id': 'region'}}) }}
-								{{ form_row(form.address.department, {'attr': {'id': 'department'}}) }}
+								{{ form_widget(form.address.latitude, {'attr': {'id': 'client_contract_form_address_latitude'}}) }}
+								{{ form_widget(form.address.longitude, {'attr': {'id': 'client_contract_form_address_longitude'}}) }}
+								{{ form_widget(form.address.region, {'attr': {'id': 'client_contract_form_address_region'}}) }}
+								{{ form_widget(form.address.department, {'attr': {'id': 'client_contract_form_address_department'}}) }}
 							</div>
 
 							<div class="col-md-6 mb-3">
@@ -341,6 +341,7 @@
 								<i class="bi bi-arrow-right"></i>
 							</button>
 						</div>
+
 					</div>
 
 					<div id="step-4" class="step">
@@ -387,10 +388,10 @@
 									<input type="text" class="form-control" name="country_{{ station.id }}" id="country_{{ station.id }}" value="France"/>
 								</div>
 
-								<input type="hidden" name="region_{{ station.id }}" id="region_{{ station.id }}"/>
-								<input type="hidden" name="department_{{ station.id }}" id="department_{{ station.id }}"/>
-								<input type="hidden" name="latitude_{{ station.id }}" id="latitude_{{ station.id }}"/>
-								<input type="hidden" name="longitude_{{ station.id }}" id="longitude_{{ station.id }}"/>
+								<input type="hidden" name="region_{{ station.id }}" id="region_{{ station.id }}" />
+								<input type="hidden" name="department_{{ station.id }}" id="department_{{ station.id }}" />
+								<input type="hidden" name="latitude_{{ station.id }}" id="latitude_{{ station.id }}" />
+								<input type="hidden" name="longitude_{{ station.id }}" id="longitude_{{ station.id }}" />
 
 							</div>
 						{% endfor %}
@@ -414,386 +415,576 @@
 							</button>
 						</div>
 					</div>
+
 					{{ form_end(form) }}
 				</div>
 			</div>
 		{% endblock %}
-		 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-		 <script>
-						    function applyPriceToAll() {
-						        try {
-						          const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
-						          const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
-						          const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
-						
-						          if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
-						            alert("Impossible de trouver les champs de prix pour la première borne.");
-						            return;
-						          }
-						
-						          const sourcePurchase = sourcePurchaseInput.value;
-						          const sourceResale = sourceResaleInput.value;
-						          const sourcePublic = sourcePublicInput.value;
-						
-						          if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
-						            alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
-						            return;
-						          }
-						
-						          document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
-						            input.value = sourcePurchase;
-						          });
-						          document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
-						            input.value = sourceResale;
-						          });
-						          document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
-						            input.value = sourcePublic;
-						          });
-						        } catch (error) {
-						          console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
-						          alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
-						        }
-						      }
-						 
-						    function applyStationInfoToAll() {
-						      try {
-						        const firstPublic = document.querySelector('select[name^="public_"]');
-						        const firstAddress = document.querySelector('input[name^="adress_"]');
-						        const firstInstalled = document.querySelector('input[name^="installedAt_"]');
-						        const firstSupervised = document.querySelector('input[name^="supervisedAt_"]');
-						 
-						        if (!firstPublic || !firstAddress || !firstInstalled || !firstSupervised) {
-						          alert("Impossible de trouver les informations de la première borne.");
-						          return;
-						        }
-						        const valuePublic = firstPublic.value;
-						        const valueAddress = firstAddress.value;
-						        const valueInstalled = firstInstalled.value;
-						        const valueSupervised = firstSupervised.value;
-						 
-						        if (valueAddress === "" || valueInstalled === "" || valueSupervised === "") {
-						          alert("Veuillez remplir toutes les informations de la première borne.");
-						          return;
-						        }
-						        document.querySelectorAll('select[name^="public_"]').forEach((select, index) => {
-						          if (index > 0) {
-						            select.value = valuePublic;
-						          }
-						        });
-						        document.querySelectorAll('input[name^="adress_"]').forEach((input, index) => {
-						          if (index > 0) {
-						            input.value = valueAddress;
-						          }
-						        });
-						        document.querySelectorAll('input[name^="installedAt_"]').forEach((input, index) => {
-						          if (index > 0) {
-						            input.value = valueInstalled;
-						          }
-						        });
-						        document.querySelectorAll('input[name^="supervisedAt_"]').forEach((input, index) => {
-						          if (index > 0) {
-						            input.value = valueSupervised;
-						          }
-						        });
-						      } catch (error) {
-						        console.error("Erreur lors de l'application des informations à toutes les bornes :", error);
-						        alert("Une erreur est survenue lors de l'application des informations. Veuillez réessayer.");
-						      }
-						    }
-						 
-						    document.addEventListener("DOMContentLoaded", function () {
-						      const totalSteps = 4;
-						      let currentStep = 1;
-						 
-						      function showStep(step) {
-						        document.querySelectorAll(".step").forEach((stepDiv) => stepDiv.classList.remove("active"));
-						        document.getElementById(`step-${step}`).classList.add("active");
-						        updateProgressBar(step);
-						      }
-						 
-						      function nextStep() {
-						        if (!validateStep(currentStep)) {
-						          console.log(`❌ Erreurs détectées à l'étape ${currentStep}.`);
-						          return;
-						        }
-						        if (currentStep < totalSteps) {
-						          currentStep++;
-						          showStep(currentStep);
-						        }
-						      }
-						 
-						      function prevStep() {
-						        if (currentStep > 1) {
-						          currentStep--;
-						          showStep(currentStep);
-						        }
-						      }
-						 
-						      window.nextStep = nextStep;
-						      window.prevStep = prevStep;
-						 
-						      function validateStep(step) {
-						        let isValid = true;
-						        const fields = document.querySelectorAll(`#step-${step} input, #step-${step} select`);
-						        fields.forEach((field) => {
-						          field.classList.remove("is-invalid");
-						          let errorMessage = validateField(field);
-						          if (errorMessage) {
-						            isValid = false;
-						            showError(field, errorMessage);
-						          }
-						        });
-						        console.log(`Validation de l'étape ${step}: ${isValid}`);
-						        return isValid;
-						      }
-						 
-						      function validateField(field) {
-						        const value = field.value.trim();
-						        if (!value) {
-						          return "Ce champ est obligatoire";
-						        }
-						        return null;
-						      }
-						 
-						      function showError(field, message) {
-						        field.classList.add("is-invalid");
-						        let parent = field.closest(".mb-3") || field.parentNode;
-						        let errorDiv = parent.querySelector(".error-message");
-						        if (!errorDiv) {
-						          errorDiv = document.createElement("div");
-						          errorDiv.className = "error-message text-danger mt-1";
-						          errorDiv.innerText = message;
-						          parent.appendChild(errorDiv);
-						        } else {
-						          errorDiv.innerText = message;
-						        }
-						      }
-						 
-						      function updateProgressBar(step) {
-						        const progress = (step / totalSteps) * 100;
-						        const progressBar = document.getElementById("progress-bar");
-						        if (progressBar) {
-						          progressBar.style.width = `${progress}%`;
-						          progressBar.setAttribute("aria-valuenow", progress);
-						        }
-						      }
-						 
-						      document.querySelectorAll(".btn-next").forEach((button) => {
-						        button.addEventListener("click", function (event) {
-						          event.preventDefault();
-						          nextStep();
-						        });
-						      });
-						 
-						      document.querySelectorAll(".btn-prev").forEach((button) => {
-						        button.addEventListener("click", function (event) {
-						          event.preventDefault();
-						          prevStep();
-						        });
-						      });
-						 
-						      showStep(currentStep);
-						    });
-						  </script>
-	</body>
 
-</html>
 
- <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-  tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-    new bootstrap.Tooltip(tooltipTriggerEl)
-  })
-})
-</script>
-{# 
-  <script>
-  const input = document.getElementById('client_contract_form_address_fullAddress');
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 
-  input.addEventListener('input', function () {
-    const query = this.value;
-    if (query.length < 3) return;
+<script>
+	function applyPriceToAll() {
+		try {
+			const sourcePurchaseInput = document.querySelector('input[name^="priceKwh_"]');
+			const sourceResaleInput = document.querySelector('input[name^="priceResale_"]');
+			const sourcePublicInput = document.querySelector('input[name^="pricePublic_"]');
 
-    fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
-      .then(res => res.json())
-      .then(data => {
-        const datalist = document.getElementById('address-suggestions');
-        if (!datalist) return;
-
-        datalist.innerHTML = '';
-        data.features.forEach(feature => {
-          const option = document.createElement('option');
-          option.value = feature.properties.label;
-          option.dataset.raw = JSON.stringify(feature.properties);
-          datalist.appendChild(option);
-        });
-      });
-  });
-
-  input.addEventListener('change', function () {
-    const selectedValue = this.value;
-    const options = document.getElementById('address-suggestions')?.options || [];
-
-    for (let opt of options) {
-      if (opt.value === selectedValue) {
-        const props = JSON.parse(opt.dataset.raw);
-
-        document.getElementById('client_contract_form_address_streetNumber')?.value = props.housenumber || '';
-        document.getElementById('client_contract_form_address_streetName')?.value = props.street || '';
-        document.getElementById('client_contract_form_address_postalCode')?.value = props.postcode || '';
-        document.getElementById('client_contract_form_address_city')?.value = props.city || '';
-        document.getElementById('client_contract_form_address_country')?.value = 'France';
-        break;
-      }
-    }
-  });
-</script>
-#}
-
- <script>
-  const input = document.getElementById('client_contract_form_address_fullAddress');
-  const results = document.getElementById('autocomplete-results');
-
-  input.addEventListener('input', function () {
-    const query = this.value;
-    if (query.length < 3) {
-      results.style.display = 'none';
-      return;
-    }
-
-    fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
-      .then(res => res.json())
-      .then(data => {
-        results.innerHTML = '';
-        if (data.features.length === 0) {
-          results.style.display = 'none';
-          return;
-        }
-
-        data.features.forEach(feature => {
-          const item = document.createElement('button');
-          item.type = 'button';
-          item.className = 'list-group-item list-group-item-action';
-          item.textContent = feature.properties.label;
-          item.dataset.raw = JSON.stringify(feature.properties);
-
-          item.addEventListener('click', function () {
-            const props = JSON.parse(this.dataset.raw);
-
-            input.value = props.label;
-            document.getElementById('client_contract_form_address_streetNumber').value = props.housenumber || '';
-            document.getElementById('client_contract_form_address_streetName').value = props.street || '';
-            document.getElementById('client_contract_form_address_postalCode').value = props.postcode || '';
-            document.getElementById('client_contract_form_address_city').value = props.city || '';
-            document.getElementById('client_contract_form_address_country').value = 'France';
-
-			 // 🔽 Ajout latitude / longitude
-			const coords = data.features.find(f => f.properties.label === raw.label)?.geometry?.coordinates;
-			if (coords) {
-				document.getElementById('latitude')?.value = coords[1]; // latitude
-				document.getElementById('longitude')?.value = coords[0]; // longitude
+			if (!sourcePurchaseInput || !sourceResaleInput || !sourcePublicInput) {
+			alert("Impossible de trouver les champs de prix pour la première borne.");
+			return;
 			}
 
-			// 🔽 Ajout département et région depuis "context"
-			const context = raw.context?.split(',').map(c => c.trim());
-			const department = context?.[1] || '';
-			const region = context?.[2] || '';
-			document.getElementById('department')?.value = department;
-			document.getElementById('region')?.value = region;
+			const sourcePurchase = sourcePurchaseInput.value;
+			const sourceResale = sourceResaleInput.value;
+			const sourcePublic = sourcePublicInput.value;
 
-            results.style.display = 'none';
-          });
+			if (sourcePurchase === "" || sourceResale === "" || sourcePublic === "") {
+			alert("Veuillez remplir tous les prix (achat, revente et public) pour la première borne.");
+			return;
+			}
 
-          results.appendChild(item);
-        });
+			document.querySelectorAll('input[name^="priceKwh_"]').forEach((input) => {
+			input.value = sourcePurchase;
+			});
+			document.querySelectorAll('input[name^="priceResale_"]').forEach((input) => {
+			input.value = sourceResale;
+			});
+			document.querySelectorAll('input[name^="pricePublic_"]').forEach((input) => {
+			input.value = sourcePublic;
+			});
+		} catch (error) {
+			console.error("Erreur lors de l'application des prix à toutes les bornes :", error);
+			alert("Une erreur est survenue lors de l'application des prix. Veuillez réessayer.");
+		}
+		}
+	
+	function applyStationInfoToAll() {
+		try {
+		const firstPublic = document.querySelector('select[name^="public_"]');
+		const firstAddress = document.querySelector('input[name^="adress_"]');
+		const firstInstalled = document.querySelector('input[name^="installedAt_"]');
+		const firstSupervised = document.querySelector('input[name^="supervisedAt_"]');
+	
+		if (!firstPublic || !firstAddress || !firstInstalled || !firstSupervised) {
+			alert("Impossible de trouver les informations de la première borne.");
+			return;
+		}
+		const valuePublic = firstPublic.value;
+		const valueAddress = firstAddress.value;
+		const valueInstalled = firstInstalled.value;
+		const valueSupervised = firstSupervised.value;
+	
+		if (valueAddress === "" || valueInstalled === "" || valueSupervised === "") {
+			alert("Veuillez remplir toutes les informations de la première borne.");
+			return;
+		}
+		document.querySelectorAll('select[name^="public_"]').forEach((select, index) => {
+			if (index > 0) {
+			select.value = valuePublic;
+			}
+		});
+		document.querySelectorAll('input[name^="adress_"]').forEach((input, index) => {
+			if (index > 0) {
+			input.value = valueAddress;
+			}
+		});
+		document.querySelectorAll('input[name^="installedAt_"]').forEach((input, index) => {
+			if (index > 0) {
+			input.value = valueInstalled;
+			}
+		});
+		document.querySelectorAll('input[name^="supervisedAt_"]').forEach((input, index) => {
+			if (index > 0) {
+			input.value = valueSupervised;
+			}
+		});
+		} catch (error) {
+		console.error("Erreur lors de l'application des informations à toutes les bornes :", error);
+		alert("Une erreur est survenue lors de l'application des informations. Veuillez réessayer.");
+		}
+	}
+	
+	document.addEventListener("DOMContentLoaded", function () {
+		const totalSteps = 4;
+		let currentStep = 1;
+	
+		function showStep(step) {
+		document.querySelectorAll(".step").forEach((stepDiv) => stepDiv.classList.remove("active"));
+		document.getElementById(`step-${step}`).classList.add("active");
+		updateProgressBar(step);
+		}
+	
+		function nextStep() {
+		if (!validateStep(currentStep)) {
+			console.log(`❌ Erreurs détectées à l'étape ${currentStep}.`);
+			return;
+		}
+		if (currentStep < totalSteps) {
+			currentStep++;
+			showStep(currentStep);
+		}
+		}
+	
+		function prevStep() {
+		if (currentStep > 1) {
+			currentStep--;
+			showStep(currentStep);
+		}
+		}
+	
+		window.nextStep = nextStep;
+		window.prevStep = prevStep;
+	
+		function validateStep(step) {
+		let isValid = true;
+		const fields = document.querySelectorAll(`#step-${step} input, #step-${step} select`);
+		  fields.forEach((field) => {
+			field.classList.remove("is-invalid");
 
-        results.style.display = 'block';
-      });
-  });
+			if (field.id === "client_contract_form_address_fullAddress") return;
 
-  document.addEventListener('click', function (e) {
-    if (!results.contains(e.target) && e.target !== input) {
-      results.style.display = 'none';
-    }
-  });
-  // À exécuter une fois dans ton JS global
-  document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
-    new bootstrap.Tooltip(el);
-  });
+			const errorMessage = validateField(field);
+			if (errorMessage) {
+			console.log("❌ Champ invalide :", field.name || field.id, "| Valeur :", field.value);
+			isValid = false;
+			showError(field, errorMessage);
+			}
+		});
+		console.log(`Validation de l'étape ${step}: ${isValid}`);
+		return isValid;
+		}
+	
+		function validateField(field) {
+		if (field.disabled) return null;
+
+		const skipFields = [
+			'client_contract_form[address][streetNumber]',
+			'client_contract_form[address][streetName]',
+			'client_contract_form[address][postalCode]',
+			'client_contract_form[address][city]',
+			'client_contract_form[address][latitude]',
+			'client_contract_form[address][longitude]',
+			'client_contract_form[address][region]',
+			'client_contract_form[address][department]',
+		];
+
+		if (skipFields.includes(field.name)) return null;
+			const value = field.value.trim();
+			if (!value) {
+				return "Ce champ est obligatoire";
+			}
+			return null; // Tout est bon
+		}
+
+		function showError(field, message) {
+		field.classList.add("is-invalid");
+		let parent = field.closest(".mb-3") || field.parentNode;
+		let errorDiv = parent.querySelector(".error-message");
+		if (!errorDiv) {
+			errorDiv = document.createElement("div");
+			errorDiv.className = "error-message text-danger mt-1";
+			errorDiv.innerText = message;
+			parent.appendChild(errorDiv);
+		} else {
+			errorDiv.innerText = message;
+		}
+		}
+	
+		function updateProgressBar(step) {
+		const progress = (step / totalSteps) * 100;
+		const progressBar = document.getElementById("progress-bar");
+		if (progressBar) {
+			progressBar.style.width = `${progress}%`;
+			progressBar.setAttribute("aria-valuenow", progress);
+		}
+		}
+	
+		document.querySelectorAll(".btn-next").forEach((button) => {
+		button.addEventListener("click", function (event) {
+			event.preventDefault();
+			nextStep();
+		});
+		});
+	
+		document.querySelectorAll(".btn-prev").forEach((button) => {
+		button.addEventListener("click", function (event) {
+			event.preventDefault();
+			prevStep();
+		});
+		});
+	
+		showStep(currentStep);
+	});
 </script>
 
- <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.address-autocomplete').forEach(input => {
-      const stationId = input.id.split('_')[1];
-      const results = document.getElementById(`autocomplete_results_${stationId}`);
-
-      input.addEventListener('input', function () {
-        const query = this.value;
-        if (query.length < 3) {
-          results.style.display = 'none';
-          return;
-        }
-
-        fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
-          .then(res => res.json())
-          .then(data => {
-            results.innerHTML = '';
-            if (data.features.length === 0) {
-              results.style.display = 'none';
-              return;
-            }
-
-            data.features.forEach(feature => {
-              const props = feature.properties;
-              const item = document.createElement('button');
-              item.type = 'button';
-              item.className = 'list-group-item list-group-item-action';
-              item.textContent = props.label;
-              item.dataset.raw = JSON.stringify(props);
-
-              item.addEventListener('click', function () {
-                const raw = JSON.parse(this.dataset.raw);
-                input.value = raw.label;
-
-                document.getElementById(`postalCode_${stationId}`).value = raw.postcode || '';
-                document.getElementById(`city_${stationId}`).value = raw.city || '';
-                document.getElementById(`country_${stationId}`).value = 'France';
-
-				document.getElementById(`postalCode_${stationId}`).value = raw.postcode || '';
-				document.getElementById(`city_${stationId}`).value = raw.city || '';
-				document.getElementById(`country_${stationId}`).value = 'France';
-
-				const coords = feature.geometry?.coordinates;
-				if (coords) {
-				document.getElementById(`latitude_${stationId}`)?.value = coords[1];
-				document.getElementById(`longitude_${stationId}`)?.value = coords[0];
-				}
-
-				const context = raw.context?.split(',').map(c => c.trim());
-				const department = context?.[1] || '';
-				const region = context?.[2] || '';
-				document.getElementById(`department_${stationId}`)?.value = department;
-				document.getElementById(`region_${stationId}`)?.value = region;
-
-
-                results.style.display = 'none';
-              });
-
-              results.appendChild(item);
-            });
-
-            results.style.display = 'block';
-          });
-      });
-
-      document.addEventListener('click', function (e) {
-        if (!results.contains(e.target) && e.target !== input) {
-          results.style.display = 'none';
-        }
-      });
-    });
-  });
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+			new bootstrap.Tooltip(tooltipTriggerEl)
+		})
+	})
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	const input = document.getElementById('client_contract_form_address_fullAddress');
+	const results = document.getElementById('autocomplete-results');
+
+	const departmentToRegion = {
+		'01': 'Auvergne-Rhône-Alpes',
+		'02': 'Hauts-de-France',
+		'03': 'Auvergne-Rhône-Alpes',
+		'04': 'Provence-Alpes-Côte d\'Azur',
+		'05': 'Provence-Alpes-Côte d\'Azur',
+		'06': 'Provence-Alpes-Côte d\'Azur',
+		'07': 'Auvergne-Rhône-Alpes',
+		'08': 'Grand Est',
+		'09': 'Occitanie',
+		'10': 'Grand Est',
+		'11': 'Occitanie',
+		'12': 'Occitanie',
+		'13': 'Provence-Alpes-Côte d\'Azur',
+		'14': 'Normandie',
+		'15': 'Auvergne-Rhône-Alpes',
+		'16': 'Nouvelle-Aquitaine',
+		'17': 'Nouvelle-Aquitaine',
+		'18': 'Centre-Val de Loire',
+		'19': 'Nouvelle-Aquitaine',
+		'2A': 'Corse',
+		'2B': 'Corse',
+		'21': 'Bourgogne-Franche-Comté',
+		'22': 'Bretagne',
+		'23': 'Nouvelle-Aquitaine',
+		'24': 'Nouvelle-Aquitaine',
+		'25': 'Bourgogne-Franche-Comté',
+		'26': 'Auvergne-Rhône-Alpes',
+		'27': 'Normandie',
+		'28': 'Centre-Val de Loire',
+		'29': 'Bretagne',
+		'30': 'Occitanie',
+		'31': 'Occitanie',
+		'32': 'Occitanie',
+		'33': 'Nouvelle-Aquitaine',
+		'34': 'Occitanie',
+		'35': 'Bretagne',
+		'36': 'Centre-Val de Loire',
+		'37': 'Centre-Val de Loire',
+		'38': 'Auvergne-Rhône-Alpes',
+		'39': 'Bourgogne-Franche-Comté',
+		'40': 'Nouvelle-Aquitaine',
+		'41': 'Centre-Val de Loire',
+		'42': 'Auvergne-Rhône-Alpes',
+		'43': 'Auvergne-Rhône-Alpes',
+		'44': 'Pays de la Loire',
+		'45': 'Centre-Val de Loire',
+		'46': 'Occitanie',
+		'47': 'Nouvelle-Aquitaine',
+		'48': 'Occitanie',
+		'49': 'Pays de la Loire',
+		'50': 'Normandie',
+		'51': 'Grand Est',
+		'52': 'Grand Est',
+		'53': 'Pays de la Loire',
+		'54': 'Grand Est',
+		'55': 'Grand Est',
+		'56': 'Bretagne',
+		'57': 'Grand Est',
+		'58': 'Bourgogne-Franche-Comté',
+		'59': 'Hauts-de-France',
+		'60': 'Hauts-de-France',
+		'61': 'Normandie',
+		'62': 'Hauts-de-France',
+		'63': 'Auvergne-Rhône-Alpes',
+		'64': 'Nouvelle-Aquitaine',
+		'65': 'Occitanie',
+		'66': 'Occitanie',
+		'67': 'Grand Est',
+		'68': 'Grand Est',
+		'69': 'Auvergne-Rhône-Alpes',
+		'70': 'Bourgogne-Franche-Comté',
+		'71': 'Bourgogne-Franche-Comté',
+		'72': 'Pays de la Loire',
+		'73': 'Auvergne-Rhône-Alpes',
+		'74': 'Auvergne-Rhône-Alpes',
+		'75': 'Île-de-France',
+		'76': 'Normandie',
+		'77': 'Île-de-France',
+		'78': 'Île-de-France',
+		'79': 'Nouvelle-Aquitaine',
+		'80': 'Hauts-de-France',
+		'81': 'Occitanie',
+		'82': 'Occitanie',
+		'83': 'Provence-Alpes-Côte d\'Azur',
+		'84': 'Provence-Alpes-Côte d\'Azur',
+		'85': 'Pays de la Loire',
+		'86': 'Nouvelle-Aquitaine',
+		'87': 'Nouvelle-Aquitaine',
+		'88': 'Grand Est',
+		'89': 'Bourgogne-Franche-Comté',
+		'90': 'Bourgogne-Franche-Comté',
+		'91': 'Île-de-France',
+		'92': 'Île-de-France',
+		'93': 'Île-de-France',
+		'94': 'Île-de-France',
+		'95': 'Île-de-France',
+		'971': 'Guadeloupe',
+		'972': 'Martinique',
+		'973': 'Guyane',
+		'974': 'La Réunion',
+		'976': 'Mayotte'
+	};
+
+	let debounceTimeout;
+
+	input.addEventListener('input', function () {
+		const query = input.value.trim();
+		if (query.length < 3) {
+			results.style.display = 'none';
+			return;
+		}
+
+		clearTimeout(debounceTimeout);
+		debounceTimeout = setTimeout(() => {
+			fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
+				.then(response => response.json())
+				.then(data => {
+					results.innerHTML = '';
+					if (!data.features.length) {
+						results.style.display = 'none';
+						return;
+					}
+
+					data.features.forEach(feature => {
+						const item = document.createElement('button');
+						item.type = 'button';
+						item.className = 'list-group-item list-group-item-action';
+						item.textContent = feature.properties.label;
+						item.addEventListener('click', () => fillAddress(feature));
+						results.appendChild(item);
+					});
+
+					results.style.display = 'block';
+				});
+		}, 300);
+	});
+
+	document.addEventListener('click', function (e) {
+		if (!results.contains(e.target) && e.target !== input) {
+			results.style.display = 'none';
+		}
+	});
+
+	function fillAddress(feature) {
+
+		console.log(feature);
+
+		const props = feature.properties;
+		const geometry = feature.geometry;
+
+		console.log(props.postcode);
+
+		input.value = props.label;
+		results.style.display = 'none';
+
+		let depCode = props.postcode?.substring(0, 2); // par défaut
+		if (props.postcode?.startsWith('97') || props.postcode?.startsWith('98')) {
+			depCode = props.postcode?.substring(0, 3); // DOM-TOM
+		}
+
+		console.log('Code postal :', props.postcode);
+		console.log('Dép. extrait :', depCode);
+		console.log('Région trouvée :', departmentToRegion[depCode]);
+
+		document.getElementById('client_contract_form_address_streetNumber').value = props.housenumber || '';
+		document.getElementById('client_contract_form_address_streetName').value = props.street || '';
+		document.getElementById('client_contract_form_address_postalCode').value = props.postcode || '';
+		document.getElementById('client_contract_form_address_city').value = props.city || '';
+		document.getElementById('client_contract_form_address_country').value = 'France';
+		document.getElementById('client_contract_form_address_latitude').value = geometry.coordinates[1];
+		document.getElementById('client_contract_form_address_longitude').value = geometry.coordinates[0];
+		document.getElementById('client_contract_form_address_department').value = depCode;
+		document.getElementById('client_contract_form_address_region').value = departmentToRegion[depCode] || '';
+	}
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+	const departmentToRegion = {
+		'01': 'Auvergne-Rhône-Alpes',
+		'02': 'Hauts-de-France',
+		'03': 'Auvergne-Rhône-Alpes',
+		'04': 'Provence-Alpes-Côte d\'Azur',
+		'05': 'Provence-Alpes-Côte d\'Azur',
+		'06': 'Provence-Alpes-Côte d\'Azur',
+		'07': 'Auvergne-Rhône-Alpes',
+		'08': 'Grand Est',
+		'09': 'Occitanie',
+		'10': 'Grand Est',
+		'11': 'Occitanie',
+		'12': 'Occitanie',
+		'13': 'Provence-Alpes-Côte d\'Azur',
+		'14': 'Normandie',
+		'15': 'Auvergne-Rhône-Alpes',
+		'16': 'Nouvelle-Aquitaine',
+		'17': 'Nouvelle-Aquitaine',
+		'18': 'Centre-Val de Loire',
+		'19': 'Nouvelle-Aquitaine',
+		'2A': 'Corse',
+		'2B': 'Corse',
+		'21': 'Bourgogne-Franche-Comté',
+		'22': 'Bretagne',
+		'23': 'Nouvelle-Aquitaine',
+		'24': 'Nouvelle-Aquitaine',
+		'25': 'Bourgogne-Franche-Comté',
+		'26': 'Auvergne-Rhône-Alpes',
+		'27': 'Normandie',
+		'28': 'Centre-Val de Loire',
+		'29': 'Bretagne',
+		'30': 'Occitanie',
+		'31': 'Occitanie',
+		'32': 'Occitanie',
+		'33': 'Nouvelle-Aquitaine',
+		'34': 'Occitanie',
+		'35': 'Bretagne',
+		'36': 'Centre-Val de Loire',
+		'37': 'Centre-Val de Loire',
+		'38': 'Auvergne-Rhône-Alpes',
+		'39': 'Bourgogne-Franche-Comté',
+		'40': 'Nouvelle-Aquitaine',
+		'41': 'Centre-Val de Loire',
+		'42': 'Auvergne-Rhône-Alpes',
+		'43': 'Auvergne-Rhône-Alpes',
+		'44': 'Pays de la Loire',
+		'45': 'Centre-Val de Loire',
+		'46': 'Occitanie',
+		'47': 'Nouvelle-Aquitaine',
+		'48': 'Occitanie',
+		'49': 'Pays de la Loire',
+		'50': 'Normandie',
+		'51': 'Grand Est',
+		'52': 'Grand Est',
+		'53': 'Pays de la Loire',
+		'54': 'Grand Est',
+		'55': 'Grand Est',
+		'56': 'Bretagne',
+		'57': 'Grand Est',
+		'58': 'Bourgogne-Franche-Comté',
+		'59': 'Hauts-de-France',
+		'60': 'Hauts-de-France',
+		'61': 'Normandie',
+		'62': 'Hauts-de-France',
+		'63': 'Auvergne-Rhône-Alpes',
+		'64': 'Nouvelle-Aquitaine',
+		'65': 'Occitanie',
+		'66': 'Occitanie',
+		'67': 'Grand Est',
+		'68': 'Grand Est',
+		'69': 'Auvergne-Rhône-Alpes',
+		'70': 'Bourgogne-Franche-Comté',
+		'71': 'Bourgogne-Franche-Comté',
+		'72': 'Pays de la Loire',
+		'73': 'Auvergne-Rhône-Alpes',
+		'74': 'Auvergne-Rhône-Alpes',
+		'75': 'Île-de-France',
+		'76': 'Normandie',
+		'77': 'Île-de-France',
+		'78': 'Île-de-France',
+		'79': 'Nouvelle-Aquitaine',
+		'80': 'Hauts-de-France',
+		'81': 'Occitanie',
+		'82': 'Occitanie',
+		'83': 'Provence-Alpes-Côte d\'Azur',
+		'84': 'Provence-Alpes-Côte d\'Azur',
+		'85': 'Pays de la Loire',
+		'86': 'Nouvelle-Aquitaine',
+		'87': 'Nouvelle-Aquitaine',
+		'88': 'Grand Est',
+		'89': 'Bourgogne-Franche-Comté',
+		'90': 'Bourgogne-Franche-Comté',
+		'91': 'Île-de-France',
+		'92': 'Île-de-France',
+		'93': 'Île-de-France',
+		'94': 'Île-de-France',
+		'95': 'Île-de-France',
+		'971': 'Guadeloupe',
+		'972': 'Martinique',
+		'973': 'Guyane',
+		'974': 'La Réunion',
+		'976': 'Mayotte'
+	};
+
+	document.querySelectorAll('.address-autocomplete').forEach(input => {
+		const stationId = input.id.split('_')[1]; // récupère l'ID de la borne
+		const resultsContainer = document.getElementById(`autocomplete_results_${stationId}`);
+		let debounceTimeout;
+
+		input.addEventListener('input', function () {
+			const query = input.value.trim();
+			if (query.length < 3) {
+				resultsContainer.style.display = 'none';
+				return;
+			}
+
+			clearTimeout(debounceTimeout);
+			debounceTimeout = setTimeout(() => {
+				fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
+					.then(res => res.json())
+					.then(data => {
+						resultsContainer.innerHTML = '';
+						if (!data.features.length) {
+							resultsContainer.style.display = 'none';
+							return;
+						}
+
+						data.features.forEach(feature => {
+							const item = document.createElement('button');
+							item.type = 'button';
+							item.className = 'list-group-item list-group-item-action';
+							item.textContent = feature.properties.label;
+							item.addEventListener('click', () => fillStationAddress(feature, stationId, input, resultsContainer));
+							resultsContainer.appendChild(item);
+						});
+						resultsContainer.style.display = 'block';
+					});
+			}, 300);
+		});
+
+		document.addEventListener('click', function (e) {
+			if (!resultsContainer.contains(e.target) && e.target !== input) {
+				resultsContainer.style.display = 'none';
+			}
+		});
+	});
+
+	function fillStationAddress(feature, stationId, input, resultsContainer) {
+		const props = feature.properties;
+		const geometry = feature.geometry;
+
+		let depCode = props.postcode?.substring(0, 2);
+		if (props.postcode?.startsWith('97') || props.postcode?.startsWith('98')) {
+			depCode = props.postcode?.substring(0, 3);
+		}
+
+		input.value = props.label;
+		resultsContainer.style.display = 'none';
+
+		document.getElementById(`postalCode_${stationId}`).value = props.postcode || '';
+		document.getElementById(`city_${stationId}`).value = props.city || '';
+		document.getElementById(`country_${stationId}`).value = 'France';
+		document.getElementById(`latitude_${stationId}`).value = geometry.coordinates[1];
+		document.getElementById(`longitude_${stationId}`).value = geometry.coordinates[0];
+		document.getElementById(`department_${stationId}`).value = depCode;
+		document.getElementById(`region_${stationId}`).value = departmentToRegion[depCode] || '';
+	}
+});
+</script>
+
+
+</body>
+
+</html>

@@ -23,16 +23,15 @@ class AddressType extends AbstractType
                     'autocomplete' => 'off'
                 ],
             ])
-            ->add('streetNumber', HiddenType::class)
-            ->add('streetName', HiddenType::class)
-            ->add('postalCode', HiddenType::class)
-            ->add('city', HiddenType::class)
-            ->add('country', HiddenType::class, ['data' => 'France'])
-            ->add('latitude', HiddenType::class)
-            ->add('longitude', HiddenType::class)
-            ->add('region', HiddenType::class)
-            ->add('department', HiddenType::class);
-
+            ->add('streetNumber', HiddenType::class, ['required' => true])
+            ->add('streetName', HiddenType::class, ['required' => true])
+            ->add('postalCode', HiddenType::class, ['required' => true])
+            ->add('city', HiddenType::class, ['required' => true])
+            ->add('country', HiddenType::class, ['required' => true, 'data' => 'France'])
+            ->add('latitude', HiddenType::class, ['required' => true])
+            ->add('longitude', HiddenType::class, ['required' => true])
+            ->add('region', HiddenType::class, ['required' => true])
+            ->add('department', HiddenType::class, ['required' => true]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

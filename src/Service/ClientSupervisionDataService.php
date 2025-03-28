@@ -39,8 +39,6 @@ class ClientSupervisionDataService
     
         $this->logger->info("[Supervision] ✅ Terminé pour {$station->getModel()}");
     }
-    
-    
 
     private function createUser(Client $client): void
     {
@@ -142,7 +140,6 @@ class ClientSupervisionDataService
             throw $e;
         }
     }
-    
 
     private function makePostRequest(string $url, array $payload, ?string $token, string $successMessage): void
     {
@@ -219,7 +216,6 @@ class ClientSupervisionDataService
         }
     }
     
-
     private function createSiteArea(StationSupervisionDTO $dto, string $siteId): string
     {
         $setting = $dto->chargingStationSetting;
@@ -274,8 +270,6 @@ class ClientSupervisionDataService
             throw $e;
         }
     }
-    
-    
 
     private function createPricingDefinition(StationSupervisionDTO $dto): void
     {

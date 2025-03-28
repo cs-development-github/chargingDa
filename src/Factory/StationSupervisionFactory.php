@@ -1,7 +1,4 @@
-
 <?php
-
-// src/Factory/StationSupervisionFactory.php
 namespace App\Factory;
 
 use App\Entity\Intervention;
