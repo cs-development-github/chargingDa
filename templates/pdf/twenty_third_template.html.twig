@@ -57,6 +57,9 @@
             text-align: center;
             color: #555;
         }
+        .tooltip {
+            z-index: 1070 !important;
+        }
     </style>
 </head>
 <body>
@@ -77,9 +80,9 @@
                 <tbody>
                     <tr>
                         <td><strong>Offre Boost</strong></td>
-                        <td>19.90€ HT / mois / point de charge</td>
+                        <td>9.90€ HT / mois / point de charge</td>
                         <td>{{ totalConnectors }}</td>
-                        <td>{{ (19.90 * totalConnectors)|number_format(2, '.', ' ') }} € HT</td>
+                        <td>{{ (9.90 * totalConnectors)|number_format(2, '.', ' ') }} € HT</td>
                     </tr>
                     <tr>
                         <td>Frais de kWh délivré</td>

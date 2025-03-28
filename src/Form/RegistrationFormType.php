@@ -47,6 +47,12 @@ class RegistrationFormType extends AbstractType
             ->add('societyName', TextType::class, [
                 'label' => 'Nom de l\'entreprise'
             ])
+            ->add('phone', TextType::class, [
+                'label' => 'Numéro de téléphone'
+            ])
+            ->add('siret', TextType::class, [
+                'label' => 'Numéro de siret'
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'J\'accepte les conditions générales',
