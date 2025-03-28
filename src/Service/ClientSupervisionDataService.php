@@ -12,7 +12,7 @@ use Psr\Log\LoggerInterface;
 
 class ClientSupervisionDataService
 {
-    private string $externalApiToken = '...'; // token create_user
+    private string $externalApiToken = '4565adcf6ff98a5bb7d7862a91c553d0b2e5e35e096f0a02e15aa8399cfa6288f23ffa09133af056c1e8776e250ee12b9c078fd9a82255193d19dcc4abce1c05aef8e25e64c453526e5ff2f835af24719130568f6a43cd21dac17e7e3396d8e90530b0b40828cb1b66ab639e75d012a1b2d27019d4a5461ac08beaf6b9d2ed8b';
     private ?string $partnerToken = null;
 
     public function __construct(
@@ -31,11 +31,11 @@ class ClientSupervisionDataService
         $this->authenticatePartner();
         
         $companyId = $this->createCompany($client);
-        $siteId = $this->createSite($dto, $companyId); // <-- dto
-        $siteAreaId = $this->createSiteArea($dto, $siteId); // <-- dto
+        $siteId = $this->createSite($dto, $companyId);
+        $siteAreaId = $this->createSiteArea($dto, $siteId);
     
         $this->createPricingDefinition($dto);
-        $this->assignSiteAreaToStation($siteAreaId, $station);
+        $this->assignSiteAreaToStation($dto, $siteAreaId, $station);
     
         $this->logger->info("[Supervision] ✅ Terminé pour {$station->getModel()}");
     }
@@ -51,6 +51,8 @@ class ClientSupervisionDataService
             'password' => 'MotDePasse123.',
             'phone' => $client->getPhone() ?? '0600000000'
         ];
+
+        $token = '';
 
         $this->makePostRequest($url, $payload, $this->externalApiToken, '[Supervision] Utilisateur créé');
     }
@@ -326,9 +328,9 @@ class ClientSupervisionDataService
         $this->makePostRequest($url, $payload, $this->partnerToken, '[Supervision] Tarification créée pour ' . $entityId);
     }
 
-    private function assignSiteAreaToStation(string $siteAreaId, ChargingStations $station): void
+    private function assignSiteAreaToStation($dto, string $siteAreaId, ChargingStations $station): void
     {
-        $stationName = $station->getModel();
+        $stationName = $dto->borneName;        ;
         $url = "https://lodmi.charge-angels.com/v1/api/charging-stations/{$stationName}/parameters";
 
         $payload = [
