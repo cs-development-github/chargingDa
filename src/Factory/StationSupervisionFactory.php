@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Factory;
 
 use App\Entity\Intervention;
@@ -19,16 +20,10 @@ class StationSupervisionFactory
      */
     public function createFromInterventions(array $interventions): array
     {
-        $uniqueStations = [];
+        $dtos = [];
 
         foreach ($interventions as $intervention) {
             $station = $intervention->getChargingStation();
-            $stationId = $station->getId();
-
-            if (isset($uniqueStations[$stationId])) {
-                continue;
-            }
-
             $client = $intervention->getClient();
 
             $tarification = $this->tarificationRepo->findOneBy([
@@ -50,10 +45,9 @@ class StationSupervisionFactory
             );
 
             $dto->chargingStationSetting = $setting;
-
-            $uniqueStations[$stationId] = $dto;
+            $dtos[] = $dto;
         }
 
-        return array_values($uniqueStations);
+        return $dtos;
     }
 }
