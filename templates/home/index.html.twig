@@ -217,8 +217,6 @@
 			</div>
 		</div>
 	</div>
-
-
 </div>
 
 {# Modal ajouter un client #}
@@ -254,16 +252,23 @@
 								{{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
 							</label>
 							{{ form_widget(interventionForm.interventions.vars.prototype.sim, {
-                'attr': {'class': 'form-control gradient-input'}
-            }) }}
+								'attr': {'class': 'form-control gradient-input'}
+							}) }}
 						</div>
 						<div class="col-md-6">
 							<label class="form-label mb-0">
 								{{ form_label(interventionForm.interventions.vars.prototype.borneName, 'Identifiant de la borne') }}
+									<i id="info-icon-unique"
+										class="bi bi-info-circle ms-2"
+										data-bs-toggle="tooltip"
+										data-tooltip-image="{{ asset('build/images/Qrcode_exemple.png') }}"
+										title="Tooltip image"
+										style="cursor: pointer;">
+									</i>
 							</label>
 							{{ form_widget(interventionForm.interventions.vars.prototype.borneName, {
-                'attr': {'class': 'form-control gradient-input'}
-            }) }}
+									'attr': {'class': 'form-control gradient-input'}
+								}) }}
 						</div>
 					</div>
 
@@ -339,7 +344,9 @@
 			</div>
 		</div>
 	</div>
-</div></div> 
+</div>
+
+</div> 
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -349,7 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const stepIndicatorStep = document.getElementById("currentStepDoc");
     const totalStepsStep = document.getElementById("totalStepsDoc");
     const customStep = document.getElementById("customStepSupervision");
-    const stepInfo = document.getElementById("stepContentText"); // 👈 à créer dans le HTML
+    const stepInfo = document.getElementById("stepContentText");
     const prevBtn = document.querySelector('.prev-step');
     const nextBtn = document.querySelector('.next-step');
 
@@ -357,7 +364,6 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentStep = 0;
     let totalSteps = 0;
 
-    // Au clic sur une borne
     document.querySelectorAll(".start-supervision-btn").forEach(button => {
         button.addEventListener("click", async function () {
             const stationId = this.dataset.id;
@@ -370,9 +376,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (!res.ok) throw new Error("Erreur de chargement des documentations");
 
                 steps = await res.json();
-                steps.sort((a, b) => (a.step ?? 0) - (b.step ?? 0)); // par sécurité
+                steps.sort((a, b) => (a.step ?? 0) - (b.step ?? 0));
 
-                totalSteps = steps.length + 1; // +1 pour l'étape finale personnalisée
+                totalSteps = steps.length + 1;
                 currentStep = 0;
 
                 totalStepsStep.textContent = totalSteps;
@@ -398,7 +404,6 @@ document.addEventListener("DOMContentLoaded", function () {
             stepImageStep.src = step.image;
             stepImageStep.classList.remove("d-none");
 
-            // Ajout du texte OCPP et NAPN si présent
             if (step.ocpp || step.napn) {
                 stepInfo.innerHTML = `
                     ${step.ocpp ? `<p><strong>OCPP :</strong> ${step.ocpp}</p>` : ""}
@@ -406,7 +411,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
             }
         } else {
-            // Dernière étape personnalisée
             customStep.classList.remove("d-none");
         }
 
@@ -438,110 +442,112 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <script>
-			    document.addEventListener("DOMContentLoaded", function () {
-			        let currentStep = 1;
-			        const totalSteps = 2;
-			
-			        const stepIndicatorForm = document.getElementById("currentStepForm");
-			        const totalStepsFormElem = document.getElementById("totalStepsForm");
-			
-			        if (!stepIndicatorForm) {
-			            console.error("stepIndicatorForm est introuvables.");
-			            return;
-			        }
-			
-			            if (!totalStepsFormElem) {
-			            console.error("totalStepsFormElem est introuvables.");
-			            return;
-			        }
-			
-			        totalStepsFormElem.textContent = totalSteps;
-			
-			        function updateStep() {
-			            document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
-			            let currentStepElement = document.getElementById("step" + currentStep);
-			            if (currentStepElement) {
-			                currentStepElement.classList.remove("d-none");
-			            }
-			
-			            let progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
-			            let progressStep1 = document.getElementById("progressStep1");
-			            let progressStep2 = document.getElementById("progressStep2");
-			
-			            if (progressStep1 && progressStep2) {
-			                progressStep1.style.width = `${progressPercentage}%`;
-			                progressStep2.style.width = `${100 - progressPercentage}%`;
-			
-			                progressStep1.classList.toggle("bg-success", currentStep >= 1);
-			                progressStep2.classList.toggle("bg-success", currentStep === 2);
-			            }
-			
-			            let modalTitle = document.getElementById("modalTitle");
-			            if (modalTitle) {
-			                modalTitle.textContent = currentStep === 1 ? "Information du client" : "Information de l'installation";
-			            }
-			
-			            let prevBtn = document.getElementById("prevBtn");
-			            let nextBtn = document.getElementById("nextBtn");
-			            let submitBtn = document.getElementById("submitBtn");
-			
-			            if (prevBtn && nextBtn && submitBtn) {
-			                prevBtn.classList.toggle("d-none", currentStep === 1);
-			                nextBtn.classList.toggle("d-none", currentStep === totalSteps);
-			                submitBtn.classList.toggle("d-none", currentStep !== totalSteps);
-			            }
-			
-			            stepIndicatorForm.textContent = currentStep;
-			        }
-			
-			        document.getElementById("progressModal").addEventListener("show.bs.modal", function () {
-			            currentStep = 1;
-			            updateStep();
-			        });
-			
-			        let nextBtn = document.getElementById("nextBtn");
-			        let prevBtn = document.getElementById("prevBtn");
-			        let submitBtn = document.getElementById("submitBtn");
-			
-			        if (nextBtn) {
-			            nextBtn.addEventListener("click", () => {
-			                if (currentStep < totalSteps) {
-			                    currentStep++;
-			                    updateStep();
-			                }
-			            });
-			        }
-			
-			        if (prevBtn) {
-			            prevBtn.addEventListener("click", () => {
-			                if (currentStep > 1) {
-			                    currentStep--;
-			                    updateStep();
-			                }
-			            });
-			        }
-			
-			        if (submitBtn) {
-			            submitBtn.addEventListener("click", function (event) {
-			                event.preventDefault();
-			                let form = document.getElementById("multiStepForm");
-			                if (!form) return;
-			                submitBtn.disabled = true;
-			                form.submit();
-			            });
-			        }
-			
-			        let form = document.getElementById("multiStepForm");
-			        if (form) {
-			            form.addEventListener("submit", function (event) {
-			                event.preventDefault();
-			                setTimeout(() => {
-			                    this.submit();
-			                }, 1000);
-			            });
-			        }
-			    });
-	</script> <script>
+	document.addEventListener("DOMContentLoaded", function () {
+		let currentStep = 1;
+		const totalSteps = 2;
+
+		const stepIndicatorForm = document.getElementById("currentStepForm");
+		const totalStepsFormElem = document.getElementById("totalStepsForm");
+
+		if (!stepIndicatorForm) {
+			console.error("stepIndicatorForm est introuvables.");
+			return;
+		}
+
+			if (!totalStepsFormElem) {
+			console.error("totalStepsFormElem est introuvables.");
+			return;
+		}
+
+		totalStepsFormElem.textContent = totalSteps;
+
+		function updateStep() {
+			document.querySelectorAll(".form-step").forEach(step => step.classList.add("d-none"));
+			let currentStepElement = document.getElementById("step" + currentStep);
+			if (currentStepElement) {
+				currentStepElement.classList.remove("d-none");
+			}
+
+			let progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+			let progressStep1 = document.getElementById("progressStep1");
+			let progressStep2 = document.getElementById("progressStep2");
+
+			if (progressStep1 && progressStep2) {
+				progressStep1.style.width = `${progressPercentage}%`;
+				progressStep2.style.width = `${100 - progressPercentage}%`;
+
+				progressStep1.classList.toggle("bg-success", currentStep >= 1);
+				progressStep2.classList.toggle("bg-success", currentStep === 2);
+			}
+
+			let modalTitle = document.getElementById("modalTitle");
+			if (modalTitle) {
+				modalTitle.textContent = currentStep === 1 ? "Information du client" : "Information de l'installation";
+			}
+
+			let prevBtn = document.getElementById("prevBtn");
+			let nextBtn = document.getElementById("nextBtn");
+			let submitBtn = document.getElementById("submitBtn");
+
+			if (prevBtn && nextBtn && submitBtn) {
+				prevBtn.classList.toggle("d-none", currentStep === 1);
+				nextBtn.classList.toggle("d-none", currentStep === totalSteps);
+				submitBtn.classList.toggle("d-none", currentStep !== totalSteps);
+			}
+
+			stepIndicatorForm.textContent = currentStep;
+		}
+
+		document.getElementById("progressModal").addEventListener("show.bs.modal", function () {
+			currentStep = 1;
+			updateStep();
+		});
+
+		let nextBtn = document.getElementById("nextBtn");
+		let prevBtn = document.getElementById("prevBtn");
+		let submitBtn = document.getElementById("submitBtn");
+
+		if (nextBtn) {
+			nextBtn.addEventListener("click", () => {
+				if (currentStep < totalSteps) {
+					currentStep++;
+					updateStep();
+				}
+			});
+		}
+
+		if (prevBtn) {
+			prevBtn.addEventListener("click", () => {
+				if (currentStep > 1) {
+					currentStep--;
+					updateStep();
+				}
+			});
+		}
+
+		if (submitBtn) {
+			submitBtn.addEventListener("click", function (event) {
+				event.preventDefault();
+				let form = document.getElementById("multiStepForm");
+				if (!form) return;
+				submitBtn.disabled = true;
+				form.submit();
+			});
+		}
+
+		let form = document.getElementById("multiStepForm");
+		if (form) {
+			form.addEventListener("submit", function (event) {
+				event.preventDefault();
+				setTimeout(() => {
+					this.submit();
+				}, 1000);
+			});
+		}
+	});
+</script> 
+	
+<script>
 	document.addEventListener("DOMContentLoaded", function () {
 		const startButton = document.getElementById("startSupervision");
 		const stepContent = document.getElementById("stepContent");
@@ -718,42 +724,81 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	});
 	
-	</script> <script>
-		document.addEventListener("DOMContentLoaded", function () {
-			const addButton = document.getElementById('addIntervention');
-			const container = document.getElementById('interventionContainer');
-	
-			if (!addButton || !container) {
-				console.error("addButton ou container manquant.");
+</script> 
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const addButton = document.getElementById('addIntervention');
+		const container = document.getElementById('interventionContainer');
+
+		if (!addButton || !container) {
+			console.error("addButton ou container manquant.");
+			return;
+		}
+
+		let index = 0;
+
+		addButton.addEventListener('click', function () {
+			const prototype = container.dataset.prototype;
+			if (!prototype) {
+				console.error("Prototype manquant dans data-prototype.");
 				return;
 			}
-	
-			let index = 0;
-	
-			addButton.addEventListener('click', function () {
-				const prototype = container.dataset.prototype;
-				if (!prototype) {
-					console.error("Prototype manquant dans data-prototype.");
-					return;
-				}
-	
-				const newForm = prototype.replace(/__name__/g, index);
-				const newDiv = document.createElement('div');
-				newDiv.innerHTML = newForm;
-				container.appendChild(newDiv);
-	
-				index++;
-			});
-	
-			// (optionnel) supprimer une borne si un bouton trash est cliqué
-			container.addEventListener('click', function (e) {
-				if (e.target.closest('.remove-intervention')) {
-					e.preventDefault();
-					const item = e.target.closest('.intervention-item');
-					if (item) {
-						item.remove();
-					}
-				}
-			});
+
+			const newForm = prototype.replace(/__name__/g, index);
+			const newDiv = document.createElement('div');
+			newDiv.innerHTML = newForm;
+			container.appendChild(newDiv);
+
+			index++;
 		});
-	</script>{% endblock %}
+
+		// (optionnel) supprimer une borne si un bouton trash est cliqué
+		container.addEventListener('click', function (e) {
+			if (e.target.closest('.remove-intervention')) {
+				e.preventDefault();
+				const item = e.target.closest('.intervention-item');
+				if (item) {
+					item.remove();
+				}
+			}
+		});
+	});
+</script>
+	
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		tooltipTriggerList.map(function (tooltipTriggerEl) {
+			return new bootstrap.Tooltip(tooltipTriggerEl)
+		})
+	})
+</script>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+	const modal = document.getElementById("progressModal");
+
+	if (!modal) return;
+
+	modal.addEventListener("shown.bs.modal", function () {
+		const tooltipTrigger = document.getElementById("info-icon-unique");
+
+		if (!tooltipTrigger || tooltipTrigger.dataset.bound === "true") return;
+
+		const imageUrl = tooltipTrigger.dataset.tooltipImage;
+
+		new bootstrap.Tooltip(tooltipTrigger, {
+			html: true,
+			title: `<img src="${imageUrl}" style="max-width:200px; height:auto;" alt="QR Code exemple">`,
+			container: 'body' // important dans une modal
+		});
+
+		tooltipTrigger.dataset.bound = "true";
+	});
+});
+
+</script>
+	
+{% endblock %}
