@@ -27,7 +27,7 @@ class ClientContractService
     public function generateAndSendContract(Client $client, bool $sendEmail = true, bool $requestSignature = true): ?string
     {
         $projectDir = $this->kernel->getProjectDir() . "/public/pdf";
-        $clientId = $client->getId();
+        $clientId = $client->getDocumentId();
 
         if (!is_dir($projectDir)) {
             mkdir($projectDir, 0777, true);

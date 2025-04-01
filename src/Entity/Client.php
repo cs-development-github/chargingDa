@@ -76,6 +76,9 @@ class Client
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $signatureTransactionId = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $documentId = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -355,6 +358,18 @@ class Client
     public function setSignatureTransactionId(string $signatureTransactionId): static
     {
         $this->signatureTransactionId = $signatureTransactionId;
+
+        return $this;
+    }
+
+    public function getDocumentId(): ?string
+    {
+        return $this->documentId;
+    }
+
+    public function setDocumentId(?string $documentId): static
+    {
+        $this->documentId = $documentId;
 
         return $this;
     }
