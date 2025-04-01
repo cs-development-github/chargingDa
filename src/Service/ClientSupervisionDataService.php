@@ -40,7 +40,35 @@ class ClientSupervisionDataService
 
     private function createUser(Client $client): void
     {
-        $url = 'https://srv.mobi-gest.com:5059/create_user';
+        $email = $client->getEmail();
+        $url = 'https://lodmi.charge-angels.com/v1/api/users?Search=' . urlencode($email) . '&Skip=0&Limit=100&SortFields=id&OnlyRecordCount=false&WithAuth=true';
+    
+        try {
+            $response = $this->httpClient->request('GET', $url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->externalApiToken,
+                    'Accept' => 'application/json',
+                ],
+            ]);
+    
+            if ($response->getStatusCode() >= 300) {
+                $this->logger->warning("[Supervision] ⚠️ Erreur lors de la vérification de l'existence de l'utilisateur $email");
+                return;
+            }
+    
+            $data = $response->toArray();
+            foreach ($data['result'] ?? [] as $user) {
+                if (strcasecmp($user['email'], $email) === 0) {
+                    $this->logger->info("[Supervision] ✅ Utilisateur déjà existant : $email");
+                    return;
+                }
+            }
+        } catch (\Throwable $e) {
+            $this->logger->error("[Supervision] ❌ Exception lors de la vérification de l'utilisateur $email : " . $e->getMessage());
+            return;
+        }
+    
+        $urlCreate = 'https://srv.mobi-gest.com:5059/create_user';
         $payload = [
             'email' => $client->getEmail(),
             'lastName' => $client->getLastName(),
@@ -48,8 +76,12 @@ class ClientSupervisionDataService
             'password' => 'MotDePasse123.',
             'phone' => $client->getPhone() ?? '0600000000'
         ];
-
-        $this->makePostRequest($url, $payload, $this->externalApiToken, '[Supervision] Utilisateur créé');
+    
+        try {
+            $this->makePostRequest($urlCreate, $payload, $this->externalApiToken, '[Supervision] 🆕 Utilisateur créé');
+        } catch (\Throwable $e) {
+            $this->logger->error("[Supervision] ❌ Échec de création de l'utilisateur $email : " . $e->getMessage());
+        }
     }
 
     private function authenticatePartner(): void
