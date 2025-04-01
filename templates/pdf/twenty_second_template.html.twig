@@ -66,7 +66,7 @@
 
         <div class="section">
             <h2>Le Client</h2>
-            <p>Nom du Client : <strong>{{ client.name }} {{ client.lastname }}</strong><br>
+            <p>Nom du Client : <strong>{{ client.name|capitalize }} {{ client.lastname }}</strong><br>
                Adresse : <strong>{{ client.address.fullAddress }} </strong><br>
                En cas de changement d’adresse, l’autre Partie devra aussitôt en être avisée.
             </p>
@@ -88,7 +88,7 @@
             <div>
                 <p>Le Client</p>
                 <p><strong>{{ client.societyName }}</strong></p>
-                <p><strong>{{ client.name }} {{ client.lastname }}</strong></p>
+                <p><strong>{{ client.name|capitalize }} {{ client.lastname }}</strong></p>
             </div>
         </div>
 
