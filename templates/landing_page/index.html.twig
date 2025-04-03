@@ -515,20 +515,22 @@
     </nav>
     <div style="margin-top: 80px;"></div>
 
-    <section class="hero" style="display: flex; align-items: center; justify-content: center;">
+    <section class="hero d-flex align-items-center justify-content-center px-3">
         <div class="custom-card" data-aos="zoom-in" data-aos-duration="1000">
-            <h2 class="mb-3">
+            <h2 class="mb-3 text-center">
                 <span class="gradient-text">LA PLATEFORME</span> QUI FACILITE LES PROFESSIONNELS
                 <span class="gradient-text">DE L'IRVE</span>
             </h2>
-            <p class="mb-4">
+            <p class="mb-4 text-center">
                 Sublimez votre prestation et finalisez votre installation en proposant à vos clients
                 nos solutions de supervision.
             </p>
-            <a href="{{ path('app_login') }}" class="btn btn-gradient">COMMENCER</a>
-
+            <div class="text-center">
+                <a href="{{ path('app_login') }}" class="btn btn-gradient">COMMENCER</a>
+            </div>
         </div>
     </section>
+
 
     <section class="offers py-5">
         <div class="container">
