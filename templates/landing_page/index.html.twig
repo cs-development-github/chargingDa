@@ -482,6 +482,19 @@
                 margin-top: 2rem;
             }
         }
+
+        @media (max-width: 767.98px) {
+            .connect-plus {
+                background: linear-gradient(to bottom, #ec008c 0%, #f6941f 50%, #ffffff 100%);
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .pink-circle-container img {
+                width: 90% !important;
+                max-width: 320px;
+            }
+        }
     </style>
 </head>
 
@@ -546,14 +559,13 @@
                     </p>
 
 
-                    <ul
-                        class="list-unstyled d-flex gap-5 mt-4 flex-wrap justify-content-center justify-content-lg-start">
+                    <ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
                         <li class="text-center">
                             <span class="gradient-text offer-number d-block">1</span>
                             <span class="item-text d-block">Carte<br>SIM M2M</span>
                         </li>
 
-                        <li class="text-center d-none d-md-block">
+                        <li class="text-center align-self-md-start">
                             <span class="gradient-text offer-number d-block">+</span>
                         </li>
 
@@ -562,7 +574,7 @@
                             <span class="item-text d-block">QR Code<br>sécurisé</span>
                         </li>
 
-                        <li class="text-center d-none d-md-block">
+                        <li class="text-center align-self-md-start">
                             <span class="gradient-text offer-number d-block">+</span>
                         </li>
 
@@ -571,6 +583,7 @@
                             <span class="item-text d-block">Guide de<br>mise en supervision</span>
                         </li>
                     </ul>
+
 
 
 
@@ -596,41 +609,65 @@
                     </p>
 
                     <div class="row text-center g-4 justify-content-center">
+
+                        <!-- 1 - SIM -->
                         <div class="col-6 col-sm-6 col-lg-2">
                             <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
                             <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Carte<br>SIM
                                 M2M</span>
                         </div>
 
-                        <div class="col-12 col-lg-1 d-none d-lg-block">
+                        <!-- + MOBILE -->
+                        <div class="col-12 d-block d-lg-none">
                             <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
                         </div>
 
+                        <!-- + DESKTOP -->
+                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
+                            <span class="textspecial fs-1 fw-bold d-block">+</span>
+                        </div>
+
+                        <!-- 1 - MODEM -->
                         <div class="col-6 col-sm-6 col-lg-2">
                             <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
                             <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Modeme<br>4G</span>
                         </div>
 
-                        <div class="col-12 col-lg-1 d-none d-lg-block">
+                        <!-- + MOBILE -->
+                        <div class="col-12 d-block d-lg-none">
                             <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
                         </div>
 
+                        <!-- + DESKTOP -->
+                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
+                            <span class="textspecial fs-1 fw-bold d-block">+</span>
+                        </div>
+
+                        <!-- 1 - QR CODE -->
                         <div class="col-6 col-sm-6 col-lg-2">
                             <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
                             <span class="textnormal text-white d-block" style="font-size: 1.1rem;">QR
                                 Code<br>sécurisé</span>
                         </div>
 
-                        <div class="col-12 col-lg-1 d-none d-lg-block">
+                        <!-- + MOBILE -->
+                        <div class="col-12 d-block d-lg-none">
                             <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
                         </div>
 
+                        <!-- + DESKTOP -->
+                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
+                            <span class="textspecial fs-1 fw-bold d-block">+</span>
+                        </div>
+
+                        <!-- 1 - GUIDE -->
                         <div class="col-6 col-sm-6 col-lg-2">
                             <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
                             <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Guide de<br>mise en
                                 supervision</span>
                         </div>
                     </div>
+
 
 
                     <div class="btoon mt-5">
