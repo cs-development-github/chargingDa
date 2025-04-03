@@ -41,14 +41,14 @@ class RegistrationController extends AbstractController
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             $user->setRoles(['ROLE_USER']);
             $user->setIsActive(true);
-            $user->setIsVerified(false); // 👈 important
+            $user->setIsVerified(false);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user);
 
-            $this->addFlash('success', 'Un email de confirmation t’a été envoyé.');
+            $this->addFlash('success', 'Un email de confirmation vous a été adressé.');
 
             return $this->redirectToRoute('app_login');
         }

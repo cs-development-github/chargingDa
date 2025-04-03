@@ -36,7 +36,7 @@ class UniversignService
 
     public function sign(Client $client): string
     {
-        $pdfPath = $this->projectDir . "/public/pdf/contrat_final_{$client->getId()}.pdf";
+        $pdfPath = $this->projectDir . "/public/pdf/contrat_{$client->getDocumentId()}.pdf";
 
         if (!file_exists($pdfPath)) {
             throw new \RuntimeException("Le fichier PDF du contrat est introuvable.");
