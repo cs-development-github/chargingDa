@@ -1,280 +1,809 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lodmi partenaires</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <title>Partenaires</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     {{ encore_entry_link_tags('landing') }}
+    <style>
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-container img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .title-gradient {
+            font-family: 'UrbaneRounded', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(to right, #ec008c, #f6941f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-left: 8px;
+        }
+
+        .hero {
+            position: relative;
+            min-height: 80vh;
+            background: url("{{ asset('build/images/landing/backgroundlanding.png') }}") center center / cover no-repeat fixed;
+
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(transparent, #fff);
+            z-index: 2;
+        }
+
+        .custom-card {
+            position: relative;
+            z-index: 3;
+            background: #fff;
+            border-radius: 3rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 700px;
+            height: 400px;
+            padding: 5rem;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+        .gradient-text {
+            font-family: 'UrbaneRounded', sans-serif;
+            background: linear-gradient(to right, #ec008c, #f6941f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-gradient {
+            background: linear-gradient(to right, #ec008c, #f6941f);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 30px;
+        }
+
+        .btn-gradient:hover {
+            opacity: 0.9;
+            color: #fff;
+        }
+
+        .offers {
+            margin-top: 100px;
+            padding: 4rem 0;
+            background: #fff;
+        }
+
+        .offers h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .offers h2 span {
+            display: block;
+        }
+
+        .pink-circle-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .pink-circle-container::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(236, 0, 140, 0.15), transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+        }
+
+        .pink-circle-container img {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .offers .title-bullet {
+            color: #f58a10;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .offer-number {
+            font-size: 3.5rem;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .item-text {
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        .offer-title {
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            margin-top: 1.5rem;
+        }
+
+        .connect-plus {
+            position: relative;
+            background: linear-gradient(to right, #ec008c 0%, #f6941f 50%, #ffffff 100%);
+        }
+
+        .btn-white-rounded {
+            background-color: #fff;
+            color: #ec008c;
+            border: 2px solid #ec008c;
+            border-radius: 50px;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-white-rounded:hover {
+            background-color: #ec008c;
+            color: #fff;
+        }
+
+        .btoon {
+            background-color: #fff;
+            border-radius: 50px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            text-align: left;
+            display: inline-block;
+            max-width: 100%;
+        }
+
+        .steps-section {
+            background-color: #fff;
+            padding: 4rem 0;
+        }
+
+        .steps-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+            padding: 0 1rem;
+            flex: 0 0 auto;
+        }
+
+        .step-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ec008c, #f6941f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            margin: 0 auto 1rem auto;
+        }
+
+        .step-line {
+            flex: 1;
+            max-width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #ec008c, #f6941f);
+            margin: 0 1rem;
+            border-radius: 2px;
+        }
+
+        .partner-marquee {
+            background-color: #f9f9f9;
+            padding: 2rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .marquee-container {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .marquee {
+            display: flex;
+            align-items: center;
+            animation: marquee 25s linear infinite;
+        }
+
+        .brand-partner {
+            width: 150px;
+            height: 100px;
+            object-fit: contain;
+            margin: 0 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-partner:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .footer-section {
+            background: url("{{ asset('build/images/landing/background.png') }}") center center / cover no-repeat;
+            color: #fff;
+            padding: 3rem 0;
+            position: relative;
+        }
+
+        .footer-card {
+            background-color: #fff;
+            border-radius: 2rem;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 100%;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        .footer-brand .logo-container img {
+            max-width: 80%;
+            max-height: 80%;
+            object-fit: contain;
+        }
+
+        .footer-brand .brand-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            background: linear-gradient(to right, #ec008c, #f6941f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links .link-column {
+            min-width: 120px;
+        }
+
+        .footer-links .link-column h5 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            color: #333;
+        }
+
+        .footer-links .link-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links .link-column ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links .link-column ul li a {
+            color: #555;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links .link-column ul li a:hover {
+            color: #ec008c;
+            text-decoration: underline;
+        }
+
+        .gradient-line {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #ec008c, #f6941f);
+            margin: 0 auto;
+        }
+
+        @media (max-width: 992px) {
+            .custom-card {
+                width: 90%;
+                height: auto;
+                padding: 3rem;
+            }
+
+            .offers .row {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+
+            .hero {
+                padding: 1rem;
+                background-attachment: scroll;
+            }
+
+            .custom-card {
+                width: 90%;
+                height: auto;
+                padding: 2rem;
+            }
+
+            .title-gradient {
+                font-size: 20px;
+            }
+
+            .btn-gradient {
+                padding: 0.5rem 1rem;
+            }
+
+            .offers h2 {
+                font-size: 1.5rem;
+            }
+
+            .pink-circle-container img {
+                max-width: 180px;
+            }
+
+            .connect-plus {
+                padding: 2rem 0;
+            }
+
+            .steps-wrapper {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .step-line {
+                display: none;
+            }
+
+            .brand-partner {
+                width: 120px;
+                height: 80px;
+                margin: 0 1rem;
+            }
+
+            .connect-plus h2 {
+                font-size: 2rem;
+                text-align: center;
+            }
+
+            .connect-plus p {
+                font-size: 1rem;
+                text-align: center;
+            }
+
+            .connect-plus .col-md-6 {
+                text-align: center;
+            }
+        }
+
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        @media (max-width: 576px) {
+            .navbar .btn-gradient {
+                padding: 0.375rem 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .offers .kit-content {
+                text-align: center;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .offers .kit-content h3 {
+                justify-content: center;
+            }
+
+            .offers .kit-items {
+                flex-direction: column !important;
+                gap: 2rem !important;
+            }
+
+            .offers .offer-number {
+                font-size: 2.5rem;
+                /* mantiene tamaño */
+            }
+
+            .offers .item-text {
+                font-size: 1rem;
+            }
+
+            .offers .description {
+                margin-top: 2rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .connect-plus {
+                background: linear-gradient(to bottom, #ec008c 0%, #f6941f 50%, #ffffff 100%);
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .pink-circle-container img {
+                width: 90% !important;
+                max-width: 320px;
+            }
+        }
+    </style>
 </head>
-<style>
-    .steps-section {
-        text-align: center;
-        padding: 50px 20px;
-    }
-
-    .steps-section h5 {
-        color: #6c757d;
-    }
-
-    .steps-title {
-        font-size: 2rem;
-        font-weight: bold;
-        background: linear-gradient(to right, #ff3c7f, #ff914d);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    .steps-section p {
-        color: #6c757d;
-        max-width: 600px;
-        margin: 0 auto 30px;
-    }
-
-    .step-circle {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(to right, #ff3c7f, #ff914d);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 15px;
-        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-        transition: transform 0.3s;
-        overflow: hidden;
-    }
-
-    .step-circle:hover {
-        transform: scale(1.08);
-    }
-
-    .step-circle img {
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
-    }
-
-    .step-title {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: #333;
-        margin-bottom: 5px;
-    }
-
-    .step-description {
-        font-size: 0.9rem;
-        color: #666;
-        max-width: 200px;
-        margin: 0 auto;
-    }
-
-    .arrow {
-        font-size: 1.5rem;
-        color: #999;
-        margin: 0 10px;
-    }
-
-    @media (max-width: 768px) {
-        .arrow {
-            display: none;
-        }
-
-        .col-step {
-            margin-bottom: 30px;
-        }
-    }
-</style>
 
 <body>
-    <script>
-        AOS.init({
-            duration: 800,  
-            once: false,   
-            mirror: true,  
-        });
-    </script>
-
-
-    <header class="bg-white shadow-sm">
-        <div class="container d-flex justify-content-between align-items-center py-3">
-            <div class="d-flex align-items-center">
-                <img src="{{ asset('build/images/logosmall.png') }}" alt="Logo" class="me-2" style="height: 40px;">
-                <h3 class="mb-0 fw-bold text-gradient">PARTENAIRE</h3>
-            </div>
-            <a href="{{path('app_login')}}" class="btn btn-gradient">Se connecter</a>
-        </div>
-        <div class="header-gradient"></div>
-    </header>
-
-    <section class="info-section">
-        <div class="info-container">
-            <div class="info-text" data-aos="fade-up-right">
-                <div class="text-container">
-                    <h2 class="info-title">
-                        La plateforme qui <span class="highlight">Facilite</span> les professionnels de L'IRVE
-                    </h2>
-                    <p>Sublimez votre prestation et finalisez votre installation en proposant à vos clients nos
-                        solutions de supervision
-                    </p>
-                    <ul class="info-list">
-                        <li>Facile</li>
-                        <li>Rapide</li>
-                        <li>Sécurisé</li>
-                    </ul>
-                    <a href="#" class="btn-gradient">Commencer</a>
+    <nav class="navbar navbar-light bg-white shadow fixed-top" data-aos-duration="800">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <div class="logo-container me-2">
+                    <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
                 </div>
-            </div>
-            <div class="info-image">
-                <img class="right_image" src="{{ asset('build/images/landing/hero_banner.jpg') }}"
-                    alt="Illustration principale">
-                <img class="left_image" src="{{ asset('build/images/left_hero_banner.png') }}"
-                    alt="Illustration secondaire">
+                <span class="title-gradient">PARTENAIRES</span>
+            </a>
+
+            <a href="{{ path('app_login') }}" class="btn btn-gradient">
+                Se connecter
+            </a>
+        </div>
+    </nav>
+    <div style="margin-top: 80px;"></div>
+
+    <section class="hero d-flex align-items-center justify-content-center px-3">
+        <div class="custom-card" data-aos="zoom-in" data-aos-duration="1000">
+            <h2 class="mb-3 text-center">
+                <span class="gradient-text">LA PLATEFORME</span> QUI FACILITE LES PROFESSIONNELS
+                <span class="gradient-text">DE L'IRVE</span>
+            </h2>
+            <p class="mb-4 text-center">
+                Sublimez votre prestation et finalisez votre installation en proposant à vos clients
+                nos solutions de supervision.
+            </p>
+            <div class="text-center">
+                <a href="{{ path('app_login') }}" class="btn btn-gradient">COMMENCER</a>
             </div>
         </div>
     </section>
 
-    <section class="kits-section">
 
-        <h2 class="section-title">
-            Découvrez nos offres
-        </h2>
-
+    <section class="offers py-5">
         <div class="container">
-            <div class="kits-container">
+            <h2 class="text-center mb-4">
+                <span class="gradient-text d-block mb-2">NOS OFFRES</span>
+                <span class="textspecial d-block">POUR TOUJOURS MIEUX VOUS ACCOMPAGNER</span>
+            </h2>
 
-                <div class="kit-card ms-4" data-aos="flip-left">
-                    <h2 class="card-title">KIT DE SUPERVISIONS</h2>
-                    <img src="{{ asset('build/images/landing/kit_supervision_socle.png') }}" alt="Kit de supervisions"
-                        class="kit-image">
-                    <ul class="info-list">
-                        <li>1 carte sim M2M</li>
-                        <li>Un Qr Code sécuriser</li>
-                        <li>Documentation de supervisions</li>
-                    </ul>
+            <div class="gradient-line mb-5" data-aos="fade-up" data-aos-duration="800"></div>
+
+            <div class="row align-items-center">
+                <div class="col-md-5 text-center mb-4 mb-md-0" data-aos="fade-right" data-aos-duration="800">
+                    <div class="pink-circle-container">
+                        <img src="{{ asset('build/images/landing/kit.png') }}" alt="Kit de Supervision"
+                            class="img-fluid">
+                    </div>
                 </div>
 
-                <div class="kit-card" data-aos="flip-left">
-                    <h2 class="card-title">KIT DE SUPERVISIONS</h2>
-                    <span class="complet">COMPLET+</span>
-                    <img src="{{ asset('build/images/landing/kit_supervision_modem_socle.png') }}" alt="Kit de supervisions Complet+"
-                        class="kit-image">
+                <div class="col-md-7 kit-content" data-aos="fade-left" data-aos-duration="800">
+                    <h3 class="mb-3 d-flex align-items-center offer-title">
+                        <span class="title-bullet gradient-text me-2">●</span>
+                        <span class="textspecial">LE KIT DE SUPERVISION</span>
+                    </h3>
 
-                    <ul class="info-list">
-                        <li>1 carte sim M2M</li>
-                        <li>Un Qr Code sécuriser</li>
-                        <li>Un modem 4g</li>
-                        <li>Compatibilité toutes bornes</li>
-                        <li>Grappes de bornes</li>
-                        <li>Documentation de supervisions</li>
+                    <p class="mb-4 textnormal">
+                        La solution essentielle pour assurer la connectivité et la supervision de vos bornes de
+                        recharge.
+                    </p>
+
+
+                    <ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
+                        <li class="text-center">
+                            <span class="gradient-text offer-number d-block">1</span>
+                            <span class="item-text d-block">Carte<br>SIM M2M</span>
+                        </li>
+
+                        <li class="text-center align-self-md-start">
+                            <span class="gradient-text offer-number d-block">+</span>
+                        </li>
+
+                        <li class="text-center">
+                            <span class="gradient-text offer-number d-block">1</span>
+                            <span class="item-text d-block">QR Code<br>sécurisé</span>
+                        </li>
+
+                        <li class="text-center align-self-md-start">
+                            <span class="gradient-text offer-number d-block">+</span>
+                        </li>
+
+                        <li class="text-center">
+                            <span class="gradient-text offer-number d-block">1</span>
+                            <span class="item-text d-block">Guide de<br>mise en supervision</span>
+                        </li>
                     </ul>
-                </div>
 
+
+
+
+                    <p class="description textnormal mt-4">
+                        Idéal pour les bornes équipées d’un emplacement dédié carte SIM.
+                    </p>
+                </div>
             </div>
         </div>
     </section>
 
-    <div class="container steps-section">
-        <h5>Étapes</h5>
-        <h2 class="steps-title" data-aos="fade-up">Á Suivre</h2>
-        <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Soluta harum
-            ipsum venenatis metus sem veniam eveniet aperiam suscipit.
-        </p>
+    <section class="connect-plus py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h2 class="textspecial text-white fw-bold mb-3" style="font-size: 2.5rem;">
+                        LE KIT DE SUPERVISION
+                        <span class="fw-light" style="font-size: 2.2rem;">CONNECT+</span>
+                    </h2>
+                    <p class="textnormal text-white mb-4">
+                        La solution essentielle pour assurer la connectivité et la supervision de vos bornes de
+                        recharge.
+                    </p>
 
-        <div class="row justify-content-center align-items-center">
-            <div class="col-12 col-md-3 text-center col-step" data-aos="zoom-in">
-                <div class="step-circle">
-                    <img src="{{ asset('build/images/landing/connect.png') }}" alt="Identificación">
+                    <div class="row text-center g-4 justify-content-center">
+
+                        <div class="col-6 col-sm-6 col-lg-2">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
+                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Carte<br>SIM
+                                M2M</span>
+                        </div>
+
+                        <div class="col-12 d-block d-lg-none">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
+                        </div>
+
+                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
+                            <span class="textspecial fs-1 fw-bold d-block">+</span>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-lg-2">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
+                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Modeme<br>4G</span>
+                        </div>
+
+                        <div class="col-12 d-block d-lg-none">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
+                        </div>
+
+                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
+                            <span class="textspecial fs-1 fw-bold d-block">+</span>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-lg-2">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
+                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">QR
+                                Code<br>sécurisé</span>
+                        </div>
+
+                        <div class="col-12 d-block d-lg-none">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
+                        </div>
+
+                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
+                            <span class="textspecial fs-1 fw-bold d-block">+</span>
+                        </div>
+
+                        <div class="col-6 col-sm-6 col-lg-2">
+                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
+                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Guide de<br>mise en
+                                supervision</span>
+                        </div>
+                    </div>
+
+
+
+                    <div class="btoon mt-5">
+                        <span class="gradient-text">GESTION DES GRAPPES DE BORNES</span>
+                    </div>
                 </div>
-                <h4 class="step-title">Je m'identifie</h4>
-                <p class="step-description">Lorem ipsum dolor sit amet consectetur.</p>
-            </div>
 
-            <div class="col-12 col-md-1 d-none d-md-block text-center arrow">
-                →
-            </div>
-
-            <div class="col-12 col-md-3 text-center col-step" data-aos="zoom-in">
-                <div class="step-circle">
-                    <img src="{{ asset('build/images/landing/read_the_doc.png') }}" alt="Documentación">
+                <div class="col-md-6 text-center mt-4 mt-md-0">
+                    <div class="pink-circle-container">
+                        <img src="{{ asset('build/images/landing/boite.png') }}" alt="Box Connect+"
+                            style="max-width: 600px;" class="img-fluid">
+                    </div>
                 </div>
-                <h4 class="step-title">Je suis les étapes de la documentation</h4>
-                <p class="step-description">Lorem ipsum dolor sit amet consectetur.</p>
             </div>
-
-            <div class="col-12 col-md-1 d-none d-md-block text-center arrow">
-                →
-            </div>
-
-            <div class="col-12 col-md-3 text-center col-step" data-aos="zoom-in">
-                <div class="step-circle">
-                    <img src="{{ asset('build/images/landing/supervision.png') }}" alt="Supervisión">
-                </div>
-                <h4 class="step-title">Je mets en supervision</h4>
-                <p class="step-description">Lorem ipsum dolor sit amet consectetur.</p>
-            </div>
-        </div>
-    </div>
-
-
-
-
-    <section class="partner-section">
-        <h2 class="section-title" data-aos="fade-up">
-            Compatible avec
-        </h2>
-
-        <div class="partner-item" data-aos="fade-down">
-            <img src="{{ asset('build/images/landing/Brand/abb.png')}}" alt="ABB" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/alpitronic.png')}}" alt="Alpitronic" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/autel.png')}}" alt="Autel" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/hager.png')}}" alt="Hager" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg')}}" alt="Legrand" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/ohme.png')}}" alt="Ohme" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/schneider.png')}}" alt="Schneider" class="brand-partner">
-            <img src="{{ asset('build/images/landing/Brand/wallbox.jpg')}}" alt="Wallbox" class="brand-partner">
         </div>
     </section>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h4>Liens</h4>
-                <ul>
-                    <li>FAQ</li>
-                    <li>Aide</li>
-                    <li>Support</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Légal</h4>
-                <ul>
-                    <li>Conditions générales</li>
-                    <li>Confidentialité</li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Entreprise</h4>
-                <ul>
-                    <li>À propos</li>
-                    <li>Contact</li>
-                </ul>
+
+    <section class="steps-section">
+        <div class="container">
+            <div class="steps-wrapper">
+                <div class="step" data-aos="fade-up" data-aos-duration="800">
+                    <div class="step-circle">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <h5>Je m'identifie</h5>
+                    <p class="text-muted">Votre identification</p>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-aos="fade-up" data-aos-duration="800">
+                    <div class="step-circle">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+                    <h5>Documentation</h5>
+                    <p class="text-muted">Suivez la documentation</p>
+                </div>
+                <div class="step-line"></div>
+                <div class="step" data-aos="fade-up" data-aos-duration="800">
+                    <div class="step-circle">
+                        <i class="bi bi-speedometer2"></i>
+                    </div>
+                    <h5>Supervision</h5>
+                    <p class="text-muted">Mise en supervision</p>
+                </div>
             </div>
         </div>
+    </section>
 
-        <div class="footer-divider"></div>
+    <section class="partner-marquee">
+        <div class="container">
+            <h2 class="text-center mb-4" style="font-weight: 600; letter-spacing: 1px;">Compatible avec</h2>
+            <div class="gradient-line mb-4"></div>
+            <div class="marquee-container">
+                <div class="marquee">
+                    <img src="{{ asset('build/images/landing/Brand/abb.png') }}" alt="ABB" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/alpitronic.png') }}" alt="Alpitronic"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/autel.png') }}" alt="Autel" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/hager.png') }}" alt="Hager" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg') }}" alt="Legrand"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/ohme.png') }}" alt="Ohme" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/schneider.png') }}" alt="Schneider"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/wallbox.jpg') }}" alt="Wallbox"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/abb.png') }}" alt="ABB" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/alpitronic.png') }}" alt="Alpitronic"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/autel.png') }}" alt="Autel" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/hager.png') }}" alt="Hager" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg') }}" alt="Legrand"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/ohme.png') }}" alt="Ohme" class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/schneider.png') }}" alt="Schneider"
+                        class="brand-partner">
+                    <img src="{{ asset('build/images/landing/Brand/wallbox.jpg') }}" alt="Wallbox"
+                        class="brand-partner">
+                </div>
+            </div>
+        </div>
+    </section>
 
-        <div class="footer-bottom">
-            <img src="{{ asset('build/images/landing/logo_footer.png')}}" alt="Logo" class="footer-logo">
-            <span>copyright 2025</span>
+    <footer class="footer-section py-5 bg-white" data-aos-duration="800">
+        <div class="container">
+            <div
+                class="footer-card d-flex flex-column flex-md-row align-items-center text-center text-md-start justify-content-between">
+
+                <!-- Logo + Texto -->
+                <div class="footer-brand mb-4 mb-md-0 text-center text-md-start align-self-md-center">
+                    <div class="logo-container mb-2">
+                        <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi"
+                            style="max-width: 50px;">
+                    </div>
+                    <span class="title-gradient d-none d-md-inline">PARTENAIRES</span>
+                </div>
+
+                <!-- Enlaces -->
+                <div class="footer-links d-flex flex-column flex-md-row gap-4">
+
+                    <!-- Liens -->
+                    <div class="link-column">
+                        <h5 class="fw-bold mb-3">Liens</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">FAQ</a></li>
+                            <li><a href="#">Aide</a></li>
+                            <li><a href="#">Support</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Légal -->
+                    <div class="link-column">
+                        <h5 class="fw-bold mb-3">Légal</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">CGU</a></li>
+                            <li><a href="#">CGV</a></li>
+                            <li><a href="#">RGPD</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Entreprise -->
+                    <div class="link-column">
+                        <h5 class="fw-bold mb-3">Entreprise</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="#">À propos</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            once: true,
+            duration: 1000
+        });
+    </script>
 </body>
 
 </html>

@@ -111,6 +111,10 @@ class HomeController extends AbstractController
             $token = Uuid::v4()->toRfc4122();
             $client->setSecureToken($token);
 
+            $randomNumber = random_int(1000, 9999);
+            $documentId = '2025SUP' . $randomNumber;
+            $client->setDocumentId($documentId);
+
             $entityManager->persist($client);
             $entityManager->flush();
 
