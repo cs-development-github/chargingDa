@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use App\Entity\Client;
+use App\Entity\User;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Twig\Environment;
@@ -68,5 +70,20 @@ class ClientMailService
 
         $this->mailer->send($email);
     }
+
+    public function sendInstallerWelcomeEmail(User $user): void
+    {
+        $email = (new TemplatedEmail())
+            ->from('nepasrepondre@lodmi.com')
+            ->to($user->getEmail())
+            ->subject('Bienvenue chez LODMI 🎉')
+            ->htmlTemplate('emails/welcome_email.html.twig')
+            ->context([
+                'user' => $user,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
 }
 

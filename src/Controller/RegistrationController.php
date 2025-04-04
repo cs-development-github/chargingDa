@@ -41,14 +41,14 @@ class RegistrationController extends AbstractController
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             $user->setRoles(['ROLE_USER']);
             $user->setIsActive(true);
-            $user->setIsVerified(false); // 👈 important
+            $user->setIsVerified(false);
 
             $entityManager->persist($user);
             $entityManager->flush();
 
             $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user);
 
-            $this->addFlash('success', 'Un email de confirmation t’a été envoyé.');
+            $this->addFlash('success', 'Un email de confirmation vous a été adressé.');
 
             return $this->redirectToRoute('app_login');
         }
@@ -60,29 +60,40 @@ class RegistrationController extends AbstractController
 
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, EntityManagerInterface $em, VerifyEmailHelperInterface $verifyEmailHelper): Response
-    {
+    public function verifyUserEmail(
+        Request $request,
+        EntityManagerInterface $em,
+        VerifyEmailHelperInterface $verifyEmailHelper
+    ): Response {
         $userId = $request->get('id');
         if (!$userId) {
             throw $this->createNotFoundException();
         }
-
+    
         $user = $em->getRepository(User::class)->find($userId);
         if (!$user) {
             throw $this->createNotFoundException();
         }
-
+    
         try {
-            $verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getId(), $user->getEmail());
+            $verifyEmailHelper->validateEmailConfirmation(
+                $request->getUri(),
+                $user->getId(),
+                $user->getEmail()
+            );
         } catch (VerifyEmailExceptionInterface $e) {
             $this->addFlash('error', $e->getReason());
             return $this->redirectToRoute('app_register');
         }
-
+    
         $user->setIsVerified(true);
         $em->flush();
-
+    
+        // Envoi immédiat du mail de bienvenue
+        $this->emailVerifier->sendWelcomeEmail($user);
+    
         $this->addFlash('success', 'Adresse email vérifiée avec succès !');
         return $this->redirectToRoute('app_login');
     }
+    
 }
