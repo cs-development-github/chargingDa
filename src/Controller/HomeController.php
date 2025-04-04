@@ -32,6 +32,12 @@ class HomeController extends AbstractController
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
+        
+        if ($user instanceof \App\Entity\User && $user->isVerified() && !$user->getEmailVerifiedAt()) {
+            $this->clientMailService->sendInstallerWelcomeEmail($user); // méthode à créer
+            $user->setEmailVerifiedAt(new \DateTimeImmutable());
+            $entityManager->flush();
+        }
     
         $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user], ['id' => 'DESC']);
     

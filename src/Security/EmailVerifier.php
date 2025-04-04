@@ -29,7 +29,7 @@ class EmailVerifier
         $email = (new TemplatedEmail())
             ->from(new Address('nepasrepondre@lodmi.com'))
             ->to($user->getEmail())
-            ->subject('Confirme ton adresse email')
+            ->subject('Confirme votre adresse email')
             ->htmlTemplate('emails/confirmation_email.html.twig')
             ->context([
                 'signedUrl' => $signatureComponents->getSignedUrl(),
@@ -40,4 +40,19 @@ class EmailVerifier
 
         $this->mailer->send($email);
     }
+
+    public function sendWelcomeEmail(User $user): void
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('nepasrepondre@lodmi.com'))
+            ->to($user->getEmail())
+            ->subject('Bienvenue ! Votre compte est activé ✅')
+            ->htmlTemplate('emails/welcome_email.html.twig')
+            ->context([
+                'user' => $user,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
 }

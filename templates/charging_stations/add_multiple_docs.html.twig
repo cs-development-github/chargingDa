@@ -3,30 +3,90 @@
 {% block title %}Ajouter des documentations - {{ station.model }}{% endblock %}
 
 {% block body %}
-<div class="container my-5">
-  <h2 class="mb-4">Ajouter plusieurs documentations pour la borne <strong>{{ station.model }}</strong></h2>
-
-  {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-
-  <div id="doc-collection-wrapper"
-       data-prototype="{{ form_widget(form.docs.vars.prototype)|e('html_attr') }}">
-    {% for docForm in form.docs %}
-      <div class="doc-form-group border rounded p-3 mb-3">
-        {{ form_widget(docForm) }}
+<div class="container py-5 mt-5">
+  <div class="bg-white p-4 p-md-5 rounded-5 shadow-lg mx-auto" style="max-width: 850px;">
+    <h2 class="mb-5 d-flex flex-column flex-md-row align-items-start align-items-md-center gap-3">
+      <i class="bi bi-file-earmark-plus-fill text-primary fs-3"></i>
+      <div class="d-flex flex-column">
+        <span class="fw-bold fs-4">Ajouter plusieurs documentations</span>
+        <span class="fs-5">pour la borne <strong class="text-gradient">{{ station.model }}</strong></span>
       </div>
-    {% endfor %}
+    </h2>
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'class': 'needs-validation'}}) }}
+
+    <div id="doc-collection-wrapper"
+         data-prototype="{{ form_widget(form.docs.vars.prototype)|e('html_attr') }}">
+      {% for docForm in form.docs %}
+        <div class="doc-form-group border rounded-4 p-3 p-md-4 mb-4 bg-light-subtle">
+          {{ form_row(docForm.image, {
+            'label': 'Image de la documentation',
+            'attr': {'class': 'form-control'}
+          }) }}
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              {{ form_row(docForm.ocpp, {
+                'label': 'OCPP',
+                'attr': {'class': 'form-control'}
+              }) }}
+            </div>
+            <div class="col-md-6">
+              {{ form_row(docForm.napn, {
+                'label': 'NAPN',
+                'attr': {'class': 'form-control'}
+              }) }}
+            </div>
+            <div class="col-12">
+              {{ form_row(docForm.ChargingStation, {
+                'label': 'Borne concernée',
+                'attr': {'class': 'form-select'}
+              }) }}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-center justify-content-md-start gap-3">
+      <button type="button" id="add-doc-btn" class="btn btn-outline-gradient px-4">
+        <i class="bi bi-plus-circle me-1"></i> Ajouter une étape
+      </button>
+
+      <button type="submit" class="btn btn-gradient px-4">
+        <i class="bi bi-save me-1"></i> Enregistrer
+      </button>
+    </div>
+
+    {{ form_end(form) }}
   </div>
-
-  <button type="button" id="add-doc-btn" class="btn btn-outline-secondary mb-3">
-    ➕ Ajouter une étape
-  </button>
-
-  <div>
-    <button type="submit" class="btn btn-primary">✅ Enregistrer toutes les documentations</button>
-  </div>
-
-  {{ form_end(form) }}
 </div>
+
+<style>
+  .btn-gradient {
+    background: linear-gradient(to right, #ec008c, #f6941f);
+    color: white;
+    border: none;
+    padding: 0.4rem 1.2rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .btn-outline-gradient {
+    background: linear-gradient(to right, #ec008c, #f6941f);
+    color: white;
+    padding: 0.4rem 1.2rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    border: none;
+    font-size: 0.95rem;
+  }
+  .text-gradient {
+    background: linear-gradient(90deg, #ec008c, #f6941f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+</style>
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
@@ -39,7 +99,7 @@
     addBtn.addEventListener('click', () => {
       const newForm = prototypeTemplate.replace(/__name__/g, index);
       const div = document.createElement('div');
-      div.classList.add('doc-form-group', 'border', 'rounded', 'p-3', 'mb-3');
+      div.classList.add('doc-form-group', 'border', 'rounded-4', 'p-3', 'p-md-4', 'mb-4', 'bg-light-subtle');
       div.innerHTML = newForm;
 
       wrapper.appendChild(div);
