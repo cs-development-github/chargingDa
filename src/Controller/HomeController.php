@@ -10,6 +10,7 @@ use App\Form\ClientFormType;
 use Symfony\Component\Uid\Uuid;
 use App\Service\ClientMailService;
 use App\Form\InterventionFormType;
+use App\Repository\ChargingStationsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,7 +76,7 @@ class HomeController extends AbstractController
     }
 
     #[Route('/dashboard/ajout-client', name: 'app_add_client')]
-    public function addClient(Request $request, EntityManagerInterface $entityManager): Response
+    public function addClient(Request $request, EntityManagerInterface $entityManager, ChargingStationsRepository $chargingStationsRepository): Response
     {
         $user = $this->getUser();
     
@@ -90,6 +91,8 @@ class HomeController extends AbstractController
     
         $interventionForm = $this->createForm(InterventionFormType::class);
         $interventionForm->handleRequest($request);
+
+        $chargingStationModels = $chargingStationsRepository->findAll();
     
         if (
             $clientForm->isSubmitted() && $clientForm->isValid() &&
@@ -112,6 +115,7 @@ class HomeController extends AbstractController
         return $this->render('home/add_client.html.twig', [
             'clientForm' => $clientForm->createView(),
             'interventionForm' => $interventionForm->createView(),
+            'chargingStationModels' => $chargingStationModels,
         ]);
     }
 

@@ -1,5 +1,4 @@
 {% extends 'base.html.twig' %}
-
 {% block style %}
 	<style>
 		body {
@@ -151,18 +150,6 @@
 			background-color: #dc3545 !important;
 		}
 
-		.cluster-count-wrapper {
-			margin-top: 15px;
-		}
-
-		.cluster-count-wrapper select {
-			width: auto;
-			display: inline-block;
-			margin-left: 10px;
-			border-radius: 6px;
-			padding: 5px 10px;
-		}
-
 		.btn {
 			border-radius: 30px !important;
 			padding: 10px 20px;
@@ -214,7 +201,7 @@
 		.connection-box {
 			color: white;
 			border-radius: 8px;
-            width: 500px;
+			width: 500px;
 			text-align: center;
 		}
 
@@ -235,12 +222,67 @@
 			}
 		}
 	</style>
+
+
+	<style>
+		.custom-modal-overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.6);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+		}
+
+		.custom-modal {
+			background: white;
+			padding: 20px;
+			border-radius: 12px;
+			width: 600px;
+			max-width: 95%;
+			max-height: 90vh;
+			overflow-y: auto;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		.custom-modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.custom-modal-close {
+			background: none;
+			border: none;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		.custom-modal-search {
+			width: 100%;
+			margin-top: 10px;
+			padding: 8px;
+			border-radius: 8px;
+			border: 1px solid #ccc;
+		}
+
+		.custom-modal-list {
+			margin-top: 15px;
+		}
+
+		.custom-model-card {
+			padding: 10px;
+			margin-bottom: 10px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+		}
+	</style>
 {% endblock %}
 
 
 {% block body %}
-	<div
-		class="wrapper">
+	<div class="wrapper">
 
 		<div class="container">
 			{{ form_start(clientForm) }}
@@ -255,6 +297,14 @@
 				{{ form_row(interventionForm.interventions.vars.prototype.sim) }}
 				{{ form_row(interventionForm.interventions.vars.prototype.borneName) }}
 				{{ form_row(interventionForm.interventions.vars.prototype.chargingStation) }}
+
+				<div class="form-group">
+					<label>Modèle de borne</label>
+					<button type="button" class="btn btn-primary" onclick="openModal(this)">🔍 Choisir un modèle</button>
+					<input type="hidden" name="intervention_form[interventions][__index__][chargingStation]" class="charging-station-hidden"/>
+					<div class="model-selected text-muted small mt-1"></div>
+				</div>
+
 			</div>
 			<div class="connection-box-wrapper">
 				<div class="connection-box"></div>
@@ -270,7 +320,6 @@
 				<div class="container mb-3 connection-settings full-block">
 
 					<button type="button" class="btn btn-danger remove-connection-btn d-none">🗑️</button>
-					{# ⬅ Ici maintenant #}
 
 					<div class="connection-content">
 						<div class="connection-form">
@@ -280,19 +329,6 @@
 									Carte SIM</label>
 								<label><input type="radio" name="connectionChoice-0" value="connect">
 									Connect +</label>
-								<label><input type="radio" name="connectionChoice-0" value="cluster">
-									Grappe de bornes</label>
-							</div>
-
-							<div class="cluster-count-wrapper" style="display: none;">
-								<label>Nombre de bornes à relier :</label>
-								<select class="cluster-count-select">
-									<option value="">-- Sélectionner --</option>
-									{% for i in 1..5 %}
-										<option value="{{ i }}">{{ i }}</option>
-									{% endfor %}
-								</select>
-								<button type="button" class="btn btn-sm btn-primary start-cluster mt-2">Valider</button>
 							</div>
 
 							<div class="sim-blocks-wrapper" data-prototype="{{ prototype|e('html_attr') }}"></div>
@@ -315,120 +351,174 @@
 		{{ form_end(interventionForm) }}
 	</div>
 
+	<div id="customModal" class="custom-modal-overlay">
+		<div class="custom-modal">
+			<div class="custom-modal-header">
+				<h2>Choisir un modèle de borne</h2>
+				<button class="custom-modal-close" onclick="closeModal()">×</button>
+			</div>
+
+			<input type="text" id="searchModelInput" placeholder="Rechercher..." class="custom-modal-search"/>
+
+			<div id="modalModelList" class="custom-modal-list">
+				{% for model in chargingStationModels %}
+					<div class="custom-model-card" data-name="{{ model.model|lower }}">
+						<div class="d-flex align-items-center gap-3 mb-2">
+							<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width: 80px; height: auto; border-radius: 6px;">
+							<div>
+								<strong>{{ model.model }}</strong><br>
+								<small>{{ model.manufacturer.name }}
+									– 7 kW</small>
+							</div>
+						</div>
+						<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius: 8px;">
+						<button class="btn btn-sm btn-outline-success" onclick="selectModel(
+								              '{{ model.id }}',
+								              '{{ model.model }}',
+								              '{{ model.image }}',
+								              '{{ model.manufacturer.image }}',
+								              '{{ model.manufacturer.name }}'
+								            )">
+							Choisir
+						</button>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
 	 <script>
-			  const connectionsWrapper = document.getElementById('connectionsWrapper');
-			  const addConnectionBtn = document.getElementById('addConnectionBtn');
-			
-			  let connectionIndex = 1;
-			  let simIndex = 0;
-			
-			  function setupConnectionGroup(group, index) {
-			    const radioInputs = group.querySelectorAll(`input[name="connectionChoice-${index}"]`);
-			    const simWrapper = group.querySelector('.sim-blocks-wrapper');
-			    const clusterWrapper = group.querySelector('.cluster-count-wrapper');
-			    const clusterSelect = group.querySelector('.cluster-count-select');
-			    const startClusterBtn = group.querySelector('.start-cluster');
-			    const removeConnectionBtn = group.querySelector('.remove-connection-btn');
-			    const prototype = simWrapper.dataset.prototype;
-			
-			    let currentMode = 'sim';
-			
-			    radioInputs.forEach(radio => {
-			      radio.addEventListener('change', e => {
-			        simWrapper.innerHTML = '';
-			        simIndex = 0;
-			        clusterWrapper.style.display = 'none';
-			        currentMode = e.target.value;
-			
-			        if (currentMode === 'sim' || currentMode === 'connect') {
-			          addSimBlock(simWrapper, prototype, true, currentMode);
-			        } else if (currentMode === 'cluster') {
-			          clusterWrapper.style.display = 'block';
-			        }
-			      });
-			
-			      if (radio.checked) radio.dispatchEvent(new Event('change'));
-			    });
-			
-			    startClusterBtn.addEventListener('click', () => {
-			      const count = parseInt(clusterSelect.value);
-			      if (!isNaN(count) && count > 0 && count <= 5) {
-			        simWrapper.innerHTML = '';
-			        for (let i = 0; i < count; i++) {
-			          addSimBlock(simWrapper, prototype, i === 0, 'cluster');
-			        }
-			      }
-			    });
-			
-			    if (index > 0) {
-			      removeConnectionBtn.classList.remove('d-none');
-			      removeConnectionBtn.addEventListener('click', () => group.remove());
-			    }
-			  }
-			
-			function addSimBlock(wrapper, prototype, isFirst, mode) {
-			  let html = prototype.replace(/__name__/g, simIndex++);
-			  const temp = document.createElement('div');
-			  temp.innerHTML = html;
-			  const simWrapper = temp.firstElementChild;
-			
-			  if (mode === 'cluster' && !isFirst) {
-			    const simInput = simWrapper.querySelector('input[name$="[sim]"]');
-			    if (simInput) simInput.closest('div').remove();
-			
-			    const connBoxWrap = simWrapper.querySelector('.connection-box-wrapper');
-			    if (connBoxWrap) connBoxWrap.remove();
-			  }
-			
-                const connectionBox = simWrapper.querySelector('.connection-box');
-                    if (connectionBox) {
-                    connectionBox.classList.remove('blue', 'red', 'green');
-                    connectionBox.innerHTML = '';
-
-                    switch (mode) {
-                        case 'sim':
-                        connectionBox.classList.add('blue');
-                        connectionBox.innerHTML = '<img src="{{ asset('build/images/sim_isometric.png') }}" alt="SIM" style="max-width: 100%; height: auto;" />';
-                        break;
-
-                        case 'connect':
-                        connectionBox.classList.add('red');
-                        connectionBox.innerHTML = '<img src="{{ asset('build/images/modem_isometric.png') }}" alt="Modem" style="max-width: 100%; height: auto;" />';
-                        break;
-
-                        case 'cluster':
-                        connectionBox.classList.add('green');
-                        connectionBox.textContent = 'Connexion Grappe de bornes';
-                        break;
-                    }
-                }
+					  const connectionsWrapper = document.getElementById('connectionsWrapper');
+					  const addConnectionBtn = document.getElementById('addConnectionBtn');
+					
+					  let connectionIndex = 1;
+					  let simIndex = 0;
+					
+					  function setupConnectionGroup(group, index) {
+					    const radioInputs = group.querySelectorAll(`input[name="connectionChoice-${index}"]`);
+					    const simWrapper = group.querySelector('.sim-blocks-wrapper');
+					    const removeConnectionBtn = group.querySelector('.remove-connection-btn');
+					    const prototype = simWrapper.dataset.prototype;
+					
+					    let currentMode = 'sim';
+					
+					    radioInputs.forEach(radio => {
+					      radio.addEventListener('change', e => {
+					        simWrapper.innerHTML = '';
+					        simIndex = 0;
+					        currentMode = e.target.value;
+											
+							if (currentMode === 'sim' || currentMode === 'connect') {
+								addSimBlock(simWrapper, prototype, true, currentMode);
+							}
+					      });
+					
+					      if (radio.checked) radio.dispatchEvent(new Event('change'));
+					    });
+										
+					    if (index > 0) {
+					      removeConnectionBtn.classList.remove('d-none');
+					      removeConnectionBtn.addEventListener('click', () => group.remove());
+					    }
+					  }
+					
+					function addSimBlock(wrapper, prototype, isFirst, mode) {
+					  let html = prototype.replace(/__name__/g, simIndex++);
+					  const temp = document.createElement('div');
+					  temp.innerHTML = html;
+					  const simWrapper = temp.firstElementChild;
+					
+		                const connectionBox = simWrapper.querySelector('.connection-box');
+		                    if (connectionBox) {
+		                    connectionBox.classList.remove('blue', 'red', 'green');
+		                    connectionBox.innerHTML = '';
+		
+		                    switch (mode) {
+		                        case 'sim':
+		                        connectionBox.classList.add('blue');
+		                        connectionBox.innerHTML = '<img src="{{ asset('build/images/sim_isometric.png') }}" alt="SIM" style="max-width: 100%; height: auto;" />';
+		                        break;
+		
+		                        case 'connect':
+		                        connectionBox.classList.add('red');
+		                        connectionBox.innerHTML = '<img src="{{ asset('build/images/modem_isometric.png') }}" alt="Modem" style="max-width: 100%; height: auto;" />';
+		                        break;
+		                    }
+		                }
+					  wrapper.appendChild(simWrapper);
+					}
+					
+					
+					  window.addEventListener('DOMContentLoaded', () => {
+					    const firstGroup = document.querySelector('.connection-group');
+					    setupConnectionGroup(firstGroup, 0);
+					  });
+					
+					  addConnectionBtn.addEventListener('click', () => {
+					    const base = document.querySelector('.connection-group');
+					    const clone = base.cloneNode(true);
+					
+					    clone.querySelectorAll('input[type="radio"]').forEach(input => {
+					      input.name = `connectionChoice-${connectionIndex}`;
+					      input.checked = input.value === 'sim';
+					    });
+					
+					    clone.querySelector('.sim-blocks-wrapper').innerHTML = '';
+					
+					    connectionsWrapper.appendChild(clone);
+					    setupConnectionGroup(clone, connectionIndex++);
+					  });
+					</script>
 
 
-			
-			  wrapper.appendChild(simWrapper);
-			}
-			
-			
-			  window.addEventListener('DOMContentLoaded', () => {
-			    const firstGroup = document.querySelector('.connection-group');
-			    setupConnectionGroup(firstGroup, 0);
-			  });
-			
-			  addConnectionBtn.addEventListener('click', () => {
-			    const base = document.querySelector('.connection-group');
-			    const clone = base.cloneNode(true);
-			
-			    clone.querySelectorAll('input[type="radio"]').forEach(input => {
-			      input.name = `connectionChoice-${connectionIndex}`;
-			      input.checked = input.value === 'sim';
-			    });
-			
-			    clone.querySelector('.sim-blocks-wrapper').innerHTML = '';
-			    clone.querySelector('.cluster-count-select').selectedIndex = 0;
-			
-			    connectionsWrapper.appendChild(clone);
-			    setupConnectionGroup(clone, connectionIndex++);
-			  });
-			</script>
+	 <script>
+	let currentHiddenInput = null;
+	let currentDisplayLabel = null;
+	
+	function openModal(button) {
+	  const wrapper = button.closest('.sim-block');
+	  currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
+	  currentDisplayLabel = wrapper.querySelector('.model-selected');
+	  document.getElementById('customModal').style.display = 'flex';
+	}
+	
+	function closeModal() {
+	  document.getElementById('customModal').style.display = 'none';
+	  currentHiddenInput = null;
+	  currentDisplayLabel = null;
+	}
+	
+	function selectModel(id, name, image, manufacturerImage, manufacturerName) {
+	  const container = document.getElementById('modelSelectContainer');
+	  const input = container.querySelector('input[type="hidden"]');
+	
+	  input.value = id;
+	
+	  container.innerHTML = `
+	    <div class="model-preview">
+	      <img src="/uploads/${image}" class="model-img" alt="Borne" style="max-width: 100px; border-radius: 8px;" />
+	      <img src="/uploads/${manufacturerImage}" class="manufacturer-logo" alt="Fabricant" style="max-width: 80px; margin-left: 10px;" />
+	      <p><strong>${name}</strong> - ${manufacturerName}</p>
+	      <div class="btn-group mt-2">
+	        <button class="btn btn-sm btn-warning" onclick="openCustomModal()">Modifier</button>
+	        <button class="btn btn-sm btn-danger" onclick="resetModelSelection()">Supprimer</button>
+	      </div>
+	    </div>
+	  `;
+	
+	  closeModal();
+	}
+	
+	document.getElementById('searchModelInput').addEventListener('input', function () {
+	  const val = this.value.toLowerCase();
+	  document.querySelectorAll('.custom-model-card').forEach(card => {
+	    card.style.display = card.dataset.name.includes(val) ? 'block' : 'none';
+	  });
+	});
+	
+	document.getElementById('customModal').addEventListener('click', function (e) {
+	  if (e.target === this) closeModal();
+	});
+	</script>
 
-{% endblock %}
+</script>{% endblock %}
