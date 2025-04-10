@@ -282,76 +282,79 @@
 
 
 {% block body %}
-	<div class="wrapper">
+<div class="wrapper">
+	<div class="container">
+		{{ form_start(clientForm, {
+			action: path('app_submit_form'),
+			method: 'POST'
+		}) }}
 
-		<div class="container">
-			{{ form_start(clientForm) }}
 			<h2>Informations Client</h2>
 			{{ form_widget(clientForm) }}
-			{{ form_end(clientForm) }}
-		</div>
 
-		{% set prototype %}
-		<div class="sim-wrapper">
-			<div class="sim-block">
-				{{ form_row(interventionForm.interventions.vars.prototype.sim) }}
-				{{ form_row(interventionForm.interventions.vars.prototype.borneName) }}
-				{{ form_row(interventionForm.interventions.vars.prototype.chargingStation) }}
+{% set prototype %}
+	<div class="sim-wrapper">
+		<div class="sim-block">
+			{{ form_row(interventionForm.interventions.vars.prototype.sim) }}
+			{{ form_row(interventionForm.interventions.vars.prototype.borneName) }}
 
-				<div class="form-group">
-					<label>Modèle de borne</label>
-					<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
-						🔍 Choisir un modèle
-					</button>
-					<input type="hidden" name="intervention_form[interventions][__index__][chargingStation]" class="charging-station-hidden"/>
-					<div class="model-selected text-muted small mt-1"></div>
-				</div>
-
+			<div style="display: none;">
+				{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
+					'attr': { 'class': 'charging-station-hidden' }
+				}) }}
 			</div>
-			<div class="connection-box-wrapper">
-				<div class="connection-box"></div>
+
+			<div class="form-group">
+				<label>Modèle de borne</label>
+				<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
+					🔍 Choisir un modèle
+				</button>
+				<div class="model-selected text-muted small mt-1"></div>
 			</div>
 		</div>
-		{% endset %}
+		<div class="connection-box-wrapper">
+			<div class="connection-box"></div>
+		</div>
+	</div>
+{% endset %}
 
 
-		{{ form_start(interventionForm) }}
+			<h2>Interventions</h2>
+			{{ form_errors(interventionForm) }}
 
-		<div id="connectionsWrapper">
-			<div class="connection-group">
-				<div class="container mb-3 connection-settings full-block">
+			<div id="connectionsWrapper">
+				{% for form_intervention in interventionForm.interventions %}
+					{# Tu peux custom ici si besoin d'afficher les interventions existantes #}
+				{% endfor %}
+				<div class="connection-group">
+					<div class="container mb-3 connection-settings full-block">
+						<button type="button" class="btn btn-danger remove-connection-btn d-none">🗑️</button>
 
-					<button type="button" class="btn btn-danger remove-connection-btn d-none">🗑️</button>
-
-					<div class="connection-content">
-						<div class="connection-form">
-							<h2>Quel moyen de connexion ?</h2>
-							<div class="radio-group">
-								<label><input type="radio" name="connectionChoice-0" value="sim" checked>
-									Carte SIM</label>
-								<label><input type="radio" name="connectionChoice-0" value="connect">
-									Connect +</label>
+						<div class="connection-content">
+							<div class="connection-form">
+								<h2>Quel moyen de connexion ?</h2>
+								<div class="radio-group">
+									<label><input type="radio" name="connectionChoice-0" value="sim" checked> Carte SIM</label>
+									<label><input type="radio" name="connectionChoice-0" value="connect"> Connect +</label>
+								</div>
+								<div class="sim-blocks-wrapper" data-prototype="{{ prototype|e('html_attr') }}"></div>
 							</div>
-
-							<div class="sim-blocks-wrapper" data-prototype="{{ prototype|e('html_attr') }}"></div>
-
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
+			<div class="mt-3">
+				<button type="button" id="addConnectionBtn" class="btn btn-primary">➕ Ajouter une connexion</button>
+			</div>
 
-		<div class="mt-3">
-			<button type="button" id="addConnectionBtn" class="btn btn-primary">➕ Ajouter une connexion</button>
-		</div>
+			<div class="mt-4">
+				<button type="submit" class="btn btn-success">✅ Enregistrer</button>
+			</div>
 
-		<div class="mt-4">
-			<button type="submit" class="btn btn-success">Enregistrer</button>
-		</div>
-
-		{{ form_end(interventionForm) }}
+		{{ form_end(clientForm) }}
 	</div>
+</div>
 
 	<div id="customModal" class="custom-modal-overlay">
 		<div class="custom-modal">
@@ -375,12 +378,12 @@
 						</div>
 						<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius: 8px;">
 						<button class="btn btn-sm btn-outline-success" onclick="selectModel(
-								              '{{ model.id }}',
-								              '{{ model.model }}',
-								              '{{ model.image }}',
-								              '{{ model.manufacturer.image }}',
-								              '{{ model.manufacturer.name }}'
-								            )">
+																              '{{ model.id }}',
+																              '{{ model.model }}',
+																              '{{ model.image }}',
+																              '{{ model.manufacturer.image }}',
+																              '{{ model.manufacturer.name }}'
+																            )">
 							Choisir
 						</button>
 					</div>
@@ -390,145 +393,146 @@
 	</div>
 
 	 <script>
-					  const connectionsWrapper = document.getElementById('connectionsWrapper');
-					  const addConnectionBtn = document.getElementById('addConnectionBtn');
-					
-					  let connectionIndex = 1;
-					  let simIndex = 0;
-					
-					  function setupConnectionGroup(group, index) {
-					    const radioInputs = group.querySelectorAll(`input[name="connectionChoice-${index}"]`);
-					    const simWrapper = group.querySelector('.sim-blocks-wrapper');
-					    const removeConnectionBtn = group.querySelector('.remove-connection-btn');
-					    const prototype = simWrapper.dataset.prototype;
-					
-					    let currentMode = 'sim';
-					
-					    radioInputs.forEach(radio => {
-					      radio.addEventListener('change', e => {
-					        simWrapper.innerHTML = '';
-					        simIndex = 0;
-					        currentMode = e.target.value;
+						  const connectionsWrapper = document.getElementById('connectionsWrapper');
+						  const addConnectionBtn = document.getElementById('addConnectionBtn');
+						
+						  let connectionIndex = 1;
+						  let simIndex = 0;
+						
+						  function setupConnectionGroup(group, index) {
+						    const radioInputs = group.querySelectorAll(`input[name="connectionChoice-${index}"]`);
+						    const simWrapper = group.querySelector('.sim-blocks-wrapper');
+						    const removeConnectionBtn = group.querySelector('.remove-connection-btn');
+						    const prototype = simWrapper.dataset.prototype;
+						
+						    let currentMode = 'sim';
+						
+						    radioInputs.forEach(radio => {
+						      radio.addEventListener('change', e => {
+						        simWrapper.innerHTML = '';
+						        simIndex = 0;
+						        currentMode = e.target.value;
+												
+								if (currentMode === 'sim' || currentMode === 'connect') {
+									addSimBlock(simWrapper, prototype, true, currentMode);
+								}
+						      });
+						
+						      if (radio.checked) radio.dispatchEvent(new Event('change'));
+						    });
 											
-							if (currentMode === 'sim' || currentMode === 'connect') {
-								addSimBlock(simWrapper, prototype, true, currentMode);
-							}
-					      });
-					
-					      if (radio.checked) radio.dispatchEvent(new Event('change'));
-					    });
-										
-					    if (index > 0) {
-					      removeConnectionBtn.classList.remove('d-none');
-					      removeConnectionBtn.addEventListener('click', () => group.remove());
-					    }
-					  }
-					
-					function addSimBlock(wrapper, prototype, isFirst, mode) {
-					  let html = prototype.replace(/__name__/g, simIndex++);
-					  const temp = document.createElement('div');
-					  temp.innerHTML = html;
-					  const simWrapper = temp.firstElementChild;
-					
-		                const connectionBox = simWrapper.querySelector('.connection-box');
-		                    if (connectionBox) {
-		                    connectionBox.classList.remove('blue', 'red', 'green');
-		                    connectionBox.innerHTML = '';
-		
-		                    switch (mode) {
-		                        case 'sim':
-		                        connectionBox.classList.add('blue');
-		                        connectionBox.innerHTML = '<img src="{{ asset('build/images/sim_isometric.png') }}" alt="SIM" style="max-width: 100%; height: auto;" />';
-		                        break;
-		
-		                        case 'connect':
-		                        connectionBox.classList.add('red');
-		                        connectionBox.innerHTML = '<img src="{{ asset('build/images/modem_isometric.png') }}" alt="Modem" style="max-width: 100%; height: auto;" />';
-		                        break;
-		                    }
-		                }
-					  wrapper.appendChild(simWrapper);
-					}
-					
-					
-					  window.addEventListener('DOMContentLoaded', () => {
-					    const firstGroup = document.querySelector('.connection-group');
-					    setupConnectionGroup(firstGroup, 0);
-					  });
-					
-					  addConnectionBtn.addEventListener('click', () => {
-					    const base = document.querySelector('.connection-group');
-					    const clone = base.cloneNode(true);
-					
-					    clone.querySelectorAll('input[type="radio"]').forEach(input => {
-					      input.name = `connectionChoice-${connectionIndex}`;
-					      input.checked = input.value === 'sim';
-					    });
-					
-					    clone.querySelector('.sim-blocks-wrapper').innerHTML = '';
-					
-					    connectionsWrapper.appendChild(clone);
-					    setupConnectionGroup(clone, connectionIndex++);
-					  });
-					</script>
+						    if (index > 0) {
+						      removeConnectionBtn.classList.remove('d-none');
+						      removeConnectionBtn.addEventListener('click', () => group.remove());
+						    }
+						  }
+						
+						function addSimBlock(wrapper, prototype, isFirst, mode) {
+						  let html = prototype.replace(/__name__/g, simIndex++);
+						  const temp = document.createElement('div');
+						  temp.innerHTML = html;
+						  const simWrapper = temp.firstElementChild;
+						
+			                const connectionBox = simWrapper.querySelector('.connection-box');
+			                    if (connectionBox) {
+			                    connectionBox.classList.remove('blue', 'red', 'green');
+			                    connectionBox.innerHTML = '';
+			
+			                    switch (mode) {
+			                        case 'sim':
+			                        connectionBox.classList.add('blue');
+			                        connectionBox.innerHTML = '<img src="{{ asset('build/images/sim_isometric.png') }}" alt="SIM" style="max-width: 100%; height: auto;" />';
+			                        break;
+			
+			                        case 'connect':
+			                        connectionBox.classList.add('red');
+			                        connectionBox.innerHTML = '<img src="{{ asset('build/images/modem_isometric.png') }}" alt="Modem" style="max-width: 100%; height: auto;" />';
+			                        break;
+			                    }
+			                }
+						  wrapper.appendChild(simWrapper);
+						}
+						
+						
+						  window.addEventListener('DOMContentLoaded', () => {
+						    const firstGroup = document.querySelector('.connection-group');
+						    setupConnectionGroup(firstGroup, 0);
+						  });
+						
+						  addConnectionBtn.addEventListener('click', () => {
+						    const base = document.querySelector('.connection-group');
+						    const clone = base.cloneNode(true);
+						
+						    clone.querySelectorAll('input[type="radio"]').forEach(input => {
+						      input.name = `connectionChoice-${connectionIndex}`;
+						      input.checked = input.value === 'sim';
+						    });
+						
+						    clone.querySelector('.sim-blocks-wrapper').innerHTML = '';
+						
+						    connectionsWrapper.appendChild(clone);
+						    setupConnectionGroup(clone, connectionIndex++);
+						  });
+						</script>
 
 
 	 <script>
-let currentHiddenInput = null;
-let currentDisplayLabel = null;
-let currentChooseBtn = null;
-
-function openModal(button) {
-  const wrapper = button.closest('.sim-block');
-  currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
-  currentDisplayLabel = wrapper.querySelector('.model-selected');
-  currentChooseBtn = wrapper.querySelector('.choose-model-btn');
-  document.getElementById('customModal').style.display = 'flex';
-}
-
-function closeModal() {
-  document.getElementById('customModal').style.display = 'none';
-  currentHiddenInput = null;
-  currentDisplayLabel = null;
-  currentChooseBtn = null;
-}
-
-function selectModel(id, name, image, manufacturerImage, manufacturerName) {
-  if (!currentHiddenInput || !currentDisplayLabel || !currentChooseBtn) return;
-
-  currentHiddenInput.value = id;
-  currentChooseBtn.classList.add('d-none'); // cacher le bouton
-
-  currentDisplayLabel.innerHTML = `
-    <div class="model-preview d-flex align-items-center gap-3">
-      <img src="/uploads/${image}" alt="Borne" style="max-width: 80px; border-radius: 6px;" />
-      <img src="/uploads/${manufacturerImage}" alt="Fabricant" style="max-width: 60px;" />
-      <div>
-        <strong>${name}</strong><br>
-        <small>${manufacturerName}</small>
-        <div class="btn-group mt-2">
-          <button type="button" class="btn btn-sm btn-danger" onclick="resetModelSelection(this)">Supprimer</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  closeModal();
-}
-
-function resetModelSelection(button) {
-  const wrapper = button.closest('.sim-block');
-  if (!wrapper) return;
-
-  const input = wrapper.querySelector('input.charging-station-hidden');
-  const display = wrapper.querySelector('.model-selected');
-  const chooseBtn = wrapper.querySelector('.choose-model-btn');
-
-  if (input) input.value = '';
-  if (display) display.innerHTML = '';
-  if (chooseBtn) chooseBtn.classList.remove('d-none');
-}
-
-
-</script>
+	let currentHiddenInput = null;
+	let currentDisplayLabel = null;
+	let currentChooseBtn = null;
+	
+	function openModal(button) {
+	  const wrapper = button.closest('.sim-block');
+	  currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
+	  currentDisplayLabel = wrapper.querySelector('.model-selected');
+	  currentChooseBtn = wrapper.querySelector('.choose-model-btn');
+	  document.getElementById('customModal').style.display = 'flex';
+	}
+	
+	function closeModal() {
+	  document.getElementById('customModal').style.display = 'none';
+	  currentHiddenInput = null;
+	  currentDisplayLabel = null;
+	  currentChooseBtn = null;
+	}
+	
+	function selectModel(id, name, image, manufacturerImage, manufacturerName) {
+	  if (!currentHiddenInput || !currentDisplayLabel || !currentChooseBtn) return;
+	
+	  currentHiddenInput.value = id;
+	  currentChooseBtn.classList.add('d-none');
+	  currentHiddenInput.name = currentHiddenInput.name.replace('__index__', simIndex - 1);
+	
+	  currentDisplayLabel.innerHTML = `
+	    <div class="model-preview d-flex align-items-center gap-3">
+	      <img src="/uploads/${image}" alt="Borne" style="max-width: 80px; border-radius: 6px;" />
+	      <img src="/uploads/${manufacturerImage}" alt="Fabricant" style="max-width: 60px;" />
+	      <div>
+	        <strong>${name}</strong><br>
+	        <small>${manufacturerName}</small>
+	        <div class="btn-group mt-2">
+	          <button type="button" class="btn btn-sm btn-danger" onclick="resetModelSelection(this)">Supprimer</button>
+	        </div>
+	      </div>
+	    </div>
+	  `;
+	
+	  closeModal();
+	}
+	
+	function resetModelSelection(button) {
+	  const wrapper = button.closest('.sim-block');
+	  if (!wrapper) return;
+	
+	  const input = wrapper.querySelector('input.charging-station-hidden');
+	  const display = wrapper.querySelector('.model-selected');
+	  const chooseBtn = wrapper.querySelector('.choose-model-btn');
+	
+	  if (input) input.value = '';
+	  if (display) display.innerHTML = '';
+	  if (chooseBtn) chooseBtn.classList.remove('d-none');
+	}
+	
+	
+	</script>
 {% endblock %}

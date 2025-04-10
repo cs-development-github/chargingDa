@@ -76,32 +76,39 @@ class HomeController extends AbstractController
     }
 
     #[Route('/dashboard/ajout-client', name: 'app_add_client')]
-    public function addClient(Request $request, EntityManagerInterface $entityManager, ChargingStationsRepository $chargingStationsRepository): Response
-    {
+    public function addClient(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        ChargingStationsRepository $chargingStationsRepository
+    ): Response {
         $user = $this->getUser();
     
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
     
-        // Création du client + formulaire
         $client = new Client();
         $clientForm = $this->createForm(ClientFormType::class, $client);
         $clientForm->handleRequest($request);
     
         $interventionForm = $this->createForm(InterventionFormType::class);
         $interventionForm->handleRequest($request);
-
-        $chargingStationModels = $chargingStationsRepository->findAll();
     
-        if (
-            $clientForm->isSubmitted() && $clientForm->isValid() &&
-            $interventionForm->isSubmitted() && $interventionForm->isValid()
-        ) {
+        $chargingStationModels = $chargingStationsRepository->findAll();
+
+    
+        if ($clientForm->isSubmitted()) {
             foreach ($interventionForm->get('interventions') as $interventionField) {
                 $intervention = $interventionField->getData();
+    
+                if (!$intervention || !$intervention->getChargingStation()) {
+                    $this->addFlash('danger', 'Un modèle de borne est manquant.');
+                    return $this->redirectToRoute('app_add_client');
+                }
+    
                 $intervention->setClient($client);
                 $intervention->setInstallator($user);
+    
                 $entityManager->persist($intervention);
             }
     
