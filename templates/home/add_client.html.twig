@@ -300,7 +300,9 @@
 
 				<div class="form-group">
 					<label>Modèle de borne</label>
-					<button type="button" class="btn btn-primary" onclick="openModal(this)">🔍 Choisir un modèle</button>
+					<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
+						🔍 Choisir un modèle
+					</button>
 					<input type="hidden" name="intervention_form[interventions][__index__][chargingStation]" class="charging-station-hidden"/>
 					<div class="model-selected text-muted small mt-1"></div>
 				</div>
@@ -472,53 +474,61 @@
 
 
 	 <script>
-	let currentHiddenInput = null;
-	let currentDisplayLabel = null;
-	
-	function openModal(button) {
-	  const wrapper = button.closest('.sim-block');
-	  currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
-	  currentDisplayLabel = wrapper.querySelector('.model-selected');
-	  document.getElementById('customModal').style.display = 'flex';
-	}
-	
-	function closeModal() {
-	  document.getElementById('customModal').style.display = 'none';
-	  currentHiddenInput = null;
-	  currentDisplayLabel = null;
-	}
-	
-	function selectModel(id, name, image, manufacturerImage, manufacturerName) {
-	  const container = document.getElementById('modelSelectContainer');
-	  const input = container.querySelector('input[type="hidden"]');
-	
-	  input.value = id;
-	
-	  container.innerHTML = `
-	    <div class="model-preview">
-	      <img src="/uploads/${image}" class="model-img" alt="Borne" style="max-width: 100px; border-radius: 8px;" />
-	      <img src="/uploads/${manufacturerImage}" class="manufacturer-logo" alt="Fabricant" style="max-width: 80px; margin-left: 10px;" />
-	      <p><strong>${name}</strong> - ${manufacturerName}</p>
-	      <div class="btn-group mt-2">
-	        <button class="btn btn-sm btn-warning" onclick="openCustomModal()">Modifier</button>
-	        <button class="btn btn-sm btn-danger" onclick="resetModelSelection()">Supprimer</button>
-	      </div>
-	    </div>
-	  `;
-	
-	  closeModal();
-	}
-	
-	document.getElementById('searchModelInput').addEventListener('input', function () {
-	  const val = this.value.toLowerCase();
-	  document.querySelectorAll('.custom-model-card').forEach(card => {
-	    card.style.display = card.dataset.name.includes(val) ? 'block' : 'none';
-	  });
-	});
-	
-	document.getElementById('customModal').addEventListener('click', function (e) {
-	  if (e.target === this) closeModal();
-	});
-	</script>
+let currentHiddenInput = null;
+let currentDisplayLabel = null;
+let currentChooseBtn = null;
 
-</script>{% endblock %}
+function openModal(button) {
+  const wrapper = button.closest('.sim-block');
+  currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
+  currentDisplayLabel = wrapper.querySelector('.model-selected');
+  currentChooseBtn = wrapper.querySelector('.choose-model-btn');
+  document.getElementById('customModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('customModal').style.display = 'none';
+  currentHiddenInput = null;
+  currentDisplayLabel = null;
+  currentChooseBtn = null;
+}
+
+function selectModel(id, name, image, manufacturerImage, manufacturerName) {
+  if (!currentHiddenInput || !currentDisplayLabel || !currentChooseBtn) return;
+
+  currentHiddenInput.value = id;
+  currentChooseBtn.classList.add('d-none'); // cacher le bouton
+
+  currentDisplayLabel.innerHTML = `
+    <div class="model-preview d-flex align-items-center gap-3">
+      <img src="/uploads/${image}" alt="Borne" style="max-width: 80px; border-radius: 6px;" />
+      <img src="/uploads/${manufacturerImage}" alt="Fabricant" style="max-width: 60px;" />
+      <div>
+        <strong>${name}</strong><br>
+        <small>${manufacturerName}</small>
+        <div class="btn-group mt-2">
+          <button type="button" class="btn btn-sm btn-danger" onclick="resetModelSelection(this)">Supprimer</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  closeModal();
+}
+
+function resetModelSelection(button) {
+  const wrapper = button.closest('.sim-block');
+  if (!wrapper) return;
+
+  const input = wrapper.querySelector('input.charging-station-hidden');
+  const display = wrapper.querySelector('.model-selected');
+  const chooseBtn = wrapper.querySelector('.choose-model-btn');
+
+  if (input) input.value = '';
+  if (display) display.innerHTML = '';
+  if (chooseBtn) chooseBtn.classList.remove('d-none');
+}
+
+
+</script>
+{% endblock %}
