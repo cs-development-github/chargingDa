@@ -1,0 +1,538 @@
+{% extends 'base.html.twig' %}
+{% block style %}
+	<style>
+		body {
+			background-color: #f4f6f8;
+			font-family: 'Segoe UI', sans-serif;
+		}
+
+		.wrapper {
+			padding: 30px;
+			max-width: 1100px;
+			margin: auto;
+		}
+
+		.container {
+			background: #fff;
+			border-radius: 16px;
+			padding: 30px;
+			margin-bottom: 30px;
+			box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+		}
+
+		h2,
+		h3 {
+			margin-bottom: 20px;
+			color: #333;
+		}
+
+		input[type="text"],
+		input[type="email"],
+		input[type="number"],
+		input[type="password"],
+		select,
+		textarea {
+			width: 100%;
+			padding: 10px 15px;
+			border: 1px solid #ced4da;
+			border-radius: 8px;
+			background-color: #fff;
+			box-shadow: none;
+			font-size: 1rem;
+			transition: all 0.2s ease-in-out;
+			margin-bottom: 15px;
+		}
+
+		input:focus,
+		select:focus,
+		textarea:focus {
+			outline: none;
+			border-color: transparent;
+			box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.35);
+		}
+
+		label {
+			font-weight: 600;
+			margin-bottom: 5px;
+			display: inline-block;
+			color: #495057;
+		}
+
+		form .form-group,
+		form div:not(.radio-group):not(.connection-box-wrapper):not(.sim-block):not(.connection-content) {
+			margin-bottom: 20px;
+		}
+
+		.connection-group .container {
+			position: relative;
+			padding: 20px 25px;
+		}
+
+		.connection-group .container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 6px;
+			height: 100%;
+			background: linear-gradient(to bottom, #ff4081, #ff8c00);
+			border-top-left-radius: 16px;
+			border-bottom-left-radius: 16px;
+		}
+
+		.connection-group {
+			position: relative;
+		}
+
+		.remove-connection-btn {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			z-index: 10;
+			padding: 6px 10px;
+			font-size: 14px;
+			border-radius: 50%;
+			width: 36px;
+			height: 36px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.remove-connection-btn:hover {
+			transform: scale(1.05);
+		}
+
+		.radio-group {
+			display: flex;
+			gap: 15px;
+			margin-bottom: 20px;
+		}
+
+		.radio-group input[type="radio"] {
+			display: none;
+		}
+
+		.radio-group label {
+			background: #e9ecef;
+			border-radius: 30px;
+			padding: 10px 20px;
+			cursor: pointer;
+			font-weight: 500;
+			color: #333;
+			transition: all 0.2s ease;
+		}
+
+		.radio-group input[type="radio"]:checked + label {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			color: #fff;
+		}
+
+		.radio-group label:hover {
+			background-color: #dee2e6;
+		}
+
+		.sim-block {
+			margin-top: 20px;
+			padding: 20px;
+			border-radius: 12px;
+		}
+
+		.sim-block h3 {
+			font-size: 1.1rem;
+			margin-top: 0;
+		}
+
+		.green {
+			background-color: #198754 !important;
+		}
+		.red {
+			background-color: #dc3545 !important;
+		}
+
+		.btn {
+			border-radius: 30px !important;
+			padding: 10px 20px;
+			font-weight: 500;
+			transition: all 0.2s ease-in-out;
+		}
+
+		.btn-primary {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border: none;
+			color: white;
+		}
+
+		.btn-danger {
+			background: #dc3545;
+			border: none;
+			color: white;
+		}
+
+		.btn-success {
+			background: #198754;
+			border: none;
+			color: white;
+		}
+
+		.btn:hover {
+			transform: translateY(-1px);
+			opacity: 0.95;
+		}
+
+		.sim-wrapper {
+			display: flex;
+			gap: 20px;
+			align-items: flex-start;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+
+		.sim-block {
+			flex: 1;
+		}
+
+		.connection-box-wrapper {
+			width: 250px;
+			flex-shrink: 0;
+		}
+
+
+		.connection-box {
+			color: white;
+			border-radius: 8px;
+			width: 500px;
+			text-align: center;
+		}
+
+		.connection-content {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 30px;
+		}
+
+		.connection-form {
+			flex: 1;
+		}
+
+		@media(max-width: 768px) {
+			.radio-group {
+				flex-direction: column;
+			}
+		}
+	</style>
+
+
+	<style>
+		.custom-modal-overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.6);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+		}
+
+		.custom-modal {
+			background: white;
+			padding: 20px;
+			border-radius: 12px;
+			width: 600px;
+			max-width: 95%;
+			max-height: 90vh;
+			overflow-y: auto;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+		}
+
+		.custom-modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.custom-modal-close {
+			background: none;
+			border: none;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		.custom-modal-search {
+			width: 100%;
+			margin-top: 10px;
+			padding: 8px;
+			border-radius: 8px;
+			border: 1px solid #ccc;
+		}
+
+		.custom-modal-list {
+			margin-top: 15px;
+		}
+
+		.custom-model-card {
+			padding: 10px;
+			margin-bottom: 10px;
+			border: 1px solid #ddd;
+			border-radius: 8px;
+		}
+	</style>
+{% endblock %}
+
+
+{% block body %}
+<div class="wrapper">
+	<div class="container">
+		{{ form_start(clientForm, {
+			action: path('app_submit_form'),
+			method: 'POST'
+		}) }}
+
+			<h2>Informations Client</h2>
+			{{ form_widget(clientForm) }}
+
+{% set prototype %}
+	<div class="sim-wrapper">
+		<div class="sim-block">
+			{{ form_row(interventionForm.interventions.vars.prototype.sim) }}
+			{{ form_row(interventionForm.interventions.vars.prototype.borneName) }}
+
+			<div style="display: none;">
+				{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
+					'attr': { 'class': 'charging-station-hidden' }
+				}) }}
+			</div>
+
+			<div class="form-group">
+				<label>Modèle de borne</label>
+				<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
+					🔍 Choisir un modèle
+				</button>
+				<div class="model-selected text-muted small mt-1"></div>
+			</div>
+		</div>
+		<div class="connection-box-wrapper">
+			<div class="connection-box"></div>
+		</div>
+	</div>
+{% endset %}
+
+
+			<h2>Interventions</h2>
+			{{ form_errors(interventionForm) }}
+
+			<div id="connectionsWrapper">
+				{% for form_intervention in interventionForm.interventions %}
+					{# Tu peux custom ici si besoin d'afficher les interventions existantes #}
+				{% endfor %}
+				<div class="connection-group">
+					<div class="container mb-3 connection-settings full-block">
+						<button type="button" class="btn btn-danger remove-connection-btn d-none">🗑️</button>
+
+						<div class="connection-content">
+							<div class="connection-form">
+								<h2>Quel moyen de connexion ?</h2>
+								<div class="radio-group">
+									<label><input type="radio" name="connectionChoice-0" value="sim" checked> Carte SIM</label>
+									<label><input type="radio" name="connectionChoice-0" value="connect"> Connect +</label>
+								</div>
+								<div class="sim-blocks-wrapper" data-prototype="{{ prototype|e('html_attr') }}"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="mt-3">
+				<button type="button" id="addConnectionBtn" class="btn btn-primary">➕ Ajouter une connexion</button>
+			</div>
+
+			<div class="mt-4">
+				<button type="submit" class="btn btn-success">✅ Enregistrer</button>
+			</div>
+
+		{{ form_end(clientForm) }}
+	</div>
+</div>
+
+	<div id="customModal" class="custom-modal-overlay">
+		<div class="custom-modal">
+			<div class="custom-modal-header">
+				<h2>Choisir un modèle de borne</h2>
+				<button class="custom-modal-close" onclick="closeModal()">×</button>
+			</div>
+
+			<input type="text" id="searchModelInput" placeholder="Rechercher..." class="custom-modal-search"/>
+
+			<div id="modalModelList" class="custom-modal-list">
+				{% for model in chargingStationModels %}
+					<div class="custom-model-card" data-name="{{ model.model|lower }}">
+						<div class="d-flex align-items-center gap-3 mb-2">
+							<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width: 80px; height: auto; border-radius: 6px;">
+							<div>
+								<strong>{{ model.model }}</strong><br>
+								<small>{{ model.manufacturer.name }}
+									– 7 kW</small>
+							</div>
+						</div>
+						<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius: 8px;">
+						<button class="btn btn-sm btn-outline-success" onclick="selectModel(
+																              '{{ model.id }}',
+																              '{{ model.model }}',
+																              '{{ model.image }}',
+																              '{{ model.manufacturer.image }}',
+																              '{{ model.manufacturer.name }}'
+																            )">
+							Choisir
+						</button>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+
+	 <script>
+						  const connectionsWrapper = document.getElementById('connectionsWrapper');
+						  const addConnectionBtn = document.getElementById('addConnectionBtn');
+						
+						  let connectionIndex = 1;
+						  let simIndex = 0;
+						
+						  function setupConnectionGroup(group, index) {
+						    const radioInputs = group.querySelectorAll(`input[name="connectionChoice-${index}"]`);
+						    const simWrapper = group.querySelector('.sim-blocks-wrapper');
+						    const removeConnectionBtn = group.querySelector('.remove-connection-btn');
+						    const prototype = simWrapper.dataset.prototype;
+						
+						    let currentMode = 'sim';
+						
+						    radioInputs.forEach(radio => {
+						      radio.addEventListener('change', e => {
+						        simWrapper.innerHTML = '';
+						        simIndex = 0;
+						        currentMode = e.target.value;
+												
+								if (currentMode === 'sim' || currentMode === 'connect') {
+									addSimBlock(simWrapper, prototype, true, currentMode);
+								}
+						      });
+						
+						      if (radio.checked) radio.dispatchEvent(new Event('change'));
+						    });
+											
+						    if (index > 0) {
+						      removeConnectionBtn.classList.remove('d-none');
+						      removeConnectionBtn.addEventListener('click', () => group.remove());
+						    }
+						  }
+						
+						function addSimBlock(wrapper, prototype, isFirst, mode) {
+						  let html = prototype.replace(/__name__/g, simIndex++);
+						  const temp = document.createElement('div');
+						  temp.innerHTML = html;
+						  const simWrapper = temp.firstElementChild;
+						
+			                const connectionBox = simWrapper.querySelector('.connection-box');
+			                    if (connectionBox) {
+			                    connectionBox.classList.remove('blue', 'red', 'green');
+			                    connectionBox.innerHTML = '';
+			
+			                    switch (mode) {
+			                        case 'sim':
+			                        connectionBox.classList.add('blue');
+			                        connectionBox.innerHTML = '<img src="{{ asset('build/images/sim_isometric.png') }}" alt="SIM" style="max-width: 100%; height: auto;" />';
+			                        break;
+			
+			                        case 'connect':
+			                        connectionBox.classList.add('red');
+			                        connectionBox.innerHTML = '<img src="{{ asset('build/images/modem_isometric.png') }}" alt="Modem" style="max-width: 100%; height: auto;" />';
+			                        break;
+			                    }
+			                }
+						  wrapper.appendChild(simWrapper);
+						}
+						
+						
+						  window.addEventListener('DOMContentLoaded', () => {
+						    const firstGroup = document.querySelector('.connection-group');
+						    setupConnectionGroup(firstGroup, 0);
+						  });
+						
+						  addConnectionBtn.addEventListener('click', () => {
+						    const base = document.querySelector('.connection-group');
+						    const clone = base.cloneNode(true);
+						
+						    clone.querySelectorAll('input[type="radio"]').forEach(input => {
+						      input.name = `connectionChoice-${connectionIndex}`;
+						      input.checked = input.value === 'sim';
+						    });
+						
+						    clone.querySelector('.sim-blocks-wrapper').innerHTML = '';
+						
+						    connectionsWrapper.appendChild(clone);
+						    setupConnectionGroup(clone, connectionIndex++);
+						  });
+						</script>
+
+
+	 <script>
+	let currentHiddenInput = null;
+	let currentDisplayLabel = null;
+	let currentChooseBtn = null;
+	
+	function openModal(button) {
+	  const wrapper = button.closest('.sim-block');
+	  currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
+	  currentDisplayLabel = wrapper.querySelector('.model-selected');
+	  currentChooseBtn = wrapper.querySelector('.choose-model-btn');
+	  document.getElementById('customModal').style.display = 'flex';
+	}
+	
+	function closeModal() {
+	  document.getElementById('customModal').style.display = 'none';
+	  currentHiddenInput = null;
+	  currentDisplayLabel = null;
+	  currentChooseBtn = null;
+	}
+	
+	function selectModel(id, name, image, manufacturerImage, manufacturerName) {
+	  if (!currentHiddenInput || !currentDisplayLabel || !currentChooseBtn) return;
+	
+	  currentHiddenInput.value = id;
+	  currentChooseBtn.classList.add('d-none');
+	  currentHiddenInput.name = currentHiddenInput.name.replace('__index__', simIndex - 1);
+	
+	  currentDisplayLabel.innerHTML = `
+	    <div class="model-preview d-flex align-items-center gap-3">
+	      <img src="/uploads/${image}" alt="Borne" style="max-width: 80px; border-radius: 6px;" />
+	      <img src="/uploads/${manufacturerImage}" alt="Fabricant" style="max-width: 60px;" />
+	      <div>
+	        <strong>${name}</strong><br>
+	        <small>${manufacturerName}</small>
+	        <div class="btn-group mt-2">
+	          <button type="button" class="btn btn-sm btn-danger" onclick="resetModelSelection(this)">Supprimer</button>
+	        </div>
+	      </div>
+	    </div>
+	  `;
+	
+	  closeModal();
+	}
+	
+	function resetModelSelection(button) {
+	  const wrapper = button.closest('.sim-block');
+	  if (!wrapper) return;
+	
+	  const input = wrapper.querySelector('input.charging-station-hidden');
+	  const display = wrapper.querySelector('.model-selected');
+	  const chooseBtn = wrapper.querySelector('.choose-model-btn');
+	
+	  if (input) input.value = '';
+	  if (display) display.innerHTML = '';
+	  if (chooseBtn) chooseBtn.classList.remove('d-none');
+	}
+	
+	
+	</script>
+{% endblock %}

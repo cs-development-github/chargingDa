@@ -15,8 +15,13 @@
     <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     {{ encore_entry_link_tags('app') }}
 
+
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
+
+{% block style %} 
+
+{% endblock %}
 
 <body>
     {% include 'bars/navbar.html.twig' %}
