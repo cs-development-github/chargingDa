@@ -1,0 +1,222 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Interventions
+{% endblock %}
+
+{% block body %}
+	<style>
+		.container {
+			background-color: white !important;
+			padding: 20px;
+			margin-top: 200px;
+		}
+
+		.header-search {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 1rem;
+		}
+
+		.header-search .left,
+		.header-search .right {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+		}
+
+		.header-search .left {
+			flex: 1 1 100%;
+		}
+
+		@media(min-width: 768px) {
+			.header-search .left {
+				flex: 1;
+			}
+		}
+
+		.header-search h4 {
+			margin: 0;
+			font-weight: bold;
+		}
+
+		.header-search input.form-control {
+			max-width: 250px;
+			border-radius: 10px;
+		}
+
+		.header-search button {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border-radius: 10px;
+			color: white;
+			border: none;
+			padding: 0.5rem 1rem;
+			margin-top: 0.5rem;
+		}
+
+		@media(min-width: 768px) {
+			.header-search button {
+				margin-top: 0;
+			}
+		}
+
+		.station-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-weight: bold;
+			color: #6c757d;
+			text-transform: uppercase;
+			padding: 15px;
+			margin-bottom: 10px;
+			border-bottom: 2px solid #ddd;
+		}
+
+		.station-header span {
+			flex: 1;
+			text-align: center;
+		}
+
+		.station-card {
+			background-color: white;
+			border-radius: 10px;
+			padding: 15px;
+			box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+			margin-bottom: 15px;
+		}
+
+		.card-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.station-info {
+			flex: 1;
+			text-align: center;
+		}
+
+		.btn-action {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border: none;
+			border-radius: 10px;
+			color: white;
+			padding: 6px 12px;
+			font-size: 0.9rem;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.btn-action:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+		}
+
+		.modal-content {
+			border-radius: 12px;
+			box-shadow: rgba(0, 0, 0, 0.2) 0 10px 30px;
+			border: none;
+		}
+
+		.modal-header {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			color: white;
+			border-top-left-radius: 12px;
+			border-top-right-radius: 12px;
+		}
+
+		.btn-close {
+			filter: invert(1);
+		}
+
+		.form-control {
+			border-radius: 8px;
+			padding: 10px;
+		}
+
+		.btn-save {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border-radius: 10px;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+		}
+
+		.d-md-block {
+			display: block !important;
+		}
+
+		.d-md-none {
+			display: none !important;
+		}
+
+		.station-card:hover {
+			background-color: #f9f9f9;
+			cursor: pointer;
+		}
+
+		@media(max-width: 767.98px) {
+			.d-md-block {
+				display: none !important;
+			}
+
+			.d-md-none {
+				display: block !important;
+			}
+		}
+	</style>
+	{% if is_granted('ROLE_ADMIN') %}
+		<div class="container">
+			<form method="get" class="header-search mb-4">
+				<div class="left">
+					<input type="text" name="borneName" value="{{ filters.borneName }}" class="form-control me-2" placeholder="Nom de la borne">
+					<input type="text" name="clientName" value="{{ filters.clientName }}" class="form-control me-2" placeholder="Nom du client">
+					<input type="text" name="reference" value="{{ filters.reference }}" class="form-control me-2" placeholder="Référence">
+				</div>
+				<div class="right">
+					<button type="submit">Filtrer</button>
+				</div>
+			</form>
+
+			<div class="station-header">
+				<span>Nombre de borne</span>
+				<span>Client</span>
+				<span>Installateur</span>
+			</div>
+
+			{% for group in pagination %}
+				{% set intervention = group.intervention %}
+				<a href="{{ path('intervention_client_show', { id: group.anyInterventionId }) }}" style="text-decoration: none; color: inherit;">
+					<div class="station-card">
+						<div class="card-content">
+
+							<div class="station-info">
+								<small>{{ group.nbBornes }}
+									borne{{ group.nbBornes > 1 ? 's' }}</small>
+							</div>
+
+							<div class="station-info">
+								📧
+								{{ intervention.client.email ?? '—' }}
+							</div>
+
+							<div class="station-info">
+								👷
+								{{ intervention.installator.name ?? 'Inconnu' }}
+								{{ intervention.installator.lastname ?? '' }}
+							</div>
+
+						</div>
+					</div>
+				</a>
+			{% else %}
+				<p>Aucune intervention trouvée.</p>
+			{% endfor %}
+
+
+			<div class="mt-4">
+				{{ knp_pagination_render(pagination) }}
+			</div>
+		</div>
+	{% endif %}
+{% endblock %}

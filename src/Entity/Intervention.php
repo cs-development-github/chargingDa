@@ -28,6 +28,9 @@ class Intervention
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $borneName = null;
 
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $reference = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -89,6 +92,18 @@ class Intervention
     public function setBorneName(string $borneName): static
     {
         $this->borneName = $borneName;
+
+        return $this;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?string $reference): static
+    {
+        $this->reference = $reference;
 
         return $this;
     }

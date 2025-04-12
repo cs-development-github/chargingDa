@@ -24,7 +24,7 @@
                 <li><a class="dropdown-item" href="{{ path('app_account') }}">Mon compte</a></li>
                 <li><a class="dropdown-item" href="{{ path('app_charging_stations') }}">Bornes de recharge</a></li>
                 {% if is_granted('ROLE_ADMIN') %}
-
+                <li><a class="dropdown-item" href="{{ path('app_intervention') }}">Interventions</a></li>
                 {% endif %}
                 <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
             </ul>
