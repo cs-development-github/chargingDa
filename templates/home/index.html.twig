@@ -118,35 +118,91 @@
 					<strong>{{ client.email }}</strong>
 				</p>
 			</div>
+			<div class="borne-section" data-client-id="{{ loop.index }}">
+				<div class="borne-container d-grid"
+					style="grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem;">
+					{% for station in client.stations %}
+					<div class="borne-card card shadow-sm border-0"
+						style="transition: transform 0.3s ease; overflow: hidden;" {% if loop.index> 4 %} hidden {%
+						endif %}>
 
-			<div class="borne-container d-flex flex-wrap gap-4 justify-content-center">
-				{% for station in client.stations %}
-				<div class="borne-card bg-white rounded shadow-sm position-relative"
-					style="width: 250px; overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; cursor: pointer;">
-					<span class="badge bg-secondary position-absolute top-0 end-0 m-2">{{ station.station.model
-						}}</span>
+						<div class="position-relative bg-light d-flex align-items-center justify-content-center"
+							style="height: 220px;">
+							<img src="{{ asset('uploads/' ~ station.station.image) }}" alt="Image de la Borne"
+								class="img-fluid p-3" style="max-height: 100%; object-fit: contain;">
 
-					<div class="d-flex justify-content-center align-items-center bg-light"
-						style="height: 150px; overflow: hidden;">
-						<img src="{{ asset('uploads/' ~ station.station.image) }}" alt="Image de la Borne"
-							class="img-fluid p-2" style="object-fit: contain; max-height: 100%;">
+							<span class="badge bg-primary position-absolute top-0 start-0 m-2">
+								<i class="bi bi-cpu me-1"></i> {{ station.station.model }}
+							</span>
+
+							<div class="position-absolute top-0 end-0 m-2">
+								<a href="#" class="edit-icon me-2" title="Modifier">
+									<i class="bi bi-pencil"></i>
+								</a>
+								<a href="#" class="delete-icon" title="Supprimer">
+									<i class="bi bi-trash"></i>
+								</a>
+							</div>
+
+						</div>
+
+						<div class="card-body text-center">
+							<h5 class="card-title text-dark mb-2">{{ station.borneName }}</h5>
+
+							<div class="d-flex flex-column align-items-start gap-2 text-muted" style="font-size: 14px;">
+								<div>
+									<i class="bi bi-plug me-2 text-primary"></i>
+									Connecteurs: <strong>{{ station.station.connectors }}</strong>
+								</div>
+								<div>
+									{% if station.station.isActive %}
+									<i class="bi bi-check-circle me-2 text-success"></i>
+									<span class="text-success">Active</span>
+									{% else %}
+									<i class="bi bi-x-circle me-2 text-danger"></i>
+									<span class="text-danger">Inactive</span>
+									{% endif %}
+								</div>
+								<div>
+									<i class="bi bi-building me-2 text-secondary"></i>
+									Fabricant: <strong>{{ station.station.manufacturer.name }}</strong>
+								</div>
+								<div>
+									<i class="bi bi-calendar me-2 text-info"></i>
+									Ajoutée: {{ station.station.createdAt|date('d/m/Y') }}
+								</div>
+							</div>
+
+							<hr>
+
+							<a href="#" class="btn btn-outline-success w-100 mt-2 start-supervision-btn"
+								data-bs-toggle="modal" data-bs-target="#stepByStepModal"
+								data-id="{{ station.station.id }}" data-model="{{ station.station.model }}"
+								data-bornename="{{ station.borneName }}">
+								<i class="bi bi-play-circle me-1"></i>Démarrer supervision
+							</a>
+						</div>
+						
 					</div>
-
-					<div class="p-3 text-center">
-						<h6 class="mb-2 text-muted" style="font-size: 18px; color: #333;">{{ station.station.model }}
-						</h6>
-						<a href="#" class="start-supervision-btn text-success fs-3" data-bs-toggle="modal"
-							data-bs-target="#stepByStepModal" data-id="{{ station.station.id }}"
-							data-model="{{ station.station.model }}" data-bornename="{{ station.borneName }}"
-							style="transition: color 0.3s;">
-							<i class="bi bi-play-circle-fill"></i>
-						</a>
-					</div>
+					{% else %}
+					<p class="text-muted">Aucune borne pour ce client.</p>
+					{% endfor %}
 				</div>
-				{% else %}
-				<p class="text-muted">Aucune borne pour ce client.</p>
-				{% endfor %}
+
+				{% if client.stations|length > 4 %}
+				<div class="text-center mt-4">
+					<button class="btn-toggle-more">
+						<span class="btn-text">Afficher plus</span>
+						<i class="bi bi-chevron-down ms-1 transition btn-icon"></i>
+					</button>
+				</div>
+				{% endif %}
 			</div>
+
+
+
+
+
 		</div>
 		{% else %}
 		<p class="text-center text-muted">Aucun client trouvé.</p>
@@ -155,6 +211,51 @@
 </div>
 
 <style>
+	.edit-icon,
+	.delete-icon {
+		color: #6c757d;
+		text-decoration: none;
+		transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
+	}
+
+	.edit-icon:hover,
+	.delete-icon:hover {
+		transform: scale(1.1) translateY(-2px);
+		color: #495057;
+		filter: brightness(1.2);
+	}
+
+
+	.card-footer a {
+		cursor: pointer;
+		transition: transform 0.3s ease, color 0.3s ease;
+	}
+
+	.card-footer a:hover {
+		transform: scale(1.1);
+		color: #0056b3;
+	}
+
+	.btn-toggle-more {
+		background-color: #f8f9fa;
+		border: none;
+		padding: 0.6rem 1.2rem;
+		border-radius: 30px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		color: #333;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.btn-toggle-more:hover {
+		background-color: #e9ecef;
+	}
+
+	.transition {
+		transition: transform 0.3s ease;
+	}
+
 	.icon-gradient {
 		background: linear-gradient(90deg, #ec008c, #f6941f);
 		-webkit-background-clip: text;
@@ -506,6 +607,50 @@
 </script>
 
 <script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const sections = document.querySelectorAll('.borne-section');
+
+		sections.forEach(section => {
+			const cards = section.querySelectorAll('.borne-card');
+			const btn = section.querySelector('.btn-toggle-more');
+			const btnText = section.querySelector('.btn-text');
+			const btnIcon = section.querySelector('.btn-icon');
+
+			const batchSize = 4;
+			let visibleCount = batchSize;
+
+			function updateView() {
+				cards.forEach((card, index) => {
+					card.hidden = index >= visibleCount;
+				});
+
+				if (visibleCount >= cards.length) {
+					btnText.textContent = 'Afficher moins';
+					btnIcon.classList.remove('bi-chevron-down');
+					btnIcon.classList.add('bi-chevron-up');
+					btnIcon.style.transform = 'rotate(180deg)';
+				} else {
+					btnText.textContent = 'Afficher plus';
+					btnIcon.classList.remove('bi-chevron-up');
+					btnIcon.classList.add('bi-chevron-down');
+					btnIcon.style.transform = 'rotate(0deg)';
+				}
+			}
+
+			if (btn) {
+				btn.addEventListener('click', () => {
+					if (visibleCount >= cards.length) {
+						visibleCount = batchSize; // reset
+					} else {
+						visibleCount = Math.min(visibleCount + batchSize, cards.length);
+					}
+					updateView();
+				});
+
+				updateView(); // initial
+			}
+		});
+	});
 	document.addEventListener("DOMContentLoaded", function () {
 		let currentStep = 1;
 		const totalSteps = 2;

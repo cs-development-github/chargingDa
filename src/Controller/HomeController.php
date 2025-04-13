@@ -66,7 +66,6 @@ class HomeController extends AbstractController
     
         $clientForm = $this->createForm(ClientFormType::class);
         $interventionForm = $this->createForm(InterventionFormType::class);
-    
         return $this->render('home/index.html.twig', [
             'clientsData' => $clientsData,
             'clientForm' => $clientForm->createView(),
