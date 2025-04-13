@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Intervention;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Repository\InterventionRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -63,5 +65,19 @@ final class InterventionController extends AbstractController
             'groupInterventions' => $groupInterventions,
         ]);
     }
+
+    #[Route('/intervention/{id}', name: 'intervention_delete', methods: ['POST'])]
+    public function delete(Request $request, Intervention $intervention, EntityManagerInterface $em): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $intervention->getId(), $request->request->get('_token'))) {
+            $em->remove($intervention);
+            $em->flush();
+
+            $this->addFlash('success', 'Intervention supprimée avec succès.');
+        }
+
+        return $this->redirectToRoute('app_intervention');
+    }
+
 
 }

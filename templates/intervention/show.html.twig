@@ -83,7 +83,7 @@
 		<div class="row">
 			<div class="col-md-6">
 				<div class="section-card">
-					<h4>🧑‍💼 Client</h4>
+					<h4>Client </h4>
 					<ul class="list-group">
 						<li class="list-group-item">
 							<strong>Nom :</strong>
@@ -116,7 +116,7 @@
 
 			<div class="col-md-6">
 				<div class="section-card">
-					<h4>🔧 Installateur</h4>
+					<h4>Installateur</h4>
 					<ul class="list-group">
 						<li class="list-group-item">
 							<strong>Nom :</strong>
@@ -148,7 +148,7 @@
 		<div class="row">
 			<div class="col-md-6">
 				<div class="section-card">
-					<h4>⚡️ Borne concernée</h4>
+					<h4>Borne concernée</h4>
 					<ul class="list-group">
 						<li class="list-group-item">
 							<strong>Nom :</strong>
@@ -173,51 +173,68 @@
 			</div>
 		</div>
 
-		{% if groupInterventions|length > 1 %}
-			<div class="section-card">
-				<h4>📦 Bornes liées à cette intervention groupée</h4>
-				<div class="row mt-4">
-					{% for inter in groupInterventions %}
-						<div class="col-md-6 col-lg-4 mb-4">
-							<div class="card card-intervention h-100">
-								<div class="card-body">
-									<div class="d-flex justify-content-between align-items-center mb-3">
-										<h5 class="card-title mb-0">{{ inter.borneName }}</h5>
-									</div>
+		{% if groupInterventions %}
+		<div class="section-card">
+			<h4>Bornes liées à cette intervention</h4>
+			<div class="row mt-4">
+			{% for inter in groupInterventions %}
+				<div class="col-md-6 col-lg-4 mb-4">
+				<div class="card card-intervention h-100">
+					<div class="card-body position-relative">
+					{# 🔴 Bouton supprimer (icône) en haut à droite #}
+					<button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ inter.id }}" title="Supprimer l'intervention">
+						<i class="bi bi-trash"></i> {# Bootstrap Icons - assure-toi de l'avoir inclus #}
+					</button>
 
-									<p class="card-text">
-										<strong>Référence :</strong>
-										{{ inter.reference }}</p>
-									<p class="card-text">
-										<strong>Modèle :</strong>
-										{{ inter.chargingStation.model ?? '—' }}</p>
-									<p class="card-text">
-										<strong>Fabricant :</strong>
-										{{ inter.chargingStation.manufacturer.name ?? '—' }}</p>
-									<p class="card-text">
-										<strong>Connecteurs :</strong>
-										{{ inter.chargingStation.connectors ?? '—' }}</p>
-									<p class="card-text">
-										<strong>SIM :</strong>
-										{{ inter.sim ?? '—' }}</p>
+					<div class="d-flex justify-content-between align-items-center mb-3">
+						<h5 class="card-title mb-0">{{ inter.borneName }}</h5>
+					</div>
 
-									{% if inter.chargingStation.manufacturer.image %}
-										<img src="{{ asset('uploads/' ~ inter.chargingStation.manufacturer.image) }}" alt="Logo Fabricant" class="img-fluid me-2 mb-2">
-									{% endif %}
+					<p class="card-text"><strong>Référence :</strong> {{ inter.reference }}</p>
+					<p class="card-text"><strong>Modèle :</strong> {{ inter.chargingStation.model ?? '—' }}</p>
+					<p class="card-text"><strong>Fabricant :</strong> {{ inter.chargingStation.manufacturer.name ?? '—' }}</p>
+					<p class="card-text"><strong>Connecteurs :</strong> {{ inter.chargingStation.connectors ?? '—' }}</p>
+					<p class="card-text"><strong>SIM :</strong> {{ inter.sim ?? '—' }}</p>
 
-									{% if inter.chargingStation.image %}
-										<img src="{{ asset('uploads/' ~ inter.chargingStation.image) }}" alt="Image Borne" class="img-fluid mb-2">
-									{% endif %}
-								</div>
-								<div class="card-footer bg-transparent text-end">
-									<a href="{{ path('intervention_client_show', { id: inter.id }) }}" class="btn btn-sm btn-primary">Voir</a>
-								</div>
-							</div>
-						</div>
+					{% if inter.chargingStation.manufacturer.image %}
+						<img src="{{ asset('uploads/' ~ inter.chargingStation.manufacturer.image) }}" alt="Logo Fabricant" class="img-fluid me-2 mb-2">
+					{% endif %}
+					{% if inter.chargingStation.image %}
+						<img src="{{ asset('uploads/' ~ inter.chargingStation.image) }}" alt="Image Borne" class="img-fluid mb-2">
+					{% endif %}
+					</div>
 
-					{% endfor %}
+					<div class="card-footer bg-transparent text-end">
+					<a href="{{ path('intervention_client_show', { id: inter.id }) }}" class="btn btn-sm btn-primary">Voir</a>
+					</div>
 				</div>
+				</div>
+
+				{# Modal de suppression #}
+				<div class="modal fade" id="deleteModal{{ inter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ inter.id }}" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+					<div class="modal-header bg-danger text-white">
+						<h5 class="modal-title" id="deleteModalLabel{{ inter.id }}">Supprimer l’intervention</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+					</div>
+					<div class="modal-body">
+						Es-tu sûr de vouloir supprimer l’intervention <strong>#{{ inter.id }}</strong> ({{ inter.borneName }}) ?
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+
+						<form method="post" action="{{ path('intervention_delete', { id: inter.id }) }}" class="d-inline">
+						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ inter.id) }}">
+						<button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+						</form>
+					</div>
+					</div>
+				</div>
+				</div>
+			{% endfor %}
 			</div>
+		</div>
 		{% endif %}
 
 		<div class="text-end">

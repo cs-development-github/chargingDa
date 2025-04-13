@@ -182,6 +182,7 @@
 				<span>Nombre de borne</span>
 				<span>Client</span>
 				<span>Installateur</span>
+				<span>Reférence</span>
 			</div>
 
 			{% for group in pagination %}
@@ -196,14 +197,16 @@
 							</div>
 
 							<div class="station-info">
-								📧
 								{{ intervention.client.email ?? '—' }}
 							</div>
 
 							<div class="station-info">
-								👷
 								{{ intervention.installator.name ?? 'Inconnu' }}
 								{{ intervention.installator.lastname ?? '' }}
+							</div>
+
+							<div class="station-info">
+								{{ group.refPrefix ?? '—' }}
 							</div>
 
 						</div>

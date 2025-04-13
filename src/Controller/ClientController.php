@@ -94,7 +94,6 @@ final class ClientController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Associer l'installateur
             $intervention->setInstallator($user);
             $client->setCreatedBy($user);
 
@@ -181,80 +180,80 @@ final class ClientController extends AbstractController
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
-            
+
                 if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"]) && isset($data["pricePublic_$stationId"])) {
                     $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
-            
+
                     if (!$tarification) {
                         $tarification = new Tarification();
                         $tarification->setChargingStation($station);
                     }
-            
+
                     $tarification->setClient($client);
                     $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
                     $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
                     $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
                     $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
-            
+
                     $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
                     $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
                     $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
-            
+
                     $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
                     $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
                     $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
-            
+
                     $em->persist($tarification);
                 }
             }
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
-            
+
                 if (isset($data["public_$stationId"]) && isset($data["addressLine_$stationId"])) {
                     $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
-            
+
                     if (!$setting) {
                         $setting = new ChargingStationSetting();
                         $setting->setChargingStation($station);
                         $setting->setClient($client);
                     }
-            
+
                     $setting->setPublic((bool) $data["public_$stationId"]);
                     $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
                     $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
                     $setting->setCity($data["city_$stationId"] ?? '');
                     $setting->setCountry($data["country_$stationId"] ?? '');
-            
+
                     $setting->setRegion($data["region_$stationId"] ?? null);
                     $setting->setDepartment($data["department_$stationId"] ?? null);
                     $setting->setLatitude(isset($data["latitude_$stationId"]) ? (float) $data["latitude_$stationId"] : null);
                     $setting->setLongitude(isset($data["longitude_$stationId"]) ? (float) $data["longitude_$stationId"] : null);
-            
+
                     $em->persist($setting);
                 }
             }
-            
-            
+
             $em->flush();
 
             if ($this->isClientDataComplete($client)) {
-                $contractService->generateAndSendContract($client);
-            
+                // $contractService->generateAndSendContract($client);
+
                 $dtos = $this->stationSupervisionFactory->createFromInterventions($interventions);
-            
+
                 if (!empty($dtos)) {
                     $firstDto = $dtos[0];
-                
+
                     $this->clientSupervisionDataService->superviseClientStations(
                         $firstDto->client,
-                        $dtos // on garde tous les DTOs
+                        $dtos
                     );
                 }
-                
+
+                return $this->redirectToRoute('client_success_page', ['token' => $client->getSecureToken()]);
             }
-            
         }
+
 
         return $this->render('client/complete_form.html.twig', [
             'form' => $form->createView(),
@@ -262,6 +261,21 @@ final class ClientController extends AbstractController
             'chargingStations' => $chargingStations,
         ]);
     }
+
+    #[Route('/client/success/{token}', name: 'client_success_page', methods: ['GET'])]
+    public function successPage(string $token, EntityManagerInterface $em): Response
+    {
+        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
+
+        if (!$client) {
+            throw $this->createNotFoundException('Client introuvable');
+        }
+
+        return $this->render('client/process.html.twig', [
+            'client' => $client,
+        ]);
+    }
+
 
     private function isClientDataComplete(Client $client): bool
     {
