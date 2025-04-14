@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Supervision en cours</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+      body {
+        background: #f7f9fc;
+        font-family: "Segoe UI", Roboto, sans-serif;
+      }
+
+      .hero {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        color: white;
+        padding: 2.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      .timeline {
+        position: relative;
+        padding-left: 35px;
+      }
+
+      .timeline::before {
+        content: "";
+        position: absolute;
+        left: 17px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #dcdde1;
+      }
+
+      .timeline-step {
+        position: relative;
+        margin-bottom: 2rem;
+        padding: 1.25rem 1.25rem 1rem 1.5rem;
+        background: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+      }
+
+      .timeline-step::before {
+        content: "⏳";
+        position: absolute;
+        left: -12px;
+        background: white;
+        padding: 0.2rem;
+        border-radius: 50%;
+        font-size: 1.3rem;
+        transition: all 0.3s ease;
+      }
+
+      .timeline-step.success::before {
+        content: "✅";
+        color: #2d6a4f;
+      }
+
+      .timeline-step.failed::before {
+        content: "❌";
+        color: #e63946;
+      }
+
+      .step-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #1d3557;
+        margin-bottom: 0.5rem;
+      }
+
+      .step-message {
+        font-size: 0.9rem;
+        color: #6c757d;
+      }
+
+      .timeline-step.success {
+        background-color: #e8f5e9;
+      }
+
+      .timeline-step.failed {
+        background-color: #fceaea;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container my-5">
+        <div class="hero">
+            <h1 class="display-6 mb-3">Supervision en cours</h1>
+            <p class="lead mb-0">Merci <strong>{{ client.societyName ?? client.firstName }}</strong>, nous traitons vos données.</p>
+        </div>
+
+        <div class="timeline" id="steps-timeline"></div>
+
+        <div id="final-message" class="alert alert-success mt-5 d-none text-center fw-semibold" style="font-size: 1.1rem;">
+            Votre contrat prêt pour signature vous a été envoyé par mail. <br />
+            Une fois celui-ci signé, la borne sera automatiquement activée et fonctionnelle.
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const token = '{{ client.secureToken }}';
+        const timeline = document.getElementById('steps-timeline');
+
+        fetch(`/api/supervise/${token}`, { method: 'POST' })
+          .then(res => res.json())
+          .then(steps => displayTimeline(steps))
+          .catch(err => {
+            timeline.innerHTML = `<div class="alert alert-danger">❌ Une erreur est survenue pendant la supervision.</div>`;
+            console.error(err);
+          });
+
+        function displayTimeline(steps) {
+          steps.forEach((step, index) => {
+            const stepEl = document.createElement('div');
+            stepEl.className = 'timeline-step';
+            stepEl.id = `step-${index}`;
+            stepEl.innerHTML = `
+              <div class="step-title">${step.label}</div>
+              <div class="step-message">En cours...</div>
+            `;
+            timeline.appendChild(stepEl);
+          });
+
+          animateSteps(steps);
+        }
+
+function animateSteps(steps) {
+  let i = 0;
+  function next() {
+    if (i >= steps.length) {
+      // ✅ Fin de l’animation : on affiche le message
+      const finalMsg = document.getElementById('final-message');
+      finalMsg.classList.remove('d-none');
+      return;
+    }
+
+    const step = steps[i];
+    const el = document.getElementById(`step-${i}`);
+
+    setTimeout(() => {
+      if (step.status) {
+        el.classList.add('success');
+        el.querySelector('.step-message').textContent = 'Validé ✅';
+      } else {
+        el.classList.add('failed');
+        el.querySelector('.step-message').textContent = step.message ?? 'Erreur';
+      }
+      i++;
+      next();
+    }, 900);
+  }
+
+  next();
+}
+
+      });
+    </script>
+  </body>
+</html>
