@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aide - Partenaires</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+  {{ encore_entry_link_tags('landing') }}
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      padding-top: 80px;
+      background-color: #f9f9f9;
+    }
+
+    .navbar-brand {
+      text-decoration: none !important;
+    }
+
+    .logo-container img {
+      height: 40px;
+    }
+
+    .title-gradient {
+      font-weight: bold;
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero {
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      color: white;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: bold;
+    }
+
+    .section-aide {
+      padding: 4rem 1rem;
+    }
+
+    .section-aide h2 {
+      font-weight: bold;
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-custom {
+      border: none;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .card-custom:hover {
+      transform: translateY(-5px);
+    }
+
+    .contact-card {
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .contact-card:hover {
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-floating {
+      position: relative;
+    }
+
+    .form-floating .form-control {
+      padding-left: 3rem;
+    }
+
+    .form-floating label {
+      left: 3rem;
+    }
+
+    .form-floating .bi {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+
+    textarea.form-control {
+      resize: none;
+    }
+
+    .btn-send {
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      color: white;
+      border: none;
+      border-radius: 2rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(236, 0, 140, 0.2);
+    }
+
+    .btn-send:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(236, 0, 140, 0.4);
+    }
+
+    footer {
+      background-color: #fff;
+      padding: 2rem 0;
+      text-align: center;
+      border-top: 1px solid #eee;
+    }
+
+    .gradient-text {
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: 'UrbaneRounded', sans-serif;
+      font-weight: 600;
+    }
+
+    .title-gradient {
+      font-family: 'UrbaneRounded', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .logo-container {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo-container img {
+      max-width: 80%;
+      max-height: 80%;
+      object-fit: contain;
+    }
+
+    .btn-gradient {
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 30px;
+      transition: opacity 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+      opacity: 0.9;
+      color: #fff;
+    }
+
+    .gradient-line {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(to right, #ec008c, #f6941f);
+      margin: 0 auto;
+    }
+
+    .footer-section {
+      background: url("./assets/images/background.png") center center / cover no-repeat;
+      color: #fff;
+      padding: 3rem 0;
+      position: relative;
+    }
+
+    .footer-card {
+      background-color: #fff;
+      border-radius: 2rem;
+      padding: 2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 100%;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links .link-column h5 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      color: #333;
+    }
+
+    .footer-links .link-column ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .footer-links .link-column ul li {
+      margin-bottom: 0.5rem;
+    }
+
+    .footer-links .link-column ul li a {
+      color: #555;
+    }
+
+    .footer-links .link-column ul li a:hover {
+      color: #ec008c;
+    }
+
+    .footer-section {
+      background-color: #f8f9fa;
+      padding: 3rem 1rem;
+    }
+
+    .footer-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      text-align: center;
+    }
+
+    @media (min-width: 768px) {
+      .footer-card {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+      }
+    }
+
+    .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .footer-links {
+        flex-direction: row;
+        gap: 4rem;
+      }
+    }
+
+    .link-column ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .link-column a {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .logo-container img {
+      height: 40px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-white shadow fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="{{ path('app_landing_page') }}">
+        <div class="logo-container me-2">
+          <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi" />
+        </div>
+        <span class="title-gradient">PARTENAIRES</span>
+      </a>
+
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="container">
+      <h1 data-aos="fade-down">Besoin d'aide ?</h1>
+      <p class="lead mt-3" data-aos="fade-up">Notre équipe est là pour vous accompagner à chaque étape.</p>
+    </div>
+  </header>
+
+  <section class="section-aide">
+    <div class="container">
+      <div class="row g-4 mb-5">
+        <div class="col-md-4" data-aos="fade-up">
+          <div class="card card-custom p-4 h-100 text-center">
+            <i class="bi bi-wifi fs-1 text-warning mb-3"></i>
+            <h5 class="fw-bold mb-2">Problème de supervision</h5>
+            <p>Vérifiez votre carte SIM, suivez le guide d'activation ou contactez notre support.</p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+          <div class="card card-custom p-4 h-100 text-center">
+            <i class="bi bi-plug fs-1 text-danger mb-3"></i>
+            <h5 class="fw-bold mb-2">Compatibilité de votre borne</h5>
+            <p>Assurez-vous que votre modèle accepte les cartes SIM. Consultez notre guide de compatibilité.</p>
+          </div>
+        </div>
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+          <div class="card card-custom p-4 h-100 text-center">
+            <i class="bi bi-box-seam fs-1 text-success mb-3"></i>
+            <h5 class="fw-bold mb-2">Livraison et installation</h5>
+            <p>Suivez votre commande et découvrez les étapes d'installation rapides et simples.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card p-5 bg-white shadow-lg rounded-4" data-aos="fade-up" data-aos-delay="300">
+        <h2 class="mb-5 text-center title-gradient">Nous sommes à votre écoute</h2>
+        <div id="alert-container"></div>
+        <form class="contact-form" id="help-form">
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="name" name="user_name" placeholder="Votre nom" required>
+                <label for="name">Votre nom</label>
+                <i class="bi bi-person-fill"></i>
+              </div>
+            </div>
+            <!-- Email -->
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="email" class="form-control" id="email" name="user_email" placeholder="Votre email"
+                  required>
+                <label for="email">Email</label>
+                <i class="bi bi-envelope-fill"></i>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="subject" name="subject" placeholder="Sujet" required>
+                <label for="subject">Sujet</label>
+                <i class="bi bi-chat-left-dots-fill"></i>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-floating">
+                <textarea class="form-control" id="message" name="message" placeholder="Votre message"
+                  style="height: 150px" required></textarea>
+                <label for="message">Votre message</label>
+                <i class="bi bi-pencil-square"></i>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-send d-inline-flex align-items-center gap-2 px-4 py-2">
+              <i class="bi bi-send-fill fs-5"></i>
+              <span class="fw-semibold">Envoyer</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer-section" data-aos-duration="800">
+    <div class="container">
+      <div class="footer-card">
+        <div class="footer-brand">
+          <div class="logo-container mb-3 mb-md-0">
+            <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
+          </div>
+        </div>
+        <div class="footer-links">
+          <div class="link-column">
+            <h5>Liens</h5>
+            <ul>
+              <li><a href="{{ path('app_faq') }}">FAQ</a></li>
+              <li><a href="{{ path('app_aide') }}">Aide</a></li>
+            </ul>
+          </div>
+          <div class="link-column">
+            <h5>Légal</h5>
+            <ul>
+              <li><a href="{{ path('app_cgu') }}">CGU</a></li>
+              <li><a href="#">CGV</a></li>
+              <li><a href="#">RGPD</a></li>
+            </ul>
+          </div>
+          <div class="link-column">
+            <h5>Entreprise</h5>
+            <ul>
+              <li><a href="{{ path('app_propos') }}">À propos</a></li>
+              <li><a href="{{ path('app_contact') }}">Contact</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <script>
+    AOS.init({ once: true, duration: 1000 });
+    emailjs.init("TxmeGLDR5n8VzRPJ8");
+
+    document.getElementById("help-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const alertContainer = document.getElementById("alert-container");
+
+      emailjs.sendForm("service_ql3duuq", "template_g8g800o", this)
+        .then(function () {
+          alertContainer.innerHTML = `
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              Votre message a été envoyé avec succès !
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+          e.target.reset();
+        }, function () {
+          alertContainer.innerHTML = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              Une erreur est survenue. Veuillez réessayer plus tard.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>`;
+        });
+    });
+  </script>
+</body>
+
+</html>
