@@ -26,7 +26,7 @@ class ContractSignatureService
 
     public function sign(Client $client): string
     {
-        $pdfPath = "{$this->pdfDir}/contrat_final_{$client->getId()}.pdf";
+        $pdfPath = "{$this->pdfDir}/contrat_final_{$client->getDocumentId()}.pdf";
 
         if (!file_exists($pdfPath)) {
             throw new \RuntimeException("Le fichier PDF du contrat est introuvable.");

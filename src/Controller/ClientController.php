@@ -237,23 +237,11 @@ final class ClientController extends AbstractController
             $em->flush();
 
             if ($this->isClientDataComplete($client)) {
-                // $contractService->generateAndSendContract($client);
-
-                $dtos = $this->stationSupervisionFactory->createFromInterventions($interventions);
-
-                if (!empty($dtos)) {
-                    $firstDto = $dtos[0];
-
-                    $this->clientSupervisionDataService->superviseClientStations(
-                        $firstDto->client,
-                        $dtos
-                    );
-                }
+                $contractService->generateAndSendContract($client);
 
                 return $this->redirectToRoute('client_success_page', ['token' => $client->getSecureToken()]);
             }
         }
-
 
         return $this->render('client/complete_form.html.twig', [
             'form' => $form->createView(),
