@@ -186,34 +186,6 @@
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="col-md-6">
-				<div class="section-card">
-					<h4>Borne concernée</h4>
-					<ul class="list-group">
-						<li class="list-group-item">
-							<strong>Nom :</strong>
-							{{ intervention.borneName }}</li>
-						<li class="list-group-item">
-							<strong>Modèle :</strong>
-							{{ intervention.chargingStation.model }}</li>
-						<li class="list-group-item">
-							<strong>Fabricant :</strong>
-							{{ intervention.chargingStation.manufacturer.name ?? 'Inconnu' }}</li>
-						<li class="list-group-item">
-							<strong>Connecteurs :</strong>
-							{{ intervention.chargingStation.connectors }}</li>
-						<li class="list-group-item">
-							<strong>Slug :</strong>
-							{{ intervention.chargingStation.slug }}</li>
-						<li class="list-group-item">
-							<strong>Créée le :</strong>
-							{{ intervention.chargingStation.createdAt|date('d/m/Y H:i') }}</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
 		{% if groupInterventions %}
 		<div class="section-card">
 			<h4>Bornes liées à cette intervention</h4>
