@@ -65,6 +65,9 @@ class ChargingStations
     #[ORM\OneToMany(targetEntity: ChargingStationDocumentation::class, mappedBy: 'ChargingStation')]
     private Collection $chargingStationDocumentations;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $power = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -272,6 +275,18 @@ class ChargingStations
                 $chargingStationDocumentation->setChargingStation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPower(): ?int
+    {
+        return $this->power;
+    }
+
+    public function setPower(?int $power): static
+    {
+        $this->power = $power;
 
         return $this;
     }

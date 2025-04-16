@@ -15,13 +15,28 @@
                     </div>
 
                     <div class="mb-3">
+                        {{ form_label(editForm.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.model, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
                         {{ form_label(editForm.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
                         {{ form_widget(editForm.manufacturer, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form_label(editForm.connectors, 'PDC', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_label(editForm.connectors, 'Point de charge', {'label_attr': {'class': 'fw-bold'}}) }}
                         {{ form_widget(editForm.connectors, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.power, 'Puissance', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.power, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(editForm.isActive, 'isActive', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.isActive, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">
