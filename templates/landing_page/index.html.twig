@@ -588,7 +588,7 @@
 
                         <li class="text-center">
                             <span class="gradient-text offer-number d-block">1</span>
-                            <span class="item-text d-block">Guide de<br>mise en supervision</span>
+                            <span class="item-text d-block">Guide de<br>supervision</span>
                         </li>
                     </ul>
 
@@ -661,7 +661,7 @@
 
                         <div class="col-6 col-sm-6 col-lg-2">
                             <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Guide de<br>mise en
+                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Guide de<br>
                                 supervision</span>
                         </div>
                     </div>
@@ -766,32 +766,28 @@
                 <!-- Enlaces -->
                 <div class="footer-links d-flex flex-column flex-md-row gap-4">
 
-                    <!-- Liens -->
                     <div class="link-column">
                         <h5 class="fw-bold mb-3">Liens</h5>
                         <ul class="list-unstyled">
-                            <li><a href="#">FAQ</a></li>
-                            <li><a href="#">Aide</a></li>
-                            <li><a href="#">Support</a></li>
+                            <li><a href="{{ path('app_faq') }}">FAQ</a></li>
+                            <li><a href="{{ path('app_aide') }}">Aide</a></li>
                         </ul>
                     </div>
 
-                    <!-- Légal -->
                     <div class="link-column">
                         <h5 class="fw-bold mb-3">Légal</h5>
                         <ul class="list-unstyled">
-                            <li><a href="#">CGU</a></li>
-                            <li><a href="#">CGV</a></li>
-                            <li><a href="#">RGPD</a></li>
+                            <li><a href="{{ path('app_cgu') }}">CGU</a></li>
+                            <li><a href="#">CGV</a></li> <!-- Ruta aún no definida -->
+                            <li><a href="#">RGPD</a></li> <!-- Ruta aún no definida -->
                         </ul>
                     </div>
 
-                    <!-- Entreprise -->
                     <div class="link-column">
                         <h5 class="fw-bold mb-3">Entreprise</h5>
                         <ul class="list-unstyled">
-                            <li><a href="#">À propos</a></li>
-                            <li><a href="#">Contact</a></li>
+                            <li><a href="{{ path('app_propos') }}">À propos</a></li>
+                            <li><a href="{{ path('app_contact') }}">Contact</a></li>
                         </ul>
                     </div>
 
@@ -799,6 +795,7 @@
             </div>
         </div>
     </footer>
+
 
 
 

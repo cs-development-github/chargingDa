@@ -29,7 +29,7 @@ class EmailVerifier
         $email = (new TemplatedEmail())
             ->from(new Address('nepasrepondre@lodmi.com'))
             ->to($user->getEmail())
-            ->subject('Confirme votre adresse email')
+            ->subject('Confirmez vôtre adresse email')
             ->htmlTemplate('emails/confirmation_email.html.twig')
             ->context([
                 'signedUrl' => $signatureComponents->getSignedUrl(),

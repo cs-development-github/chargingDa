@@ -28,6 +28,7 @@ class InterventionFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'csrf_protection' => false,
         ]);
     }
 }

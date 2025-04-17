@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
 {% block body %}
 
 <style>
@@ -86,7 +85,59 @@
 			transform: rotate(360deg);
 		}
 	}
+
+	.edit-icon,
+	.delete-icon {
+		color: #6c757d;
+		text-decoration: none;
+		transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
+	}
+
+	.edit-icon:hover,
+	.delete-icon:hover {
+		transform: scale(1.1) translateY(-2px);
+		color: #495057;
+		filter: brightness(1.2);
+	}
+
+	.card-footer a {
+		cursor: pointer;
+		transition: transform 0.3s ease, color 0.3s ease;
+	}
+
+	.card-footer a:hover {
+		transform: scale(1.1);
+		color: #0056b3;
+	}
+
+	.btn-toggle-more {
+		background-color: #f8f9fa;
+		border: none;
+		padding: 0.6rem 1.2rem;
+		border-radius: 30px;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+		color: #333;
+		font-weight: 500;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.btn-toggle-more:hover {
+		background-color: #e9ecef;
+	}
+
+	.transition {
+		transition: transform 0.3s ease;
+	}
+
+	.icon-gradient {
+		background: linear-gradient(90deg, #ec008c, #f6941f);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		display: inline-block;
+	}
 </style>
+
 <div class="container">
 	<h1 class="text-center mb-4 text-dark">Supervision des Bornes</h1>
 	<hr class="mx-auto mb-4" style="width: 80%; border: 2px solid #ddd;">
@@ -94,13 +145,14 @@
 	<div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-2 mb-4">
 		<span class="fw-bold text-dark fs-5 mb-3 mb-md-0">Prochaine intervention</span>
 
-		<button type="button" data-bs-toggle="modal" data-bs-target="#progressModal"
-			style="padding: 12px 25px; font-size: 16px; color: #fff; border: none; border-radius: 5px; background: linear-gradient(90deg, #ff7e5f, #ff3f81); transition: background 0.3s, box-shadow 0.3s, transform 0.3s; cursor: pointer; position: relative; z-index: 2;"
+			<a href={{path('app_add_client')}}
+			style="padding: 12px 25px; font-size: 16px; color: #fff; border: none; border-radius: 5px; background: linear-gradient(90deg, #ff7e5f, #ff3f81); transition: background 0.3s, box-shadow 0.3s, transform 0.3s; cursor: pointer; position: relative; z-index: 2; text-decoration: none;"
 			onmouseover="this.style.background='linear-gradient(90deg, #ff3f81, #ff7e5f)'; this.style.transform='translateY(-5px) scale(1.05)';"
 			onmouseout="this.style.background='linear-gradient(90deg, #ff7e5f, #ff3f81)'; this.style.transform='translateY(0) scale(1)';">
-			<i class="bi bi-person-plus"></i>
-			Ajouter un client
-		</button>
+				<i class="bi bi-person-plus"></i>
+				Ajouter un client
+			</a>
+
 	</div>
 </div>
 
@@ -210,67 +262,12 @@
 	</div>
 </div>
 
-<style>
-	.edit-icon,
-	.delete-icon {
-		color: #6c757d;
-		text-decoration: none;
-		transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
-	}
-
-	.edit-icon:hover,
-	.delete-icon:hover {
-		transform: scale(1.1) translateY(-2px);
-		color: #495057;
-		filter: brightness(1.2);
-	}
-
-
-	.card-footer a {
-		cursor: pointer;
-		transition: transform 0.3s ease, color 0.3s ease;
-	}
-
-	.card-footer a:hover {
-		transform: scale(1.1);
-		color: #0056b3;
-	}
-
-	.btn-toggle-more {
-		background-color: #f8f9fa;
-		border: none;
-		padding: 0.6rem 1.2rem;
-		border-radius: 30px;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-		color: #333;
-		font-weight: 500;
-		cursor: pointer;
-		transition: all 0.3s ease;
-	}
-
-	.btn-toggle-more:hover {
-		background-color: #e9ecef;
-	}
-
-	.transition {
-		transition: transform 0.3s ease;
-	}
-
-	.icon-gradient {
-		background: linear-gradient(90deg, #ec008c, #f6941f);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		display: inline-block;
-	}
-</style>
-
 <div class="modal fade" id="stepByStepModal" tabindex="-1" aria-labelledby="stepByStepModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg modal-fullscreen-md-down">
 		<div class="modal-content">
 
 			<div class="modal-header" style="background: linear-gradient(90deg, #ff7e5f, #ff3f81); color: white;">
 				<h5 class="modal-title" id="stepByStepModalLabel">
-					<i class="bi bi-lightning-charge-fill text-warning"></i>
 					Mise en supervision
 				</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
@@ -279,15 +276,20 @@
 			<div class="modal-body text-center">
 				<div class="step-indicator mb-2">
 					<strong>Étape
-						<span id="currentStepDoc">1</span>
+						<span id="currentStepDoc">X</span>
 						/
-						<span id="totalStepsDoc">9</span>
+						<span id="totalStepsDoc">X</span>
 					</strong>
 				</div>
 
 				<div class="progress mb-3" style="height: 5px;">
 					<div id="stepProgressBar" class="progress-bar bg-success"
 						style="width: 0%; transition: width 0.3s;"></div>
+				</div>
+
+				<div id="loadingStepDocs" class="text-center my-4 d-none">
+					<p class="text-muted mb-3">Chargement des étapes de supervision...</p>
+					<div class="loader"></div>
 				</div>
 
 				<div class="image-container text-center position-relative">
@@ -350,138 +352,6 @@
 		</div>
 	</div>
 </div>
-</div>
-
-{# Modal ajouter un client #}
-<div class="modal fade" id="progressModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="modalTitle">
-					<i class="bi bi-gear"></i>
-					Information du client
-				</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="step-indicator mb-2" style="display: none;">
-				<strong>Étape
-					<span id="currentStepForm">1</span>
-					/
-					<span id="totalStepsForm">2</span>
-				</strong>
-			</div>
-
-			<div class="modal-body">
-				<div class="progress mb-3 " style="height: 5px;">
-					<div id="progressStep1" class="progress-bar bg-success bg-success" style="width: 50%;"></div>
-					<div id="progressStep2" class="progress-bar bg-secondary bg-success" style="width: 50%;"></div>
-				</div>
-
-				{% set prototype_intervention %}
-				<div class="intervention-item mb-3">
-					<div class="row mb-2">
-						<div class="col-md-6">
-							<label class="form-label mb-0">
-								{{ form_label(interventionForm.interventions.vars.prototype.sim, 'Numéro de SIM') }}
-							</label>
-							{{ form_widget(interventionForm.interventions.vars.prototype.sim, {
-							'attr': {'class': 'form-control gradient-input'}
-							}) }}
-						</div>
-						<div class="col-md-6">
-							<label class="form-label mb-0">
-								{{ form_label(interventionForm.interventions.vars.prototype.borneName, 'Identifiant de
-								la borne') }}
-								<i id="info-icon-unique" class="bi bi-info-circle ms-2" data-bs-toggle="tooltip"
-									data-tooltip-image="{{ asset('build/images/Qrcode_exemple.png') }}"
-									title="Tooltip image" style="cursor: pointer;">
-								</i>
-							</label>
-							{{ form_widget(interventionForm.interventions.vars.prototype.borneName, {
-							'attr': {'class': 'form-control gradient-input'}
-							}) }}
-						</div>
-					</div>
-
-					<div class="row align-items-end">
-						<div class="col-md-12">
-							<label class="form-label mb-0">
-								{{ form_label(interventionForm.interventions.vars.prototype.chargingStation, 'Borne de
-								recharge') }}
-							</label>
-							<div class="d-flex align-items-center">
-								{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {
-								'attr': {'class': 'form-select gradient-input'}
-								}) }}
-								<button type="button" class="btn text-white remove-intervention ms-2"
-									style="background: linear-gradient(to right, #ff4081, #ff8c00);
-										                                                                                            border: none;
-										                                                                                            border-radius: 8px;
-										                                                                                            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
-									<i class="bi bi-trash"></i>
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-
-
-				{% endset %}
-
-				<form id="multiStepForm" method="post" action="{{ path('app_submit_form') }}">
-					{{ form_start(clientForm, {'attr': {'id': 'multiStepForm'}}) }}
-
-					<div class="form-step mb-4" id="step1">
-						{{ form_widget(clientForm) }}
-					</div>
-
-					<div class="form-step d-none mb-4" id="step2">
-						{{ form_widget(interventionForm) }}
-
-						<div class="mb-3 text-end">
-							<div class="d-flex justify-content-end mb-3">
-								<button type="button" id="addIntervention" class="btn text-white fw-bold rounded-pill"
-									style="background: linear-gradient(to right, #ff4081, #ff8c00);
-																																									                                               border: none;
-																																									                                               border-radius: 30px;
-																																									                                               padding: 10px 16px;
-																																									                                               font-size: 14px;
-																																									                                               box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.15);">
-									<i class="bi bi-plus-circle me-2"></i>
-									Ajouter une borne
-								</button>
-							</div>
-
-
-						</div>
-
-						<div id="interventionContainer" data-prototype="{{ prototype_intervention|e('html_attr') }}">
-						</div>
-					</div>
-
-					<div class="modal-footer">
-						<button type="button" id="prevBtn" class="btn btn-secondary d-none rounded-3 rounded-pill">
-							<i class="bi bi-arrow-left"></i>
-							Précédent
-						</button>
-						<button type="button" id="nextBtn" class="btn btn-primary rounded-3 rounded-pill">
-							Suivant
-							<i class="bi bi-arrow-right"></i>
-						</button>
-						<button type="submit" id="submitBtn" class="btn btn-success d-none rounded-3 rounded-pill">
-							<i class="bi bi-check-circle"></i>
-							Envoyer
-						</button>
-					</div>
-
-					{{ form_end(clientForm) }}
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
-
-</div>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -506,12 +376,23 @@
 
 				document.getElementById("displayBorneName").textContent = borneName ?? "—";
 
+				document.getElementById("loadingStepDocs").classList.remove("d-none");
+				stepImageStep.classList.add("d-none");
+				customStep.classList.add("d-none");
+				stepInfo.innerHTML = "";
+				prevBtn.disabled = true;
+				nextBtn.disabled = true;
+
 				try {
 					const res = await fetch(`/charging/stations/${stationId}/docs`);
 					if (!res.ok) throw new Error("Erreur de chargement des documentations");
 
 					steps = await res.json();
 					steps.sort((a, b) => (a.step ?? 0) - (b.step ?? 0));
+
+					document.getElementById("loadingStepDocs").classList.add("d-none");
+					prevBtn.disabled = false;
+					nextBtn.disabled = false;
 
 					totalSteps = steps.length + 1;
 					currentStep = 0;
@@ -707,11 +588,6 @@
 			stepIndicatorForm.textContent = currentStep;
 		}
 
-		document.getElementById("progressModal").addEventListener("show.bs.modal", function () {
-			currentStep = 1;
-			updateStep();
-		});
-
 		let nextBtn = document.getElementById("nextBtn");
 		let prevBtn = document.getElementById("prevBtn");
 		let submitBtn = document.getElementById("submitBtn");
@@ -823,6 +699,7 @@
 
 			} catch (error) {
 				console.error("Erreur:", error);
+				startButton.classList.remove("d-none");
 				showNotification(error.message, "danger");
 			}
 		}
@@ -918,7 +795,10 @@
 			return response.ok;
 		}
 
-		startButton.addEventListener("click", startSupervisionProcess);
+		startButton.addEventListener("click", function () {
+			startButton.classList.add("d-none"); // on masque le bouton
+			startSupervisionProcess(); // on lance le process
+		});
 
 		modal.addEventListener("hidden.bs.modal", resetProcess);
 
@@ -926,6 +806,7 @@
 			stepIcons.forEach(icon => icon.classList.remove("active"));
 			stepLines.forEach(line => line.style.backgroundColor = "#ddd");
 			stepIconsContainer.classList.add("d-none");
+			startButton.classList.remove("d-none");
 			stepContent.classList.add("d-none");
 			finalStepContent.classList.add("d-none");
 			selectedBorneName = null;
@@ -987,8 +868,6 @@
 <script>
 
 	document.addEventListener("DOMContentLoaded", function () {
-		const modal = document.getElementById("progressModal");
-
 		if (!modal) return;
 
 		modal.addEventListener("shown.bs.modal", function () {

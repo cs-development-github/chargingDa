@@ -2,13 +2,7 @@
 
 {% block body %}
 <div class="container mt-5">
-    <h2>Modifier la documentation – Étape {{ documentation.step }}</h2>
-
     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        <div class="mb-3">
-            {{ form_label(form.step) }}
-            {{ form_widget(form.step, {'attr': {'class': 'form-control'}}) }}
-        </div>
         <div class="mb-3">
             {{ form_label(form.ocpp) }}
             {{ form_widget(form.ocpp, {'attr': {'class': 'form-control'}}) }}

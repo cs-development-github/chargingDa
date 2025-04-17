@@ -3,179 +3,238 @@
 {% block title %}Mon Profil{% endblock %}
 
 {% block body %}
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
 <style>
-    :root {
-        --gray-color: #818285;
-        --input-bg: #fff;
-        --button-bg: #f7f7f7;
-        --control-height: 50px;
-        --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    body {
+        background-color: #f5f6fa;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
     }
 
-    .label-gray {
-        color: var(--gray-color);
-        font-weight: bold;
-        margin-bottom: 5px;
+    .profile-page-container {
+        max-width: 1200px;
+        margin: 140px auto 60px auto;
+        padding: 20px;
     }
 
-    .custom-input {
-        background-color: var(--input-bg);
-        border: none;
+    .profile-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .profile-header h1 {
+        font-weight: 600;
+        font-size: 2rem;
+        color: #333;
+    }
+
+    .profile-card {
+        background: #fff;
         border-radius: 15px;
-        padding: 12px 15px;
-        width: 100%;
-        height: var(--control-height);
-        box-shadow: var(--shadow-inset);
-        outline: none;
-        transition: box-shadow 0.2s ease-in-out;
-    }
-
-    .custom-input:focus {
-        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
-    }
-
-    .attach-btn,
-    .attach-file-btn {
-        background-color: var(--button-bg);
-        color: var(--gray-color);
-        border: 1px solid var(--gray-color);
-        cursor: pointer;
-        transition: opacity 0.3s;
-        min-height: var(--control-height);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .attach-btn {
-        border-radius: 30px;
-        padding: 6px 12px;
-        width: 100%;
-    }
-
-    .attach-file-btn {
-        border-radius: 40px;
-        padding: 10px 20px;
-        width: 100%;
-    }
-
-    .attach-btn:hover,
-    .attach-file-btn:hover {
-        opacity: 0.9;
-    }
-
-    .profile-pic-wrapper {
-        width: 220px;
-        height: 220px;
-        background: linear-gradient(45deg, #ec008c, #f6941f);
-        border-radius: 50%;
-        padding: 5px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom: 10px;
+        flex-wrap: wrap;
     }
 
-    .profile-pic {
-        border-radius: 50%;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .documents-column {
+    .profile-left {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        flex: 1 1 300px;
+        padding: 40px 20px;
+        color: #fff;
         display: flex;
         flex-direction: column;
+        align-items: center;
         justify-content: center;
     }
 
-    .form-check-label {
-        font-size: 0.85rem;
+    .profile-image-wrapper {
+        width: 130px;
+        height: 130px;
+        border: 3px solid rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .profile-image-wrapper i {
+        font-size: 4rem;
+        color: #fff;
+    }
+
+    .profile-name {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    .profile-subtitle {
+        font-size: 1rem;
+        font-weight: 300;
+        margin-bottom: 20px;
+        opacity: 0.9;
+        text-align: center;
+    }
+
+    .profile-right {
+        flex: 2 1 500px;
+        padding: 40px 30px;
+    }
+
+    #update-message {
+        text-align: center;
+        color: #28a745;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+    .profile-form .form-group {
+        position: relative;
+        margin-bottom: 25px;
+    }
+
+    .profile-form .form-group label {
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 8px;
+        color: #555;
+        gap: 8px;
+    }
+
+    .gradient-icon {
+        background: linear-gradient(45deg, #ec008c, #f6941f);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline-block;
+        font-size: 1rem;
+    }
+
+    .profile-form input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 30px;
+        font-size: 1rem;
+        transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .profile-form input:focus {
+        border-color: #ec008c;
+        outline: none;
+        box-shadow: 0 0 8px rgba(236, 0, 140, 0.3);
     }
 
     .save-btn {
         background: linear-gradient(45deg, #ec008c, #f6941f);
         color: #fff;
         border: none;
-        padding: 8px 12px;
-        border-radius: 20px;
+        padding: 12px 35px;
+        border-radius: 30px;
         cursor: pointer;
+        font-size: 1rem;
+        transition: box-shadow 0.3s, opacity 0.3s;
         display: inline-flex;
         align-items: center;
-        gap: 5px;
-        font-size: 0.9rem;
-        transition: opacity 0.3s;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+        gap: 8px;
     }
 
     .save-btn:hover {
-        opacity: 0.9;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        opacity: 0.95;
     }
 
-    @media (max-width: 767.98px) {
-
-        .profile-pic-wrapper {
-            width: 150px;
-            height: 150px;
+    @media (max-width: 768px) {
+        .profile-card {
+            flex-direction: column;
         }
 
-        .custom-input {
-            height: auto;
-            padding: 10px 12px;
+        .profile-left,
+        .profile-right {
+            flex: auto;
         }
 
-        .attach-btn,
-        .attach-file-btn {
-            min-height: auto;
-            padding: 8px 10px;
+        .profile-left {
+            text-align: center;
+            padding: 30px 20px;
         }
     }
 </style>
 
-<div class="container my-5 mt-10"  style="margin-top: 150px">
-    <h1 class="text-center mb-4">Mon Profil</h1>
+<div class="profile-page-container">
+    <div class="profile-header">
+        <h1>Mon Profil</h1>
+    </div>
 
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <h2>Données Personnelles</h2>
-
-            <div id="update-message" class="mt-2 text-success fw-bold" style="display: none;">
-                ✅ Données mises à jour avec succès !
+    <div class="profile-card">
+        <div class="profile-left">
+            <div class="profile-image-wrapper">
+                <i class="fas fa-user"></i>
             </div>
-
-            <div class="mb-3">
-                <label for="nom" class="form-label label-gray">NOM</label>
-                <input type="text" id="nom" name="nom" class="form-control custom-input" value="{{ user.lastname }}"
-                    placeholder="Votre nom">
+            <div class="profile-name">
+                {{ user.name }} {{ user.lastname }}
             </div>
-            <div class="mb-3">
-                <label for="prenom" class="form-label label-gray">PRÉNOM</label>
-                <input type="text" id="prenom" name="prenom" class="form-control custom-input"
-                    value="{{ user.name }}" placeholder="Votre prénom">
-            </div>
-            <div class="mb-3">
-                <label for="entreprise" class="form-label label-gray">ENTREPRISE</label>
-                <input type="text" id="entreprise" name="entreprise" class="form-control custom-input"
-                    value="{{ user.societyName }}" placeholder="Nom de l’entreprise">
-            </div>
-            <div class="mb-3">
-                <label for="telephone" class="form-label label-gray">TÉLÉPHONE</label>
-                <input type="text" id="telephone" name="telephone" class="form-control custom-input"
-                    value="{{ user.phone }}" placeholder="+33...">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label label-gray">EMAIL</label>
-                <input type="email" id="email" name="email" class="form-control custom-input" value="{{ user.email }}"
-                    placeholder="votre@email.fr">
-            </div>
-
-            <div class="text-center mt-3">
-                <button type="button" class="save-btn btn btn-primary">
-                    <i class="bi bi-pencil"></i> Modifier
-                </button>
+            <div class="profile-subtitle">
+                {{ user.societyName is not empty ? user.societyName : 'Entreprise' }}
             </div>
         </div>
 
+        <div class="profile-right">
+            <div id="update-message">
+                <i class="fas fa-check-circle"></i> Données mises à jour avec succès !
+            </div>
+
+            <form class="profile-form">
+                <div class="form-group">
+                    <label for="nom">
+                        <i class="fas fa-user gradient-icon"></i> Nom
+                    </label>
+                    <input type="text" id="nom" name="nom" value="{{ user.lastname }}" placeholder="Votre Nom">
+                </div>
+
+                <div class="form-group">
+                    <label for="prenom">
+                        <i class="fas fa-user gradient-icon"></i> Prénom
+                    </label>
+                    <input type="text" id="prenom" name="prenom" value="{{ user.name }}" placeholder="Votre Prénom">
+                </div>
+
+                <div class="form-group">
+                    <label for="entreprise">
+                        <i class="fas fa-building gradient-icon"></i> Entreprise
+                    </label>
+                    <input type="text" id="entreprise" name="entreprise" value="{{ user.societyName }}"
+                        placeholder="Nom de l’entreprise">
+                </div>
+
+                <div class="form-group">
+                    <label for="telephone">
+                        <i class="fas fa-phone gradient-icon"></i> Téléphone
+                    </label>
+                    <input type="tel" id="telephone" name="telephone" value="{{ user.phone }}" placeholder="+33...">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope gradient-icon"></i> Email
+                    </label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" placeholder="votre@email.fr">
+                </div>
+
+                <div class="text-center">
+                    <button type="button" class="save-btn">
+                        <i class="fas fa-pencil-alt"></i> Modifier
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
@@ -185,7 +244,7 @@
         const updateMessage = document.querySelector("#update-message");
 
         saveButton.addEventListener("click", function () {
-            saveButton.innerHTML = '<i class="bi bi-hourglass-split"></i> Mise à jour...';
+            saveButton.innerHTML = '<i class="fas fa-hourglass-half"></i> Mise à jour...';
             saveButton.disabled = true;
 
             const userData = {
@@ -207,6 +266,13 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.message) {
+                        document.querySelector(".profile-name").textContent =
+                            userData.name + " " + userData.lastname;
+
+
+                        document.querySelector(".profile-subtitle").textContent =
+                            userData.societyName ? userData.societyName : 'Entreprise';
+
                         updateMessage.style.display = "block";
                         setTimeout(() => {
                             updateMessage.style.display = "none";
@@ -217,7 +283,7 @@
                 })
                 .catch(error => console.error("Erreur:", error))
                 .finally(() => {
-                    saveButton.innerHTML = '<i class="bi bi-pencil"></i> Modifier';
+                    saveButton.innerHTML = '<i class="fas fa-pencil-alt"></i> Modifier';
                     saveButton.disabled = false;
                 });
         });

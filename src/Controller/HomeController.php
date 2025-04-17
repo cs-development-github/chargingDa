@@ -10,6 +10,7 @@ use App\Form\ClientFormType;
 use Symfony\Component\Uid\Uuid;
 use App\Service\ClientMailService;
 use App\Form\InterventionFormType;
+use App\Repository\ChargingStationsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -72,7 +73,57 @@ class HomeController extends AbstractController
             'interventionForm' => $interventionForm->createView(),
         ]);
     }
+
+    #[Route('/dashboard/ajout-client', name: 'app_add_client')]
+    public function addClient(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        ChargingStationsRepository $chargingStationsRepository
+    ): Response {
+        $user = $this->getUser();
     
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+    
+        $client = new Client();
+        $clientForm = $this->createForm(ClientFormType::class, $client);
+        $clientForm->handleRequest($request);
+    
+        $interventionForm = $this->createForm(InterventionFormType::class);
+        $interventionForm->handleRequest($request);
+    
+        $chargingStationModels = $chargingStationsRepository->findAll();
+
+    
+        if ($clientForm->isSubmitted()) {
+            foreach ($interventionForm->get('interventions') as $interventionField) {
+                $intervention = $interventionField->getData();
+    
+                if (!$intervention || !$intervention->getChargingStation()) {
+                    $this->addFlash('danger', 'Un modèle de borne est manquant.');
+                    return $this->redirectToRoute('app_add_client');
+                }
+    
+                $intervention->setClient($client);
+                $intervention->setInstallator($user);
+    
+                $entityManager->persist($intervention);
+            }
+    
+            $entityManager->persist($client);
+            $entityManager->flush();
+    
+            $this->addFlash('success', 'Client et bornes enregistrés avec succès.');
+            return $this->redirectToRoute('app_home');
+        }
+    
+        return $this->render('home/add_client.html.twig', [
+            'clientForm' => $clientForm->createView(),
+            'interventionForm' => $interventionForm->createView(),
+            'chargingStationModels' => $chargingStationModels,
+        ]);
+    }
 
     #[Route('/supervision/{id}', name: 'start_supervision')]
     public function startSupervision($id, EntityManagerInterface $entityManager): Response

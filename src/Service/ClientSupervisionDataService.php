@@ -19,23 +19,59 @@ class ClientSupervisionDataService
         private LoggerInterface $logger
     ) {}
 
-    public function superviseClientStations(Client $client, array $dtos): void
+    public function superviseClientStations(Client $client, array $dtos): array
     {
-
-        $this->createUser($client);
-        $this->authenticatePartner();
-
-        $firstDto = $dtos[0];
-        $setting = $firstDto->chargingStationSetting;
-
-        $companyId = $this->createOrGetCompany($client);
-        $siteId = $this->createOrGetSite($client, $setting, $companyId);
-        $siteAreaId = $this->createOrGetSiteArea($client, $setting, $siteId);
-
-        foreach ($dtos as $dto) {
-            $this->createPricingDefinition($dto);
-            $this->assignSiteAreaToStation($dto, $siteAreaId, $dto->station);
+        $steps = [];
+    
+        try {
+            $this->createUser($client);
+            $steps[] = ['label' => 'Création de l\'utilisateur', 'status' => true];
+        } catch (\Throwable $e) {
+            $steps[] = ['label' => 'Erreur création utilisateur', 'status' => false, 'message' => $e->getMessage()];
         }
+    
+        try {
+            $this->authenticatePartner();
+            $steps[] = ['label' => 'Authentification', 'status' => true];
+        } catch (\Throwable $e) {
+            $steps[] = ['label' => 'Erreur auth partenaire', 'status' => false, 'message' => $e->getMessage()];
+            return $steps;
+        }
+    
+        try {
+            $firstDto = $dtos[0];
+            $setting = $firstDto->chargingStationSetting;
+    
+            $companyId = $this->createOrGetCompany($client);
+            $steps[] = ['label' => 'Création de la société', 'status' => true];
+    
+            $siteId = $this->createOrGetSite($client, $setting, $companyId);
+            $steps[] = ['label' => 'Création du site', 'status' => true];
+    
+            $siteAreaId = $this->createOrGetSiteArea($client, $setting, $siteId);
+            $steps[] = ['label' => 'Création de la zone', 'status' => true];
+    
+            foreach ($dtos as $dto) {
+                try {
+                    $this->createPricingDefinition($dto);
+                    $steps[] = ['label' => "Affectation des tarifs {$dto->borneName}", 'status' => true];
+                } catch (\Throwable $e) {
+                    $steps[] = ['label' => "Erreur tarif {$dto->borneName}", 'status' => false, 'message' => $e->getMessage()];
+                }
+    
+                try {
+                    $this->assignSiteAreaToStation($dto, $siteAreaId, $dto->station);
+                    $steps[] = ['label' => "Assignation de la borne : {$dto->borneName}", 'status' => true];
+                } catch (\Throwable $e) {
+                    $steps[] = ['label' => "Erreur assignation {$dto->borneName}", 'status' => false, 'message' => $e->getMessage()];
+                }
+            }
+    
+        } catch (\Throwable $e) {
+            $steps[] = ['label' => 'Erreur globale', 'status' => false, 'message' => $e->getMessage()];
+        }
+    
+        return $steps;
     }
 
     private function createUser(Client $client): void

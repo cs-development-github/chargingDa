@@ -1,410 +1,390 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Bornes{% endblock %}
+{% block title %}
+	Bornes
+{% endblock %}
 
 {% block body %}
-<style>
-  .container {
-    background-color: white !important;
-    padding: 20px;
-  }
+	<style>
+		.container {
+			background-color: white !important;
+			padding: 20px;
+		}
 
-  .header-search {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
+		.header-search {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 1rem;
+		}
 
-  .header-search .left,
-  .header-search .right {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-  }
+		.header-search .left,
+		.header-search .right {
+			display: flex;
+			flex-wrap: wrap;
+			align-items: center;
+		}
 
-  .header-search .left {
-    flex: 1 1 100%;
-  }
+		.header-search .left {
+			flex: 1 1 100%;
+		}
 
-  @media (min-width: 768px) {
-    .header-search .left {
-      flex: 1;
-    }
-  }
+		@media(min-width: 768px) {
+			.header-search .left {
+				flex: 1;
+			}
+		}
 
-  .header-search h4 {
-    margin: 0;
-    font-weight: bold;
-  }
+		.header-search h4 {
+			margin: 0;
+			font-weight: bold;
+		}
 
-  .header-search input.form-control {
-    max-width: 250px;
-    border-radius: 10px;
-  }
+		.header-search input.form-control {
+			max-width: 250px;
+			border-radius: 10px;
+		}
 
-  .header-search button {
-    background: linear-gradient(to right, #ff4081, #ff8c00);
-    border-radius: 10px;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    margin-top: 0.5rem;
-  }
+		.header-search button {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border-radius: 10px;
+			color: white;
+			border: none;
+			padding: 0.5rem 1rem;
+			margin-top: 0.5rem;
+		}
 
-  @media (min-width: 768px) {
-    .header-search button {
-      margin-top: 0;
-    }
-  }
+		@media(min-width: 768px) {
+			.header-search button {
+				margin-top: 0;
+			}
+		}
 
-  .station-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    color: #6c757d;
-    text-transform: uppercase;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #ddd;
-  }
+		.station-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			font-weight: bold;
+			color: #6c757d;
+			text-transform: uppercase;
+			padding: 15px;
+			margin-bottom: 10px;
+			border-bottom: 2px solid #ddd;
+		}
 
-  .station-header span {
-    flex: 1;
-    text-align: center;
-  }
+		.station-header span {
+			flex: 1;
+			text-align: center;
+		}
 
-  .station-card {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    margin-bottom: 15px;
-  }
+		.station-card {
+			background-color: white;
+			border-radius: 10px;
+			padding: 15px;
+			box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+			margin-bottom: 15px;
+		}
 
-  .card-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+		.card-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
 
-  .station-info {
-    flex: 1;
-    text-align: center;
-  }
+		.station-info {
+			flex: 1;
+			text-align: center;
+		}
 
-  .btn-action {
-    background: linear-gradient(to right, #ff4081, #ff8c00);
-    border: none;
-    border-radius: 10px;
-    color: white;
-    padding: 6px 12px;
-    font-size: 0.9rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+		.btn-action {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border: none;
+			border-radius: 10px;
+			color: white;
+			padding: 6px 12px;
+			font-size: 0.9rem;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
 
-  .btn-action:hover {
-    transform: scale(1.05);
-    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-  }
+		.btn-action:hover {
+			transform: scale(1.05);
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+		}
 
-  .modal-content {
-    border-radius: 12px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 30px;
-    border: none;
-  }
+		.modal-content {
+			border-radius: 12px;
+			box-shadow: rgba(0, 0, 0, 0.2) 0 10px 30px;
+			border: none;
+		}
 
-  .modal-header {
-    background: linear-gradient(to right, #ff4081, #ff8c00);
-    color: white;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-  }
+		.modal-header {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			color: white;
+			border-top-left-radius: 12px;
+			border-top-right-radius: 12px;
+		}
 
-  .btn-close {
-    filter: invert(1);
-  }
+		.btn-close {
+			filter: invert(1);
+		}
 
-  .form-control {
-    border-radius: 8px;
-    padding: 10px;
-  }
+		.form-control {
+			border-radius: 8px;
+			padding: 10px;
+		}
 
-  .btn-save {
-    background: linear-gradient(to right, #ff4081, #ff8c00);
-    border-radius: 10px;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-  }
+		.btn-save {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border-radius: 10px;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+		}
 
-  .d-md-block {
-    display: block !important;
-  }
+		.d-md-block {
+			display: block !important;
+		}
 
-  .d-md-none {
-    display: none !important;
-  }
+		.d-md-none {
+			display: none !important;
+		}
 
-  @media (max-width: 767.98px) {
-    .d-md-block {
-      display: none !important;
-    }
+		@media(max-width: 767.98px) {
+			.d-md-block {
+				display: none !important;
+			}
 
-    .d-md-none {
-      display: block !important;
-    }
-  }
-</style>
+			.d-md-none {
+				display: block !important;
+			}
+		}
+	</style>
 
-<div class="container mt-10" style="margin-top: 200px;">
-  <div class="header-search">
-    <div class="left">
-      <h4>DOCUMENTATION BORNES</h4>
-    </div>
-    <div class="right">
-      {% if is_granted('ROLE_ADMIN') %}
-      <button class="ms-3 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#addStationModal">
-        <i class="bi bi-plus-lg"></i> Ajouter
-      </button>
-      {% endif %}
-    </div>
-    {% if is_granted('ROLE_ADMIN') %}
-    <div class="w-100 d-md-none mt-2">
-      <button class="w-100" data-bs-toggle="modal" data-bs-target="#addStationModal">
-        <i class="bi bi-plus-lg"></i> Ajouter
-      </button>
-    </div>
-    {% endif %}
-  </div>
+	<div class="container mt-10" style="margin-top: 200px;">
+		<div class="header-search">
+			<div class="left">
+				<h4>DOCUMENTATION BORNES</h4>
+			</div>
 
-  <div class="d-none d-md-block">
-    <div class="station-header">
-      <span>Modèle</span>
-      <span>Fabricant</span>
-      <span>PDC</span>
-      <span>Photo</span>
-      {% if is_granted('ROLE_ADMIN') %}
-      <span>Gestion</span>
-      {% endif %}
-    </div>
+			{% if is_granted('ROLE_ADMIN') %}
+				<div class="right">
+					<button class="ms-3 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#addStationModal">
+						<i class="bi bi-plus-lg"></i>
+						Ajouter une Borne
+					</button>
+					<button class="ms-3 d-none d-md-block" data-bs-toggle="modal" data-bs-target="#addManufacturerModal">
+						<i class="bi bi-plus-lg"></i>
+						Ajouter un Constructeur
+					</button>
+				</div>
+				<div class="w-100 d-md-none mt-2">
+					<button class="w-100 mb-2" data-bs-toggle="modal" data-bs-target="#addStationModal">
+						<i class="bi bi-plus-lg"></i>
+						Ajouter une Borne
+					</button>
+					<button class="w-100" data-bs-toggle="modal" data-bs-target="#addManufacturerModal">
+						<i class="bi bi-plus-lg"></i>
+						Ajouter un Constructeur
+					</button>
+				</div>
+			{% endif %}
+		</div>
 
-    <div class="row">
-      {% for station in chargingStations %}
-      <div class="col-12">
-        <div class="station-card">
-          <div class="card-content">
-            <div class="station-info">
-              <span class="fw-bold text-dark">{{ station.model }}</span>
-            </div>
-            <div class="station-info">
-              {% if station.manufacturer.image %}
-              <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo Fabricant" width="90">
-              {% else %}
-              <span class="text-muted">Fabricant</span>
-              {% endif %}
-            </div>
-            <div class="station-info">
-              <span class="fw-bold text-dark">{{ station.connectors }}</span>
-            </div>
-            <div class="station-info">
-              {% if station.image %}
-              <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image de la Borne" width="90">
-              {% else %}
-              <span class="text-muted">Non disponible</span>
-              {% endif %}
-            </div>
-            {% if is_granted('ROLE_ADMIN') %}
-            <div class="station-info text-center">
-              <div class="station-actions d-flex justify-content-center gap-2">
-                <a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="btn-action">
-                  <i class="bi bi-pencil-square"></i>
-                </a>
-                <button class="btn-action" data-bs-toggle="modal"
-                  data-bs-target="#deleteStationModal{{ station.slug }}">
-                  <i class="bi bi-trash"></i>
-                </button>
-              </div>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      {% if is_granted('ROLE_ADMIN') %}
-      <div class="modal fade" id="deleteStationModal{{ station.slug }}" tabindex="-1"
-        aria-labelledby="deleteStationModalLabel{{ station.slug }}" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Confirmation de suppression</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <div class="modal-body">
-              <p>Êtes-vous sûr de vouloir supprimer cette borne ? Cette action est irréversible.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-              <form action="{{ path('charging_station_delete', { slug: station.slug }) }}" method="POST">
-                <button type="submit" class="btn-action">Confirmer la suppression</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-      {% else %}
-      <div class="col-12 text-center text-muted">
-        <p>Aucune borne enregistrée.</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-
-  <div class="d-block d-md-none">
-    <div class="row">
-      {% for station in chargingStations %}
-      <div class="col-12">
-        <div class="card station-card mb-3">
-          <div class="card-body text-center">
-            <div class="mb-2">
-              {% if station.image %}
-              <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image de la Borne" class="img-fluid"
-                style="max-width: 150px; border-radius: 10px;">
-              {% else %}
-              <span class="text-muted">Pas d'image</span>
-              {% endif %}
-            </div>
-            <h5 class="card-title fw-bold text-dark">{{ station.model }}</h5>
-            <p class="mb-1">
-              <strong>Fabricant:</strong>
-              {% if station.manufacturer.image %}
-              <br>
-              <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo Fabricant"
-                style="max-width: 80px; border-radius: 5px;">
-              {% else %}
-              <span class="text-muted">Non spécifié</span>
-              {% endif %}
-            </p>
-            <p class="mb-1">
-              <strong>PDC:</strong> {{ station.connectors }}
-            </p>
-            {% if is_granted('ROLE_ADMIN') %}
-            <div class="d-flex justify-content-center gap-3">
-              <a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="btn-action">
-                <i class="bi bi-pencil-square"></i>
-              </a>
-              <button class="btn-action" data-bs-toggle="modal"
-                data-bs-target="#deleteStationModalMobile{{ station.slug }}">
-                <i class="bi bi-trash"></i>
-              </button>
-            </div>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-
-      {% if is_granted('ROLE_ADMIN') %}
-      <div class="modal fade" id="deleteStationModalMobile{{ station.slug }}" tabindex="-1"
-        aria-labelledby="deleteStationModalLabelMobile{{ station.slug }}" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Confirmation de suppression</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-            </div>
-            <div class="modal-body">
-              <p>Êtes-vous sûr de vouloir supprimer cette borne ? Cette action est irréversible.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-              <form action="{{ path('charging_station_delete', { slug: station.slug }) }}" method="POST">
-                <button type="submit" class="btn-action">Confirmer la suppression</button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-      {% endif %}
-      {% else %}
-      <div class="col-12 text-center text-muted">
-        <p>Aucune borne enregistrée.</p>
-      </div>
-      {% endfor %}
-    </div>
-  </div>
+<div class="card p-3 mb-4 shadow-sm">
+  <input type="text" id="global-search" class="form-control" placeholder="🔍 Rechercher une borne (modèle, constructeur, puissance...)">
 </div>
 
-<div class="modal fade" id="addStationModal" tabindex="-1" aria-labelledby="addStationModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addStationModalLabel">Gestion des Bornes</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body">
-        <ul class="nav nav-tabs" id="borneTabs" role="tablist">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="borne-tab" data-bs-toggle="tab" data-bs-target="#borne" type="button"
-              role="tab">
-              Ajouter une Borne
-            </button>
-          </li>
-          <li class="nav-item" role="presentation">
-            <button class="nav-link" id="proprietaire-tab" data-bs-toggle="tab" data-bs-target="#proprietaire"
-              type="button" role="tab">
-              Ajouter un constructeur
-            </button>
-          </li>
-        </ul>
-        <div class="tab-content" id="borneTabsContent">
-          <div class="tab-pane fade show active" id="borne" role="tabpanel">
-            <form action="{{ path('charging_station_add') }}" method="post" enctype="multipart/form-data">
-              {{ form_start(form) }}
-              <div class="mb-3">
-                {{ form_label(form.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
-                {{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
-              </div>
-              <div class="mb-3">
-                {{ form_label(form.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
-                {{ form_widget(form.manufacturer, {'attr': {'class': 'form-control'}}) }}
-              </div>
-              <div class="mb-3">
-                {{ form_label(form.connectors, 'PDC', {'label_attr': {'class': 'fw-bold'}}) }}
-                {{ form_widget(form.connectors, {'attr': {'class': 'form-control'}}) }}
-              </div>
-              <div class="mb-3">
-                <label class="fw-bold">Photo</label>
-                <input type="file" name="image" class="form-control" />
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-save">Enregistrer</button>
-              </div>
-              {{ form_end(form) }}
-            </form>
-          </div>
-          <div class="tab-pane fade" id="proprietaire" role="tabpanel">
-            <form action="{{ path('manufacturer_add') }}" method="POST" enctype="multipart/form-data">
-              {{ form_start(manufacturerForm) }}
-              <div class="mb-3">
-                {{ form_label(manufacturerForm.name, 'Nom du constructeur', {'label_attr': {'class': 'fw-bold'}}) }}
-                {{ form_widget(manufacturerForm.name, {'attr': {'class': 'form-control'}}) }}
-              </div>
-              <div class="mb-3">
-                {{ form_label(manufacturerForm.image, 'Logo du constructeur', {'label_attr': {'class': 'fw-bold'}}) }}
-                {{ form_widget(manufacturerForm.image, {'attr': {'class': 'form-control'}}) }}
-              </div>
-              <div class="modal-footer">
-                <button type="submit" class="btn btn-save">Ajouter</button>
-              </div>
-              {{ form_end(manufacturerForm) }}
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+{% if chargingStations is not empty %}
+			<div class="row">
+				{% for station in chargingStations %}
+					<div class="col-12 col-md-6 col-xl-4 mb-4">
+            <div class="p-3 rounded-4 shadow-sm border bg-white h-100 d-flex flex-column justify-content-between station-card" data-search="{{ (station.model ~ ' ' ~ (station.manufacturer.name ?? '') ~ ' ' ~ station.power ~ ' ' ~ station.connectors)|lower }}">
+     							<div class="text-center">
+								{% if station.image %}
+									<img src="{{ asset('uploads/' ~ station.image) }}" alt="Photo borne" class="img-fluid rounded mb-3" style="max-height: 150px;">
+								{% else %}
+									<div class="text-muted small mb-3">Aucune image disponible</div>
+								{% endif %}
+								<h5 class="fw-bold mb-1">{{ station.model }}</h5>
+								<p class="text-muted mb-2 small">{{ station.power }}
+									kW –
+									{{ station.connectors }}
+									point(s)</p>
+							</div>
+
+							<div class="text-center mb-3">
+								{% if station.manufacturer.image %}
+									<img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo constructeur" class="img-fluid" style="max-height: 60px;">
+								{% else %}
+									<div class="text-muted small">Constructeur non renseigné</div>
+								{% endif %}
+							</div>
+
+							{% if is_granted('ROLE_ADMIN') %}
+								<div class="d-flex justify-content-center gap-3 mt-2">
+									<a href="{{ path('charging_station_show', { slug: station.slug }) }}" class="btn btn-action">
+										<i class="bi bi-pencil-square me-1"></i>
+										Modifier
+									</a>
+									<button class="btn btn-action" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.slug }}">
+										<i class="bi bi-trash me-1"></i>
+										Supprimer
+									</button>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+
+					{% if is_granted('ROLE_ADMIN') %}
+						<div class="modal fade" id="deleteStationModal{{ station.slug }}" tabindex="-1" aria-labelledby="deleteStationModalLabel{{ station.slug }}" aria-hidden="true">
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title">Confirmation de suppression</h5>
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+									</div>
+									<div class="modal-body">
+										<p>Voulez-vous vraiment supprimer
+											<strong>{{ station.model }}</strong>
+											?</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+										<form method="POST" action="{{ path('charging_station_delete', { slug: station.slug }) }}">
+											<button type="submit" class="btn btn-danger">Confirmer</button>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% else %}
+			<div class="alert alert-warning text-center">Aucune borne enregistrée pour le moment.</div>
+{% endif %}
+
+
+	</div>
+
+	<div class="modal fade" id="addStationModal" tabindex="-1" aria-labelledby="addStationModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addStationModalLabel">Ajouter une Borne</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<div class="modal-body">
+					<form action="{{ path('charging_station_add') }}" method="post" enctype="multipart/form-data">
+						{{ form_start(form) }}
+						<div class="mb-3">
+							{{ form_label(form.model, 'Modèle', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(form.model, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="mb-3">
+							{{ form_label(form.image, 'Photo de la borne', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="mb-3">
+							{{ form_label(form.manufacturer, 'Fabricant', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(form.manufacturer, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="mb-3">
+							{{ form_label(form.connectors, 'Nombre de point de charge', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(form.connectors, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="mb-3">
+							{{ form_label(form.power, 'Puissance', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(form.power, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="mb-3">
+							{{ form_label(form.isActive, 'Publier', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(form.isActive) }}
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-save">Enregistrer</button>
+						</div>
+						{{ form_end(form) }}
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="addManufacturerModal" tabindex="-1" aria-labelledby="addManufacturerModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="addManufacturerModalLabel">Ajouter un Constructeur</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+				</div>
+				<div class="modal-body">
+					<form action="{{ path('manufacturer_add') }}" method="POST" enctype="multipart/form-data">
+						{{ form_start(manufacturerForm) }}
+						<div class="mb-3">
+							{{ form_label(manufacturerForm.name, 'Nom du constructeur', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(manufacturerForm.name, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="mb-3">
+							{{ form_label(manufacturerForm.image, 'Logo du constructeur', {'label_attr': {'class': 'fw-bold'}}) }}
+							{{ form_widget(manufacturerForm.image, {'attr': {'class': 'form-control'}}) }}
+						</div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-save">Ajouter</button>
+						</div>
+						{{ form_end(manufacturerForm) }}
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<script>
+	  document.addEventListener('DOMContentLoaded', () => {
+	    const addButtons = document.querySelectorAll('[data-bs-target="#addStationModal"]');
+	
+	    addButtons.forEach(btn => {
+	      btn.addEventListener('click', function () {
+	        const tab = this.dataset.tab;
+	
+	        // On attend un peu que la modal s’ouvre avant de changer l’onglet
+	        setTimeout(() => {
+	          const tabBtn = document.querySelector(`#borneTabs button[data-bs-target="#${tab}"]`);
+	          if (tabBtn) {
+	            const tabInstance = new bootstrap.Tab(tabBtn);
+	            tabInstance.show();
+	          }
+	        }, 200);
+	      });
+	    });
+	  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('global-search');
+    const cards = document.querySelectorAll('.station-card');
+    const countDisplay = document.getElementById('stations-count');
+
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', () => {
+      const searchValue = searchInput.value.trim().toLowerCase();
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const haystack = card.dataset.search || '';
+        const match = haystack.includes(searchValue);
+        card.parentElement.style.display = match ? 'block' : 'none';
+        if (match) visibleCount++;
+      });
+
+      if (countDisplay) {
+        countDisplay.textContent = visibleCount;
+      }
+    });
+  });
+</script>
+
 {% endblock %}

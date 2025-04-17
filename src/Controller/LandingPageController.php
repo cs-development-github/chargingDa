@@ -22,4 +22,31 @@ final class LandingPageController extends AbstractController
         return $this->render('landing_page/cgu.html.twig', [
         ]);
     }
+    #[Route('/aide', name: 'app_aide')]
+    public function aide(): Response
+    {
+        return $this->render('landing_page/aide.html.twig', []);
+    }
+
+    #[Route('/contact', name: 'app_contact')]
+    public function contact(): Response
+    {
+        return $this->render('landing_page/contact.html.twig', []);
+    }
+
+    #[Route('/faq', name: 'app_faq')]
+    public function faq(): Response
+    {
+        return $this->render('landing_page/faq.html.twig', []);
+    }
+
+
+    #[Route('/propos', name: 'app_propos')]
+    public function propos(): Response
+    {
+        return $this->render('landing_page/propos.html.twig', []);
+    }
+
+
+
 }
