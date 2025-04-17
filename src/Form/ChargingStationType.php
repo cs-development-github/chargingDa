@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Manufacturer;
 use App\Entity\ChargingStations;
+use Doctrine\DBAL\Types\BooleanType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -11,6 +12,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class ChargingStationType extends AbstractType
 {
@@ -21,6 +24,10 @@ class ChargingStationType extends AbstractType
                 'label' => 'Modèle',
                 'attr' => ['class' => 'form-control'],
             ])
+            ->add('image', FileType::class, [
+                'label' => 'Photo de la borne',
+                'attr' => ['class' => 'form-control'],
+            ])    
             ->add('manufacturer', EntityType::class, [
                 'class' => Manufacturer::class,
                 'choice_label' => 'name',
@@ -32,8 +39,21 @@ class ChargingStationType extends AbstractType
                 'label' => 'PDC',
                 'attr' => ['class' => 'form-control'],
             ])
+            ->add('power', ChoiceType::class, [
+                'label' => 'Puissance',
+                'attr' => ['class' => 'form-control'],
+                'choices' => array_combine(
+                    array_map(fn($v) => $v . ' kW', range(3, 22)),
+                    range(3, 22)
+                ),
+                'placeholder' => 'Sélectionnez la puissance',
+            ])
+            ->add('image', FileType::class, [
+                'label' => 'Photo de la borne',
+                'attr' => ['class' => 'form-control'],
+            ])            
             ->add('isActive', CheckboxType::class, [
-                'label' => 'Actif ',
+                'label' => 'Actif',
                 'required' => false,
             ]);
     }

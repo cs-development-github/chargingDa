@@ -4,76 +4,117 @@
 {% endblock %}
 
 {% block body %}
-	<style>
-		.section-card {
-			background: white;
-			border-radius: 16px;
-			padding: 25px;
-			margin-bottom: 30px;
-			box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-		}
+<style>
+	:root {
+		--linear-gradient: linear-gradient(135deg, #ff5e62, #ff9966);
+		--shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
+		--shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+		--text-color: #333;
+		--accent-color: #ff5e62;
+	}
 
-		.section-card h4 {
-			border-left: 4px solid #ff4081;
-			padding-left: 10px;
-			margin-bottom: 20px;
-			font-weight: bold;
-		}
+	body {
+		font-family: 'Segoe UI', sans-serif;
+		color: var(--text-color);
+	}
 
-		.list-group-item {
-			border: none;
-			border-bottom: 1px solid #eee;
-		}
+	h2, h4 {
+		font-weight: 600;
+		color: var(--accent-color);
+	}
 
-		.btn-primary {
-			background: linear-gradient(to right, #ff4081, #ff8c00);
-			border: none;
-			border-radius: 8px;
-		}
+	.section-card {
+		background: white;
+		border-radius: 12px;
+		padding: 30px;
+		margin-bottom: 30px;
+		box-shadow: var(--shadow-card);
+		transition: box-shadow 0.3s ease;
+	}
 
-		.btn-secondary {
-			border-radius: 8px;
-		}
+	.section-card:hover {
+		box-shadow: var(--shadow-card-hover);
+	}
 
-		.badge.bg-secondary {
-			background-color: #6c757d;
-			font-size: 0.75rem;
-			padding: 4px 8px;
-			border-radius: 10px;
-		}
+	.section-card h4 {
+		border-left: 4px solid var(--accent-color);
+		padding-left: 12px;
+		font-size: 1.2rem;
+		margin-bottom: 25px;
+	}
 
-		.card-intervention {
-			border-radius: 12px;
-			border: none;
-			box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-			transition: all 0.2s ease;
-		}
+	.list-group-item {
+		border: none;
+		border-bottom: 1px solid #f0f0f0;
+		padding: 10px 0;
+	}
 
-		.card-intervention:hover {
-			transform: translateY(-4px);
-			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-		}
+	.list-group-item strong {
+		display: inline-block;
+		min-width: 130px;
+		color: #666;
+	}
 
-		.card-title {
-			font-weight: 600;
-			color: #ff4081;
-		}
+	.card-intervention {
+		border-radius: 10px;
+		box-shadow: var(--shadow-card);
+		border: none;
+		transition: all 0.2s ease;
+	}
 
-		.img-fluid {
-			max-height: 60px;
-			object-fit: contain;
-		}
+	.card-intervention:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-card-hover);
+	}
 
-		.card-footer .btn {
-			background: linear-gradient(to right, #ff4081, #ff8c00);
-			border: none;
-			border-radius: 8px;
-		}
+	.card-title {
+		font-weight: 600;
+		color: var(--accent-color);
+		font-size: 1.1rem;
+	}
 
-		.text-muted {
-			font-size: 0.9rem;
-		}
-	</style>
+	.btn {
+		border: none;
+		border-radius: 8px;
+		font-weight: 500;
+	}
+
+	.btn-primary,
+	.card-footer .btn {
+		background: var(--linear-gradient);
+		color: white;
+	}
+
+	.btn-secondary {
+		background-color: #e9ecef;
+		color: #333;
+	}
+
+	.btn-outline-danger {
+		border: 1px solid #ff5e62;
+		color: #ff5e62;
+	}
+
+	.btn-outline-danger:hover {
+		background-color: #ffe6e9;
+	}
+
+	.img-fluid {
+		max-height: 60px;
+		object-fit: contain;
+	}
+
+	.badge.bg-secondary {
+		background-color: #6c757d;
+		font-size: 0.75rem;
+		padding: 4px 8px;
+		border-radius: 10px;
+	}
+
+	.text-muted {
+		font-size: 0.9rem;
+	}
+</style>
 
 	<div class="container" style="margin-top: 150px;">
 		<h2 class="mb-5 text-center">Intervention
@@ -140,34 +181,6 @@
 						<li class="list-group-item">
 							<strong>Créé le :</strong>
 							{{ intervention.installator.createdAt|date('d/m/Y H:i') }}</li>
-					</ul>
-				</div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-6">
-				<div class="section-card">
-					<h4>Borne concernée</h4>
-					<ul class="list-group">
-						<li class="list-group-item">
-							<strong>Nom :</strong>
-							{{ intervention.borneName }}</li>
-						<li class="list-group-item">
-							<strong>Modèle :</strong>
-							{{ intervention.chargingStation.model }}</li>
-						<li class="list-group-item">
-							<strong>Fabricant :</strong>
-							{{ intervention.chargingStation.manufacturer.name ?? 'Inconnu' }}</li>
-						<li class="list-group-item">
-							<strong>Connecteurs :</strong>
-							{{ intervention.chargingStation.connectors }}</li>
-						<li class="list-group-item">
-							<strong>Slug :</strong>
-							{{ intervention.chargingStation.slug }}</li>
-						<li class="list-group-item">
-							<strong>Créée le :</strong>
-							{{ intervention.chargingStation.createdAt|date('d/m/Y H:i') }}</li>
 					</ul>
 				</div>
 			</div>
