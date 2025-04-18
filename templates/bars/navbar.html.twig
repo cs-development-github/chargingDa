@@ -1,33 +1,265 @@
-<nav class="navbar navbar-expand-lg bg-white shadow-sm px-4 py-3 fixed-top" style="height: 70px; z-index: 1050;">
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
-                <img src="{{ asset('build/images/lodmico.png') }}" alt="ya pas de ph" class="img-fluid me-2 d-none d-md-block"
-                    style="height: 50px; border-radius: 10px;">
-                <h4 class="fw-bold mb-0 d-none d-md-block" style="
-                  background: linear-gradient(to right, #ff4081, #ff8c00);
-                  -webkit-background-clip: text;
-                  -webkit-text-fill-color: transparent;
-                ">
-                    PARTENAIRE
-                </h4>
-            </a>
-        </div>
+<style>
+    .navbar-custom {
+        background: #fff;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    }
 
-        <div class="dropdown">
-            <a class="d-flex align-items-center text-decoration-none dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <div class="ms-2 d-none d-lg-block text-black">
-                    <strong>{{ app.user.name }} {{ app.user.lastname }}</strong>
-                </div>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="{{ path('app_account') }}">Mon compte</a></li>
-                <li><a class="dropdown-item" href="{{ path('app_charging_stations') }}">Bornes de recharge</a></li>
-                {% if is_granted('ROLE_ADMIN') %}
-                <li><a class="dropdown-item" href="{{ path('app_intervention') }}">Interventions</a></li>
-                {% endif %}
-                <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Déconnexion</a></li>
-            </ul>
+    /* ==== Logo Cuadrado ==== */
+    .logo-square {
+        width: 48px;
+        height: 48px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+    }
+
+    .logo-square img {
+        max-width: 40px;
+        max-height: 40LVFQaozFQfukhuApSWzvgljMVZNpEjLZitWUoykrMGNSEnxyYjEKlxKThUIhBDoUkmutbZQqNuZBniHxKFjPRefhYpblgFRfOwxyPoqMLOKsqlaXTacgHKaBpMFzoQrdWpbOArzjZqsVOGhLoEtXvhFpxixvkiHfWufJBjGDOqOHVRIFsnzmwjPiNpx;
+    }
+
+    /* ==== Texto Degradado ==== */
+    .brand-gradient {
+        background: linear-gradient(90deg, #ff4081, #ff8c00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 1.125rem;
+        font-weight: 700;
+    }
+
+    /* ==== Toggler móvil (se oculta en PC) ==== */
+    .navbar-toggler.d-lg-none {
+        display: flex;
+    }
+
+    /* ==== Dropdown de usuario (PC) ==== */
+    .user-dropdown {
+        margin-left: auto;
+    }
+
+    .user-dropdown .dropdown-toggle {
+        text-decoration: none !important;
+        color: #333;
+        transition: color 0.2s;
+        display: flex;
+        align-items: center;
+    }
+
+    .user-dropdown .dropdown-toggle:hover {
+        color: #333;
+    }
+
+    /* ==== Nombre sin subrayado y con hover degradado ==== */
+    .user-name {
+        background: none;
+        -webkit-text-fill-color: #333;
+        transition: background 0.3s, -webkit-text-fill-color 0.3s;
+    }
+
+    .user-dropdown .dropdown-toggle:hover .user-name {
+        background: linear-gradient(90deg, #ff4081, #ff8c00);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* ==== Círculo de Icono de Usuario ==== */
+    .user-icon-circle {
+        width: 36px;
+        height: 36px;
+        background: linear-gradient(90deg, #ff4081, #ff8c00);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.5rem;
+    }
+
+    .user-icon-circle i {
+        color: #fff;
+        font-size: 1.3rem;
+    }
+
+    /* ==== Menú Dropdown ==== */
+    .dropdown-menu-end {
+        min-width: 200px;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .dropdown-item {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        color: #555;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown-item i {
+        margin-right: 0.5rem;
+        font-size: 1rem;
+    }
+
+    /* === Hover NARANJA === */
+    .dropdown-item:hover {
+        background: rgba(255, 140, 0, 0.1);
+        color: #ff8c00;
+    }
+
+    .dropdown-divider {
+        margin: 0.5rem 0;
+        border-color: rgba(0, 0, 0, 0.05);
+    }
+
+    .dropdown-item.text-danger:hover {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545 !important;
+    }
+
+    /* ==== Degradado en cabecera ==== */
+    .offcanvas-alt .offcanvas-header {
+        background: linear-gradient(90deg, #ff4081, #ff8c00);
+        color: #fff;
+    }
+
+    /* Forzar close button blanco */
+    .offcanvas-alt .btn-close {
+        filter: invert(1);
+    }
+
+    /* ==== Icono de usuario blanco ==== */
+    .offcanvas-alt .user-header-icon {
+        font-size: 1.8rem;
+        color: #fff;
+        margin-right: 0.75rem;
+    }
+
+    /* ==== Cuerpo blanco ==== */
+    .offcanvas-alt .offcanvas-body {
+        background: #fff;
+        color: #333;
+    }
+
+    .offcanvas-alt .nav-link {
+        color: #555;
+        transition: color .2s;
+    }
+
+    .offcanvas-alt .nav-link:hover {
+        color: #ff4081;
+    }
+
+    .offcanvas-alt .nav-link .bi {
+        font-size: 1.2rem;
+        margin-right: 0.5rem;
+    }
+
+    .offcanvas-alt hr {
+        border-color: #e5e5e5;
+    }
+</style>
+<nav class="navbar navbar-expand-lg navbar-custom fixed-top">
+    <div class="container">
+        {# — Logo + Texto — #}
+        <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
+            <div class="logo-square">
+                <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi">
+            </div>
+            <h4 class="brand-gradient">PARTENAIRE</h4>
+        </a>
+
+        {# — Toggler para móvil — #}
+        <button class="navbar-toggler border-0 d-lg-none" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#mainOffcanvas" aria-controls="mainOffcanvas" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        {# — Dropdown de usuario en PC — #}
+        <div class="user-dropdown d-none d-lg-block">
+            <div class="dropdown">
+                <a class="dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="user-icon-circle">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                    <span class="user-name">{{ app.user.name }} {{ app.user.lastname }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_account') }}">
+                            <i class="bi bi-person"></i> Mon compte
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_charging_stations') }}">
+                            <i class="bi bi-plug-fill"></i> Bornes de recharge
+                        </a>
+                    </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <li>
+                        <a class="dropdown-item" href="{{ path('app_intervention') }}">
+                            <i class="bi bi-tools"></i> Interventions
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                            <i class="bi bi-box-arrow-right"></i> Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </nav>
+
+
+<div class="offcanvas offcanvas-start offcanvas-alt" tabindex="-1" id="mainOffcanvas" aria-labelledby="offcanvasLabel">
+    <div class="offcanvas-header d-flex align-items-center">
+        <i class="bi bi-person-fill user-header-icon"></i>
+        <h5 class="offcanvas-title mb-0" id="offcanvasLabel">
+            {{ app.user.name }} {{ app.user.lastname }}
+        </h5>
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body p-3">
+        <ul class="navbar-nav">
+            <li class="nav-item mb-2">
+                <a class="nav-link d-flex align-items-center" href="{{ path('app_account') }}">
+                    <i class="bi bi-person"></i>
+                    Mon compte
+                </a>
+            </li>
+            <li class="nav-item mb-2">
+                <a class="nav-link d-flex align-items-center" href="{{ path('app_charging_stations') }}">
+                    <i class="bi bi-plug-fill"></i>
+                    Bornes de recharge
+                </a>
+            </li>
+            {% if is_granted('ROLE_ADMIN') %}
+            <li class="nav-item mb-2">
+                <a class="nav-link d-flex align-items-center" href="{{ path('app_intervention') }}">
+                    <i class="bi bi-tools"></i>
+                    Interventions
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <hr class="my-2">
+            </li>
+            <li class="nav-item">
+                <a class="nav-link d-flex align-items-center text-danger" href="{{ path('app_logout') }}">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Déconnexion
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
