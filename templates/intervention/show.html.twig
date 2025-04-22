@@ -1,258 +1,291 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détail Intervention #{{ intervention.id }}
-{% endblock %}
+{% block title %}Détail Intervention #{{ intervention.id }}{% endblock %}
 
 {% block body %}
 <style>
-	:root {
-		--linear-gradient: linear-gradient(135deg, #ff5e62, #ff9966);
-		--shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
-		--shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-		--text-color: #333;
-		--accent-color: #ff5e62;
-	}
+    :root {
+        --linear-gradient: linear-gradient(135deg, #ff5e62, #ff9966);
+        --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
+        --shadow-card-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
+        --text-color: #333;
+        --accent-color: #ff5e62;
+    }
 
-	body {
-		font-family: 'Segoe UI', sans-serif;
-		color: var(--text-color);
-	}
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        color: var(--text-color);
+    }
 
-	h2, h4 {
-		font-weight: 600;
-		color: var(--accent-color);
-	}
+    h2, h4 {
+        font-weight: 600;
+        color: var(--accent-color);
+    }
 
-	.section-card {
-		background: white;
-		border-radius: 12px;
-		padding: 30px;
-		margin-bottom: 30px;
-		box-shadow: var(--shadow-card);
-		transition: box-shadow 0.3s ease;
-	}
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: var(--shadow-card);
+        transition: box-shadow 0.3s ease;
+    }
 
-	.section-card:hover {
-		box-shadow: var(--shadow-card-hover);
-	}
+    .section-card:hover {
+        box-shadow: var(--shadow-card-hover);
+    }
 
-	.section-card h4 {
-		border-left: 4px solid var(--accent-color);
-		padding-left: 12px;
-		font-size: 1.2rem;
-		margin-bottom: 25px;
-	}
+    .section-card h4 {
+        border-left: 4px solid var(--accent-color);
+        padding-left: 12px;
+        font-size: 1.2rem;
+        margin-bottom: 25px;
+    }
 
-	.list-group-item {
-		border: none;
-		border-bottom: 1px solid #f0f0f0;
-		padding: 10px 0;
-	}
+    .list-group-item {
+        border: none;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 10px 0;
+    }
 
-	.list-group-item strong {
-		display: inline-block;
-		min-width: 130px;
-		color: #666;
-	}
+    .list-group-item strong {
+        display: inline-block;
+        min-width: 130px;
+        color: #666;
+    }
 
-	.card-intervention {
-		border-radius: 10px;
-		box-shadow: var(--shadow-card);
-		border: none;
-		transition: all 0.2s ease;
-	}
+    .card-intervention {
+        border-radius: 10px;
+        box-shadow: var(--shadow-card);
+        border: none;
+        transition: all 0.2s ease;
+    }
 
-	.card-intervention:hover {
-		transform: translateY(-4px);
-		box-shadow: var(--shadow-card-hover);
-	}
+    .card-intervention:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-card-hover);
+    }
 
-	.card-title {
-		font-weight: 600;
-		color: var(--accent-color);
-		font-size: 1.1rem;
-	}
+    .card-title {
+        font-weight: 600;
+        color: var(--accent-color);
+        font-size: 1.1rem;
+    }
 
-	.btn {
-		border: none;
-		border-radius: 8px;
-		font-weight: 500;
-	}
+    .btn {
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+    }
 
-	.btn-primary,
-	.card-footer .btn {
-		background: var(--linear-gradient);
-		color: white;
-	}
+    .btn-primary,
+    .card-footer .btn {
+        background: var(--linear-gradient);
+        color: white;
+    }
 
-	.btn-secondary {
-		background-color: #e9ecef;
-		color: #333;
-	}
+    .btn-secondary {
+        background-color: #e9ecef;
+        color: #333;
+    }
 
-	.btn-outline-danger {
-		border: 1px solid #ff5e62;
-		color: #ff5e62;
-	}
+    .btn-outline-danger {
+        border: 1px solid #ff5e62;
+        color: #ff5e62;
+    }
 
-	.btn-outline-danger:hover {
-		background-color: #ffe6e9;
-	}
+    .btn-outline-danger:hover {
+        background-color: #ffe6e9;
+    }
 
-	.img-fluid {
-		max-height: 60px;
-		object-fit: contain;
-	}
+    .img-fluid {
+        max-height: 60px;
+        object-fit: contain;
+    }
 
-	.badge.bg-secondary {
-		background-color: #6c757d;
-		font-size: 0.75rem;
-		padding: 4px 8px;
-		border-radius: 10px;
-	}
+    .badge.bg-secondary {
+        background-color: #6c757d;
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: 10px;
+    }
 
-	.text-muted {
-		font-size: 0.9rem;
-	}
+    .text-muted {
+        font-size: 0.9rem;
+    }
 </style>
 
-	<div class="container" style="margin-top: 150px;">
-		<h2 class="mb-5 text-center">Intervention
-			<strong>#{{ intervention.id }}</strong>
-		</h2>
+    <div class="container" style="margin-top: 150px;">
+        <h2 class="mb-5 text-center">Intervention
+            <strong>#{{ intervention.id }}</strong>
+        </h2>
 
-		<div class="row">
-			<div class="col-md-6">
-				<div class="section-card">
-					<h4>Client </h4>
-					<ul class="list-group">
-						<li class="list-group-item">
-							<strong>Nom :</strong>
-							{{ intervention.client.name }}
-							{{ intervention.client.lastname }}</li>
-						<li class="list-group-item">
-							<strong>Société :</strong>
-							{{ intervention.client.societyName }}</li>
-						<li class="list-group-item">
-							<strong>Email :</strong>
-							{{ intervention.client.email }}</li>
-						<li class="list-group-item">
-							<strong>Téléphone :</strong>
-							{{ intervention.client.phone }}</li>
-						<li class="list-group-item">
-							<strong>SIRET :</strong>
-							{{ intervention.client.siret }}</li>
-						<li class="list-group-item">
-							<strong>N° TVA :</strong>
-							{{ intervention.client.numberTva }}</li>
-						<li class="list-group-item">
-							<strong>Code NAF :</strong>
-							{{ intervention.client.codeNaf }}</li>
-						<li class="list-group-item">
-							<strong>Forme juridique :</strong>
-							{{ intervention.client.legalForm }}</li>
-					</ul>
-				</div>
-			</div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="section-card">
+                    <h4>Client </h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Nom :</strong>
+                            {{ intervention.client.name }}
+                            {{ intervention.client.lastname }}</li>
+                        <li class="list-group-item">
+                            <strong>Société :</strong>
+                            {{ intervention.client.societyName }}</li>
+                        <li class="list-group-item">
+                            <strong>Email :</strong>
+                            {{ intervention.client.email }}</li>
+                        <li class="list-group-item">
+                            <strong>Téléphone :</strong>
+                            {{ intervention.client.phone }}</li>
+                        <li class="list-group-item">
+                            <strong>SIRET :</strong>
+                            {{ intervention.client.siret }}</li>
+                        <li class="list-group-item">
+                            <strong>N° TVA :</strong>
+                            {{ intervention.client.numberTva }}</li>
+                        <li class="list-group-item">
+                            <strong>Code NAF :</strong>
+                            {{ intervention.client.codeNaf }}</li>
+                        <li class="list-group-item">
+                            <strong>Forme juridique :</strong>
+                            {{ intervention.client.legalForm }}</li>
+                    </ul>
+                </div>
+            </div>
 
-			<div class="col-md-6">
-				<div class="section-card">
-					<h4>Installateur</h4>
-					<ul class="list-group">
-						<li class="list-group-item">
-							<strong>Nom :</strong>
-							{{ intervention.installator.name }}
-							{{ intervention.installator.lastname }}</li>
-						<li class="list-group-item">
-							<strong>Email :</strong>
-							{{ intervention.installator.email }}</li>
-						<li class="list-group-item">
-							<strong>Téléphone :</strong>
-							{{ intervention.installator.phone }}</li>
-						<li class="list-group-item">
-							<strong>Société :</strong>
-							{{ intervention.installator.societyName }}</li>
-						<li class="list-group-item">
-							<strong>SIRET :</strong>
-							{{ intervention.installator.siret }}</li>
-						<li class="list-group-item">
-							<strong>Statut :</strong>
-							{{ intervention.installator.isVerified ? '✅ Vérifié' : '❌ Non vérifié' }}</li>
-						<li class="list-group-item">
-							<strong>Créé le :</strong>
-							{{ intervention.installator.createdAt|date('d/m/Y H:i') }}</li>
-					</ul>
-				</div>
-			</div>
-		</div>
+            <div class="col-md-6">
+                <div class="section-card">
+                    <h4>Installateur</h4>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <strong>Nom :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.name }} {{ intervention.installator.lastname }}
+                            {% else %}
+                                Inconnu
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Email :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.email }}
+                            {% else %}
+                                — 
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Téléphone :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.phone }}
+                            {% else %}
+                                — 
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Société :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.societyName }}
+                            {% else %}
+                                — 
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>SIRET :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.siret }}
+                            {% else %}
+                                — 
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Statut :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.isVerified ? '✅ Vérifié' : '❌ Non vérifié' }}
+                            {% else %}
+                                — 
+                            {% endif %}
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Créé le :</strong>
+                            {% if intervention.installator %}
+                                {{ intervention.installator.createdAt|date('d/m/Y H:i') }}
+                            {% else %}
+                                — 
+                            {% endif %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-		{% if groupInterventions %}
-		<div class="section-card">
-			<h4>Bornes liées à cette intervention</h4>
-			<div class="row mt-4">
-			{% for inter in groupInterventions %}
-				<div class="col-md-6 col-lg-4 mb-4">
-				<div class="card card-intervention h-100">
-					<div class="card-body position-relative">
-					{# 🔴 Bouton supprimer (icône) en haut à droite #}
-					<button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ inter.id }}" title="Supprimer l'intervention">
-						<i class="bi bi-trash"></i> {# Bootstrap Icons - assure-toi de l'avoir inclus #}
-					</button>
+        {% if groupInterventions %}
+        <div class="section-card">
+            <h4>Bornes liées à cette intervention</h4>
+            <div class="row mt-4">
+            {% for inter in groupInterventions %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card card-intervention h-100">
+                    <div class="card-body position-relative">
+                    {# 🔴 Bouton supprimer (icône) en haut à droite #}
+                    <button type="button" class="btn btn-sm btn-outline-danger position-absolute top-0 end-0 m-2" data-bs-toggle="modal" data-bs-target="#deleteModal{{ inter.id }}" title="Supprimer l'intervention">
+                        <i class="bi bi-trash"></i> {# Bootstrap Icons - assure-toi de l'avoir inclus #}
+                    </button>
 
-					<div class="d-flex justify-content-between align-items-center mb-3">
-						<h5 class="card-title mb-0">{{ inter.borneName }}</h5>
-					</div>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">{{ inter.borneName }}</h5>
+                    </div>
 
-					<p class="card-text"><strong>Référence :</strong> {{ inter.reference }}</p>
-					<p class="card-text"><strong>Modèle :</strong> {{ inter.chargingStation.model ?? '—' }}</p>
-					<p class="card-text"><strong>Fabricant :</strong> {{ inter.chargingStation.manufacturer.name ?? '—' }}</p>
-					<p class="card-text"><strong>Connecteurs :</strong> {{ inter.chargingStation.connectors ?? '—' }}</p>
-					<p class="card-text"><strong>SIM :</strong> {{ inter.sim ?? '—' }}</p>
+                    <p class="card-text"><strong>Référence :</strong> {{ inter.reference }}</p>
+                    <p class="card-text"><strong>Modèle :</strong> {{ inter.chargingStation.model ?? '—' }}</p>
+                    <p class="card-text"><strong>Fabricant :</strong> {{ inter.chargingStation.manufacturer.name ?? '—' }}</p>
+                    <p class="card-text"><strong>Connecteurs :</strong> {{ inter.chargingStation.connectors ?? '—' }}</p>
+                    <p class="card-text"><strong>SIM :</strong> {{ inter.sim ?? '—' }}</p>
 
-					{% if inter.chargingStation.manufacturer.image %}
-						<img src="{{ asset('uploads/' ~ inter.chargingStation.manufacturer.image) }}" alt="Logo Fabricant" class="img-fluid me-2 mb-2">
-					{% endif %}
-					{% if inter.chargingStation.image %}
-						<img src="{{ asset('uploads/' ~ inter.chargingStation.image) }}" alt="Image Borne" class="img-fluid mb-2">
-					{% endif %}
-					</div>
+                    {% if inter.chargingStation.manufacturer.image %}
+                        <img src="{{ asset('uploads/' ~ inter.chargingStation.manufacturer.image) }}" alt="Logo Fabricant" class="img-fluid me-2 mb-2">
+                    {% endif %}
+                    {% if inter.chargingStation.image %}
+                        <img src="{{ asset('uploads/' ~ inter.chargingStation.image) }}" alt="Image Borne" class="img-fluid mb-2">
+                    {% endif %}
+                    </div>
 
-					<div class="card-footer bg-transparent text-end">
-					<a href="{{ path('intervention_client_show', { id: inter.id }) }}" class="btn btn-sm btn-primary">Voir</a>
-					</div>
-				</div>
-				</div>
+                    <div class="card-footer bg-transparent text-end">
+                    <a href="{{ path('intervention_client_show', { id: inter.id }) }}" class="btn btn-sm btn-primary">Voir</a>
+                    </div>
+                </div>
+                </div>
 
-				{# Modal de suppression #}
-				<div class="modal fade" id="deleteModal{{ inter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ inter.id }}" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-					<div class="modal-header bg-danger text-white">
-						<h5 class="modal-title" id="deleteModalLabel{{ inter.id }}">Supprimer l’intervention</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-					</div>
-					<div class="modal-body">
-						Es-tu sûr de vouloir supprimer l’intervention <strong>#{{ inter.id }}</strong> ({{ inter.borneName }}) ?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                {# Modal de suppression #}
+                <div class="modal fade" id="deleteModal{{ inter.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ inter.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="deleteModalLabel{{ inter.id }}">Supprimer l’intervention</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        Es-tu sûr de vouloir supprimer l’intervention <strong>#{{ inter.id }}</strong> ({{ inter.borneName }}) ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
 
-						<form method="post" action="{{ path('intervention_delete', { id: inter.id }) }}" class="d-inline">
-						<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ inter.id) }}">
-						<button type="submit" class="btn btn-danger">Confirmer la suppression</button>
-						</form>
-					</div>
-					</div>
-				</div>
-				</div>
-			{% endfor %}
-			</div>
-		</div>
-		{% endif %}
+                        <form method="post" action="{{ path('intervention_delete', { id: inter.id }) }}" class="d-inline">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ inter.id) }}">
+                        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            {% endfor %}
+            </div>
+        </div>
+        {% endif %}
 
-		<div class="text-end">
-			<a href="{{ path('app_intervention') }}" class="btn btn-secondary mt-4">← Retour à la liste</a>
-		</div>
+        <div class="text-end">
+            <a href="{{ path('app_intervention') }}" class="btn btn-secondary mt-4">← Retour à la liste</a>
+        </div>
 
-	</div>
+    </div>
 {% endblock %}

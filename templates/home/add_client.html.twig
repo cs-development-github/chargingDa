@@ -2,9 +2,8 @@
 
 {% block style %}
 <style>
-	/* Mantener estilos originales */
 	body {
-		background-color: #f4f6f8;
+		background-color: #f0f2f5;
 		font-family: 'Segoe UI', sans-serif;
 	}
 
@@ -12,15 +11,10 @@
 		padding: 80px 30px 30px;
 		max-width: 1100px;
 		margin: auto;
-		/* separación del navbar */
 	}
 
-	.container {
-		background: #fff;
-		border-radius: 16px;
-		padding: 30px;
-		margin-bottom: 30px;
-		box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+	.containerbox {
+		margin-top: 50px;
 	}
 
 	h2,
@@ -225,7 +219,6 @@
 		}
 	}
 
-	/* Mantener estilos del modal original */
 	.custom-modal-overlay {
 		position: fixed;
 		inset: 0;
@@ -283,7 +276,7 @@
 
 {% block body %}
 <div class="wrapper">
-	<div class="container">
+	<div class="containerbox">
 		{{ form_start(clientForm, { action: path('app_submit_form'), method: 'POST' }) }}
 
 		<h2>Informations Client</h2>
