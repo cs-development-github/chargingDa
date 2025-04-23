@@ -74,7 +74,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard/ajout-client', name: 'app_add_client')]
+    #[Route('/dashboard/ajout-client', name: 'dashboard_add_client')]
     public function addClient(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -94,29 +94,6 @@ class HomeController extends AbstractController
         $interventionForm->handleRequest($request);
     
         $chargingStationModels = $chargingStationsRepository->findAll();
-
-    
-        if ($clientForm->isSubmitted()) {
-            foreach ($interventionForm->get('interventions') as $interventionField) {
-                $intervention = $interventionField->getData();
-    
-                if (!$intervention || !$intervention->getChargingStation()) {
-                    $this->addFlash('danger', 'Un modèle de borne est manquant.');
-                    return $this->redirectToRoute('app_add_client');
-                }
-    
-                $intervention->setClient($client);
-                $intervention->setInstallator($user);
-    
-                $entityManager->persist($intervention);
-            }
-    
-            $entityManager->persist($client);
-            $entityManager->flush();
-    
-            $this->addFlash('success', 'Client et bornes enregistrés avec succès.');
-            return $this->redirectToRoute('app_home');
-        }
     
         return $this->render('home/add_client.html.twig', [
             'clientForm' => $clientForm->createView(),
@@ -174,9 +151,11 @@ class HomeController extends AbstractController
             $entityManager->persist($client);
             $entityManager->flush();
 
-            foreach ($interventionForm->get('interventions')->getData() as $intervention) {
+            foreach ($interventionForm->get('interventions')->getData() as $i => $intervention) {
                 $intervention->setClient($client);
                 $intervention->setInstallator($user);
+                $reference = $this->generateInterventionReference($user->getName(), $i + 1);
+                $intervention->setReference($reference);
                 $entityManager->persist($intervention);
             }
 
@@ -212,5 +191,16 @@ class HomeController extends AbstractController
 
         return $this->json($data);
     }
+
+    private function generateInterventionReference(string $clientName, int $index = 1): string
+    {
+        $prefix = 'int-sup';
+        $initials = strtoupper(substr(preg_replace('/[^a-zA-Z]/u', '', $clientName), 0, 3));
+        $date = (new \DateTime())->format('dmy');
+        $iteration = str_pad((string)$index, 4, '0', STR_PAD_LEFT);
+
+        return sprintf('%s-%s-%s-%s', $prefix, $initials, $date, $iteration);
+    }
+
 
 }
