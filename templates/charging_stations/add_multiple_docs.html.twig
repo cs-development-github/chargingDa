@@ -107,14 +107,12 @@
     let index = wrapper.querySelectorAll('.doc-form-group').length;
     const prototypeTemplate = wrapper.dataset.prototype;
 
-    // Fonction pour ajouter un nouvel élément
     const addNewDocForm = () => {
       const newForm = prototypeTemplate.replace(/__name__/g, index);
       const div = document.createElement('div');
       div.classList.add('doc-form-group', 'border', 'rounded-4', 'p-3', 'p-md-4', 'mb-4', 'bg-light-subtle', 'position-relative');
       div.innerHTML = newForm;
 
-      // Ajoute aussi le bouton de suppression au nouvel élément
       const removeBtn = document.createElement('button');
       removeBtn.type = 'button';
       removeBtn.className = 'btn btn-danger btn-sm remove-doc-btn position-absolute';

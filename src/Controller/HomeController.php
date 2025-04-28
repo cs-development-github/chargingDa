@@ -202,5 +202,9 @@ class HomeController extends AbstractController
         return sprintf('%s-%s-%s-%s', $prefix, $initials, $date, $iteration);
     }
 
-
+    #[Route('/ph', name: 'ph_machine')]
+    public function ph(): Response
+    {
+        return $this->render('home/ph.html.twig');
+    }
 }
