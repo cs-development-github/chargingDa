@@ -29,7 +29,7 @@ security:
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/logout, roles: PUBLIC_ACCESS }
         - { path: ^/client/complete-info, roles: PUBLIC_ACCESS }
-        - { path: ^/dashboard, roles: ROLE_USER }
+        - { path: ^/tableau-de-bord, roles: ROLE_USER }
         - { path: ^/, roles: PUBLIC_ACCESS }
 
 

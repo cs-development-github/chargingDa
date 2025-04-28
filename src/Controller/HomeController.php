@@ -25,7 +25,7 @@ class HomeController extends AbstractController
     {
     }
 
-    #[Route('/dashboard', name: 'app_home')]
+    #[Route('/tableau-de-bord', name: 'app_home')]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
@@ -74,7 +74,7 @@ class HomeController extends AbstractController
         ]);
     }
 
-    #[Route('/dashboard/ajout-client', name: 'dashboard_add_client')]
+    #[Route('/tableau-de-bord/ajout-client', name: 'dashboard_add_client')]
     public function addClient(
         Request $request,
         EntityManagerInterface $entityManager,
