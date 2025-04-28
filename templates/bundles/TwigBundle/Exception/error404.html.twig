@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page introuvable - Erreur 404{% endblock %}
+
+{% block body %}
+<div class="container text-center py-5">
+    <h1 class="display-1 fw-bold text-primary">404</h1>
+    <p class="fs-3"> <span class="text-danger">Oups !</span> La page que vous cherchez n'existe pas.</p>
+    <p class="lead">
+        Elle a peut-être été déplacée ou supprimée.
+    </p>
+    <a href="{{ path('app_charging_stations') }}" class="btn btn-primary mt-3">
+        Retourner à l'accueil
+    </a>
+</div>
+{% endblock %}
