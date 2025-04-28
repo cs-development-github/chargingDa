@@ -68,7 +68,7 @@ final class ChargingStationsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $request->files->get('image');
+            $imageFile = $form->get('image')->getData();
             if ($imageFile instanceof UploadedFile) {
                 $imageFilename = uniqid() . '.' . $imageFile->guessExtension();
                 try {
@@ -76,16 +76,6 @@ final class ChargingStationsController extends AbstractController
                     $station->setImage($imageFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
-                }
-            }
-
-            $docFile = $request->files->get('documentation');
-            if ($docFile instanceof UploadedFile) {
-                $docFilename = uniqid() . '.' . $docFile->guessExtension();
-                try {
-                    $docFile->move($this->uploadsDirectory, $docFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'upload de la documentation.');
                 }
             }
 
@@ -116,8 +106,7 @@ final class ChargingStationsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion de l'upload du logo fabricant
-            $imageFile = $form->get('image')->getData(); // Récupération du fichier
+            $imageFile = $form->get('image')->getData();
             if ($imageFile instanceof UploadedFile) {
                 $imageFilename = uniqid() . '.' . $imageFile->guessExtension();
                 try {
