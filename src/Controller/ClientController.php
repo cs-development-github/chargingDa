@@ -78,6 +78,7 @@ final class ClientController extends AbstractController
         UrlGeneratorInterface $urlGenerator,
         Security $security
     ): Response {
+
         $client = new Client();
         $intervention = new Intervention();
 
@@ -106,6 +107,8 @@ final class ClientController extends AbstractController
             $entityManager->flush();
 
             $completionUrl = $urlGenerator->generate('client_complete_info', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
+
+            
             $mailerService->sendEmail(
                 to: $client->getEmail() ?: 'chris.vermersch@hotmail.com',
                 subject: 'Demande d\'information complémentaire contrat de supervision',

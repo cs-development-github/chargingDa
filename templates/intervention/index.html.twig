@@ -4,113 +4,132 @@
 
 {% block body %}
 <style>
-	.container {
-		background-color: white !important;
-		padding: 20px;
-		margin-top: 150px;
+	:root {
+		--gradient-bg: linear-gradient(135deg, #ff5e62, #ff9966);
+		--shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.1);
+		--shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
+		--card-radius: 16px;
 	}
 
-	.header-search {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 1rem;
-		gap: 10px;
+	.wrapper {
+		padding: 40px 20px;
+		max-width: 1200px;
+		margin: auto;
+		margin-top: 60px;
 	}
 
-	.header-search input.form-control {
-		flex: 1;
-		border-radius: 10px;
-	}
-
-	.table-custom {
-		width: 100%;
-		border-collapse: collapse;
-	}
-
-	.table-header,
-	.table-row {
-		display: flex;
-		padding: 10px 15px;
-		align-items: center;
-		border-bottom: 1px solid #eee;
-		transition: background 0.2s ease;
-	}
-
-	.table-header {
-		font-weight: bold;
-		text-transform: uppercase;
-		background-color: #f5f5f5;
-		color: #6c757d;
-	}
-
-	.table-cell {
-		flex: 1;
-		text-align: center;
-		word-break: break-word;
-	}
-
-	.table-row {
+	.card-custom {
+		border-radius: var(--card-radius);
+		box-shadow: var(--shadow-sm);
+		transition: all 0.3s ease-in-out;
+		border: none;
+		background: white;
 		cursor: pointer;
 	}
 
-	.table-row:hover {
-		background-color: #fdf2e9;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	.card-custom:hover {
+		transform: translateY(-5px);
+		box-shadow: var(--shadow-hover);
+	}
+
+	.card-header-gradient {
+		background: var(--gradient-bg);
+		color: white;
+		padding: 12px 20px;
+		border-top-left-radius: var(--card-radius);
+		border-top-right-radius: var(--card-radius);
+		font-weight: bold;
+		font-size: 1.1rem;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.card-body-custom {
+		padding: 20px;
+	}
+
+	.badge-tag {
+		background-color: #ff7e67;
+		color: white;
+		border-radius: 8px;
+		padding: 4px 8px;
+		font-size: 0.75rem;
+	}
+
+	.search-bar {
+		margin-bottom: 30px;
+		position: relative;
+	}
+
+	.search-bar input {
+		border-radius: 12px;
+		padding-left: 40px;
+	}
+
+	.search-bar .bi-search {
+		position: absolute;
+		top: 50%;
+		left: 15px;
+		transform: translateY(-50%);
+		font-size: 1.2rem;
+		color: #6c757d;
+	}
+
+	.card-icon {
+		font-size: 1.3rem;
 	}
 </style>
 
-{% if is_granted('ROLE_ADMIN') %}
-	<div class="container">
-		<div class="header-search">
-			<input type="text" id="search-global" class="form-control" placeholder="Rechercher une borne, un client, une référence, un installateur...">
+<div class="wrapper">
+	{% if is_granted('ROLE_ADMIN') %}
+		<div class="search-bar">
+			<i class="bi bi-search"></i>
+			<input type="text" class="form-control" id="search-global" placeholder="Rechercher une borne, un client, une référence, un installateur...">
 		</div>
 
-		<div class="table-custom">
-			<div class="table-header">
-				<div class="table-cell">Nombre de bornes</div>
-				<div class="table-cell">Client</div>
-				<div class="table-cell">Installateur</div>
-				<div class="table-cell">Référence</div>
-			</div>
-
+		<div class="row g-4" id="cards-container">
 			{% for group in pagination %}
 				{% set intervention = group.intervention %}
-				<div class="table-row"
-					 data-search="{{ group.nbBornes ~ ' ' ~ intervention.client.email ~ ' ' ~ (intervention.installator.name ~ ' ' ~ intervention.installator.lastname)|default('') ~ ' ' ~ group.refPrefix|default('') }}"
-					 onclick="window.location.href='{{ path('intervention_client_show', { id: group.anyInterventionId }) }}'">
-					<div class="table-cell">
-						<small>{{ group.nbBornes }} borne{{ group.nbBornes > 1 ? 's' }}</small>
-					</div>
-					<div class="table-cell">
-						{{ intervention.client.email ?? '—' }}
-					</div>
-					<div class="table-cell">
-						{{ intervention.installator.name ?? 'Inconnu' }} {{ intervention.installator.lastname ?? '' }}
-					</div>
-					<div class="table-cell">
-						{{ group.refPrefix ?? '—' }}
+				<div class="col-md-6 col-lg-4">
+					<div class="card card-custom"
+						data-search="{{ group.nbBornes ~ ' ' ~ intervention.client.email ~ ' ' ~ (intervention.installator ? (intervention.installator.name ~ ' ' ~ intervention.installator.lastname) : '') ~ ' ' ~ group.refPrefix|default('') }}"
+						onclick="window.location.href='{{ path('intervention_client_show', { id: group.anyInterventionId }) }}'">
+
+						<div class="card-header-gradient">
+							<i class="bi bi-tools card-icon"></i> Intervention #{{ group.anyInterventionId }}
+						</div>
+
+						<div class="card-body card-body-custom">
+							<p class="mb-2"><strong><i class="bi bi-lightning-charge"></i> Bornes:</strong> {{ group.nbBornes }} borne{{ group.nbBornes > 1 ? 's' }}</p>
+							<p class="mb-2"><strong><i class="bi bi-person-fill"></i> Client:</strong> {{ intervention.client.email ?? '—' }}</p>
+							<p class="mb-2"><strong><i class="bi bi-person-fill"></i> Installateur:</strong>
+								{{ intervention.installator ? (intervention.installator.name ?? 'Inconnu') ~ ' ' ~ intervention.installator.lastname : 'Inconnu' }}</p>
+							<p class="mb-0"><strong><i class="bi bi-tag"></i> Référence:</strong>
+								<span class="badge-tag">{{ group.refPrefix ?? '—' }}</span>
+							</p>
+						</div>
 					</div>
 				</div>
 			{% else %}
-				<p>Aucune intervention trouvée.</p>
+				<p class="text-center">Aucune intervention trouvée.</p>
 			{% endfor %}
 		</div>
 
 		<div class="mt-4">
 			{{ knp_pagination_render(pagination) }}
 		</div>
-	</div>
-{% endif %}
+	{% endif %}
+</div>
 
 <script>
 	document.getElementById('search-global').addEventListener('input', function () {
 		const search = this.value.toLowerCase();
-		const rows = document.querySelectorAll('.table-row');
+		const cards = document.querySelectorAll('#cards-container .card');
 
-		rows.forEach(row => {
-			const text = row.dataset.search.toLowerCase();
-			row.style.display = text.includes(search) ? 'flex' : 'none';
+		cards.forEach(card => {
+			const text = card.dataset.search.toLowerCase();
+			card.style.display = text.includes(search) ? 'block' : 'none';
 		});
 	});
 </script>

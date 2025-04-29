@@ -51,6 +51,7 @@ class ChargingStationType extends AbstractType
             ->add('image', FileType::class, [
                 'label' => 'Photo de la borne',
                 'attr' => ['class' => 'form-control'],
+                'mapped' => false,
             ])            
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Actif',

@@ -49,7 +49,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/charging/stations/{slug}', name: 'charging_station_show', methods: ['GET'])]
+    #[Route('/borne-de-recharge/{slug}', name: 'charging_station_show', methods: ['GET'])]
     public function show(ChargingStations $station, EntityManagerInterface $entityManager): Response
     {
         $editForm = $this->createForm(ChargingStationType::class, $station);
@@ -60,7 +60,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/charging/stations/add', name: 'charging_station_add', methods: ['POST'])]
+    #[Route('/borne-de-recharge/ajout', name: 'charging_station_add', methods: ['POST'])]
     public function addChargingStation(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $station = new ChargingStations();
@@ -68,7 +68,7 @@ final class ChargingStationsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $imageFile = $request->files->get('image');
+            $imageFile = $form->get('image')->getData();
             if ($imageFile instanceof UploadedFile) {
                 $imageFilename = uniqid() . '.' . $imageFile->guessExtension();
                 try {
@@ -76,16 +76,6 @@ final class ChargingStationsController extends AbstractController
                     $station->setImage($imageFilename);
                 } catch (FileException $e) {
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
-                }
-            }
-
-            $docFile = $request->files->get('documentation');
-            if ($docFile instanceof UploadedFile) {
-                $docFilename = uniqid() . '.' . $docFile->guessExtension();
-                try {
-                    $docFile->move($this->uploadsDirectory, $docFilename);
-                } catch (FileException $e) {
-                    $this->addFlash('error', 'Erreur lors de l\'upload de la documentation.');
                 }
             }
 
@@ -104,7 +94,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/manufacturer/add', name: 'manufacturer_add', methods: ['POST'])]
+    #[Route('/fabricant/ajout', name: 'manufacturer_add', methods: ['POST'])]
     public function addManufacturer(Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
@@ -116,8 +106,7 @@ final class ChargingStationsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion de l'upload du logo fabricant
-            $imageFile = $form->get('image')->getData(); // Récupération du fichier
+            $imageFile = $form->get('image')->getData();
             if ($imageFile instanceof UploadedFile) {
                 $imageFilename = uniqid() . '.' . $imageFile->guessExtension();
                 try {
@@ -141,7 +130,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/charging/stations/{slug}/edit', name: 'charging_station_edit', methods: ['POST'])]
+    #[Route('/borne-de-recharge/{slug}/edition', name: 'charging_station_edit', methods: ['POST'])]
     public function editChargingStation(Request $request, ChargingStations $station, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(ChargingStationType::class, $station);
@@ -169,7 +158,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/charging/stations/{slug}/delete', name: 'charging_station_delete', methods: ['POST'])]
+    #[Route('/borne-de-recharge/{slug}/delete', name: 'charging_station_delete', methods: ['POST'])]
     public function deleteChargingStation(ChargingStations $station, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {
@@ -184,7 +173,7 @@ final class ChargingStationsController extends AbstractController
         return $this->redirectToRoute('app_charging_stations');
     }
 
-    #[Route('/charging/stations/{slug}/documentations/add', name: 'charging_station_add_multiple_docs', methods: ['GET', 'POST'])]
+    #[Route('/borne-de-recharge/{slug}/documentations/ajout', name: 'charging_station_add_multiple_docs', methods: ['GET', 'POST'])]
     public function addMultipleDocs(
         Request $request,
         ChargingStations $station,
@@ -224,7 +213,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/documentation/{id}/edit', name: 'charging_station_doc_edit')]
+    #[Route('/documentation/{id}/edition', name: 'charging_station_doc_edit')]
 public function edit(ChargingStationDocumentation $doc, Request $request, EntityManagerInterface $em, ParameterBagInterface $params): Response
 {
     $form = $this->createForm(ChargingStationsDocumentationType::class, $doc);
