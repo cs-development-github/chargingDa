@@ -21,7 +21,7 @@ class ClientInterventionFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => null, // Pas d'entité liée, on gère les deux objets séparément
+            'data_class' => null,
         ]);
     }
 }

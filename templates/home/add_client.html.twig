@@ -282,78 +282,61 @@
 		<h2>Informations Client</h2>
 		{{ form_widget(clientForm) }}
 
-		{# Prototype #}
+		{# Prototype brut utilisé pour la duplication dynamique avec index correct #}
 		{% set prototype %}
-		<div class="sim-wrapper">
 			<div class="sim-block">
 				{{ form_row(interventionForm.interventions.vars.prototype.sim) }}
 				{{ form_row(interventionForm.interventions.vars.prototype.borneName) }}
 				<div style="display:none;">
-					{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation,
-					{'attr':{'class':'charging-station-hidden'}}) }}
+					{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {'attr':{'class':'charging-station-hidden'}}) }}
 				</div>
 				<div class="form-group">
-					<label>
-						<i class="bi bi-list-nested me-1"></i>Modèle de borne</label>
+					<label><i class="bi bi-list-nested me-1"></i>Modèle de borne</label>
 					<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
 						<i class="bi bi-search me-1"></i>Choisir un modèle
 					</button>
 					<div class="model-selected text-muted small mt-1"></div>
 				</div>
 			</div>
-			<div class="connection-box-wrapper">
-				<div class="connection-box"></div>
-			</div>
-		</div>
 		{% endset %}
 
 		<h2>Interventions</h2>
 		{{ form_errors(interventionForm) }}
-		<div id="connectionsWrapper">
-			{% for form_intervention in interventionForm.interventions %}{% endfor %}
-
-			<div class="connection-group mb-4 p-3 border rounded shadow-sm bg-white position-relative">
-				<button type="button"
-					class="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 remove-connection-btn d-none">
-					<i class="bi bi-trash"></i>
-				</button>
-
-				<div class="connection-content">
-					<div class="connection-form">
-						<h3 class="mb-3">Quel moyen de connexion ?</h3>
-
-						<div class="radio-group d-flex gap-4 align-items-center flex-wrap mb-3">
-							<div class="form-check">
-								<input type="radio" class="form-check-input" name="connectionChoice-0" id="sim-0"
-									value="sim" checked>
-								<label class="form-check-label" for="sim-0">
-									<i class="bi bi-sd-card-fill me-1"></i>Carte SIM
-								</label>
+		<div id="connectionsWrapper" data-prototype="{{ prototype|e('html_attr') }}">
+			{# Initialisation avec une connexion par défaut #}
+			{% if interventionForm.interventions|length > 0 %}
+				<div class="connection-group mb-4 p-3 border rounded shadow-sm bg-white position-relative">
+					<div class="connection-content">
+						<div class="connection-form">
+							<h3 class="mb-3">Quel moyen de connexion ?</h3>
+							<div class="radio-group">
+								<div class="form-check">
+									<input type="radio" class="form-check-input" value="sim" checked>
+									<label class="form-check-label"><i class="bi bi-sd-card-fill me-1"></i>Carte SIM</label>
+								</div>
+								<div class="form-check">
+									<input type="radio" class="form-check-input" value="connect">
+									<label class="form-check-label"><i class="bi bi-router-fill me-1"></i>Connect +</label>
+								</div>
 							</div>
-
-							<div class="form-check">
-								<input type="radio" class="form-check-input" name="connectionChoice-0" id="connect-0"
-									value="connect">
-								<label class="form-check-label" for="connect-0">
-									<i class="bi bi-router-fill me-1"></i>Connect +
-								</label>
+							<div class="sim-blocks-wrapper">
+								{{ form_widget(interventionForm.interventions[0]) }}
 							</div>
 						</div>
-
-						<div class="sim-blocks-wrapper" data-prototype="{{ prototype|e('html_attr') }}"></div>
 					</div>
 				</div>
-			</div>
+			{% endif %}
 		</div>
-
 
 		<div class="mt-3">
 			<button type="button" id="addConnectionBtn" class="btn btn-primary">
-				<i class="bi bi-plus-circle me-1"></i>Ajouter une connexion</button>
+				<i class="bi bi-plus-circle me-1"></i>Ajouter une connexion
+			</button>
 		</div>
 		<div class="mt-4">
 			<button type="submit" class="btn btn-success">
-				<i class="bi bi-save me-1"></i>Enregistrer</button>
+				<i class="bi bi-save me-1"></i>Enregistrer
+			</button>
 		</div>
 
 		{{ form_end(clientForm) }}
@@ -364,85 +347,56 @@
 	<div class="custom-modal">
 		<div class="custom-modal-header">
 			<h2>Choisir un modèle de borne</h2>
-			<button class="custom-modal-close" onclick="closeModal()">×</button>
+			<button class="custom-modal-close" onclick="closeModal()">&times;</button>
 		</div>
 		<input type="text" id="searchModelInput" class="custom-modal-search" placeholder="Rechercher..." />
 		<div id="modalModelList" class="custom-modal-list">
 			{% for model in chargingStationModels %}
-			<div class="custom-model-card" data-name="{{ model.model|lower }}">
-				<div class="d-flex align-items-center gap-3 mb-2">
-					<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne"
-						style="width:80px;border-radius:6px;" />
-					<div>
-						<strong>{{ model.model }}</strong><br>
-						<small>{{ model.manufacturer.name }}
-							– 7 kW</small>
+				<div class="custom-model-card" data-name="{{ model.model|lower }}">
+					<div class="d-flex align-items-center gap-3 mb-2">
+						<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width:80px;border-radius:6px;" />
+						<div>
+							<strong>{{ model.model }}</strong><br>
+							<small>{{ model.manufacturer.name }} – 7 kW</small>
+						</div>
 					</div>
+					<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius:8px;" />
+					<button class="btn btn-sm btn-outline-success" onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}')">
+						Choisir
+					</button>
 				</div>
-				<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100"
-					class="mb-2" style="border-radius:8px;" />
-				<button class="btn btn-sm btn-outline-success"
-					onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}')">
-					Choisir
-				</button>
-			</div>
 			{% endfor %}
 		</div>
 	</div>
 </div>
 
 <script>
-	const connectionsWrapper = document.getElementById('connectionsWrapper');
-	const addConnectionBtn = document.getElementById('addConnectionBtn');
-	let connectionIndex = 1,
-		simIndex = 0;
-	function setupConnectionGroup(group, index) {
-		const radioInputs = group.querySelectorAll(`input[name="connectionChoice-${index}"]`);
-		const simWrapper = group.querySelector('.sim-blocks-wrapper');
-		const removeConnectionBtn = group.querySelector('.remove-connection-btn');
-		const prototype = simWrapper.dataset.prototype;
-		let currentMode = 'sim';
-		radioInputs.forEach(radio => {
-			radio.addEventListener('change', e => {
-				simWrapper.innerHTML = '';
-				simIndex = 0;
-				currentMode = e.target.value;
-				addSimBlock(simWrapper, prototype, currentMode);
-			});
-			if (radio.checked)
-				radio.dispatchEvent(new Event('change'));
+	document.addEventListener('DOMContentLoaded', () => {
+		const wrapper = document.getElementById('connectionsWrapper');
+		const addBtn = document.getElementById('addConnectionBtn');
+		let index = wrapper.querySelectorAll('.sim-block').length;
 
+		addBtn.addEventListener('click', () => {
+			const prototype = wrapper.dataset.prototype;
+			const newForm = prototype.replace(/__name__/g, index);
+			const div = document.createElement('div');
+			div.classList.add('sim-block', 'mb-3');
+			div.innerHTML = newForm;
+
+			div.querySelectorAll('[id]').forEach(el => {
+				if (el.id.includes('__name__')) el.id = el.id.replace(/__name__/g, index);
+			});
+			div.querySelectorAll('[name]').forEach(el => {
+				if (el.name && el.name.includes('__name__')) el.name = el.name.replace(/__name__/g, index);
+			});
+
+			wrapper.appendChild(div);
+			index++;
 		});
-		if (index > 0) {
-			removeConnectionBtn.classList.remove('d-none');
-			removeConnectionBtn.addEventListener('click', () => group.remove());
-		}
-	}
-	function addSimBlock(wrapper, prototype, mode) {
-		let html = prototype.replace(/__name__/g, simIndex++);
-		const temp = document.createElement('div');
-		temp.innerHTML = html;
-		const simBlock = temp.firstElementChild;
-		const connectionBox = simBlock.querySelector('.connection-box');
-		connectionBox.classList.toggle('red', mode === 'connect');
-		connectionBox.classList.toggle('blue', mode === 'sim');
-		wrapper.appendChild(simBlock);
-	}
-	window.addEventListener('DOMContentLoaded', () => setupConnectionGroup(document.querySelector('.connection-group'), 0));
-	addConnectionBtn.addEventListener('click', () => {
-		const base = document.querySelector('.connection-group');
-		const clone = base.cloneNode(true);
-		clone.querySelectorAll('input[type="radio"]').forEach(input => {
-			input.name = `connectionChoice-${connectionIndex}`;
-			input.checked = input.value === 'sim';
-		});
-		clone.querySelector('.sim-blocks-wrapper').innerHTML = '';
-		connectionsWrapper.appendChild(clone);
-		setupConnectionGroup(clone, connectionIndex++);
 	});
-	let currentHiddenInput,
-		currentDisplayLabel,
-		currentChooseBtn;
+
+	let currentHiddenInput, currentDisplayLabel, currentChooseBtn;
+
 	function openModal(button) {
 		const wrapper = button.closest('.sim-block');
 		currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
@@ -450,49 +404,40 @@
 		currentChooseBtn = button;
 		document.getElementById('customModal').style.display = 'flex';
 	}
+
 	function closeModal() {
 		document.getElementById('customModal').style.display = 'none';
 		currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
 	}
+
 	function selectModel(id, name, image, manuImage, manuName) {
-		if (!currentHiddenInput)
-			return;
+		if (!currentHiddenInput) return;
 
 		currentHiddenInput.value = id;
 		currentChooseBtn.classList.add('d-none');
-		currentHiddenInput.name = currentHiddenInput.name.replace('__index__', simIndex - 1);
 		currentDisplayLabel.innerHTML = `
-  <div class="d-flex align-items-start gap-3 p-2 border rounded bg-light">
-    <img src="/uploads/${image}" style="width:80px; border-radius:6px; object-fit:cover;" alt="Model">
-    <img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
-    <div class="flex-grow-1">
-      <strong>${name}</strong><br>
-      <small class="text-muted">${manuName}</small>
-      <div class="mt-2">
-        <button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">
-          Supprimer
-        </button>
-      </div>
-    </div>
-  </div>
-`;
-
+			<div class="d-flex align-items-start gap-3 p-2 border rounded bg-light">
+				<img src="/uploads/${image}" style="width:80px; border-radius:6px; object-fit:cover;" alt="Model">
+				<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
+				<div class="flex-grow-1">
+					<strong>${name}</strong><br>
+					<small class="text-muted">${manuName}</small>
+					<div class="mt-2">
+						<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
+					</div>
+				</div>
+			</div>`;
 		closeModal();
 	}
+
 	function resetModelSelection(button) {
 		const wrapper = button.closest('.sim-block');
 		const input = wrapper.querySelector('input.charging-station-hidden');
 		const label = wrapper.querySelector('.model-selected');
 		const chooseBtn = wrapper.querySelector('.choose-model-btn');
-		if (input)
-			input.value = '';
-
-		if (label)
-			label.innerHTML = '';
-
-		if (chooseBtn)
-			chooseBtn.classList.remove('d-none');
-
+		if (input) input.value = '';
+		if (label) label.innerHTML = '';
+		if (chooseBtn) chooseBtn.classList.remove('d-none');
 	}
 </script>
 {% endblock %}

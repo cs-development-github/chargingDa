@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Erreur{% endblock %}
+
+{% block body %}
+<div class="container text-center py-5">
+    <h1 class="display-1 fw-bold text-secondary">Erreur</h1>
+    <p class="fs-3">
+        <span class="text-muted">Un problème est survenu.</span>
+    </p>
+    <p class="lead">
+        Nous faisons de notre mieux pour résoudre cela.
+    </p>
+    <a href="{{ path('app_charging_stations') }}" class="btn btn-secondary mt-3">
+        Retourner à l'accueil
+    </a>
+</div>
+{% endblock %}
