@@ -60,7 +60,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/borne-de-recharge/ajout', name: 'charging_station_add', methods: ['POST'])]
+    #[Route('/charging/stations/add', name: 'charging_station_add', methods: ['POST'])]
     public function addChargingStation(Request $request, EntityManagerInterface $entityManager, SluggerInterface $slugger): Response
     {
         $station = new ChargingStations();
@@ -94,7 +94,7 @@ final class ChargingStationsController extends AbstractController
         ]);
     }
 
-    #[Route('/fabricant/ajout', name: 'manufacturer_add', methods: ['POST'])]
+    #[Route('/manufacturer/add', name: 'manufacturer_add', methods: ['POST'])]
     public function addManufacturer(Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ADMIN')) {

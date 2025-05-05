@@ -259,10 +259,15 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
-				{{ form_start(form, { attr:{ novalidate:'novalidate' } }) }}
+				{{ form_start(form, {
+					action: path('charging_station_add'),
+					attr: { novalidate: 'novalidate' }
+				}) }}
+
 				<div class="row gy-3">
 					<div class="col-md-6">{{ form_row(form.model) }}</div>
 					<div class="col-md-6">{{ form_row(form.power) }}</div>
+					<div class="col-md-6">{{ form_row(form.reference) }}</div>
 					<div class="col-md-6">{{ form_row(form.connectors) }}</div>
 					<div class="col-md-6">{{ form_row(form.manufacturer) }}</div>
 					<div class="col-md-6">{{ form_row(form.image) }}</div>
@@ -285,7 +290,10 @@
 				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
-				{{ form_start(manufacturerForm, { attr:{ novalidate:'novalidate' } }) }}
+				{{ form_start(manufacturerForm, {
+					action: path('manufacturer_add'),
+					attr: { novalidate: 'novalidate' }
+				}) }}
 				<div class="mb-3">{{ form_row(manufacturerForm.name) }}</div>
 				<div class="mb-3">{{ form_row(manufacturerForm.image) }}</div>
 				<div class="text-end">
