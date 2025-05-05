@@ -143,8 +143,8 @@ final class ChargingStationsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Gestion de l'upload d'image si une nouvelle image est fournie
-            $imageFile = $request->files->get('image');
+            $imageFile = $form->get('image')->getData();
+
             if ($imageFile) {
                 $imageFilename = uniqid() . '.' . $imageFile->guessExtension();
                 $imageFile->move($this->uploadsDirectory, $imageFilename);

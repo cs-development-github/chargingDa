@@ -28,10 +28,6 @@ class ChargingStationType extends AbstractType
                 'label' => 'Référence',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('image', FileType::class, [
-                'label' => 'Photo de la borne',
-                'attr' => ['class' => 'form-control'],
-            ])    
             ->add('manufacturer', EntityType::class, [
                 'class' => Manufacturer::class,
                 'choice_label' => 'name',
@@ -40,7 +36,7 @@ class ChargingStationType extends AbstractType
                 'attr' => ['class' => 'form-control']
             ])
             ->add('connectors', IntegerType::class, [
-                'label' => 'PDC',
+                'label' => 'Nombre de connecteurs',
                 'attr' => ['class' => 'form-control'],
             ])
             ->add('power', ChoiceType::class, [
@@ -71,9 +67,8 @@ class ChargingStationType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'mapped' => false,
             ])
-                      
             ->add('isActive', CheckboxType::class, [
-                'label' => 'Actif',
+                'label' => 'Publiée la borne',
                 'required' => false,
             ]);
     }

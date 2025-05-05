@@ -25,18 +25,23 @@
                     </div>
 
                     <div class="mb-3">
+                        {{ form_label(editForm.image, 'Image de la borne', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.image, {'attr': {'class': 'form-control'}}) }}
+                    </div>
+
+                    <div class="mb-3">
                         {{ form_label(editForm.power, 'Puissance', {'label_attr': {'class': 'fw-bold'}}) }}
                         {{ form_widget(editForm.power, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">
-                        {{ form_label(editForm.isActive, 'isActive', {'label_attr': {'class': 'fw-bold'}}) }}
-                        {{ form_widget(editForm.isActive, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_label(editForm.reference, 'Référence', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.reference, {'attr': {'class': 'form-control'}}) }}
                     </div>
 
                     <div class="mb-3">
-                        <label class="fw-bold">Nouvelle Image de la Borne</label>
-                        <input type="file" name="image" class="form-control">
+                        {{ form_label(editForm.isActive, 'Publié la borne', {'label_attr': {'class': 'fw-bold'}}) }}
+                        {{ form_widget(editForm.isActive) }}
                     </div>
 
                     <div class="modal-footer">
