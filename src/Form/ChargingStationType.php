@@ -24,6 +24,10 @@ class ChargingStationType extends AbstractType
                 'label' => 'Modèle',
                 'attr' => ['class' => 'form-control'],
             ])
+            ->add('reference', TextType::class, [
+                'label' => 'Référence',
+                'attr' => ['class' => 'form-control'],
+            ])
             ->add('image', FileType::class, [
                 'label' => 'Photo de la borne',
                 'attr' => ['class' => 'form-control'],
@@ -42,17 +46,32 @@ class ChargingStationType extends AbstractType
             ->add('power', ChoiceType::class, [
                 'label' => 'Puissance',
                 'attr' => ['class' => 'form-control'],
-                'choices' => array_combine(
-                    array_map(fn($v) => $v . ' kW', range(3, 22)),
-                    range(3, 22)
-                ),
                 'placeholder' => 'Sélectionnez la puissance',
+                'choices' => [
+                    '3,7 kW' => 3.7,
+                    '7,4 kW' => 7.4,
+                    '11 kW'  => 11,
+                    '22 kW'  => 22,
+                    '24 kW'  => 24,
+                    '50 kW'  => 50,
+                    '100 kW' => 100,
+                    '150 kW' => 150,
+                    '175 kW' => 175,
+                    '200 kW' => 200,
+                    '250 kW' => 250,
+                    '300 kW' => 300,
+                    '350 kW' => 350,
+                ],
+                'group_by' => function ($value, $key, $index) {
+                    return $value <= 22 ? 'AC (Courant alternatif)' : 'DC (Courant continu)';
+                },
             ])
             ->add('image', FileType::class, [
                 'label' => 'Photo de la borne',
                 'attr' => ['class' => 'form-control'],
                 'mapped' => false,
-            ])            
+            ])
+                      
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Actif',
                 'required' => false,

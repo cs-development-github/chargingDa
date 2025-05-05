@@ -68,6 +68,9 @@ class ChargingStations
     #[ORM\Column(nullable: true)]
     private ?int $power = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $reference = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -287,6 +290,18 @@ class ChargingStations
     public function setPower(?int $power): static
     {
         $this->power = $power;
+
+        return $this;
+    }
+
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    public function setReference(?string $reference): static
+    {
+        $this->reference = $reference;
 
         return $this;
     }
