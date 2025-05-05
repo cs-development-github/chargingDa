@@ -16,6 +16,12 @@ final class InterventionController extends AbstractController
     #[Route('/intervention', name: 'app_intervention')]
     public function index(Request $request, InterventionRepository $repo, PaginatorInterface $paginator): Response
     {
+        $user = $this->getUser();
+
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $borneName = $request->query->get('borneName');
         $clientName = $request->query->get('clientName');
         $reference = $request->query->get('reference');

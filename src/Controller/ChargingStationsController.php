@@ -32,6 +32,12 @@ final class ChargingStationsController extends AbstractController
     #[Route('/borne-de-recharge', name: 'app_charging_stations')]
     public function index(ChargingStationsRepository $chargingStationsRepository, EntityManagerInterface $entityManager): Response
     {
+        $user = $this->getUser();
+
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+        
         $chargingStations = $chargingStationsRepository->findAll();
         $station = new ChargingStations();
         $form = $this->createForm(ChargingStationType::class, $station);
