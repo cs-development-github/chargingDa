@@ -88,9 +88,9 @@ class UniversignService
             'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
             'body' => http_build_query([
                 'type' => 'signature',
-                'position[page]' => 26,
-                'position[x]' => 50,
-                'position[y]' => 50,
+                'position[page]' => 2,
+                'position[x]' => 120,
+                'position[y]' => 170,
                 'position[width]' => 200,
                 'position[height]' => 50,
             ]),

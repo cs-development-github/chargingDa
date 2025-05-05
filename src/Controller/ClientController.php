@@ -389,7 +389,7 @@ final class ClientController extends AbstractController
                 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
                 'body' => http_build_query([
                     'type' => 'signature',
-                    'position[page]' => 26,  // ✅ Page 26
+                    'position[page]' => 25,  // ✅ Page 26
                     'position[x]' => 50,     // ✅ Position X (gauche)
                     'position[y]' => 50,    // ✅ Position Y (bas)
                     'position[width]' => 200, // ✅ Largeur

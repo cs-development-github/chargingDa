@@ -8,7 +8,6 @@ class PdfEditorService
 {
     public function mergePdfs(array $pdfFiles, string $outputPath)
     {
-        // ✅ Utilisation de Ghostscript pour fusionner les PDF
         $cmd = "gs -dBATCH -dNOPAUSE -sDEVICE=pdfwrite -sOutputFile=$outputPath ";
         foreach ($pdfFiles as $file) {
             $cmd .= " $file ";
@@ -26,7 +25,7 @@ class PdfEditorService
         $cmd = "wkhtmltopdf $htmlFile $outputPath";
         shell_exec($cmd);
 
-        unlink($htmlFile); // Supprime le fichier temporaire
+        unlink($htmlFile);
 
         return file_exists($outputPath);
     }

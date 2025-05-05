@@ -188,7 +188,7 @@
 	<div class="stations-grid">
 		{% for station in chargingStations %}
 		<div class="station-card"
-			data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~station.power) | lower }}">
+			data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~ station.power) | lower }}">
 			<div class="header">
 				<img src="{{ station.image ? asset('uploads/'~station.image) : asset('images/placeholder.jpg') }}"
 					alt="{{ station.model }}" class="device-img">
@@ -196,7 +196,7 @@
 
 			<div class="body">
 				<h5>{{ station.model }}</h5>
-				<p class="stats">{{ station.power }} kW – {{ station.points|default(1) }} point(s)</p>
+				<p class="stats">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
 			</div>
 
 			<div class="maker">
