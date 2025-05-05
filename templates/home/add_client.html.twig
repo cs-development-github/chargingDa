@@ -282,23 +282,50 @@
 		<h2>Informations Client</h2>
 		{{ form_widget(clientForm) }}
 
-		{# Prototype brut utilisé pour la duplication dynamique avec index correct #}
-		{% set prototype %}
-			<div class="sim-block">
-				{{ form_row(interventionForm.interventions.vars.prototype.sim) }}
-				{{ form_row(interventionForm.interventions.vars.prototype.borneName) }}
-				<div style="display:none;">
-					{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {'attr':{'class':'charging-station-hidden'}}) }}
-				</div>
-				<div class="form-group">
-					<label><i class="bi bi-list-nested me-1"></i>Modèle de borne</label>
-					<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
-						<i class="bi bi-search me-1"></i>Choisir un modèle
-					</button>
-					<div class="model-selected text-muted small mt-1"></div>
-				</div>
-			</div>
-		{% endset %}
+{% set prototype %}
+	<div class="sim-block position-relative border bg-white p-3 mb-3 rounded">
+		<button type="button" class="btn btn-sm btn-danger remove-connection-btn" onclick="this.closest('.sim-block').remove()">
+			<i class="bi bi-x-lg"></i>
+		</button>
+
+		<div class="form-group mb-3">
+			<label class="form-label">
+				Carte SIM
+				<i class="bi bi-info-circle-fill text-primary ms-1"
+				data-bs-toggle="tooltip"
+				data-bs-placement="top"
+				title="Numéro de carte SIM au format ICCID (ex: 893301234567890123)">
+				</i>
+			</label>
+			{{ form_widget(interventionForm.interventions.vars.prototype.sim, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div class="form-group mb-3">
+			<label class="form-label">
+				Nom de la borne
+				<i class="bi bi-info-circle-fill text-primary ms-1"
+				data-bs-toggle="tooltip"
+				data-bs-placement="top"
+				data-bs-html="true"
+				title="<img src='{{ asset('build/images/Qrcode_exemple.png') }}' alt='Exemple QR Code' style='max-width:150px;border-radius:8px;'>">
+				</i>
+			</label>
+			{{ form_widget(interventionForm.interventions.vars.prototype.borneName, { 'attr': { 'class': 'form-control' } }) }}
+		</div>
+
+		<div style="display:none;">
+			{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {'attr':{'class':'charging-station-hidden'}}) }}
+		</div>
+
+		<div class="form-group">
+			<label><i class="bi bi-list-nested me-1"></i>Modèle de borne</label>
+			<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
+				<i class="bi bi-search me-1"></i>Choisir un modèle
+			</button>
+			<div class="model-selected text-muted small mt-1"></div>
+		</div>
+	</div>
+{% endset %}
 
 		<h2>Interventions</h2>
 		{{ form_errors(interventionForm) }}
@@ -371,29 +398,59 @@
 </div>
 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const wrapper = document.getElementById('connectionsWrapper');
-		const addBtn = document.getElementById('addConnectionBtn');
-		let index = wrapper.querySelectorAll('.sim-block').length;
+document.addEventListener('DOMContentLoaded', () => {
+	const wrapper = document.getElementById('connectionsWrapper');
+	const addBtn = document.getElementById('addConnectionBtn');
+	let index = 0;
 
-		addBtn.addEventListener('click', () => {
-			const prototype = wrapper.dataset.prototype;
-			const newForm = prototype.replace(/__name__/g, index);
-			const div = document.createElement('div');
-			div.classList.add('sim-block', 'mb-3');
-			div.innerHTML = newForm;
+	// Fonction pour ajouter une nouvelle intervention
+	function addIntervention() {
+		const prototype = wrapper.dataset.prototype;
+		const newForm = prototype.replace(/__name__/g, index);
+		const div = document.createElement('div');
+		div.innerHTML = newForm;
 
-			div.querySelectorAll('[id]').forEach(el => {
-				if (el.id.includes('__name__')) el.id = el.id.replace(/__name__/g, index);
+		// Protection suppression si plus d'une
+		const deleteBtn = div.querySelector('.remove-connection-btn');
+		if (deleteBtn) {
+			deleteBtn.addEventListener('click', () => {
+				if (wrapper.querySelectorAll('.sim-block').length > 1) {
+					div.remove();
+				} else {
+					alert("Au moins une intervention est requise.");
+				}
 			});
-			div.querySelectorAll('[name]').forEach(el => {
-				if (el.name && el.name.includes('__name__')) el.name = el.name.replace(/__name__/g, index);
-			});
+		}
 
-			wrapper.appendChild(div);
+		wrapper.appendChild(div);
+		index++;
+	}
+
+	// Ajout d'une intervention par défaut si aucune
+	if (wrapper.querySelectorAll('.sim-block').length === 0) {
+		addIntervention();
+	} else {
+		// Ajoute la protection sur celle déjà rendue par Twig
+		wrapper.querySelectorAll('.sim-block').forEach((div) => {
+			const deleteBtn = div.querySelector('.remove-connection-btn');
+			if (deleteBtn) {
+				deleteBtn.addEventListener('click', () => {
+					if (wrapper.querySelectorAll('.sim-block').length > 1) {
+						div.remove();
+					} else {
+						alert("Au moins une intervention est requise.");
+					}
+				});
+			}
 			index++;
 		});
+	}
+
+	// Bouton "Ajouter une connexion"
+	addBtn.addEventListener('click', () => {
+		addIntervention();
 	});
+});
 
 	let currentHiddenInput, currentDisplayLabel, currentChooseBtn;
 
@@ -440,4 +497,36 @@
 		if (chooseBtn) chooseBtn.classList.remove('d-none');
 	}
 </script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+		tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+			new bootstrap.Tooltip(tooltipTriggerEl)
+		})
+	})
+</script>
+
+<script>
+	document.addEventListener('DOMContentLoaded', function () {
+		const searchInput = document.getElementById('searchModelInput');
+		const cards = document.querySelectorAll('.custom-model-card');
+
+		if (searchInput) {
+			searchInput.addEventListener('input', function () {
+				const value = this.value.trim().toLowerCase();
+
+				cards.forEach(card => {
+					const name = card.dataset.name;
+					if (name.includes(value)) {
+						card.style.display = 'block';
+					} else {
+						card.style.display = 'none';
+					}
+				});
+			});
+		}
+	});
+</script>
+
 {% endblock %}
