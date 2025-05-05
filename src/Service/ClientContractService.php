@@ -34,61 +34,58 @@ class ClientContractService
         }
 
         $pdfFiles = [];
-        $templates = [
+        $templateMap = [
             'first_page' => 'pdf/first_page_template.html.twig',
             'third_page' => 'pdf/third_page_template.html.twig',
-            'twenty_second' => 'pdf/twenty_second_template.html.twig'
+            'twenty_second' => 'pdf/twenty_second_template.html.twig',
         ];
 
-        foreach ($templates as $key => $template) {
-            $pdfPath = "$projectDir/{$key}_{$clientId}.pdf";
-            $htmlContent = $this->renderPdf($template, $client);
-            file_put_contents("$projectDir/debug_{$key}.html", $htmlContent);
-            
-            $this->pdfEditorService->createCustomPdf($pdfPath, $htmlContent);
+        foreach ($templateMap as $prefix => $template) {
+            $html = $this->renderPdf($template, $client);
+            $pdfPath = "$projectDir/{$prefix}_{$clientId}.pdf";
+
+            $this->pdfEditorService->createCustomPdf($pdfPath, $html);
             if (file_exists($pdfPath) && filesize($pdfPath) > 0) {
                 $pdfFiles[] = $pdfPath;
             }
         }
 
-        // Récupération des informations de la borne de recharge
+        // Génération de la page 23 avec données supplémentaires
         $chargingData = $this->getChargingStationData($client);
-        $twentyThirdPath = "$projectDir/twenty_third_{$clientId}.pdf";
-        $htmlTwentyThird = $this->renderPdf('pdf/twenty_third_template.html.twig', $client, $chargingData);
-        file_put_contents("$projectDir/debug_twenty_third.html", $htmlTwentyThird);
-        $this->pdfEditorService->createCustomPdf($twentyThirdPath, $htmlTwentyThird);
-        if (file_exists($twentyThirdPath) && filesize($twentyThirdPath) > 0) {
-            $pdfFiles[] = $twentyThirdPath;
+        $html23 = $this->renderPdf('pdf/twenty_third_template.html.twig', $client, $chargingData);
+        $pdfPath23 = "$projectDir/twenty_third_{$clientId}.pdf";
+
+        $this->pdfEditorService->createCustomPdf($pdfPath23, $html23);
+        if (file_exists($pdfPath23) && filesize($pdfPath23) > 0) {
+            $pdfFiles[] = $pdfPath23;
         }
 
-        // Chemins des fichiers PDF fixes
-        $existingPdfPaths = [
+        // Fichiers fixes existants
+        $fixedPaths = [
             "$projectDir/contrat_exploitation-2.pdf",
             "$projectDir/contrat_exploitation-4-21.pdf",
-            "$projectDir/contrat_exploitation-24-27.pdf"
+            "$projectDir/contrat_exploitation-24-25.pdf"
         ];
-        $pdfFiles = array_merge($pdfFiles, array_filter($existingPdfPaths, 'file_exists'));
+        $pdfFiles = array_merge($pdfFiles, array_filter($fixedPaths, 'file_exists'));
 
-        // Fusion des fichiers PDF
-        $mergedPdfPath = "$projectDir/contrat_final_{$clientId}.pdf";
-        $success = $this->pdfEditorService->mergePdfs($pdfFiles, $mergedPdfPath);
+        // Fusion en PDF final
+        $finalPath = "$projectDir/contrat_final_{$clientId}.pdf";
+        $success = $this->pdfEditorService->mergePdfs($pdfFiles, $finalPath);
 
-        if (!$success || !file_exists($mergedPdfPath) || filesize($mergedPdfPath) === 0) {
+        if (!$success || !file_exists($finalPath) || filesize($finalPath) === 0) {
             throw new \RuntimeException("Échec de la fusion des PDFs pour le client ID {$clientId}");
         }
 
-if ($requestSignature) {
-    $this->contractSignatureService->sign($client);
-}
+        if ($requestSignature) {
+            $this->contractSignatureService->sign($client);
+        }
 
-
-        return $mergedPdfPath;
+        return $finalPath;
     }
 
     private function renderPdf(string $template, Client $client, array $data = []): string
     {
-        $context = array_merge(['client' => $client], $data);
-        return $this->twig->render($template, $context);
+        return $this->twig->render($template, array_merge(['client' => $client], $data));
     }
 
     private function getChargingStationData(Client $client): array

@@ -79,12 +79,11 @@ class ContractSignatureService
             'body' => http_build_query([
                 'type' => 'signature',
                 'name' => 'SignatureField1',
-                'page' => 26,
-                'x' => 50,
-                'y' => 50,
+                'page' => 25,
+                'x' => 300,
+                'y' => 320,
             ]),
         ]);
-        
 
         $fieldId = $signatureData->toArray()['id'] ?? null;
         if (!$fieldId) throw new \RuntimeException("Champ de signature non ajouté.");
