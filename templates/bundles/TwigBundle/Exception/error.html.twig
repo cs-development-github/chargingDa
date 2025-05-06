@@ -1,18 +1,51 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="fr">
 
-{% block title %}Erreur{% endblock %}
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Erreur</title>
 
-{% block body %}
-<div class="container text-center py-5">
-    <h1 class="display-1 fw-bold text-secondary">Erreur</h1>
-    <p class="fs-3">
-        <span class="text-muted">Un problème est survenu.</span>
-    </p>
-    <p class="lead">
-        Nous faisons de notre mieux pour résoudre cela.
-    </p>
-    <a href="{{ path('app_charging_stations') }}" class="btn btn-secondary mt-3">
-        Retourner à l'accueil
-    </a>
-</div>
-{% endblock %}
+    <link rel="icon" href="{{ asset('build/images/favicon.png') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    {{ encore_entry_link_tags('app') }}
+
+
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    <style>
+        body {
+            background: linear-gradient(to right, #ec008c 0%, #f6941f 100%);
+            min-height: 100vh;
+        }
+
+        .card-blur {
+            backdrop-filter: blur(6px);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column justify-content-center align-items-center text-white">
+    <div class="container">
+        <div class="card card-blur shadow-lg p-5 border-0 rounded-4 text-center">
+            <h1 class="display-1 fw-bold">Erreur</h1>
+            <p class="fs-3 mb-0">
+                <span class="text-light">Un problème est survenu.</span>
+            </p>
+            <p class="lead">Nous faisons de notre mieux pour résoudre cela.</p>
+            <a href="{{ path('app_charging_stations') }}" class="btn btn-light btn-lg mt-3 text-dark fw-semibold">
+                Retourner à l'accueil
+            </a>
+        </div>
+    </div>
+</body>
+
+</html>
