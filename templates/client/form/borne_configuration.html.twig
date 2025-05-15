@@ -1,0 +1,40 @@
+<div id="step-3" id="borne-config-wrapper" class="step">
+    <div class="form-step choix-step active">
+        <h4 class="mb-3">Quel type de configuration souhaitez-vous pour votre borne ?</h4>
+        <div class="row" id="choicesContainer">
+            {% for type, config in {
+                'flotte': {'title': 'Usage interne uniquement', 'desc': 'Réservé aux véhicules de service ou de fonction de l’entreprise'},
+                'publique': {'title': 'Recharge publique', 'desc': 'Accessible à tous : voirie, parkings publics, etc.'},
+                'mixte': {'title': 'Usage mixte', 'desc': 'Combinaison d’usage interne et d’accès public'}
+            } %}
+            <div class="col-md-4 mb-3">
+                <div class="option-card p-3" data-value="{{ type }}">
+                    <input type="radio" name="choixType" class="d-none" value="{{ type }}">
+                    <p class="configuration">Configuration {{ loop.index }}</p>
+                    <h5>{{ config.title|raw }}</h5>
+                    <p class="mb-0">{{ config.desc }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="step-navigation d-flex justify-content-between">
+        <button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+            <i class="bi bi-arrow-left"></i> Précédent
+        </button>
+        <button type="button" class="btn-next btn btn-primary" data-step="2">
+            Suivant <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+    </div>
+
+    <div class="form-step config-step d-none">
+        {% include 'client/form/config_flotte.html.twig' %}
+        {% include 'client/form/config_publique.html.twig' %}
+        {% include 'client/form/config_mixte.html.twig' %}
+
+        <div class="mt-4 d-flex justify-content-between">
+            <button type="button" class="btn btn-secondary" id="btn-back">Retour</button>
+            <button type="submit" class="btn btn-success">Valider</button>
+        </div>
+    </div>
+</div>

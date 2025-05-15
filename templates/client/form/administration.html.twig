@@ -1,0 +1,88 @@
+{# templates/form/client_info.html.twig #}
+<div id="step-2" class="step">
+    <h4>Administration</h4>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.lastname) }}
+            {{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.numberTva) }}
+            {{ form_widget(form.numberTva, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.societyName) }}
+            {{ form_widget(form.societyName, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.siret) }}
+            {{ form_widget(form.siret, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.codeNaf) }}
+            {{ form_widget(form.codeNaf, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.phone) }}
+            {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+        </div>
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.email) }}
+            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3 position-relative">
+            {{ form_label(form.address.fullAddress) }}
+            {{ form_widget(form.address.fullAddress, {
+                'attr': {
+                    'class': 'form-control',
+                    'id': 'client_contract_form_address_fullAddress',
+                    'name': 'client_contract_form[address][fullAddress]',
+                    'autocomplete': 'off'
+                }
+            }) }}
+            <div id="autocomplete-results" class="list-group position-absolute z-3"
+                style="width: 100%; max-height: 200px; overflow-y: auto; display: none;"></div>
+
+            {{ form_widget(form.address.streetNumber, {'attr': {'id': 'client_contract_form_address_streetNumber'}}) }}
+            {{ form_widget(form.address.streetName, {'attr': {'id': 'client_contract_form_address_streetName'}}) }}
+            {{ form_widget(form.address.postalCode, {'attr': {'id': 'client_contract_form_address_postalCode'}}) }}
+            {{ form_widget(form.address.city, {'attr': {'id': 'client_contract_form_address_city'}}) }}
+            {{ form_widget(form.address.country, {'attr': {'id': 'client_contract_form_address_country'}}) }}
+            {{ form_widget(form.address.latitude, {'attr': {'id': 'client_contract_form_address_latitude'}}) }}
+            {{ form_widget(form.address.longitude, {'attr': {'id': 'client_contract_form_address_longitude'}}) }}
+            {{ form_widget(form.address.region, {'attr': {'id': 'client_contract_form_address_region'}}) }}
+            {{ form_widget(form.address.department, {'attr': {'id': 'client_contract_form_address_department'}}) }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.legalForm) }}
+            {{ form_widget(form.legalForm, {'attr': {'class': 'form-control'}}) }}
+        </div>
+    </div>
+
+    <div class="step-navigation d-flex justify-content-between">
+        <button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+            <i class="bi bi-arrow-left"></i> Précédent
+        </button>
+        <button type="button" class="btn-next btn btn-primary" data-step="2">
+            Suivant <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+</div>
