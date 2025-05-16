@@ -40,7 +40,7 @@ class MailService
     public function sendEmailWithAttachment(string $to, string $subject, string $htmlTemplate, string $pdfPath)
     {
         $email = (new Email())
-            ->from('nepasrepondre@lodmi.com')
+            ->from('nepasrepondrelodmi@lodmi.com')
             ->to($to)
             ->subject($subject)
             ->html($htmlTemplate)
