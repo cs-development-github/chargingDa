@@ -5,13 +5,45 @@
 		{% include 'client/form/warning.html.twig' %}
 		{% include 'client/form/administration.html.twig' %}
         {% include 'client/form/borne_configuration.html.twig' %}
-
 	</div>
 
+    <div id="customModal" class="custom-modal">
+    <div class="custom-modal-content">
+        <span class="custom-modal-close" id="customModalClose">&times;</span>
+        <h5 class="mb-3">Confirmation</h5>
+        <p>Êtes-vous sûr de ce choix ? Il influencera le contrat généré par la suite.</p>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+            <button class="btn btn-secondary" id="cancelCustomModal">Non</button>
+            <button class="btn btn-primary" id="confirmChoiceBtn">Oui, je confirme</button>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block javascript %}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const nextButtons = document.querySelectorAll('.btn-next');
     const prevButtons = document.querySelectorAll('.btn-prev');
+
+    function getLogicalStep(stepNumber) {
+        if (stepNumber <= 2) return 1;
+        if (stepNumber <= 3) return 2;       
+        return 3;
+    }
+
+    function updateSidebar(currentStep) {
+        const logicalStep = getLogicalStep(currentStep);
+        document.querySelectorAll('.circle-step').forEach(el => {
+            const step = parseInt(el.dataset.step);
+            if (step <= logicalStep) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        });
+    }
 
     nextButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -22,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (nextStep) {
                 currentStep.classList.remove('active');
                 nextStep.classList.add('active');
+                updateSidebar(currentStepId + 1);
             }
         });
     });
@@ -29,14 +62,163 @@ document.addEventListener('DOMContentLoaded', () => {
     prevButtons.forEach(button => {
         button.addEventListener('click', () => {
             const currentStep = button.closest('.step');
-            const previousStep = currentStep.previousElementSibling;
+            const currentStepId = parseInt(currentStep.id.split('-')[1]);
+            const previousStep = document.querySelector(`#step-${currentStepId - 1}`);
 
-            if (previousStep && previousStep.classList.contains('step')) {
+            if (previousStep) {
                 currentStep.classList.remove('active');
                 previousStep.classList.add('active');
+                updateSidebar(currentStepId - 1);
             }
         });
     });
+
+    // Init
+    updateSidebar(1);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const nextButtons = document.querySelectorAll('.btn-next');
+    const prevButtons = document.querySelectorAll('.btn-prev');
+
+    function getLogicalStep(stepNumber) {
+        if (stepNumber <= 2) return 1;
+        if (stepNumber <= 3) return 2;
+        return 3;
+    }
+
+    function updateSidebar(currentStep) {
+        const logicalStep = getLogicalStep(currentStep);
+        document.querySelectorAll('.circle-step').forEach(el => {
+            const step = parseInt(el.dataset.step);
+            if (step <= logicalStep) {
+                el.classList.add('active');
+            } else {
+                el.classList.remove('active');
+            }
+        });
+    }
+
+    nextButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const currentStep = button.closest('.step');
+            const currentStepId = parseInt(button.dataset.step);
+            const nextStep = document.querySelector(`#step-${currentStepId + 1}`);
+
+            if (nextStep) {
+                currentStep.classList.remove('active');
+                nextStep.classList.add('active');
+                updateSidebar(currentStepId + 1);
+            }
+        });
+    });
+
+    prevButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const currentStep = button.closest('.step');
+            const currentStepId = parseInt(currentStep.id.split('-')[1]);
+            const previousStep = document.querySelector(`#step-${currentStepId - 1}`);
+
+            if (previousStep) {
+                currentStep.classList.remove('active');
+                previousStep.classList.add('active');
+                updateSidebar(currentStepId - 1);
+            }
+        });
+    });
+
+    // Modal logic
+    const customModal = document.getElementById('customModal');
+    const closeModalBtn = document.getElementById('customModalClose');
+    const cancelModalBtn = document.getElementById('cancelCustomModal');
+    const confirmBtn = document.getElementById('confirmChoiceBtn');
+    const choixStep = document.querySelector('.choix-step');
+    const configStep = document.querySelector('.config-step');
+    let selectedConfig = null;
+
+    document.querySelectorAll('.option-card').forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            selectedConfig = card.dataset.value;
+            customModal.classList.add('show');
+        });
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        customModal.classList.remove('show');
+    });
+
+    cancelModalBtn.addEventListener('click', () => {
+        customModal.classList.remove('show');
+    });
+
+    confirmBtn.addEventListener('click', () => {
+        customModal.classList.remove('show');
+
+        choixStep.classList.remove('active');
+        configStep.classList.remove('d-none');
+        configStep.classList.add('active');
+
+configStep.querySelectorAll('.config-content').forEach(block => block.classList.add('d-none'));
+
+const selectedBlock = document.getElementById(`config-${selectedConfig}`);
+if (selectedBlock) selectedBlock.classList.remove('d-none');
+        updateSidebar(3);
+    });
+
+    updateSidebar(1);
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const options = document.querySelectorAll('.option-card');
+    const formStepConfig = document.querySelector('.config-step');
+    const configContents = document.querySelectorAll('.config-content');
+
+    options.forEach(option => {
+        option.addEventListener('click', () => {
+            // Sélectionne le bouton radio
+            option.querySelector('input[type="radio"]').checked = true;
+
+            // Marque l'option comme active
+            options.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+
+            // Affiche le bon bloc de config à l'étape suivante
+            const selectedValue = option.getAttribute('data-value');
+            formStepConfig.classList.remove('d-none');
+
+            configContents.forEach(content => {
+                content.classList.add('d-none');
+            });
+
+            const target = document.getElementById(`config-${selectedValue}`);
+            if (target) target.classList.remove('d-none');
+        });
+    });
+
+document.getElementById('btn-back').addEventListener('click', function () {
+    const choixStep = document.querySelector('.choix-step');
+    const configStep = document.querySelector('.config-step');
+
+    // Masquer la config
+    configStep.classList.remove('active');
+    configStep.classList.add('d-none');
+
+    // Réinitialiser les contenus
+    configStep.querySelectorAll('.config-content').forEach(content => content.classList.add('d-none'));
+
+    // Réafficher les choix
+    choixStep.classList.add('active');
+
+    // Mettre à jour la barre latérale si nécessaire
+    updateSidebar(2);
+});
+
 });
 </script>
 

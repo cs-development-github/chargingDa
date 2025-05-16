@@ -144,7 +144,6 @@ document.addEventListener("DOMContentLoaded", function () {
         resultBox.style.display = 'block';
     });
 
-    // Fermer la liste si on clique ailleurs
     document.addEventListener('click', function (e) {
         if (!input.contains(e.target) && !resultBox.contains(e.target)) {
             resultBox.style.display = 'none';
