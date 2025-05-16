@@ -3,8 +3,8 @@
         <h4 class="mb-3">Quel type de configuration souhaitez-vous pour votre borne ?</h4>
         <div class="row" id="choicesContainer">
             {% for type, config in {
-                'flotte': {'title': 'Usage interne uniquement', 'desc': 'Réservé aux véhicules de service ou de fonction de l’entreprise'},
-                'publique': {'title': 'Recharge publique', 'desc': 'Accessible à tous : voirie, parkings publics, etc.'},
+                'flotte': {'title': 'Bornes privées', 'desc': 'Réservé aux véhicules de service ou de fonction de l’entreprise'},
+                'publique': {'title': 'Bornes privées', 'desc': 'Accessible à tous : voirie, parkings publics, etc.'},
                 'mixte': {'title': 'Usage mixte', 'desc': 'Combinaison d’usage interne et d’accès public'}
             } %}
             <div class="col-md-4 mb-3">

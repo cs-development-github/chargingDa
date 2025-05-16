@@ -1,55 +1,55 @@
 {# templates/form/client_info.html.twig #}
 <div id="step-2" class="step">
-    <h4>Administration</h4>
+	<h4>Administration</h4>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.name) }}
-            {{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.lastname) }}
-            {{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.name) }}
+			{{ form_widget(form.name, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.lastname) }}
+			{{ form_widget(form.lastname, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.numberTva) }}
-            {{ form_widget(form.numberTva, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.societyName) }}
-            {{ form_widget(form.societyName, {'attr': {'class': 'form-control'}}) }}
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.numberTva) }}
+			{{ form_widget(form.numberTva, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.societyName) }}
+			{{ form_widget(form.societyName, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.siret) }}
-            {{ form_widget(form.siret, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.codeNaf) }}
-            {{ form_widget(form.codeNaf, {'attr': {'class': 'form-control'}}) }}
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.siret) }}
+			{{ form_widget(form.siret, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.codeNaf) }}
+			{{ form_widget(form.codeNaf, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.phone) }}
-            {{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.email) }}
-            {{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
-        </div>
-    </div>
+	<div class="row">
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.phone) }}
+			{{ form_widget(form.phone, {'attr': {'class': 'form-control'}}) }}
+		</div>
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.email) }}
+			{{ form_widget(form.email, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
 
-    <div class="row">
-        <div class="col-md-6 mb-3 position-relative">
-            {{ form_label(form.address.fullAddress) }}
-            {{ form_widget(form.address.fullAddress, {
+	<div class="row">
+		<div class="col-md-6 mb-3 position-relative">
+			{{ form_label(form.address.fullAddress) }}
+			{{ form_widget(form.address.fullAddress, {
                 'attr': {
                     'class': 'form-control',
                     'id': 'client_contract_form_address_fullAddress',
@@ -57,32 +57,98 @@
                     'autocomplete': 'off'
                 }
             }) }}
-            <div id="autocomplete-results" class="list-group position-absolute z-3"
-                style="width: 100%; max-height: 200px; overflow-y: auto; display: none;"></div>
+			<div id="autocomplete-results" class="list-group position-absolute z-3" style="width: 100%; max-height: 200px; overflow-y: auto; display: none;"></div>
 
-            {{ form_widget(form.address.streetNumber, {'attr': {'id': 'client_contract_form_address_streetNumber'}}) }}
-            {{ form_widget(form.address.streetName, {'attr': {'id': 'client_contract_form_address_streetName'}}) }}
-            {{ form_widget(form.address.postalCode, {'attr': {'id': 'client_contract_form_address_postalCode'}}) }}
-            {{ form_widget(form.address.city, {'attr': {'id': 'client_contract_form_address_city'}}) }}
-            {{ form_widget(form.address.country, {'attr': {'id': 'client_contract_form_address_country'}}) }}
-            {{ form_widget(form.address.latitude, {'attr': {'id': 'client_contract_form_address_latitude'}}) }}
-            {{ form_widget(form.address.longitude, {'attr': {'id': 'client_contract_form_address_longitude'}}) }}
-            {{ form_widget(form.address.region, {'attr': {'id': 'client_contract_form_address_region'}}) }}
-            {{ form_widget(form.address.department, {'attr': {'id': 'client_contract_form_address_department'}}) }}
-        </div>
+			{{ form_widget(form.address.streetNumber, {'attr': {'id': 'client_contract_form_address_streetNumber'}}) }}
+			{{ form_widget(form.address.streetName, {'attr': {'id': 'client_contract_form_address_streetName'}}) }}
+			
+			{{ form_widget(form.address.country, {'attr': {'id': 'client_contract_form_address_country'}}) }}
+			{{ form_widget(form.address.latitude, {'attr': {'id': 'client_contract_form_address_latitude'}}) }}
+			{{ form_widget(form.address.longitude, {'attr': {'id': 'client_contract_form_address_longitude'}}) }}
+			{{ form_widget(form.address.region, {'attr': {'id': 'client_contract_form_address_region'}}) }}
+			{{ form_widget(form.address.department, {'attr': {'id': 'client_contract_form_address_department'}}) }}
+		</div>
 
-        <div class="col-md-6 mb-3">
-            {{ form_label(form.legalForm) }}
-            {{ form_widget(form.legalForm, {'attr': {'class': 'form-control'}}) }}
-        </div>
-    </div>
 
-    <div class="step-navigation d-flex justify-content-between">
-        <button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
-            <i class="bi bi-arrow-left"></i> Précédent
-        </button>
-        <button type="button" class="btn-next btn btn-primary" data-step="2">
-            Suivant <i class="bi bi-arrow-right"></i>
-        </button>
-    </div>
+		<div class="col-md-6 mb-3">
+			{{ form_label(form.legalForm) }}
+			{{ form_widget(form.legalForm, {'attr': {'class': 'form-control'}}) }}
+		</div>
+	</div>
+
+    <div class="row">
+				<div class="col-md-6 mb-3 position-relative">
+                    {{ form_label(form.address.postalCode) }}
+					{{ form_widget(form.address.postalCode, {'attr': {'id': 'client_contract_form_address_postalCode','class': 'form-control'}}) }}
+				</div>
+                <div class="col-md-6 mb-3 position-relative">
+                    {{ form_label(form.address.city) }}
+					{{ form_widget(form.address.city, {'attr': {'id': 'client_contract_form_address_city','class': 'form-control'}}) }}
+				</div>
+			</div>
+
+	<div class="step-navigation d-flex justify-content-between">
+		<button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+			<i class="bi bi-arrow-left"></i>
+			Précédent
+		</button>
+		<button type="button" class="btn-next btn btn-primary" data-step="2">
+			Suivant
+			<i class="bi bi-arrow-right"></i>
+		</button>
+	</div>
 </div>
+
+
+ <script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById('client_contract_form_address_fullAddress');
+    const resultBox = document.getElementById('autocomplete-results');
+
+    input.addEventListener('input', async function () {
+        const query = input.value.trim();
+        if (query.length < 3) {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = '';
+            return;
+        }
+
+        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
+        const data = await response.json();
+
+        resultBox.innerHTML = '';
+        data.features.forEach(feature => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.classList.add('list-group-item', 'list-group-item-action');
+            item.textContent = feature.properties.label;
+            item.addEventListener('click', () => {
+                input.value = feature.properties.label;
+                resultBox.innerHTML = '';
+                resultBox.style.display = 'none';
+
+                document.getElementById('client_contract_form_address_streetNumber').value = feature.properties.housenumber || '';
+                document.getElementById('client_contract_form_address_streetName').value = feature.properties.street || '';
+                document.getElementById('client_contract_form_address_postalCode').value = feature.properties.postcode || '';
+                document.getElementById('client_contract_form_address_city').value = feature.properties.city || '';
+                document.getElementById('client_contract_form_address_country').value = 'France';
+                document.getElementById('client_contract_form_address_latitude').value = feature.geometry.coordinates[1];
+                document.getElementById('client_contract_form_address_longitude').value = feature.geometry.coordinates[0];
+                document.getElementById('client_contract_form_address_region').value = feature.properties.context?.split(',')[1]?.trim() || '';
+                document.getElementById('client_contract_form_address_department').value = feature.properties.context?.split(',')[0]?.trim() || '';
+            });
+
+            resultBox.appendChild(item);
+        });
+
+        resultBox.style.display = 'block';
+    });
+
+    // Fermer la liste si on clique ailleurs
+    document.addEventListener('click', function (e) {
+        if (!input.contains(e.target) && !resultBox.contains(e.target)) {
+            resultBox.style.display = 'none';
+        }
+    });
+});
+</script>
