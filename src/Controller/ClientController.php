@@ -141,117 +141,113 @@ final class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/client/complete-info', name: 'client_complete_info')]
-    public function completeClientInfo(Request $request, EntityManagerInterface $em, ClientContractService $contractService): Response
-    {
-        $token = $request->query->get('token');
+#[Route('/client/complete-info', name: 'client_complete_info')]
+public function completeClientInfo(
+    Request $request,
+    EntityManagerInterface $em,
+    ClientContractService $contractService
+): Response {
+    $token = $request->query->get('token');
 
-        if (!$token) {
-            throw $this->createAccessDeniedException('Token manquant.');
-        }
-
-        $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-
-        if (!$client) {
-            throw $this->createNotFoundException('Lien invalide ou client introuvable.');
-        }
-
-        $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
-
-        $chargingStations = [];
-        foreach ($interventions as $intervention) {
-            $chargingStations[] = $intervention->getChargingStation();
-        }
-
-        $form = $this->createForm(ClientContractFormType::class, $client);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $request->request->all();
-
-            $freeBadges = isset($data['freeBadges']) ? (int) $data['freeBadges'] : 0;
-
-            $badge = $em->getRepository(Badge::class)->findOneBy(['client' => $client]);
-
-            if (!$badge) {
-                $badge = new Badge();
-                $badge->setClient($client);
-            }
-
-            $badge->setNumber($freeBadges);
-            $em->persist($badge);
-
-            foreach ($chargingStations as $station) {
-                $stationId = $station->getId();
-
-                if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"]) && isset($data["pricePublic_$stationId"])) {
-                    $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
-
-                    if (!$tarification) {
-                        $tarification = new Tarification();
-                        $tarification->setChargingStation($station);
-                    }
-
-                    $tarification->setClient($client);
-                    $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
-                    $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
-                    $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
-                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
-
-                    $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
-                    $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
-                    $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
-
-                    $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
-                    $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
-                    $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
-
-                    $em->persist($tarification);
-                }
-            }
-
-            foreach ($chargingStations as $station) {
-                $stationId = $station->getId();
-
-                if (isset($data["public_$stationId"]) && isset($data["addressLine_$stationId"])) {
-                    $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
-
-                    if (!$setting) {
-                        $setting = new ChargingStationSetting();
-                        $setting->setChargingStation($station);
-                        $setting->setClient($client);
-                    }
-
-                    $setting->setPublic((bool) $data["public_$stationId"]);
-                    $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
-                    $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
-                    $setting->setCity($data["city_$stationId"] ?? '');
-                    $setting->setCountry($data["country_$stationId"] ?? '');
-
-                    $setting->setRegion($data["region_$stationId"] ?? null);
-                    $setting->setDepartment($data["department_$stationId"] ?? null);
-                    $setting->setLatitude(isset($data["latitude_$stationId"]) ? (float) $data["latitude_$stationId"] : null);
-                    $setting->setLongitude(isset($data["longitude_$stationId"]) ? (float) $data["longitude_$stationId"] : null);
-
-                    $em->persist($setting);
-                }
-            }
-
-            $em->flush();
-
-            if ($this->isClientDataComplete($client)) {
-                $contractService->generateAndSendContract($client);
-
-                return $this->redirectToRoute('client_success_page', ['token' => $client->getSecureToken()]);
-            }
-        }
-
-        return $this->render('client/complete_form.html.twig', [
-            'form' => $form->createView(),
-            'client' => $client,
-            'chargingStations' => $chargingStations,
-        ]);
+    if (!$token) {
+        throw $this->createAccessDeniedException('Token manquant.');
     }
+
+    $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
+
+    if (!$client) {
+        throw $this->createNotFoundException('Lien invalide ou client introuvable.');
+    }
+
+    $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
+
+    $chargingStations = [];
+    $totalConnectors = 0;
+
+    foreach ($interventions as $intervention) {
+        $station = $intervention->getChargingStation();
+        if ($station) {
+            $chargingStations[] = $station;
+            $totalConnectors += is_countable($station->getConnectors()) 
+                ? count($station->getConnectors()) 
+                : (int) $station->getConnectors();
+        }
+    }
+
+    $form = $this->createForm(ClientContractFormType::class, $client);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $data = $request->request->all();
+        $freeBadges = (int) ($data['freeBadges'] ?? 0);
+
+        $badge = $em->getRepository(Badge::class)->findOneBy(['client' => $client]) ?? new Badge();
+        $badge->setClient($client);
+        $badge->setNumber($freeBadges);
+        $em->persist($badge);
+
+        foreach ($chargingStations as $station) {
+            $stationId = $station->getId();
+
+            // Tarification
+            if (isset($data["priceKwh_$stationId"], $data["priceResale_$stationId"], $data["pricePublic_$stationId"])) {
+                $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station])
+                    ?? new Tarification();
+                $tarification->setChargingStation($station);
+                $tarification->setClient($client);
+                $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
+                $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
+                $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
+                $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
+
+                $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
+                $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
+                $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
+
+                $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
+                $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
+                $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
+
+                $em->persist($tarification);
+            }
+
+            // Settings
+            if (isset($data["public_$stationId"], $data["addressLine_$stationId"])) {
+                $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station])
+                    ?? new ChargingStationSetting();
+                $setting->setChargingStation($station);
+                $setting->setClient($client);
+                $setting->setPublic((bool) $data["public_$stationId"]);
+                $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
+                $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
+                $setting->setCity($data["city_$stationId"] ?? '');
+                $setting->setCountry($data["country_$stationId"] ?? '');
+                $setting->setRegion($data["region_$stationId"] ?? null);
+                $setting->setDepartment($data["department_$stationId"] ?? null);
+                $setting->setLatitude(isset($data["latitude_$stationId"]) ? (float) $data["latitude_$stationId"] : null);
+                $setting->setLongitude(isset($data["longitude_$stationId"]) ? (float) $data["longitude_$stationId"] : null);
+
+                $em->persist($setting);
+            }
+        }
+
+        $em->flush();
+
+        if ($this->isClientDataComplete($client)) {
+            $contractService->generateAndSendContract($client);
+
+            return $this->redirectToRoute('client_success_page', ['token' => $client->getSecureToken()]);
+        }
+    }
+
+    return $this->render('client/complete_form.html.twig', [
+        'form' => $form->createView(),
+        'client' => $client,
+        'chargingStations' => $chargingStations,
+        'totalConnectors' => $totalConnectors,
+    ]);
+}
+
 
     #[Route('/client/success/{token}', name: 'client_success_page', methods: ['GET'])]
     public function successPage(string $token, EntityManagerInterface $em): Response

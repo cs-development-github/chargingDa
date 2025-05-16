@@ -4,6 +4,7 @@
 	<div class="container my-4">
 		{% include 'client/form/warning.html.twig' %}
 		{% include 'client/form/administration.html.twig' %}
+        {% include 'client/form/recap_charging_point.html.twig' %}
         {% include 'client/form/borne_configuration.html.twig' %}
 	</div>
 
@@ -29,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getLogicalStep(stepNumber) {
         if (stepNumber <= 2) return 1;
-        if (stepNumber <= 3) return 2;       
+        if (stepNumber <= 3) return 2;
         return 3;
     }
 
