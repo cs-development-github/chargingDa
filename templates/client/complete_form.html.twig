@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const prevButtons = document.querySelectorAll('.btn-prev');
 
     function getLogicalStep(stepNumber) {
-        if (stepNumber <= 2) return 1;
-        if (stepNumber <= 3) return 2;
+        if (stepNumber <= 3) return 1;
+        if (stepNumber <= 4) return 2;
         return 3;
     }
 
@@ -130,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Modal logic
     const customModal = document.getElementById('customModal');
     const closeModalBtn = document.getElementById('customModalClose');
     const cancelModalBtn = document.getElementById('cancelCustomModal');
@@ -182,14 +181,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     options.forEach(option => {
         option.addEventListener('click', () => {
-            // Sélectionne le bouton radio
             option.querySelector('input[type="radio"]').checked = true;
 
-            // Marque l'option comme active
             options.forEach(opt => opt.classList.remove('selected'));
             option.classList.add('selected');
 
-            // Affiche le bon bloc de config à l'étape suivante
             const selectedValue = option.getAttribute('data-value');
             formStepConfig.classList.remove('d-none');
 
@@ -206,17 +202,11 @@ document.getElementById('btn-back').addEventListener('click', function () {
     const choixStep = document.querySelector('.choix-step');
     const configStep = document.querySelector('.config-step');
 
-    // Masquer la config
     configStep.classList.remove('active');
     configStep.classList.add('d-none');
-
-    // Réinitialiser les contenus
     configStep.querySelectorAll('.config-content').forEach(content => content.classList.add('d-none'));
-
-    // Réafficher les choix
     choixStep.classList.add('active');
 
-    // Mettre à jour la barre latérale si nécessaire
     updateSidebar(2);
 });
 
