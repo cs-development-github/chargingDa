@@ -1,18 +1,65 @@
-<div class="container my-4">
-  <p>
-    Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
-  </p>
+<div class="container my-4" id="step-4">
 
-  <p>
-    Pour gérer l’exploitation et la refacturation de l’énergie de mes 
-    <strong>{{ totalConnectors }} points de charge</strong>, je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
-  </p>
+<button type="button" class="btn btn-outline-secondary mb-3 btn-back">
+  <i class="bi bi-arrow-left"></i> Retour au choix
+</button>
 
-  <h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
-  <p>
-    <strong>Pour les véhicules de flotte</strong> (véhicules de service et véhicules de fonction), 
-    la refacturation s’appliquera automatiquement sur la base du prix d’achat réel de l’électricité 
-    <span class="text-primary">+ 0,03 € TTC / kWh</span>.
-  </p>
+	<p>
+		Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
+	</p>
 
+	<p>
+		Pour gérer l’exploitation et la refacturation de l’énergie de mes
+		<strong>{{ totalConnectors }}
+			points de charge</strong>, je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
+	</p>
+
+	<h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
+	<p>
+		<strong>Pour les véhicules de flotte</strong>
+		(véhicules de service et véhicules de fonction), 
+		    la refacturation s’appliquera automatiquement sur la base du prix d’achat réel de l’électricité
+		<span class="price-gradient">+ 0,03 € TTC / kWh</span>.
+	</p>
+
+	<div class="form-check mt-4">
+		<input class="form-check-input" type="checkbox" id="acceptTerms" onchange="toggleButton()">
+		<label class="form-check-label" for="acceptTerms" data-step="5">
+			J’ai lu et j’accepte
+		</label>
+	</div>
+
+	<button id="confirmButton" type="submit" class="btn btn-primary mt-3" disabled>Confirmer</button>
 </div>
+
+<style>
+	.price-gradient {
+		background: linear-gradient(to right, #ec008c, #f6941f);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		font-weight: bold;
+	}
+</style>
+
+ <script>
+  function toggleButton() {
+    const checkbox = document.getElementById('acceptTerms');
+    const button = document.getElementById('confirmButton');
+    button.disabled = !checkbox.checked;
+  }
+</script>
+
+ <script>
+  document.querySelectorAll('[data-step="back"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const currentStep = document.querySelector('.step-active');
+      if (!currentStep) return;
+
+      const prevStep = currentStep.previousElementSibling;
+      if (prevStep && prevStep.classList.contains('step')) {
+        currentStep.classList.remove('step-active');
+        prevStep.classList.add('step-active');
+      }
+    });
+  });
+</script>

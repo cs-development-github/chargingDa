@@ -1,57 +1,164 @@
-<div class="container my-4">
-  <p>
-    <strong>Merci de compléter chaque champ avec attention.</strong><br>
-    Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
-  </p>
+<div class="container my-4" id="step-4">
 
-  <p>
-    Pour gérer l’exploitation et la refacturation de l’énergie de mes 
-    <strong>{{ totalConnectors }} points de charge</strong>, je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
-  </p>
+<button type="button" class="btn btn-outline-secondary mb-3 btn-back">
+  <i class="bi bi-arrow-left"></i> Retour au choix
+</button>
 
-  <h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
-  <p>
-    J’offre la possibilité à mes collaborateurs (véhicules personnels) et au public extérieur (clientèle ou visiteurs) de se recharger sur mes points de charge. 
-    Une tarification spécifique est appliquée afin de respecter la règlementation, d’éviter la notion d’avantage en nature, et de refacturer de manière juste 
-    la consommation d’énergie distribuée.
-  </p>
-  <p class="text-muted">
-    (Ces tarifs sont généralement supérieurs au coût réel.)<br>
-    <strong>(10% de commission C.A LODMI)</strong>
-  </p>
+  <div id="tarif-intro" class="transition-text">
+    <p>
+      <strong>Merci de compléter chaque champ avec attention.</strong><br>
+      Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
+    </p>
 
-  <ul>
-    <li>
-      <strong>Pour les véhicules personnels de mes collaborateurs :</strong><br>
-      <label>
-        Prix :
-        <input type="text" step="0.01" class="styled-input" name="prix_revient_flotte"> €HT/KWh.
-      </label>
-    </li>
-    <li>
-      <strong>Pour les véhicules extérieurs (public) :</strong><br>
-      <label>
-        Prix :
-        <input type="text" step="0.01" class="styled-input" name="prix_revient_flotte"> €HT/KWh.
-      </label>
-    </li>
-  </ul>
+    <p>
+      Pour gérer l’exploitation et la refacturation de l’énergie de mes 
+      <strong>{{ totalConnectors }} points de charge</strong>, je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
+    </p>
 
-  <h5>Options complémentaires pour les véhicules extérieurs :</h5>
-  <ul>
-    <li>
-      <label>
-        Coût supplémentaire à la minute :
-        <input type="text" step="0.01" class="styled-input" name="prix_revient_flotte"> €HT/KWh.
-      </label><br>
-      <small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
-    </li>
-    <li>
-      <label>
-        Pénalité après recharge (au-delà de 15 min) :
-        <input type="text" step="0.01" class="styled-input" name="prix_revient_flotte"> €HT/KWh.
-      </label><br>
-      <small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
-    </li>
-  </ul>
+    <h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
+    <p>
+      J’offre la possibilité à mes collaborateurs (véhicules personnels) et au public extérieur (clientèle ou visiteurs) de se recharger sur mes points de charge. 
+      Une tarification spécifique est appliquée afin de respecter la règlementation, d’éviter la notion d’avantage en nature, et de refacturer de manière juste 
+      la consommation d’énergie distribuée.
+    </p>
+    <p class="text-muted">
+      (Ces tarifs sont généralement supérieurs au coût réel.)<br>
+      <strong>(10% de commission C.A LODMI)</strong>
+    </p>
+
+    <button id="revealButton" class="btn btn-primary mt-3">Configurer la tarification</button>
+  </div>
+
+  <div id="tarif-details" class="mt-4 fade-expand">
+    <ul>
+      <li id="step1">
+        <strong>Pour les véhicules personnels de mes collaborateurs :</strong><br>
+        <label>
+          Prix :
+          <input type="text" step="0.01" class="styled-input" name="prix_collab" id="input1"> €HT/KWh.
+        </label>
+      </li>
+
+      <li id="step2" class="mt-2" style="display: none;">
+        <strong>Pour les véhicules extérieurs (public) :</strong><br>
+        <label>
+          Prix :
+          <input type="text" step="0.01" class="styled-input" name="prix_public" id="input2"> €HT/KWh.
+        </label>
+      </li>
+    </ul>
+
+    <h5 class="mt-4" id="optionsTitle" style="display: none;">Options complémentaires pour les véhicules extérieurs :</h5>
+    <ul>
+      <li id="step3" style="display: none;">
+        <label>
+          Coût supplémentaire à la minute :
+          <input type="text" step="0.01" class="styled-input" name="cout_minute" id="input3"> €HT/KWh.
+        </label><br>
+        <small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
+      </li>
+
+      <li id="step4" class="mt-2" style="display: none;">
+        <label>
+          Pénalité après recharge (au-delà de 15 min) :
+          <input type="text" step="0.01" class="styled-input" name="penalite" id="input4"> €HT/KWh.
+        </label><br>
+        <small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
+      </li>
+    </ul>
+
+    <div id="submitBlock" style="display: none;" class="mt-4">
+      <button class="btn btn-success">Valider les tarifs</button>
+    </div>
+  </div>
 </div>
+
+<style>
+  .styled-input {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px 8px;
+    transition: border-color 0.3s ease;
+    font-size: 1rem;
+  }
+
+  .styled-input:focus {
+    border-color: #0d6efd;
+    outline: none;
+  }
+
+  #tarif-details {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transition: max-height 0.6s ease, opacity 0.6s ease, visibility 0.6s;
+  }
+
+  #tarif-details.show {
+    max-height: 2000px;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .transition-text {
+    transition: all 0.6s ease;
+  }
+
+  .shrink {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+
+  .shrink h5 {
+    font-size: 12px;
+    opacity: 0.85;
+  }
+</style>
+
+<script>
+  document.getElementById('revealButton').addEventListener('click', () => {
+    document.getElementById('tarif-details').classList.add('show');
+    document.getElementById('tarif-intro').classList.add('shrink');
+    document.getElementById('revealButton').style.display = 'none';
+  });
+
+  function showNextStep(currentInputId, nextStepId, optionalTitleId = null) {
+    const input = document.getElementById(currentInputId);
+    input.addEventListener('input', () => {
+      if (input.value.trim() !== '') {
+        const nextStep = document.getElementById(nextStepId);
+        if (nextStep && nextStep.style.display === 'none') {
+          nextStep.style.display = 'block';
+        }
+
+        if (optionalTitleId) {
+          const title = document.getElementById(optionalTitleId);
+          if (title && title.style.display === 'none') {
+            title.style.display = 'block';
+          }
+        }
+      }
+    });
+  }
+
+  showNextStep('input1', 'step2');
+  showNextStep('input2', 'step3', 'optionsTitle');
+  showNextStep('input3', 'step4');
+  showNextStep('input4', 'submitBlock');
+</script>
+
+<script>
+  document.querySelectorAll('[data-step="back"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const currentStep = document.querySelector('.step-active');
+      if (!currentStep) return;
+
+      const prevStep = currentStep.previousElementSibling;
+      if (prevStep && prevStep.classList.contains('step')) {
+        currentStep.classList.remove('step-active');
+        prevStep.classList.add('step-active');
+      }
+    });
+  });
+</script>

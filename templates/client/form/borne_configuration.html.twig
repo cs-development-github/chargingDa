@@ -16,14 +16,11 @@
                 </div>
             {% endfor %}
         </div>
-        {# <div class="step-navigation d-flex justify-content-between">
+        <div class="step-navigation d-flex justify-content-between">
             <button type="button" class="btn-prev btn btn-secondary">
                 <i class="bi bi-arrow-left"></i> Précédent
             </button>
-            <button type="button" class="btn-next btn btn-primary" data-step="2">
-                Suivant <i class="bi bi-arrow-right"></i>
-            </button>
-        </div> #}
+        </div>
     </div>
 
     <div class="form-step config-step d-none">
@@ -35,11 +32,6 @@
         </div>
         <div id="config-mixte" class="config-content d-none">
             {% include 'client/form/config_mixte.html.twig' %}
-        </div>
-
-        <div class="mt-4 d-flex justify-content-between">
-            <button type="button" class="btn btn-secondary" id="btn-back">Retour</button>
-            <button type="submit" class="btn btn-success">Valider</button>
         </div>
     </div>
 </div>
