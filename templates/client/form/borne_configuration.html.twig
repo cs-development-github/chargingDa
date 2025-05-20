@@ -1,0 +1,37 @@
+<div id="step-4" class="step">
+    <div class="form-step choix-step active">
+        <h4 class="mb-3">Quel type de configuration souhaitez-vous pour votre borne ?</h4>
+        <div class="row" id="choicesContainer">
+            {% for type, config in {
+                'flotte': {'title': 'Bornes privées', 'desc': 'avec recharge gratuite sans exploitation (véhicules de flotte de fonction et/ou service)'},
+                'publique': {'title': 'Bornes publiques', 'desc': 'Combinaison d’usage interne et d’accès public'},
+                'mixte': {'title': 'Bornes privées et publiques', 'desc': 'avec recharge gratuite et/ou payante avec exploitation (véhicules de flotte VF et/ou VS + véhicules extérieurs collaborateurs et autres) '}
+            } %}
+                <div class="col-md-4 mb-3">
+                    <div class="option-card p-3" data-value="{{ type }}">
+                        <input type="radio" name="choixType" class="d-none" value="{{ type }}">
+                        <h5>{{ config.title|raw }}</h5>
+                        <p class="mb-0">{{ config.desc }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="step-navigation d-flex justify-content-between">
+            <button type="button" class="btn-prev btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Précédent
+            </button>
+        </div>
+    </div>
+
+    <div class="form-step config-step d-none">
+        <div id="config-flotte" class="config-content d-none">
+            {% include 'client/form/config_flotte.html.twig' %}
+        </div>
+        <div id="config-publique" class="config-content d-none">
+            {% include 'client/form/config_publique.html.twig' %}
+        </div>
+        <div id="config-mixte" class="config-content d-none"> 
+            {% include 'client/form/config_mixte.html.twig' %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,79 @@
+<div id="step-5" class="step">
+	<h2 class="mb-4">Géolocalisation des bornes</h2>
+
+	{% if chargingStations is not empty %}
+		<form method="post">
+			<div class="mb-4">
+				{% for station in chargingStations %}
+					<div class="card shadow-sm mb-3 p-3">
+						<div class="card-header bg-primary text-white">
+							<strong>Borne {{ loop.index }} – {{ station.model }}</strong>
+							{% if station.reference %}
+								<span class="ms-2 text-light">({{ station.reference }})</span>
+							{% endif %}
+						</div>
+
+						<div class="row g-3 align-items-center mt-1">
+							<div class="col-md-3 text-center">
+								{% if station.image %}
+									<img src="{{ asset('uploads/' ~ station.image) }}" alt="Image de la borne"
+									     class="img-thumbnail" style="max-height: 150px;">
+								{% else %}
+									<img src="{{ asset('images/placeholder.jpg') }}" alt="Image par défaut"
+									     class="img-thumbnail" style="max-height: 150px;">
+								{% endif %}
+							</div>
+
+							<div class="col-md-9">
+								<div class="row g-3">
+									<div class="col-md-6 col-lg-5">
+										<label for="station_{{ loop.index }}_street" class="form-label">Adresse</label>
+										<input type="text" class="form-control address-autocomplete"
+										       data-index="{{ loop.index }}"
+										       name="stations[{{ loop.index }}][street]"
+										       id="station_{{ loop.index }}_street"
+										       placeholder="12 rue des Électriciens">
+									</div>
+									<div class="col-md-3 col-lg-3">
+										<label for="station_{{ loop.index }}_postal" class="form-label">Code postal</label>
+										<input type="text" class="form-control"
+										       name="stations[{{ loop.index }}][postal]"
+										       id="station_{{ loop.index }}_postal"
+										       placeholder="75000">
+									</div>
+									<div class="col-md-3 col-lg-4">
+										<label for="station_{{ loop.index }}_city" class="form-label">Ville</label>
+										<input type="text" class="form-control"
+										       name="stations[{{ loop.index }}][city]"
+										       id="station_{{ loop.index }}_city"
+										       placeholder="Paris">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+
+			<div class="step-navigation d-flex justify-content-between">
+				<button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+					<i class="bi bi-arrow-left"></i> Précédent
+				</button>
+				<button type="submit" class="btn btn-primary mt-3">
+					Valider les adresses
+					<i class="bi bi-check-circle"></i>
+				</button>
+			</div>
+		</form>
+	{% else %}
+		<div class="alert alert-warning">
+			Aucune borne à géolocaliser.
+		</div>
+	{% endif %}
+</div>
+
+<style>
+
+</style>
+
+
