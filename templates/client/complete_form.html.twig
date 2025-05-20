@@ -320,5 +320,115 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
+<script>
+  document.getElementById('revealButton').addEventListener('click', () => {
+    document.getElementById('tarif-details').classList.add('show');
+    document.getElementById('tarif-intro').classList.add('shrink');
+    document.getElementById('revealButton').style.display = 'none';
+  });
+
+  function showNextStep(currentInputId, nextStepId, optionalTitleId = null) {
+    const input = document.getElementById(currentInputId);
+    input.addEventListener('input', () => {
+      if (input.value.trim() !== '') {
+        const nextStep = document.getElementById(nextStepId);
+        if (nextStep && nextStep.style.display === 'none') {
+          nextStep.style.display = 'block';
+        }
+
+        if (optionalTitleId) {
+          const title = document.getElementById(optionalTitleId);
+          if (title && title.style.display === 'none') {
+            title.style.display = 'block';
+          }
+        }
+      }
+    });
+  }
+
+  showNextStep('input1', 'step2');
+  showNextStep('input2', 'step3', 'optionsTitle');
+  showNextStep('input3', 'step4');
+  showNextStep('input4', 'submitBlock');
+</script>
+
+<script>
+  document.querySelectorAll('[data-step="back"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const currentStep = document.querySelector('.step-active');
+      if (!currentStep) return;
+
+      const prevStep = currentStep.previousElementSibling;
+      if (prevStep && prevStep.classList.contains('step')) {
+        currentStep.classList.remove('step-active');
+        prevStep.classList.add('step-active');
+      }
+    });
+  });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const confirmBtn = document.getElementById('submitBlock');
+
+	confirmBtn.addEventListener('click', () => {
+		const currentStep = confirmBtn.closest('.step');
+		const nextStep = document.getElementById('step-5');
+
+		if (currentStep && nextStep) {
+			currentStep.classList.remove('active');
+			nextStep.classList.remove('d-none');
+			nextStep.classList.add('active');
+
+			if (typeof updateSidebar === 'function') {
+				updateSidebar(5);
+			}
+		}
+	});
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const confirmBtn = document.getElementById('submitBlock-mixte');
+
+	confirmBtn.addEventListener('click', () => {
+		const currentStep = confirmBtn.closest('.step');
+		const nextStep = document.getElementById('step-5');
+
+		if (currentStep && nextStep) {
+			currentStep.classList.remove('active');
+			nextStep.classList.remove('d-none');
+			nextStep.classList.add('active');
+
+			if (typeof updateSidebar === 'function') {
+				updateSidebar(5);
+			}
+		}
+	});
+});
+</script> 
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const confirmBtn = document.getElementById('confirmButton');
+
+	confirmBtn.addEventListener('click', () => {
+		const currentStep = confirmBtn.closest('.step');
+		const nextStep = document.getElementById('step-5');
+
+		if (currentStep && nextStep) {
+			currentStep.classList.remove('active');
+			nextStep.classList.remove('d-none');
+			nextStep.classList.add('active');
+
+			if (typeof updateSidebar === 'function') {
+				updateSidebar(5);
+			}
+		}
+	});
+});
+</script>
 
 {% endblock %}

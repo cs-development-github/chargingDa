@@ -1,10 +1,4 @@
 <div class="container my-4">
-
-	<button type="button" class="btn btn-outline-secondary mb-3 btn-back">
-			<i class="bi bi-arrow-left"></i>
-			Retour au choix
-	</button>
-
 	<div id="tarif-intro-mixte" class="transition-text">
 		<p>
 			<strong>Merci de compléter chaque champ avec attention.</strong><br>
@@ -89,71 +83,4 @@
 
 	</div>
 </div>
-
-<style>
-.styled-input {
-	border: 1px solid #ccc;
-	border-radius: 6px;
-	padding: 4px 8px;
-	transition: border-color 0.3s ease;
-	font-size: 1rem;
-}
-
-.styled-input:focus {
-	border-color: #0d6efd;
-	outline: none;
-}
-
-#tarif-details-mixte {
-	max-height: 0;
-	overflow: hidden;
-	opacity: 0;
-	visibility: hidden;
-	transition: max-height 0.6s ease, opacity 0.6s ease, visibility 0.6s;
-}
-
-#tarif-details-mixte.show {
-	max-height: 2000px;
-	opacity: 1;
-	visibility: visible;
-}
-
-.transition-text {
-	transition: all 0.6s ease;
-}
-
-.shrink {
-	font-size: 12px;
-	opacity: 0.85;
-}
-
-.shrink h5 {
-	font-size: 12px;
-	opacity: 0.85;
-}
-</style>
-
-{% block javascript %}
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-	const confirmBtn = document.getElementById('submitBlock-mixte');
-
-	confirmBtn.addEventListener('click', () => {
-		const currentStep = confirmBtn.closest('.step');
-		const nextStep = document.getElementById('step-5');
-
-		if (currentStep && nextStep) {
-			currentStep.classList.remove('active');
-			nextStep.classList.remove('d-none');
-			nextStep.classList.add('active');
-
-			if (typeof updateSidebar === 'function') {
-				updateSidebar(5);
-			}
-		}
-	});
-});
-</script>
-{% endblock %}
 	
