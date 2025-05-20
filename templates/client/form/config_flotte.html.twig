@@ -29,7 +29,7 @@
 		</label>
 	</div>
 
-	<button id="confirmButton" type="submit" class="btn btn-primary mt-3" disabled>Confirmer</button>
+	<button id="confirmButton" type="button" class="btn btn-primary mt-3" disabled>Confirmer</button>
 </div>
 
 <style>
@@ -40,4 +40,29 @@
 		font-weight: bold;
 	}
 </style>
+
+{% block javascript %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const confirmBtn = document.getElementById('confirmButton');
+
+	confirmBtn.addEventListener('click', () => {
+		const currentStep = confirmBtn.closest('.step');
+		const nextStep = document.getElementById('step-5');
+
+		if (currentStep && nextStep) {
+			currentStep.classList.remove('active');
+			nextStep.classList.remove('d-none');
+			nextStep.classList.add('active');
+
+			if (typeof updateSidebar === 'function') {
+				updateSidebar(5);
+			}
+		}
+	});
+});
+</script>
+
+{% endblock %}
+
 
