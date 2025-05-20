@@ -1,120 +1,307 @@
 {% extends 'base.login.html.twig' %}
 
-{% block title %} Connexion {% endblock %}
+{% block title %}Connexion{% endblock %}
 
 {% block stylesheet %}
-	{{ parent() }}
-	{{ encore_entry_link_tags("carousel") }}
+{{ parent() }}
+<style>
+  .vh-100 {
+    height: 100vh;
+  }
+
+  .gradient-text-title {
+    background: linear-gradient(90deg, #ff4081, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .gradient-text {
+    background: linear-gradient(90deg, #ff4081, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+
+  .btn-gradient {
+    background: linear-gradient(90deg, #ff4081, #ff8c00);
+    border: none;
+    color: #fff;
+    transition: opacity .3s;
+    padding: .75rem;
+    font-size: 1rem;
+  }
+
+  .btn-gradient:hover {
+    opacity: .9;
+  }
+
+  .col-left {
+    background: #fff;
+  }
+
+  .left-content {
+    max-width: 300px;
+    margin: 0 auto;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all .6s ease-out;
+  }
+
+  .left-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .logo-box {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    margin: 2rem auto 1rem;
+  }
+
+  .left-content h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 2rem;
+  }
+
+  .feature-list li {
+    display: flex;
+    align-items: center;
+    color: #555;
+    margin-bottom: .75rem;
+    font-size: .95rem;
+  }
+
+  .feature-list li i {
+    font-size: 1.2rem;
+    margin-right: .75rem;
+    background: linear-gradient(90deg, #ff4081, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .col-right {
+    position: relative;
+    overflow: hidden;
+    background: none;
+  }
+
+  .col-right .bg-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(6px);
+    transform: scale(1.1);
+    z-index: 1;
+  }
+
+  .col-right .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.6);
+    z-index: 2;
+  }
+
+  .card-login {
+    position: relative;
+    z-index: 3;
+    max-width: 500px;
+    width: 500px;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+  }
+
+  .card-login h2 {
+    font-size: 2.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-login .form-control {
+    padding: .75rem 1rem;
+    font-size: 1rem;
+  }
+
+  .card-login .form-check-label,
+  .card-login .form-label {
+    font-size: .95rem;
+  }
+
+  .card-login .form-label {
+    margin-bottom: .5rem;
+  }
+
+  #login-success {
+    display: none;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  #login-success .success-icon {
+    font-size: 2.5rem;
+    color: #28a745;
+    animation: pop 0.6s ease-out forwards;
+  }
+
+  @keyframes pop {
+    0% {
+      transform: scale(0);
+    }
+
+    70% {
+      transform: scale(1.2);
+    }
+
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .vh-100 {
+      height: auto !important;
+    }
+
+    .container-fluid,
+    .col-right {
+      background: #fff !important;
+    }
+
+    .col-right .bg-img,
+    .col-right .overlay {
+      display: none;
+    }
+
+    .col-left {
+      display: none !important;
+    }
+
+    .col-right {
+      flex: 0 0 100%;
+      max-width: 100%;
+      padding: 2rem 1rem;
+    }
+
+    .card-login {
+      max-width: 95%;
+      width: auto;
+      margin: 1rem auto;
+      padding: 2rem 1rem;
+    }
+  }
+</style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid p-0 position-relative" style="min-height: 100vh; background-image: url('../build/images/background.png');">
-  <div class="position-absolute top-0 start-0 w-50 h-100" style="background-color: rgba(255, 255, 255, 0.8)"></div>
-  <div class="card position-absolute top-50 start-50 translate-middle w-100" style="max-width: 1200px; border-radius: 30px; overflow: hidden; border: none; box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); background-color: transparent;">
-    <div class="row g-0" style="box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2); border-radius: 30px; overflow: hidden; background-color: white;">
-      <div class="col-md-6 p-4">
-        <div class="d-flex align-items-center justify-content-center mb-4">
-          <div style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; justify-content: center;">
-            <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi" style="width: 100%; height: auto;">
-          </div>
-          <div class="ms-3">
-            <h3 class="title mb-0">INSCRIPTION</h3>
-            <h2 class="form-title mb-0">PARTENAIRES</h2>
-          </div>
+<div class="container-fluid p-0">
+  <div class="row g-0 vh-100">
+
+    <div class="col-md-4 col-left d-none d-md-flex align-items-center">
+      <div class="left-content">
+        <div
+          style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; justify-content: center;">
+          <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi" style="width: 100%; height: auto;">
         </div>
-        <form method="post" style="max-width: 400px; margin: 0 auto">
-          {% if error %}
-          <div class="alert alert-danger">
-            {{ error.messageKey|trans(error.messageData, 'security') }}
-          </div>
-          {% endif %}
-          {% for message in app.flashes('success') %}
-              <div class="alert alert-success">
-                  {{ message }}
-              </div>
-          {% endfor %}
-          {% if app.user %}
-          <div class="alert alert-info">
-            Vous êtes connecté en tant que {{ app.user.userIdentifier }}.
-            <a href="{{ path('app_logout') }}">Déconnexion</a>
-          </div>
-          {% endif %}
-          <div class="mb-3">
-            <label for="inputEmail" class="form-label">Email</label>
-            <input type="text" name="email" value="{{ last_username }}" id="inputEmail" class="form-control form-input" required autofocus />
-          </div>
-          <div class="mb-3 position-relative">
+        <h1 class="gradient-text fw-bold">
+          Votre Solution<br />De Supervision!
+        </h1>
+        <ul class="feature-list">
+          <li><i class="bi bi-lightbulb-fill"></i>Simplifiez la mise en service</li>
+          <li><i class="bi bi-lightning-charge-fill"></i>Pilotez vos bornes en temps réel</li>
+          <li><i class="bi bi-tools"></i>Optimisez l’expérience client</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-8 col-right d-flex align-items-center justify-content-center">
+      <img src="{{ asset('build/images/backgroundclient.jpg') }}" alt="Background" class="bg-img">
+      <div class="overlay"></div>
+
+      <div>
+        <div class="card card-login shadow bg-white">
+          <h2 class="text-center">CONNEXION</h2>
+          <form id="login-form" method="post">
+            {% if error %}
+            <div class="alert alert-danger">
+              {{ error.messageKey|trans(error.messageData,'security') }}
+            </div>
+            {% endif %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="mb-4">
+              <label for="inputEmail" class="form-label">Email</label>
+              <input type="email" id="inputEmail" name="email" value="{{ last_username }}" class="form-control" required
+                autofocus>
+            </div>
+            <div class="mb-4 position-relative">
               <label for="inputPassword" class="form-label">Mot de passe</label>
               <div class="input-group">
-                  <input type="password" name="password" id="inputPassword" class="form-control form-input" required />
-                  <button type="button" class="btn btn-outline-secondary toggle-password" data-target="inputPassword">
-                      <i class="bi bi-eye"></i>
-                  </button>
+                <input type="password" id="inputPassword" name="password" class="form-control" required>
+                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="inputPassword">
+                  <i class="bi bi-eye gradient-text-title"></i>
+                </button>
               </div>
-          </div>
-          <div class="mb-3 d-flex align-items-center">
-            <input type="checkbox" class="form-check-input me-2" id="rememberMe" />
-            <label class="form-check-label" for="rememberMe">Enregistrer les informations de connexion</label>
-          </div>
-          <div class="mb-4 text-center">
-            <a href="{{ path('app_forgot_password_request') }}" style="text-decoration: none;">Mot de passe oublié ?</a>
-          </div>
-          <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}" />
-          <button type="submit" class="btn form-button">CONNEXION</button>
-          <div class="mt-3 text-center">
-            <p class="mb-0">Pas de compte ? <a href="{{ path('app_register') }}" class="text-primary">Créez-en un</a></p>
-          </div>
-        </form>
-      </div>
-      <div class="col-md-6 d-flex flex-column justify-content-center text-start" style="background-color: #fff; padding: 3rem">
-        <h1 style="font-size: 2.5rem; font-weight: 900; font-family: 'Poppins', sans-serif; color: #000; margin: 0;">
-          Votre Solution<br />De
-          <span style="background: linear-gradient(to right, #ff4081, #ff8c00); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Supervision</span>!
-        </h1>
-        <p class="mt-3" style="color: #555; font-size: 1rem; max-width: 450px; text-align: left; font-family: 'Poppins', sans-serif; margin: 0;">
-          LODMI vous accompagne avec une boîte à outils complète pour simplifier la mise en service des bornes de recharge de vos clients.
-        </p>
-        <div class="card border-0 shadow mt-5 logo-carousel">
-          <div class="logo-track">
-            {% for i in 1..5 %}
-              <img src="{{ asset('build/images/' ~ i ~ '.png') }}" alt="{{ i }}" class="logo-slide" />
-            {% endfor %}
-            {% for i in 1..5 %}
-              <img src="{{ asset('build/images/' ~ i ~ '.png') }}" alt="{{ i }}" class="logo-slide" />
-            {% endfor %}
-          </div>
+            </div>
+            <div class="mb-4 form-check">
+              <input type="checkbox" id="rememberMe" name="_remember_me" class="form-check-input">
+              <label for="rememberMe" class="form-check-label">Se souvenir de moi</label>
+            </div>
+            <button type="submit" class="btn btn-gradient w-100 mb-4">SE CONNECTER</button>
+            <div class="text-center mb-2">
+              <a href="{{ path('app_forgot_password_request') }}" class="text-decoration-none gradient-text-title">
+                Mot de passe oublié&nbsp;?
+              </a>
+            </div>
+            <div class="text-center">
+              Pas de compte&nbsp;?
+              <a href="{{ path('app_register') }}" class="gradient-text-title">
+                Inscrivez-vous
+              </a>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll(".toggle-password").forEach(button => {
-        button.addEventListener("click", function () {
-            let targetId = this.getAttribute("data-target");
-            let input = document.getElementById(targetId);
-            let icon = this.querySelector("i");
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      document.querySelector('.left-content')?.classList.add('visible');
+    }, 300);
 
-            if (!input) {
-                console.error("⚠️ Champ password non trouvé pour :", targetId);
-                return;
-            }
-
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.replace("bi-eye", "bi-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.replace("bi-eye-slash", "bi-eye");
-            }
-        });
+    document.querySelectorAll('.toggle-password').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        const icon = btn.querySelector('i');
+        if (input.type === 'password') {
+          input.type = 'text';
+          icon.classList.replace('bi-eye', 'bi-eye-slash');
+        } else {
+          input.type = 'password';
+          icon.classList.replace('bi-eye-slash', 'bi-eye');
+        }
+      });
     });
-});
 
-
+  });
 </script>
-
-
 {% endblock %}
