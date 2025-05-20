@@ -1,6 +1,6 @@
-<div class="container my-4" id="step-4">
+<div class="container my-4">
 
-<button type="button" class="btn btn-outline-secondary mb-3 btn-back">
+<button type="button" class="btn btn-outline-secondary mb-3" id="btn-back">
   <i class="bi bi-arrow-left"></i> Retour au choix
 </button>
 
@@ -41,25 +41,3 @@
 	}
 </style>
 
- <script>
-  function toggleButton() {
-    const checkbox = document.getElementById('acceptTerms');
-    const button = document.getElementById('confirmButton');
-    button.disabled = !checkbox.checked;
-  }
-</script>
-
- <script>
-  document.querySelectorAll('[data-step="back"]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const currentStep = document.querySelector('.step-active');
-      if (!currentStep) return;
-
-      const prevStep = currentStep.previousElementSibling;
-      if (prevStep && prevStep.classList.contains('step')) {
-        currentStep.classList.remove('step-active');
-        prevStep.classList.add('step-active');
-      }
-    });
-  });
-</script>

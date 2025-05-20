@@ -1,4 +1,3 @@
-{# templates/form/client_info.html.twig #}
 <div id="step-2" class="step">
 	<h4>Administration</h4>
 
@@ -100,54 +99,7 @@
 </div>
 
 
- <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById('client_contract_form_address_fullAddress');
-    const resultBox = document.getElementById('autocomplete-results');
+{% block javascript %}
 
-    input.addEventListener('input', async function () {
-        const query = input.value.trim();
-        if (query.length < 3) {
-            resultBox.style.display = 'none';
-            resultBox.innerHTML = '';
-            return;
-        }
 
-        const response = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
-        const data = await response.json();
-
-        resultBox.innerHTML = '';
-        data.features.forEach(feature => {
-            const item = document.createElement('button');
-            item.type = 'button';
-            item.classList.add('list-group-item', 'list-group-item-action');
-            item.textContent = feature.properties.label;
-            item.addEventListener('click', () => {
-                input.value = feature.properties.label;
-                resultBox.innerHTML = '';
-                resultBox.style.display = 'none';
-
-                document.getElementById('client_contract_form_address_streetNumber').value = feature.properties.housenumber || '';
-                document.getElementById('client_contract_form_address_streetName').value = feature.properties.street || '';
-                document.getElementById('client_contract_form_address_postalCode').value = feature.properties.postcode || '';
-                document.getElementById('client_contract_form_address_city').value = feature.properties.city || '';
-                document.getElementById('client_contract_form_address_country').value = 'France';
-                document.getElementById('client_contract_form_address_latitude').value = feature.geometry.coordinates[1];
-                document.getElementById('client_contract_form_address_longitude').value = feature.geometry.coordinates[0];
-                document.getElementById('client_contract_form_address_region').value = feature.properties.context?.split(',')[1]?.trim() || '';
-                document.getElementById('client_contract_form_address_department').value = feature.properties.context?.split(',')[0]?.trim() || '';
-            });
-
-            resultBox.appendChild(item);
-        });
-
-        resultBox.style.display = 'block';
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!input.contains(e.target) && !resultBox.contains(e.target)) {
-            resultBox.style.display = 'none';
-        }
-    });
-});
-</script>
+{% endblock %}
