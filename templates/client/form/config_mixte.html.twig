@@ -1,0 +1,85 @@
+<div class="container my-4">
+	<div id="tarif-intro-mixte" class="transition-text">
+		<p>
+			<strong>Merci de compléter chaque champ avec attention.</strong><br>
+			Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
+		</p>
+
+		<p>
+			Pour gérer l’exploitation et la refacturation de l’énergie de mes
+			<strong>{{ totalConnectors }}
+				points de charge</strong>, je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
+		</p>
+
+		<h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
+		<ul>
+			<li>
+				<strong>Pour les véhicules de flotte</strong>
+				(véhicules de service et véhicules de fonction) :
+																      la refacturation s’appliquera automatiquement sur la base du prix d’achat réel de l’électricité
+				<span class="text-primary">+ 0,03 € TTC / kWh</span>.<br>
+				<em>(Aucun renseignement n’est requis ici, ce calcul est automatique.)</em>
+			</li>
+			<li>
+				<p>
+					J’offre également la possibilité à mes collaborateurs (véhicules personnels) et au public extérieur (clientèle ou visiteurs) 
+																				        de se recharger sur mes points de charge. Une tarification spécifique est appliquée afin de respecter la règlementation, 
+																				        d’éviter la notion d’avantage en nature, et de refacturer de manière juste la consommation d’énergie distribuée.
+				</p>
+				<p class="text-muted">(Ces tarifs sont généralement supérieurs au coût réel.)</p>
+			</li>
+		</ul>
+
+		<button id="revealButtonMixte" class="btn btn-primary mt-3">Configurer la tarification</button>
+	</div>
+
+	<div id="tarif-details-mixte" class="mt-4 fade-expand">
+
+		<ul>
+			<li id="step1">
+				<strong>Pour les véhicules personnels de mes collaborateurs :</strong><br>
+				<label>
+					Prix :
+					<input type="text" step="0.01" class="styled-input" name="prix_revient_flotte" id="input1-mixte">
+					€HT/KWh.
+				</label>
+			</li>
+
+			<li id="step2-mixte" class="mt-2" style="display: none;">
+				<strong>Pour les véhicules extérieurs (public) :</strong><br>
+				<label>
+					Prix :
+					<input type="text" step="0.01" class="styled-input" name="prix_revient_flotte" id="input2-mixte">
+					€HT/KWh.
+				</label>
+			</li>
+		</ul>
+
+		<h5 class="mt-4" id="optionsTitle-mixte" style="display: none;">Options complémentaires pour les véhicules extérieurs :</h5>
+		<ul>
+			<li id="step3-mixte" style="display: none;">
+				<label>
+					Coût supplémentaire à la minute :
+					<input type="text" step="0.01" class="styled-input" name="prix_revient_flotte" id="input3-mixte">
+					€HT/KWh.
+				</label><br>
+				<small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
+			</li>
+
+			<li id="step4-mixte" class="mt-2" style="display: none;">
+				<label>
+					Pénalité après recharge (au-delà de 15 min) :
+					<input type="text" step="0.01" class="styled-input" name="prix_revient_flotte" id="input4-mixte">
+					€HT/KWh.
+				</label><br>
+				<small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
+			</li>
+		</ul>
+
+		<div id="submitBlock-mixte" style="display: none;" class="mt-4">
+			<button id="confirmButton" class="btn btn-primary mt-3" data-step="5">Valider les tarifs</button>
+		</div>
+
+	</div>
+</div>
+	

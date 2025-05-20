@@ -1,0 +1,69 @@
+<div class="container my-4">
+  <div id="tarif-intro" class="transition-text">
+    <p>
+      <strong>Merci de compléter chaque champ avec attention.</strong><br>     
+      Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
+    </p>
+
+    <p>
+      Pour gérer l’exploitation et la refacturation de l’énergie de mes 
+      <strong>{{ totalConnectors }} points de charge</strong>, je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
+    </p>
+
+    <h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
+    <p>
+      J’offre la possibilité à mes collaborateurs (véhicules personnels) et au public extérieur (clientèle ou visiteurs) de se recharger sur mes points de charge. 
+      Une tarification spécifique est appliquée afin de respecter la règlementation, d’éviter la notion d’avantage en nature, et de refacturer de manière juste 
+      la consommation d’énergie distribuée.
+    </p>
+    <p class="text-muted">
+      (Ces tarifs sont généralement supérieurs au coût réel.)<br>
+      <strong>(10% de commission C.A LODMI)</strong>
+    </p>
+
+    <button id="revealButton" class="btn btn-primary mt-3">Configurer la tarification</button>
+  </div>
+
+  <div id="tarif-details" class="mt-4 fade-expand">
+    <ul>
+      <li id="step1">
+        <strong>Pour les véhicules personnels de mes collaborateurs :</strong><br>
+        <label>
+          Prix :
+          <input type="text" step="0.01" class="styled-input" name="prix_collab" id="input1"> €HT/KWh.
+        </label>
+      </li>
+
+      <li id="step2" class="mt-2" style="display: none;">
+        <strong>Pour les véhicules extérieurs (public) :</strong><br>
+        <label>
+          Prix :
+          <input type="text" step="0.01" class="styled-input" name="prix_public" id="input2"> €HT/KWh.
+        </label>
+      </li>
+    </ul>
+
+    <h5 class="mt-4" id="optionsTitle" style="display: none;">Options complémentaires pour les véhicules extérieurs :</h5>
+    <ul>
+      <li id="step3" style="display: none;">
+        <label>
+          Coût supplémentaire à la minute :
+          <input type="text" step="0.01" class="styled-input" name="cout_minute" id="input3"> €HT/KWh.
+        </label><br>
+        <small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
+      </li>
+
+      <li id="step4" class="mt-2" style="display: none;">
+        <label>
+          Pénalité après recharge (au-delà de 15 min) :
+          <input type="text" step="0.01" class="styled-input" name="penalite" id="input4"> €HT/KWh.
+        </label><br>
+        <small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
+      </li>
+    </ul>
+
+    <div id="submitBlock" style="display: none;" class="mt-4">
+			<button id="confirmButton" class="btn btn-primary mt-3" data-step="5">Valider les tarifs</button>
+    </div>
+  </div>
+</div>

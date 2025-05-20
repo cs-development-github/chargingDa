@@ -17,6 +17,7 @@ use App\Service\ClientSupervisionDataService;
 use App\Service\MailService;
 use App\Service\PdfEditorService;
 use Doctrine\ORM\EntityManagerInterface;
+use SebastianBergmann\Environment\Console;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -142,8 +143,11 @@ final class ClientController extends AbstractController
     }
 
     #[Route('/client/complete-info', name: 'client_complete_info')]
-    public function completeClientInfo(Request $request, EntityManagerInterface $em, ClientContractService $contractService): Response
-    {
+    public function completeClientInfo(
+        Request $request,
+        EntityManagerInterface $em,
+        ClientContractService $contractService
+    ): Response {
         $token = $request->query->get('token');
 
         if (!$token) {
@@ -159,8 +163,16 @@ final class ClientController extends AbstractController
         $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
 
         $chargingStations = [];
+        $totalConnectors = 0;
+
         foreach ($interventions as $intervention) {
-            $chargingStations[] = $intervention->getChargingStation();
+            $station = $intervention->getChargingStation();
+            if ($station) {
+                $chargingStations[] = $station;
+                $totalConnectors += is_countable($station->getConnectors()) 
+                    ? count($station->getConnectors()) 
+                    : (int) $station->getConnectors();
+            }
         }
 
         $form = $this->createForm(ClientContractFormType::class, $client);
@@ -168,35 +180,25 @@ final class ClientController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $request->request->all();
+            $freeBadges = (int) ($data['freeBadges'] ?? 0);
 
-            $freeBadges = isset($data['freeBadges']) ? (int) $data['freeBadges'] : 0;
-
-            $badge = $em->getRepository(Badge::class)->findOneBy(['client' => $client]);
-
-            if (!$badge) {
-                $badge = new Badge();
-                $badge->setClient($client);
-            }
-
+            $badge = $em->getRepository(Badge::class)->findOneBy(['client' => $client]) ?? new Badge();
+            $badge->setClient($client);
             $badge->setNumber($freeBadges);
             $em->persist($badge);
 
             foreach ($chargingStations as $station) {
                 $stationId = $station->getId();
 
-                if (isset($data["priceKwh_$stationId"]) && isset($data["priceResale_$stationId"]) && isset($data["pricePublic_$stationId"])) {
-                    $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]);
-
-                    if (!$tarification) {
-                        $tarification = new Tarification();
-                        $tarification->setChargingStation($station);
-                    }
-
+                // Tarification
+                if (isset($data["priceKwh_$stationId"], $data["priceResale_$stationId"], $data["pricePublic_$stationId"])) {
+                    $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]) ?? new Tarification();
+                    $tarification->setChargingStation($station);
                     $tarification->setClient($client);
                     $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
+                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
                     $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
                     $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
-                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
 
                     $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
                     $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
@@ -208,26 +210,17 @@ final class ClientController extends AbstractController
 
                     $em->persist($tarification);
                 }
-            }
 
-            foreach ($chargingStations as $station) {
-                $stationId = $station->getId();
-
-                if (isset($data["public_$stationId"]) && isset($data["addressLine_$stationId"])) {
-                    $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]);
-
-                    if (!$setting) {
-                        $setting = new ChargingStationSetting();
-                        $setting->setChargingStation($station);
-                        $setting->setClient($client);
-                    }
-
+                // Settings
+                if (isset($data["public_$stationId"], $data["addressLine_$stationId"])) {
+                    $setting = $em->getRepository(ChargingStationSetting::class)->findOneBy(['chargingStation' => $station]) ?? new ChargingStationSetting();
+                    $setting->setChargingStation($station);
+                    $setting->setClient($client);
                     $setting->setPublic((bool) $data["public_$stationId"]);
                     $setting->setAddressLine($data["addressLine_$stationId"] ?? '');
                     $setting->setPostalCode($data["postalCode_$stationId"] ?? '');
                     $setting->setCity($data["city_$stationId"] ?? '');
                     $setting->setCountry($data["country_$stationId"] ?? '');
-
                     $setting->setRegion($data["region_$stationId"] ?? null);
                     $setting->setDepartment($data["department_$stationId"] ?? null);
                     $setting->setLatitude(isset($data["latitude_$stationId"]) ? (float) $data["latitude_$stationId"] : null);
@@ -250,8 +243,10 @@ final class ClientController extends AbstractController
             'form' => $form->createView(),
             'client' => $client,
             'chargingStations' => $chargingStations,
+            'totalConnectors' => $totalConnectors,
         ]);
     }
+
 
     #[Route('/client/success/{token}', name: 'client_success_page', methods: ['GET'])]
     public function successPage(string $token, EntityManagerInterface $em): Response
@@ -389,11 +384,11 @@ final class ClientController extends AbstractController
                 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
                 'body' => http_build_query([
                     'type' => 'signature',
-                    'position[page]' => 25,  // ✅ Page 26
-                    'position[x]' => 50,     // ✅ Position X (gauche)
-                    'position[y]' => 50,    // ✅ Position Y (bas)
-                    'position[width]' => 200, // ✅ Largeur
-                    'position[height]' => 50  // ✅ Hauteur
+                    'position[page]' => 25,
+                    'position[x]' => 50,
+                    'position[y]' => 50,
+                    'position[width]' => 200,
+                    'position[height]' => 50
                 ]),
             ]);
 

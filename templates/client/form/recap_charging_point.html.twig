@@ -1,0 +1,62 @@
+<div id="step-3" class="step">
+    <h2 class="mb-4">Récapitulatif des bornes concernées</h2>
+
+    {% if chargingStations is not empty %}
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+            {% for station in chargingStations %}
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-light d-flex align-items-center justify-content-between">
+                            <span class="fw-semibold">Borne {{ loop.index }}</span>
+                            {% if station.manufacturer and station.manufacturer.image %}
+                                <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}"
+                                     alt="{{ station.manufacturer.name }}"
+                                     class="img-fluid"
+                                     style="height: 30px;">
+                            {% endif %}
+                        </div>
+
+                        {% if station.image %}
+                            <img src="{{ asset('uploads/' ~ station.image) }}" class="card-img-top" alt="Image de la borne">
+                        {% else %}
+                            <img src="{{ asset('images/placeholder.jpg') }}" class="card-img-top" alt="Image par défaut">
+                        {% endif %}
+
+                        <div class="card-body">
+                            {% if station.model %}
+                                <h5 class="card-title">{{ station.model }}</h5>
+                            {% endif %}
+
+                            {% if station.reference %}
+                                <p class="mb-1">
+                                    <strong>Référence fabricant :</strong> {{ station.reference }}
+                                </p>
+                            {% endif %}
+
+                            {% if station.connectors is defined %}
+                                <p class="mb-0">
+                                    <strong>Connecteurs :</strong> {{ station.connectors }}
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            Aucune borne à afficher pour ce client.
+        </div>
+    {% endif %}
+
+    <div class="step-navigation d-flex justify-content-between">
+        <button type="button" class="btn-prev btn btn-secondary" onclick="prevStep()">
+            <i class="bi bi-arrow-left"></i>
+            Précédent
+        </button>
+        <button type="button" class="btn-next btn btn-primary" data-step="3">
+            Suivant
+            <i class="bi bi-arrow-right"></i>
+        </button>
+    </div>
+</div>
