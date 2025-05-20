@@ -70,6 +70,16 @@
 				max-width: 850px;
 				width: 100%;
 				margin: 2rem auto;
+				max-height: 85vh;
+				overflow-y: auto;
+			}
+
+			.form-content::-webkit-scrollbar {
+				width: 8px;
+			}
+			.form-content::-webkit-scrollbar-thumb {
+				background-color: rgba(0, 0, 0, 0.2);
+				border-radius: 10px;
 			}
 
 			.form-container::before {
@@ -395,6 +405,16 @@
 				-webkit-background-clip: text;
 				-webkit-text-fill-color: transparent;
 				font-weight: bold;
+			}
+
+			.autocomplete-dropdown {
+				max-height: 200px;
+				overflow-y: auto;
+				border-radius: 4px;
+			}
+
+			.autocomplete-dropdown .dropdown-item:hover {
+				background-color: #f0f0f0;
 			}
 		</style>
 	</head>

@@ -431,4 +431,77 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+ <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const inputs = document.querySelectorAll('.address-autocomplete');
+
+        inputs.forEach(input => {
+            const index = input.dataset.index;
+
+            let timeout = null;
+            let currentResults = [];
+
+            const dropdown = document.createElement('div');
+            dropdown.classList.add('autocomplete-dropdown');
+            dropdown.style.position = 'absolute';
+            dropdown.style.zIndex = '1000';
+            dropdown.style.backgroundColor = 'white';
+            dropdown.style.border = '1px solid #ccc';
+            dropdown.style.width = '100%';
+            dropdown.style.display = 'none';
+            input.parentNode.appendChild(dropdown);
+
+            input.addEventListener('input', function () {
+                const query = input.value;
+                clearTimeout(timeout);
+
+                if (query.length < 3) {
+                    dropdown.style.display = 'none';
+                    return;
+                }
+
+                timeout = setTimeout(() => {
+                    fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`)
+                        .then(response => response.json())
+                        .then(data => {
+                            currentResults = data.features;
+                            dropdown.innerHTML = '';
+
+                            currentResults.forEach(feature => {
+                                const option = document.createElement('div');
+                                option.classList.add('dropdown-item');
+                                option.style.padding = '8px';
+                                option.style.cursor = 'pointer';
+                                option.innerText = feature.properties.label;
+                                dropdown.appendChild(option);
+
+                                option.addEventListener('click', () => {
+                                    const props = feature.properties;
+                                    const geometry = feature.geometry;
+
+                                    input.value = props.name + ' ' + props.street || props.label;
+
+                                    document.getElementById(`station_${index}_postal`).value = props.postcode || '';
+                                    document.getElementById(`station_${index}_city`).value = props.city || '';
+                                    document.getElementById(`station_${index}_latitude`).value = geometry.coordinates[1];
+                                    document.getElementById(`station_${index}_longitude`).value = geometry.coordinates[0];
+
+                                    dropdown.style.display = 'none';
+                                });
+                            });
+
+                            dropdown.style.display = 'block';
+                        });
+                }, 300);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!dropdown.contains(e.target) && e.target !== input) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+    });
+</script>
+
 {% endblock %}
