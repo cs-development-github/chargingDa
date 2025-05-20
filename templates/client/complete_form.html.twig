@@ -86,7 +86,7 @@
 		
 		    function getLogicalStep(stepNumber) {
 		        if (stepNumber <= 2) return 1;
-		        if (stepNumber <= 5) return 2;
+		        if (stepNumber <= 4) return 2;
 		        return 3;
 		    }
 		
@@ -414,21 +414,24 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
 	const confirmBtn = document.getElementById('confirmButton');
 
-	confirmBtn.addEventListener('click', () => {
-		const currentStep = confirmBtn.closest('.step');
-		const nextStep = document.getElementById('step-5');
+	if (confirmBtn) {
+		confirmBtn.addEventListener('click', () => {
+			const currentStep = confirmBtn.closest('.step');
+			const nextStep = document.getElementById('step-5');
 
-		if (currentStep && nextStep) {
-			currentStep.classList.remove('active');
-			nextStep.classList.remove('d-none');
-			nextStep.classList.add('active');
+			if (currentStep && nextStep) {
+				currentStep.classList.remove('active');
+				nextStep.classList.remove('d-none');
+				nextStep.classList.add('active');
 
-			if (typeof updateSidebar === 'function') {
-				updateSidebar(5);
+				if (typeof updateSidebar === 'function') {
+					updateSidebar(5);
+				}
 			}
-		}
-	});
+		});
+	}
 });
+
 </script>
 
  <script>
