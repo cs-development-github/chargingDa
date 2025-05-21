@@ -66,6 +66,7 @@ class ChargingStationType extends AbstractType
                 'label' => 'Photo de la borne',
                 'attr' => ['class' => 'form-control'],
                 'mapped' => false,
+                'required' => false,
             ])
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Publiée la borne',

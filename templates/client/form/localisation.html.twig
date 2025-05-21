@@ -2,7 +2,6 @@
 	<h2 class="mb-4">Géolocalisation des bornes</h2>
 
 	{% if chargingStations is not empty %}
-		<form method="post">
 			<div class="mb-4">
 				{% for station in chargingStations %}
 					<div class="card shadow-sm mb-3 p-3">
@@ -64,7 +63,8 @@
 					<i class="bi bi-check-circle"></i>
 				</button>
 			</div>
-		</form>
+
+			{{ form_end(form) }}
 	{% else %}
 		<div class="alert alert-warning">
 			Aucune borne à géolocaliser.
