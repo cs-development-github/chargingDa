@@ -188,7 +188,7 @@
 	<div class="stations-grid">
 		{% for station in chargingStations %}
 		<div class="station-card"
-			data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~ station.power) | lower }}">
+			data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~ station.power~' '~station.reference) | lower }}">
 			<div class="header">
 				<img src="{{ station.image ? asset('uploads/'~station.image) : asset('images/placeholder.jpg') }}"
 					alt="{{ station.model }}" class="device-img">

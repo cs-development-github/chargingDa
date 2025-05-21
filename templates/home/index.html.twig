@@ -197,12 +197,8 @@
 									Connecteurs: <strong>{{ station.station.connectors }}</strong>
 								</div>
 								<div>
-									{% if station.station.isActive %}
-									<i class="bi bi-check-circle me-2 text-success"></i>
-									<span class="text-success">Active</span>
-									{% else %}
-									<i class="bi bi-x-circle me-2 text-danger"></i>
-									<span class="text-danger">Inactive</span>
+									{% if station.station.reference %}
+									Ref :{{station.station.reference}}
 									{% endif %}
 								</div>
 								<div>
