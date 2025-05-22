@@ -4,8 +4,8 @@
         <div class="row" id="choicesContainer">
             {% for type, config in {
                 'flotte': {'title': 'Bornes privées', 'desc': 'avec recharge gratuite sans exploitation (véhicules de flotte de fonction et/ou service)'},
-                'publique': {'title': 'Bornes publiques', 'desc': 'Combinaison d’usage interne et d’accès public'},
-                'mixte': {'title': 'Bornes privées et publiques', 'desc': 'avec recharge gratuite et/ou payante avec exploitation (véhicules de flotte VF et/ou VS + véhicules extérieurs collaborateurs et autres) '}
+                'publique': {'title': 'Bornes publiques', 'desc': 'Permet d’ouvrir l’accès public à votre borne et de fixer votre prix de revente du kWh. Idéal pour rentabiliser votre installation.'},
+                'mixte': {'title': 'Bornes privées et publiques', 'desc': 'Permet de revendre le kWh au public tout en offrant un accès gratuit aux véhicules de fonction et de service.'}
             } %}
                 <div class="col-md-4 mb-3">
                     <div class="option-card p-3" data-value="{{ type }}">

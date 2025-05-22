@@ -92,10 +92,6 @@ class ClientContractService
     {
         $tarifications = $this->entityManager->getRepository(Tarification::class)->findBy(['client' => $client]);
 
-        if (empty($tarifications)) {
-            throw new \RuntimeException("Aucune tarification trouvée pour le client ID {$client->getId()}");
-        }
-
         $totalConnectors = 0;
         $chargingStationsNames = [];
         $tarifsData = [];
