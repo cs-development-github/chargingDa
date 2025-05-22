@@ -48,7 +48,7 @@
       <li id="step3" style="display: none;">
         <label>
           Coût supplémentaire à la minute :
-          <input type="text" step="0.01" class="styled-input" name="cout_minute" id="input3"> €HT/KWh.
+          <input type="text" step="0.01" class="styled-input" name="cout_minute" id="input3"> €HT.
         </label><br>
         <small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
       </li>
@@ -56,14 +56,14 @@
       <li id="step4" class="mt-2" style="display: none;">
         <label>
           Pénalité après recharge (au-delà de 15 min) :
-          <input type="text" step="0.01" class="styled-input" name="penalite" id="input4"> €HT/KWh.
+          <input type="text" step="0.01" class="styled-input" name="penalite" id="input4"> €HT/Min.
         </label><br>
         <small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
       </li>
     </ul>
 
     <div id="submitBlock" style="display: none;" class="mt-4">
-			<button id="confirmButton" class="btn btn-primary mt-3" data-step="5">Valider les tarifs</button>
+			<button id="confirmButton" type="button" class="btn btn-primary mt-3" data-step="5">Valider les tarifs</button>
     </div>
   </div>
 </div>
