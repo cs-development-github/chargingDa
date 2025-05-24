@@ -109,7 +109,7 @@ final class ClientController extends AbstractController
 
             $completionUrl = $urlGenerator->generate('client_complete_info', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);
 
-            
+
             $mailerService->sendEmail(
                 to: $client->getEmail() ?: 'chris.vermersch@hotmail.com',
                 subject: 'Demande d\'information complémentaire contrat de supervision',
@@ -169,8 +169,8 @@ final class ClientController extends AbstractController
             $station = $intervention->getChargingStation();
             if ($station) {
                 $chargingStations[] = $station;
-                $totalConnectors += is_countable($station->getConnectors()) 
-                    ? count($station->getConnectors()) 
+                $totalConnectors += is_countable($station->getConnectors())
+                    ? count($station->getConnectors())
                     : (int) $station->getConnectors();
             }
         }
@@ -195,18 +195,15 @@ final class ClientController extends AbstractController
                     $tarification = $em->getRepository(Tarification::class)->findOneBy(['chargingStation' => $station]) ?? new Tarification();
                     $tarification->setChargingStation($station);
                     $tarification->setClient($client);
-                    $tarification->setPurcharsePrice((float) $data["priceKwh_$stationId"]);
-                    $tarification->setReducedPrice((float) $data["priceKwh_$stationId"]);
-                    $tarification->setPublicPrice((float) $data["pricePublic_$stationId"]);
-                    $tarification->setResalePrice((float) $data["priceResale_$stationId"]);
 
-                    $tarification->setFixedFeePublic((float) ($data["fixedFeePublic_$stationId"] ?? 0));
-                    $tarification->setRechargeTimePublic((float) ($data["rechargeTimePublic_$stationId"] ?? 0));
-                    $tarification->setParkingTimePublic((float) ($data["parkingTimePublic_$stationId"] ?? 0));
+                    // Tarifs actuels basés sur la configuration publique/mixte
+                    $tarification->setReducedPrice((float) ($data['prix_collab'] ?? 0)); // collaborateurs
+                    $tarification->setPublicPrice((float) ($data['prix_public'] ?? 0));  // public
+                    $tarification->setRechargeTimeResale((float) ($data['cout_minute'] ?? 0)); // coût à la minute
+                    $tarification->setParkingTimeResale((float) ($data['penalite'] ?? 0));    // pénalité de stationnement
 
-                    $tarification->setFixedFeeResale((float) ($data["fixedFeeResale_$stationId"] ?? 0));
-                    $tarification->setRechargeTimeResale((float) ($data["rechargeTimeResale_$stationId"] ?? 0));
-                    $tarification->setParkingTimeResale((float) ($data["parkingTimeResale_$stationId"] ?? 0));
+                    // Type d'offre sélectionné : flotte, publique, mixte
+                    $tarification->setOfferType($data['choixType'] ?? '');
 
                     $em->persist($tarification);
                 }
@@ -301,23 +298,23 @@ final class ClientController extends AbstractController
     public function signContract(Request $request, EntityManagerInterface $em, MailService $mailerService): Response
     {
         $token = $request->query->get('token');
-    
+
         if (!$token) {
             return new JsonResponse(['error' => 'Token manquant.'], 400);
         }
-    
+
         $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
-    
+
         if (!$client) {
             return new JsonResponse(['error' => 'Client introuvable.'], 404);
         }
-    
+
         $pdfPath = $this->getParameter('kernel.project_dir') . "/public/pdf/contrat_final_{$client->getId()}.pdf";
-    
+
         if (!file_exists($pdfPath)) {
             return new JsonResponse(['error' => "Le fichier PDF du contrat est introuvable."], 404);
         }
-    
+
         try {
             // 1️⃣ Création de la transaction
             error_log("🛠 Création de la transaction Universign...");
@@ -326,46 +323,46 @@ final class ClientController extends AbstractController
                 'headers' => ['Content-Type' => 'application/json'],
                 'json' => ['name' => "Signature Contrat - {$client->getName()}", 'language' => 'fr'],
             ]);
-    
+
             $transactionData = $transactionResponse->toArray();
             $transactionId = $transactionData['id'] ?? null;
             error_log("✅ Transaction créée avec ID : " . $transactionId);
-    
+
             if (!$transactionId) {
                 throw new \RuntimeException("Échec de la création de la transaction Universign.");
             }
-    
+
             // 🕐 Attente pour s'assurer que la transaction est bien enregistrée
             sleep(3);
-    
+
             // 2️⃣ Envoi du fichier PDF à Universign
             error_log("📄 Envoi du fichier PDF...");
             $fileResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/files", [
                 'auth_basic' => [$this->universignApiKey, ''],
                 'body' => ['file' => fopen($pdfPath, 'r')],
             ]);
-    
+
             $fileData = $fileResponse->toArray();
             $fileId = $fileData['id'] ?? null;
             error_log("✅ Fichier envoyé avec ID : " . $fileId);
-    
+
             if (!$fileId) {
                 throw new \RuntimeException("Échec de l'envoi du fichier à Universign.");
             }
-    
+
             // 3️⃣ Ajout du fichier à la transaction
             error_log("📌 Ajout du document à la transaction...");
             $docResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/documents", [
                 'auth_basic' => [$this->universignApiKey, ''],
                 'body' => ['document' => $fileId],
             ]);
-    
+
             $docData = $docResponse->toArray();
             error_log("✅ Document ajouté : " . json_encode($docData));
-    
+
             // Vérification après ajout du document
             sleep(3);
-    
+
             // 4️⃣ Récupération de la transaction pour obtenir le document ID
             error_log("🔎 Vérification de la transaction après ajout du document...");
             $documentResponse = $this->httpClient->request('GET', "{$this->universignApiUrl}/v1/transactions/{$transactionId}", [
@@ -373,12 +370,12 @@ final class ClientController extends AbstractController
             ]);
             $documentData = $documentResponse->toArray();
             error_log("✅ Transaction mise à jour : " . json_encode($documentData));
-    
+
             $documentId = $documentData['documents'][0]['id'] ?? null;
             if (!$documentId) {
                 throw new \RuntimeException("Le document ne semble pas avoir été correctement ajouté.");
             }
-    
+
             $signatureResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/documents/{$documentId}/fields", [
                 'auth_basic' => [$this->universignApiKey, ''],
                 'headers' => ['Content-Type' => 'application/x-www-form-urlencoded'],
@@ -400,7 +397,7 @@ final class ClientController extends AbstractController
                 throw new \RuntimeException("Échec de l'ajout du champ de signature.");
             }
 
-    
+
             // 6️⃣ Ajout du signataire
             error_log("👤 Ajout du signataire ({$client->getEmail()})...");
             $signerResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/signatures", [
@@ -411,17 +408,17 @@ final class ClientController extends AbstractController
                     'field'  => $signatureFieldId, // ✅ Lien avec le champ signature
                 ]),
             ]);
-    
+
             $signerData = $signerResponse->toArray();
             error_log("✅ Signataire ajouté : " . json_encode($signerData));
-    
+
             // 7️⃣ Démarrer la transaction
             error_log("🚀 Démarrage de la transaction...");
             $startResponse = $this->httpClient->request('POST', "{$this->universignApiUrl}/v1/transactions/{$transactionId}/start", [
                 'auth_basic' => [$this->universignApiKey, ''],
             ]);
             error_log("✅ Transaction démarrée.");
-    
+
             // 8️⃣ Récupération du lien de signature
             error_log("🔎 Récupération de l'URL de signature...");
             sleep(3);
@@ -430,15 +427,15 @@ final class ClientController extends AbstractController
             ]);
             $finalTransactionData = $finalTransactionResponse->toArray();
             error_log("✅ Transaction finale récupérée.");
-    
+
             // Extraction de l'URL de signature
             $signatureUrl = $finalTransactionData['actions'][0]['url'] ?? null;
-    
+
             if (!$signatureUrl) {
                 throw new \RuntimeException("Impossible de récupérer l'URL de signature.");
             }
             error_log("🔗 Lien de signature récupéré : " . $signatureUrl);
-    
+
             // 📧 Envoi de l'e-mail avec le lien de signature
             error_log("📧 Envoi de l'email au client...");
             $mailerService->sendEmail(
@@ -451,14 +448,13 @@ final class ClientController extends AbstractController
                 ]
             );
             error_log("✅ Email envoyé avec succès !");
-    
+
             // 🔗 Sauvegarde en base de données
             $client->setSignatureTransactionId($transactionId);
             $em->persist($client);
             $em->flush();
-    
-        return $this->redirectToRoute('thank_you', ['token' => $token]);
-    
+
+            return $this->redirectToRoute('thank_you', ['token' => $token]);
         } catch (\Exception $e) {
             return new JsonResponse([
                 'error' => 'Erreur Universign',
@@ -466,5 +462,4 @@ final class ClientController extends AbstractController
             ], 500);
         }
     }
-    
 }

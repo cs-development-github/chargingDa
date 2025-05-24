@@ -22,8 +22,6 @@ class LoginListener
 
         $user = $event->getAuthenticationToken()->getUser();
 
-        dd("Je suis call !");
-
         if (!$user instanceof User) {
             return;
         }

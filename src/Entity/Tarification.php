@@ -20,9 +20,6 @@ class Tarification
     private ?ChargingStations $chargingStation = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $purcharsePrice = null;
-
-    #[ORM\Column(length: 255)]
     private ?string $resalePrice = null;
 
     #[ORM\Column(length: 255)]
@@ -31,25 +28,14 @@ class Tarification
     #[ORM\Column(nullable: true)]
     private ?string $publicPrice = null;
 
-    // -------- Champs tarif public --------
-    #[ORM\Column(nullable: true)]
-    private ?string $fixedFeePublic = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?string $rechargeTimePublic = null;
-
-    #[ORM\Column(nullable: true)]
-    private ?string $parkingTimePublic = null;
-
-    // -------- Champs tarif préférentiel --------
-    #[ORM\Column(nullable: true)]
-    private ?string $fixedFeeResale = null;
-
     #[ORM\Column(nullable: true)]
     private ?string $rechargeTimeResale = null;
 
     #[ORM\Column(nullable: true)]
     private ?string $parkingTimeResale = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $OfferType = null;
 
     public function getId(): ?int
     {
@@ -76,18 +62,6 @@ class Tarification
     public function setChargingStation(?ChargingStations $chargingStation): static
     {
         $this->chargingStation = $chargingStation;
-
-        return $this;
-    }
-
-    public function getPurcharsePrice(): ?string
-    {
-        return $this->purcharsePrice;
-    }
-
-    public function setPurcharsePrice(string $purcharsePrice): static
-    {
-        $this->purcharsePrice = $purcharsePrice;
 
         return $this;
     }
@@ -128,54 +102,6 @@ class Tarification
         return $this;
     }
 
-    public function getFixedFeePublic(): ?string
-    {
-        return $this->fixedFeePublic;
-    }
-
-    public function setFixedFeePublic(?string $fixedFeePublic): static
-    {
-        $this->fixedFeePublic = $fixedFeePublic;
-
-        return $this;
-    }
-
-    public function getRechargeTimePublic(): ?string
-    {
-        return $this->rechargeTimePublic;
-    }
-
-    public function setRechargeTimePublic(?string $rechargeTimePublic): static
-    {
-        $this->rechargeTimePublic = $rechargeTimePublic;
-
-        return $this;
-    }
-
-    public function getParkingTimePublic(): ?string
-    {
-        return $this->parkingTimePublic;
-    }
-
-    public function setParkingTimePublic(?string $parkingTimePublic): static
-    {
-        $this->parkingTimePublic = $parkingTimePublic;
-
-        return $this;
-    }
-
-    public function getFixedFeeResale(): ?string
-    {
-        return $this->fixedFeeResale;
-    }
-
-    public function setFixedFeeResale(?string $fixedFeeResale): static
-    {
-        $this->fixedFeeResale = $fixedFeeResale;
-
-        return $this;
-    }
-
     public function getRechargeTimeResale(): ?string
     {
         return $this->rechargeTimeResale;
@@ -196,6 +122,18 @@ class Tarification
     public function setParkingTimeResale(?string $parkingTimeResale): static
     {
         $this->parkingTimeResale = $parkingTimeResale;
+
+        return $this;
+    }
+
+    public function getOfferType(): ?string
+    {
+        return $this->OfferType;
+    }
+
+    public function setOfferType(?string $OfferType): static
+    {
+        $this->OfferType = $OfferType;
 
         return $this;
     }
