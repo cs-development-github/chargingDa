@@ -1,0 +1,12 @@
+{# templates/supervision/step1_warning.html.twig #}
+{% extends 'base.client.html.twig' %}
+{% block body %}
+<div class="container my-5">
+	<h4>Dernière étape pour activer votre supervision !</h4>
+	<p>Vous y êtes presque ! Avant de finaliser, merci de vérifier que toutes les informations saisies sont exactes...</p>
+
+	<form method="post" action="{{ path('supervision_step', { step: 2 }) }}">
+		<button type="submit" class="btn btn-primary mt-3">Suivant</button>
+	</form>
+</div>
+{% endblock %}

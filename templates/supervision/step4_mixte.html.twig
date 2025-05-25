@@ -1,0 +1,23 @@
+{% extends 'base.client.html.twig' %}
+
+{% block body %}
+<div class="container my-4">
+    <h3>Configuration - Bornes Mixtes</h3>
+
+    {{ form_start(form) }}
+
+    <div class="row mb-3">
+        <div class="col-md-6">{{ form_row(form.prix_collab) }}</div>
+        <div class="col-md-6">{{ form_row(form.prix_public) }}</div>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-6">{{ form_row(form.cout_minute) }}</div>
+        <div class="col-md-6">{{ form_row(form.penalite) }}</div>
+    </div>
+
+    <button class="btn btn-primary">Suivant</button>
+
+    {{ form_end(form) }}
+</div>
+{% endblock %}

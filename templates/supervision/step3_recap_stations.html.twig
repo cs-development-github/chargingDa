@@ -1,0 +1,46 @@
+{% extends 'base.client.html.twig' %}
+{% block body %}
+<div class="container my-4">
+    <h2>Récapitulatif des bornes</h2>
+
+    {% if interventions|length > 0 %}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            {% for intervention in interventions %}
+                {% set station = intervention.chargingStation %}
+                <div class="col">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-header bg-light d-flex justify-content-between">
+                            <span><strong>Borne {{ loop.index }}</strong></span>
+                            {% if station.manufacturer and station.manufacturer.image %}
+                                <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}"
+                                     alt="Logo fabricant"
+                                     style="height: 30px;">
+                            {% endif %}
+                        </div>
+                        {% if station.image %}
+                            <img src="{{ asset('uploads/' ~ station.image) }}" class="card-img-top">
+                        {% endif %}
+                        <div class="card-body">
+                            {% if station.model %}
+                                <h5>{{ station.model }}</h5>
+                            {% endif %}
+                            {% if station.reference %}
+                                <p><strong>Référence :</strong> {{ station.reference }}</p>
+                            {% endif %}
+                            {% if station.connectors is defined %}
+                                <p><strong>Connecteurs :</strong> {{ station.connectors }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <form method="post" action="{{ path('supervision_step', { step: 4 }) }}">
+            <button type="submit" class="btn btn-primary mt-4">Continuer</button>
+        </form>
+    {% else %}
+        <div class="alert alert-warning">Aucune borne liée à ce client.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.client.html.twig' %}
+{% block body %}
+<div class="container my-4">
+    <h3>Quel type de configuration souhaitez-vous ?</h3>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary mt-3">Suivant</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
