@@ -1,10 +1,69 @@
 {% extends 'base.client.html.twig' %}
+
 {% block body %}
-<div class="container my-4">
-    <h3>Quel type de configuration souhaitez-vous ?</h3>
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <button class="btn btn-primary mt-3">Suivant</button>
-    {{ form_end(form) }}
-</div>
+
+	<style>
+
+		.option-card {
+			border: 2px solid #ccc;
+			border-radius: 8px;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+		.option-card.active {
+			border-color: #0d6efd;
+			background-color: #eaf3ff;
+		}
+	</style>
+	<div class="container my-4">
+		<h3>Quel type de configuration souhaitez-vous ?</h3>
+		{{ form_start(form) }}
+
+		<div class="row" id="choicesContainer">
+			{% set labels = {
+            'flotte': {'title': 'Bornes privées', 'desc': 'avec recharge gratuite sans exploitation (véhicules de flotte de fonction et/ou service)'},
+            'publique': {'title': 'Bornes publiques', 'desc': 'Permet d’ouvrir l’accès public à votre borne et de fixer votre prix de revente du kWh. Idéal pour rentabiliser votre installation.'},
+            'mixte': {'title': 'Bornes privées et publiques', 'desc': 'Permet de revendre le kWh au public tout en offrant un accès gratuit aux véhicules de fonction et de service.'}
+        } %}
+
+			{% for field in form.type %}
+				{% set value = field.vars.value %}
+				{% set label = {
+            'flotte': {'title': 'Bornes privées', 'desc': 'avec recharge gratuite sans exploitation (véhicules de flotte de fonction et/ou service)'},
+            'publique': {'title': 'Bornes publiques', 'desc': 'Permet d’ouvrir l’accès public à votre borne et de fixer votre prix de revente du kWh. Idéal pour rentabiliser votre installation.'},
+            'mixte': {'title': 'Bornes privées et publiques', 'desc': 'Permet de revendre le kWh au public tout en offrant un accès gratuit aux véhicules de fonction et de service.'}
+    }[value] %}
+
+				<div class="col-md-4 mb-3">
+					<label class="option-card p-3 d-block text-start" data-value="{{ value }}">
+						{{ form_widget(field, { attr: { class: 'd-none' } }) }}
+						<h5>{{ label.title }}</h5>
+						<p class="mb-0">{{ label.desc }}</p>
+					</label>
+				</div>
+			{% endfor %}
+
+		</div>
+
+		<div class="step-navigation d-flex justify-content-end">
+			<button type="submit" class="btn btn-primary mt-3">Suivant</button>
+		</div>
+
+		{{ form_end(form) }}
+	</div>
+
+	 <script>
+		document.addEventListener('DOMContentLoaded', () => {
+		    const cards = document.querySelectorAll('.option-card input[type="radio"]');
+		
+		    cards.forEach(input => {
+		        input.parentElement.classList.toggle('active', input.checked);
+		
+		        input.addEventListener('change', () => {
+		            cards.forEach(i => i.parentElement.classList.remove('active'));
+		            input.parentElement.classList.add('active');
+		        });
+		    });
+		});
+		</script>
 {% endblock %}

@@ -1,10 +1,10 @@
 <?php
-
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class Step5SettingsCollectionType extends AbstractType
 {
@@ -12,9 +12,14 @@ class Step5SettingsCollectionType extends AbstractType
     {
         $builder->add('settings', CollectionType::class, [
             'entry_type' => ChargingStationSettingType::class,
+            'by_reference' => false,
             'allow_add' => false,
             'allow_delete' => false,
-            'label' => false,
         ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults(['data_class' => null]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\ChargingStationSetting;
 use App\Entity\Client;
 use App\Form\ConfigFlotteType;
@@ -9,8 +10,9 @@ use App\Form\ConfigMixteType;
 use App\Form\ConfigPubliqueType;
 use App\Form\Step2ClientType;
 use App\Form\Step4ChoiceType;
+use App\Form\Step5SettingsCollectionType as FormStep5SettingsCollectionType;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\Step5SettingsCollectionType;
+use Step5SettingsCollectionType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +24,9 @@ class SupervisionController extends AbstractController
     {
         if ($step === 1) {
             if ($token) {
-                $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
+                /** @var ClientRepository $clientRepo */
+                $clientRepo = $em->getRepository(Client::class);
+                $client = $clientRepo->findOneWithAddressByToken($token);
 
                 if (!$client) {
                     throw $this->createNotFoundException('Client introuvable pour ce token.');
@@ -39,6 +43,7 @@ class SupervisionController extends AbstractController
             if (!$client instanceof Client) {
                 throw $this->createNotFoundException('Client introuvable en session.');
             }
+
             $form = $this->createForm(Step2ClientType::class, $client);
             $form->handleRequest($request);
 
@@ -100,62 +105,57 @@ class SupervisionController extends AbstractController
                 return $this->redirectToRoute('supervision_step', ['step' => 5]);
             }
 
+            $client = $request->getSession()->get('supervision_step_2');
+            $totalConnectors = 0;
+
+            if ($client instanceof Client) {
+                foreach ($client->getInterventions() as $intervention) {
+                    $station = $intervention->getChargingStation();
+                    if ($station && is_numeric($station->getConnectors())) {
+                        $totalConnectors += (int) $station->getConnectors();
+                    }
+                }
+            }
+
             return $this->render("supervision/step4_{$configType}.html.twig", [
                 'form' => $form->createView(),
+                'totalConnectors' => $totalConnectors,
             ]);
         }
 
         if ($step === 5) {
             $session = $request->getSession();
+            $client = $session->get('supervision_step_2');
 
-            $defaultData = [
-                'settings' => array_fill(0, 3, [
-                    'public' => false,
-                    'addressLine' => '',
-                    'postalCode' => '',
-                    'city' => '',
-                    'country' => '',
-                    'latitude' => '',
-                    'longitude' => '',
-                    'region' => '',
-                    'department' => '',
-                ])
-            ];
+            if (!$client instanceof Client) {
+                throw $this->createNotFoundException('Client introuvable en session.');
+            }
 
-            $form = $this->createForm(Step5SettingsCollectionType::class, $defaultData);
+            $settings = [];
+
+            foreach ($client->getInterventions() as $intervention) {
+                $station = $intervention->getChargingStation();
+                if ($station) {
+                    $setting = new ChargingStationSetting();
+                    $setting->setChargingStation($station);
+                    $settings[] = $setting;
+                }
+            }
+
+            $form = $this->createForm(FormStep5SettingsCollectionType::class, []);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $session->set('supervision_step_5', $form->getData());
+                $submitted = $form->get('settings')->getData();
 
-                $client = $session->get('supervision_step_2');
-                $settingsData = $session->get('supervision_step_5')['settings'] ?? [];
-
-                $em->persist($client);
-
-                foreach ($settingsData as $settingData) {
-                    $setting = new ChargingStationSetting();
-                    $setting->setPublic($settingData['public'] ?? false);
-                    $setting->setAddressLine($settingData['addressLine'] ?? null);
-                    $setting->setPostalCode($settingData['postalCode'] ?? null);
-                    $setting->setCity($settingData['city'] ?? null);
-                    $setting->setCountry($settingData['country'] ?? null);
-                    $setting->setLatitude($settingData['latitude'] ?? null);
-                    $setting->setLongitude($settingData['longitude'] ?? null);
-                    $setting->setRegion($settingData['region'] ?? null);
-                    $setting->setDepartment($settingData['department'] ?? null);
-
+                foreach ($submitted as $setting) {
                     $em->persist($setting);
                 }
 
                 $em->flush();
 
-                $session->remove('supervision_step_2');
-                $session->remove('supervision_step_4');
-                $session->remove('supervision_step_5');
-
-                $this->addFlash('success', 'Supervision finalisée et enregistrée avec succès !');
-
+                $session->clear();
+                $this->addFlash('success', 'Supervision enregistrée avec succès !');
                 return $this->redirectToRoute('homepage');
             }
 

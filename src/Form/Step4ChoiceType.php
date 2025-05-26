@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Form;
 
@@ -12,7 +12,7 @@ class Step4ChoiceType extends AbstractType
     {
         $builder->add('type', ChoiceType::class, [
             'choices' => [
-                'Bornes privées (flotte)' => 'flotte',
+                'Bornes privées' => 'flotte',
                 'Bornes publiques' => 'publique',
                 'Bornes mixtes' => 'mixte',
             ],

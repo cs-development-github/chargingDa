@@ -16,15 +16,47 @@ class Step2ClientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('lastname', TextType::class)
-            ->add('societyName', TextType::class)
-            ->add('siret', TextType::class, ['required' => false])
-            ->add('numberTva', TextType::class, ['required' => false])
-            ->add('codeNaf', TextType::class, ['required' => false])
-            ->add('email', EmailType::class)
-            ->add('phone', TelType::class, ['required' => false])
+            ->add('name', TextType::class, [
+                'label' => 'Nom',
+                'attr' => ['class' => 'form-control'],
+
+            ])
+            ->add('lastname', TextType::class, [
+                'label' => 'Prénom',
+                'attr' => ['class' => 'form-control'],
+
+            ])
+            ->add('societyName', TextType::class, [
+                'label' => 'Société',
+                'attr' => ['class' => 'form-control'],
+
+            ])
+            ->add('siret', TextType::class, [
+                'label' => 'Numéro de siret',
+                'attr' => ['class' => 'form-control'],
+
+            ])
+            ->add('numberTva', TextType::class, [
+                'label' => "Numéro de TVA",
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('codeNaf', TextType::class, [
+                'label' => 'Code NAF',
+                'attr' => ['class' => 'form-control'],
+
+            ])
+            ->add('email', EmailType::class, [
+                'label' => 'Adresse e-mail',
+                'attr' => ['class' => 'form-control'],
+
+            ])
+            ->add('phone', TelType::class, [
+                'label' => 'Numéro de téléphone',
+                'attr' => ['class' => 'form-control'],
+            ])
             ->add('legalForm', ChoiceType::class, [
+                'label' => 'Raison sociale',
+                'attr' => ['class' => 'form-control'],
                 'choices' => ['SAS' => 'SAS', 'SARL' => 'SARL', 'EI' => 'EI', 'Autre' => 'Autre'],
                 'placeholder' => 'Sélectionner une forme',
                 'required' => false
