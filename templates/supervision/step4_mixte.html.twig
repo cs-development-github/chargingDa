@@ -2,7 +2,10 @@
 
 {% block body %}
 <div id="tarif-intro-mixte" class="transition-text">
-    <p><strong>Merci de compléter chaque champ avec attention.</strong><br>
+    <p>
+        <strong>Merci de compléter chaque champ avec attention.</strong>
+    </p>
+    <p>
         Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
     </p>
 
@@ -75,8 +78,6 @@
 
 {% block stylesheet %}
 <style>
-
-
     :root {
         --gray-color: #818285;
         --input-bg: #fff;
@@ -84,66 +85,66 @@
         --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
     }
 
-.transition-text.shrink {
-    opacity: 0.5;
-    font-size: 15px;
-    transition: all 0.3s ease-in-out;
-}
+    .transition-text.shrink {
+        opacity: 0.5;
+        font-size: 15px;
+        transition: all 0.3s ease-in-out;
+    }
 
-.fade-expand {
-    overflow: hidden;
-    opacity: 0;
-    max-height: 0;
-    transition: max-height 0.5s ease, opacity 0.4s ease;
-}
+    .fade-expand {
+        overflow: hidden;
+        opacity: 0;
+        max-height: 0;
+        transition: max-height 0.5s ease, opacity 0.4s ease;
+    }
 
-.fade-expand.expanding {
-    opacity: 1;
-    max-height: 9999px;
-}
+    .fade-expand.expanding {
+        opacity: 1;
+        max-height: 9999px;
+    }
 
 
-.fade-expand.show {
-    opacity: 1;
-    max-height: 1000px;
-}
+    .fade-expand.show {
+        opacity: 1;
+        max-height: 1000px;
+    }
 
-.custom-input {
-    background-color: var(--input-bg);
-    border: none;
-    border-radius: 15px;
-    padding: 12px 15px;
-    width: 100%;
-    height: var(--control-height);
-    box-shadow: var(--shadow-inset);
-    outline: none;
-    transition: box-shadow 0.2s ease-in-out;
-}
-.custom-input:focus {
-    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
-}
+    .custom-input {
+        background-color: var(--input-bg);
+        border: none;
+        border-radius: 15px;
+        padding: 12px 15px;
+        width: 100%;
+        height: var(--control-height);
+        box-shadow: var(--shadow-inset);
+        outline: none;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+    .custom-input:focus {
+        box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
+    }
 
-.tarif-details-mixte li p {
-    font-size: 20px;
-}
+    .tarif-details-mixte li p {
+        font-size: 20px;
+    }
 
-.hidden-step {
-    display: list-item;
-    list-style: none;
-}
+    .hidden-step {
+        display: list-item;
+        list-style: none;
+    }
 
-.hidden-step .bullet {
-    display: inline-block;
-    margin-right: 0.5rem;
-}
+    .hidden-step .bullet {
+        display: inline-block;
+        margin-right: 0.5rem;
+    }
 
-.hidden-step.hidden-content {
-    color: transparent;
-}
+    .hidden-step.hidden-content {
+        color: transparent;
+    }
 
-#step1, #step2, #step3, #step4  {
-    font-size: 18px;
-}
+    #step1, #step2, #step3, #step4  {
+        font-size: 18px;
+    }
 </style>
 {% endblock %}
 
@@ -193,5 +194,4 @@
         }
     });
 </script>
-
 {% endblock %}

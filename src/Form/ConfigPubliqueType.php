@@ -13,22 +13,22 @@ class ConfigPubliqueType extends AbstractType
     {
         $builder
             ->add('prix_collab', NumberType::class, [
-                'label' => 'Prix collaborateurs (€ HT / kWh)',
+                'label' => 'Prix :',
                 'required' => true,
                 'scale' => 2,
             ])
             ->add('prix_public', NumberType::class, [
-                'label' => 'Prix public extérieur (€ HT / kWh)',
+                'label' => 'Prix :',
                 'required' => false,
                 'scale' => 2,
             ])
             ->add('cout_minute', NumberType::class, [
-                'label' => 'Coût supplémentaire à la minute (€ HT)',
+                'label' => false,
                 'required' => false,
                 'scale' => 2,
             ])
             ->add('penalite', NumberType::class, [
-                'label' => 'Pénalité après recharge (€ HT)',
+                'label' => false,
                 'required' => false,
                 'scale' => 2,
             ]);
