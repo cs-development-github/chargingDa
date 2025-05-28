@@ -3,7 +3,8 @@
 {% block body %}
 <div id="tarif-intro-mixte" class="transition-text">
     <p><strong>Merci de compléter chaque champ avec attention.</strong><br>
-    Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.</p>
+        Ces paramètres sont essentiels pour un fonctionnement clair, équitable et conforme.
+    </p>
 
     <p>
         Pour gérer l’exploitation et la refacturation de l’énergie de mes
@@ -34,18 +35,35 @@
     <button id="revealButtonMixte" class="btn btn-primary mt-3" type="button">Configurer la tarification</button>
 </div>
 
-<div id="tarif-details-mixte" class="mt-4 fade-expand" style="display: none;">
+<div id="tarif-details-mixte" class="mt-4 fade-expand">
     {{ form_start(form) }}
 
-    <div class="row mb-3">
-        <div class="col-md-6">{{ form_row(form.prix_collab) }}</div>
-        <div class="col-md-6">{{ form_row(form.prix_public) }}</div>
-    </div>
+    <ul>
+        <li id="step1">
+            Pour les véhicules personnels de mes collaborateurs <br>
+            {{ form_label(form.prix_collab) }} {{ form_widget(form.prix_collab, {'attr': {'class': 'styled-input '}}) }}<span>€HT/KWh</span>
+        </li>
 
-    <div class="row mb-3">
-        <div class="col-md-6">{{ form_row(form.cout_minute) }}</div>
-        <div class="col-md-6">{{ form_row(form.penalite) }}</div>
-    </div>
+        <li id="step2" style="visibility: hidden;">
+            Pour les véhicules extérieurs (public) <br>
+            {{ form_label(form.prix_collab) }}{{ form_widget(form.prix_public, {'attr': {'class': 'styled-input '}}) }}<span>€HT/KWh</span>
+        </li> 
+
+        <h5 class="mt-4" id="optionsTitle-mixte" style="visibility: hidden;">Options complémentaires pour les véhicules extérieurs :</h5>
+
+        <li id="step3" style="visibility: hidden;">
+            Coût supplémentaire à la minute
+            {{ form_widget(form.cout_minute, {'attr': {'class': 'styled-input '}}) }}<span>€HT</span> <br>
+            <small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
+        </li>
+
+        <li id="step4" style="visibility: hidden;">
+        Pénalité après recharge (au-delà de 15 min)
+            {{ form_widget(form.penalite, {'attr': {'class': 'styled-input '}}) }}<span>€HT</span> <br>
+            <small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
+        </li>
+
+    </ul>
 
     <div id="submitBlock-mixte" class="mt-4" style="display: none;">
         <button type="submit" class="btn btn-primary">Valider les tarifs</button>
@@ -53,39 +71,127 @@
 
     {{ form_end(form) }}
 </div>
+{% endblock %}
 
+{% block stylesheet %}
+<style>
+
+
+    :root {
+        --gray-color: #818285;
+        --input-bg: #fff;
+        --control-height: 50px;
+        --shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+    }
+
+.transition-text.shrink {
+    opacity: 0.5;
+    font-size: 15px;
+    transition: all 0.3s ease-in-out;
+}
+
+.fade-expand {
+    overflow: hidden;
+    opacity: 0;
+    max-height: 0;
+    transition: max-height 0.5s ease, opacity 0.4s ease;
+}
+
+.fade-expand.expanding {
+    opacity: 1;
+    max-height: 9999px;
+}
+
+
+.fade-expand.show {
+    opacity: 1;
+    max-height: 1000px;
+}
+
+.custom-input {
+    background-color: var(--input-bg);
+    border: none;
+    border-radius: 15px;
+    padding: 12px 15px;
+    width: 100%;
+    height: var(--control-height);
+    box-shadow: var(--shadow-inset);
+    outline: none;
+    transition: box-shadow 0.2s ease-in-out;
+}
+.custom-input:focus {
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.15), 0 0 6px rgba(0, 0, 0, 0.05);
+}
+
+.tarif-details-mixte li p {
+    font-size: 20px;
+}
+
+.hidden-step {
+    display: list-item;
+    list-style: none;
+}
+
+.hidden-step .bullet {
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.hidden-step.hidden-content {
+    color: transparent;
+}
+
+#step1, #step2, #step3, #step4  {
+    font-size: 18px;
+}
+</style>
 {% endblock %}
 
 {% block javascript %}
-
 <script>
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('revealButtonMixte').addEventListener('click', () => {
-        document.getElementById('tarif-details-mixte').style.display = 'block';
-        document.getElementById('tarif-intro-mixte').style.display = 'none';
-    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const revealBtn = document.getElementById('revealButtonMixte');
+        const intro = document.getElementById('tarif-intro-mixte');
+        const details = document.getElementById('tarif-details-mixte');
 
-    function showNextStep(inputId, nextId, titleId = null) {
-        const input = document.getElementById(inputId);
-        if (!input) return;
-
-        input.addEventListener('input', () => {
-            if (input.value.trim() !== '') {
-                const next = document.getElementById(nextId);
-                if (next) next.style.display = 'block';
-                if (titleId) {
-                    const title = document.getElementById(titleId);
-                    if (title) title.style.display = 'block';
-                }
-            }
+        revealBtn.addEventListener('click', () => {
+            intro.classList.add('shrink');
+            details.classList.add('show');
+            revealBtn.style.display = 'none';
+            details.scrollIntoView({ behavior: 'smooth' });
         });
-    }
 
-    showNextStep('{{ form.prix_collab.vars.id }}', '{{ form.prix_public.vars.id }}');
-    showNextStep('{{ form.prix_public.vars.id }}', '{{ form.cout_minute.vars.id }}');
-    showNextStep('{{ form.cout_minute.vars.id }}', '{{ form.penalite.vars.id }}');
-    showNextStep('{{ form.penalite.vars.id }}', 'submitBlock-mixte');
-});
+        function showNextStep(inputId, nextElementId, optionalTitleId = null) {
+            const input = document.getElementById(inputId);
+            const nextElement = document.getElementById(nextElementId);
+            const optionalTitle = optionalTitleId ? document.getElementById(optionalTitleId) : null;
+
+            if (!input || !nextElement) return;
+
+            input.addEventListener('input', () => {
+                if (input.value.trim() !== '') {
+                    nextElement.style.visibility = 'visible';
+                    if (optionalTitle) {
+                        optionalTitle.style.visibility = 'visible';
+                    }
+                }
+            });
+        }
+
+        showNextStep('{{ form.prix_collab.vars.id }}', 'step2');
+        showNextStep('{{ form.prix_public.vars.id }}', 'step3', 'optionsTitle-mixte');
+        showNextStep('{{ form.cout_minute.vars.id }}', 'step4');
+
+        const lastInput = document.getElementById('{{ form.penalite.vars.id }}');
+        const submitBlock = document.getElementById('submitBlock-mixte');
+        if (lastInput && submitBlock) {
+            lastInput.addEventListener('input', () => {
+                if (lastInput.value.trim() !== '') {
+                    submitBlock.style.display = 'block';
+                }
+            });
+        }
+    });
 </script>
 
 {% endblock %}
