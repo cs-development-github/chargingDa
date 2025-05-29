@@ -24,7 +24,7 @@
 				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 				overflow: hidden;
 				display: flex;
-                background-color: white;
+				background-color: white;
 				align-items: center;
 				justify-content: center;
 			}
@@ -45,11 +45,21 @@
 				margin-left: 8px;
 			}
 
+			.hero::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: rgba(255, 255, 255, 0.3); /* Voile blanc léger */
+				backdrop-filter: blur(6px); /* Flou d’arrière-plan */
+				-webkit-backdrop-filter: blur(6px);
+			}
+
+
 			.hero {
 				position: relative;
 				min-height: 80vh;
-				background: url("{{ asset('build/images/landing/backgroundlanding.png') }}") center center / cover no-repeat fixed;
-
+				background: url("https://installateur-qualifie.com/wp-content/uploads/2023/05/homme-voiture-entreprise-1.jpg") center center / cover no-repeat fixed;
 				display: flex;
 				align-items: flex-start;
 				justify-content: flex-start;
@@ -556,6 +566,39 @@
 				}
 			}
 		</style>
+
+		<style>
+
+			.text-center-kit {
+				display: flex;
+				flex-direction: column;
+				align-items: center !important;
+				justify-content: center !important;
+				width: 95px;
+			}
+
+			.text-center-kit {
+				text-align: center;
+			}
+
+			.offer-number-white {
+				font-size: 2.7rem;
+				font-weight: 800;
+				color: #ffffff;
+				line-height: 1;
+			}
+
+			.item-text-white {
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #ffffff;
+				line-height: 1.3;
+			}
+
+			.segoe-script {
+				font-family: 'Segoe Script', cursive !important;
+			}
+		</style>
 	</head>
 
 	<body>
@@ -574,7 +617,6 @@
 			</div>
 		</nav>
 		<div style="margin-top: 80px;"></div>
-
 		<section class="hero d-flex align-items-center justify-content-center px-3">
 			<div class="custom-card" data-aos="zoom-in" data-aos-duration="1000">
 				<h2 class="mb-3 text-center">
@@ -583,8 +625,7 @@
 					<span class="gradient-text">POUR LES PROS</span>
 				</h2>
 				<p class="mb-4 text-center">
-					LODMI partenaires vous accompagne dans la mise en supervision de vos bornes de recharge grâce à 
-										                sa solution dédiée. Moins de complécité et plus d'efficacité
+					LODMI partenaires vous accompagne dans la mise en supervision de vos bornes de recharge grâce à sa solution dédiée. Moins de complécité et plus d'efficacité
 				</p>
 				<div class="text-center">
 					<a href="{{ path('app_login') }}" class="btn btn-gradient">COMMENCER</a>
@@ -596,7 +637,7 @@
 		<section class="offers py-5">
 			<div class="container">
 				<h2 class="text-center mb-4">
-					<span class="gradient-text d-block mb-2">NOS OFFRES</span>
+					<span class="gradient-text d-block mb-2">NOS PRODUITS</span>
 					<span class="textspecial d-block">POUR TOUJOURS MIEUX VOUS ACCOMPAGNER</span>
 				</h2>
 
@@ -616,13 +657,11 @@
 						</h2>
 
 						<p class="mb-4 textnormal">
-							La solution essentielle pour assurer la connectivité et la supervision de vos bornes de
-														                        recharge.
+							La solution essentielle pour assurer la connectivité et la supervision de vos bornes de recharge.
 						</p>
 
-
 						<ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
-							<li class="text-center">
+							<li class="text-center-kit">
 								<span class="gradient-text offer-number d-block">1</span>
 								<span class="item-text d-block">Carte<br>SIM M2M</span>
 							</li>
@@ -631,7 +670,7 @@
 								<span class="gradient-text offer-number d-block">+</span>
 							</li>
 
-							<li class="text-center">
+							<li class="text-center-kit">
 								<span class="gradient-text offer-number d-block">1</span>
 								<span class="item-text d-block">QR Code<br>sécurisé</span>
 							</li>
@@ -640,7 +679,7 @@
 								<span class="gradient-text offer-number d-block">+</span>
 							</li>
 
-							<li class="text-center">
+							<li class="text-center-kit">
 								<span class="gradient-text offer-number d-block">1</span>
 								<span class="item-text d-block">Guide de<br>supervision</span>
 							</li>
@@ -663,63 +702,45 @@
 							</h3>
 						</h2>
 						<p class="textnormal text-white mb-4">
-							La solution essentielle pour assurer la connectivité et la supervision de vos bornes de
-														                        recharge.
+							La solution essentielle pour assurer la connectivité et la supervision de vos bornes de recharge.
 						</p>
 
-						<div class="row text-center g-4 justify-content-center">
+						<ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white d-block">Carte<br>SIM M2M</span>
+							</li>
 
-							<div class="col-6 col-sm-6 col-lg-2">
-								<span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-								<span class="textnormal text-white d-block" style="font-size: 1.1rem;">Carte<br>SIM
-																		                                M2M</span>
-							</div>
+							<li class="text-center align-self-md-start">
+								<span class="offer-number-white d-block">+</span>
+							</li>
 
-							<div class="col-12 d-block d-lg-none">
-								<span class="textspecial fs-1 fw-bold d-block text-white">+</span>
-							</div>
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white d-block">QR Code<br>sécurisé</span>
+							</li>
 
-							<div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
-								<span class="textspecial fs-1 fw-bold d-block">+</span>
-							</div>
+							<li class="text-center align-self-md-start">
+								<span class="offer-number-white d-block">+</span>
+							</li>
 
-							<div class="col-6 col-sm-6 col-lg-2">
-								<span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-								<span class="textnormal text-white d-block" style="font-size: 1.1rem;">Modem<br>4G</span>
-							</div>
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white d-block">Guide de<br>supervision</span>
+							</li>
 
-							<div class="col-12 d-block d-lg-none">
-								<span class="textspecial fs-1 fw-bold d-block text-white">+</span>
-							</div>
+							<li class="text-center align-self-md-start">
+								<span class="offer-number-white segoe-script d-block">+</span>
+							</li>
 
-							<div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
-								<span class="textspecial fs-1 fw-bold d-block">+</span>
-							</div>
-
-							<div class="col-6 col-sm-6 col-lg-2">
-								<span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-								<span class="textnormal text-white d-block" style="font-size: 1.1rem;">QR
-																		                                Code<br>sécurisé</span>
-							</div>
-
-							<div class="col-12 d-block d-lg-none">
-								<span class="textspecial fs-1 fw-bold d-block text-white">+</span>
-							</div>
-
-							<div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
-								<span class="textspecial fs-1 fw-bold d-block">+</span>
-							</div>
-
-							<div class="col-6 col-sm-6 col-lg-2">
-								<span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-								<span class="textnormal text-white d-block" style="font-size: 1.1rem;">Guide de<br>
-									supervision</span>
-							</div>
-						</div>
-
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white segoe-script d-block">Modem<br>4G</span>
+							</li>
+						</ul>
 
 						<div class="btoon mt-5">
-							<span class="gradient-text">GESTION DES GRAPPES DE BORNES</span>
+							<span class="gradient-text">Compatible pour toutes type de bornes</span>
 						</div>
 					</div>
 
@@ -763,7 +784,7 @@
 
 		<section class="partner-marquee">
 			<div class="container">
-				<h2 class="text-center mb-4" style="font-weight: 600; letter-spacing: 1px;">Compatible avec</h2>
+				<h2 class="text-center mb-4" style="font-weight: 600; letter-spacing: 1px;">Nos solutions sont compatible avec</h2>
 				<div class="gradient-line mb-4"></div>
 				<div class="marquee-container">
 					<div class="marquee">
@@ -845,14 +866,19 @@
 			</div>
 		</footer>
 
-		 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-		 <script>
-				        AOS.init({
-				            once: true,
-				            duration: 1000
-				        });
-				    </script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+		<script>
+			AOS.init({once: true, duration: 1000});
+		</script>
+		<script>
+		document.addEventListener('scroll', () => {
+			const hero = document.querySelector('.hero');
+			const offset = window.pageYOffset;
+			hero.style.backgroundPositionY = `${offset * 0.3}px`;
+		});
+		</script>
+
 	</body>
 
 </html>
