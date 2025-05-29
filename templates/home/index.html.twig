@@ -138,6 +138,64 @@
 	}
 </style>
 
+<style>
+.intervention-notice {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: rgba(255, 255, 255, 0.95);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 9999;
+	padding: 1rem;
+}
+
+.intervention-card {
+	max-width: 520px;
+	width: 100%;
+	background: #fff;
+	border-radius: 16px;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+	padding: 2.5rem;
+	text-align: center;
+}
+
+.intervention-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #333;
+	margin-bottom: 2rem;
+	line-height: 1.5;
+}
+
+.intervention-text-wrapper p {
+	font-size: 1rem;
+	color: #555;
+	margin-bottom: 1.2rem;
+	line-height: 1.6;
+}
+
+.btn-gradient {
+	background: linear-gradient(90deg, #ff7e5f, #ff3f81);
+	color: #fff;
+	padding: 0.75rem 1.5rem;
+	border-radius: 30px;
+	text-decoration: none;
+	font-weight: 600;
+	transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.btn-gradient:hover {
+	background: linear-gradient(90deg, #ff3f81, #ff7e5f);
+	transform: translateY(-2px);
+	color: #fff;
+}
+
+</style>
+
 <div class="container">
 	<h1 class="text-center mb-4 text-dark">Supervision des Bornes</h1>
 	<hr class="mx-auto mb-4" style="width: 80%; border: 2px solid #ddd;">
@@ -145,7 +203,7 @@
 	<div class="d-flex flex-column flex-md-row justify-content-between align-items-center px-2 mb-4">
 		<span class="fw-bold text-dark fs-5 mb-3 mb-md-0">Prochaine intervention</span>
 
-			<a href={{path('dashboard_add_client')}}
+			<a href="javascript:void(0)" id="newInterventionBtn"
 			style="padding: 12px 25px; font-size: 16px; color: #fff; border: none; border-radius: 5px; background: linear-gradient(90deg, #ff7e5f, #ff3f81); transition: background 0.3s, box-shadow 0.3s, transform 0.3s; cursor: pointer; position: relative; z-index: 2; text-decoration: none;"
 			onmouseover="this.style.background='linear-gradient(90deg, #ff3f81, #ff7e5f)'; this.style.transform='translateY(-5px) scale(1.05)';"
 			onmouseout="this.style.background='linear-gradient(90deg, #ff7e5f, #ff3f81)'; this.style.transform='translateY(0) scale(1)';">
@@ -334,26 +392,22 @@
 	</div>
 </div>
 
-<div class="modal fade" id="noInterventionModal" tabindex="-1" aria-labelledby="noInterventionLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header bg-warning text-dark">
-        <h5 class="modal-title" id="noInterventionLabel">Aucune intervention détectée</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-      </div>
-      <div class="modal-body">
-       Avant de commencer, assurez-vous d'avoir l'e-mail et le nom de l'entreprise de votre client.
+<div id="interventionNotice" class="intervention-notice d-none">
+	<div class="intervention-card">
+		<h4 class="intervention-title">
+			Avant de commencer, assurez-vous d'avoir l'e-mail et le nom de l'entreprise de votre client
+		</h4>
 
-	   Munissez-vous de votre kit de supervision
+		<div class="intervention-text-wrapper">
+			<p class="intervention-text">Munissez-vous de votre Kit de supervision</p>
+			<p class="intervention-text">Choisissez le modèle de borne de recharge, attention à bien vérifier la référence fabricant du modèle.</p>
+		</div>
 
-	   Choisissez le modele de borne de recharge, attention à bien vérifier la REF fabriquant du model
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-gradient" data-bs-dismiss="modal">J'ai compris</button>
-      </div>
-    </div>
-  </div>
+		<a href="{{ path('dashboard_add_client') }}" class="btn-gradient mt-4 d-inline-block">J'ai compris</a>
+	</div>
 </div>
+
+
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
@@ -900,6 +954,30 @@
 		});
 	});
 
+</script>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+
+		const triggerBtn = document.getElementById("newInterventionBtn");
+if (triggerBtn) {
+	triggerBtn.addEventListener("click", () => {
+		showInterventionNotice();
+	});
+}
+
+
+		const notice = document.getElementById("interventionNotice");
+		const closeBtn = document.getElementById("interventionCloseBtn");
+
+		window.showInterventionNotice = () => {
+			notice.classList.remove("d-none");
+		};
+
+		closeBtn.addEventListener("click", () => {
+			notice.classList.add("d-none");
+		});
+	});
 </script>
 
 {% endblock %}
