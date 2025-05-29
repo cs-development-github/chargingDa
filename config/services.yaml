@@ -5,11 +5,13 @@ parameters:
     universign_api_key: '%env(UNIVERSIGN_API_KEY)%'
 
 services:
+    Symfony\Component\HttpFoundation\Session\SessionInterface: '@session.factory'
+
     App\Service\UniversignService:
         arguments:
             $universignApiUrl: '%universign_api_url%'
             $apiKey: '%universign_api_key%'
-            
+
     App\EventListener\RedirectToLoginListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, priority: 10 }
@@ -28,4 +30,6 @@ services:
             - '../src/Kernel.php'
 
     # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Session\FormSessionManager:
+        arguments:
+            $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'

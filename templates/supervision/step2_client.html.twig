@@ -1,0 +1,96 @@
+{% extends 'base.client.html.twig' %}
+{% block body %}
+<div class="container my-4">
+    <h2>Informations client</h2>
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.name) }}</div>
+        <div class="col-md-6">{{ form_row(form.lastname) }}</div>
+        <div class="col-md-6">{{ form_row(form.societyName) }}</div>
+        <div class="col-md-6">{{ form_row(form.siret) }}</div>
+        <div class="col-md-6">{{ form_row(form.numberTva) }}</div>
+        <div class="col-md-6">{{ form_row(form.codeNaf) }}</div>
+        <div class="col-md-6">{{ form_row(form.email) }}</div>
+        <div class="col-md-6">{{ form_row(form.phone) }}</div>
+        <div class="col-md-6">{{ form_row(form.legalForm) }}</div>
+    </div>
+
+    <h4>Adresse</h4>
+    <div class="row">
+        <div class="col-md-6">{{ form_row(form.address.fullAddress) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.city) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.postalCode) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.streetNumber) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.streetName) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.region) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.department) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.country) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.latitude) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.longitude) }}</div>
+    </div>
+
+    <button class="btn btn-primary">Suivant</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById('client_address_fullAddress');
+    const resultBox = document.createElement('div');
+    resultBox.classList.add('list-group');
+    resultBox.style.position = 'absolute';
+    resultBox.style.zIndex = '999';
+    input.parentNode.appendChild(resultBox);
+
+    input.addEventListener('input', async function () {
+        const query = input.value.trim();
+        if (query.length < 3) {
+            resultBox.style.display = 'none';
+            resultBox.innerHTML = '';
+            return;
+        }
+
+        const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
+        const data = await res.json();
+
+        resultBox.innerHTML = '';
+        data.features.forEach(feature => {
+            const item = document.createElement('button');
+            item.type = 'button';
+            item.classList.add('list-group-item', 'list-group-item-action');
+            item.textContent = feature.properties.label;
+            item.addEventListener('click', () => {
+                input.value = feature.properties.label;
+                resultBox.innerHTML = '';
+                resultBox.style.display = 'none';
+
+                const p = feature.properties;
+                const g = feature.geometry.coordinates;
+
+                document.getElementById('client_address_streetNumber').value = p.housenumber || '';
+                document.getElementById('client_address_streetName').value = p.street || '';
+                document.getElementById('client_address_postalCode').value = p.postcode || '';
+                document.getElementById('client_address_city').value = p.city || '';
+                document.getElementById('client_address_country').value = 'France';
+                document.getElementById('client_address_latitude').value = g[1];
+                document.getElementById('client_address_longitude').value = g[0];
+                document.getElementById('client_address_region').value = p.context?.split(',')[1]?.trim() || '';
+                document.getElementById('client_address_department').value = p.context?.split(',')[0]?.trim() || '';
+            });
+            resultBox.appendChild(item);
+        });
+
+        resultBox.style.display = 'block';
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!input.contains(e.target) && !resultBox.contains(e.target)) {
+            resultBox.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -1,812 +1,884 @@
 <!DOCTYPE html>
 <html lang="es">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Partenaires</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    {{ encore_entry_link_tags('landing') }}
-    <style>
-        html,
-        body {
-            overflow-x: hidden;
-            max-width: 100vw;
-        }
-
-        .logo-container {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-container img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-        }
-
-        .title-gradient {
-            font-family: 'UrbaneRounded', sans-serif;
-            font-size: 24px;
-            font-weight: 600;
-            background: linear-gradient(to right, #ec008c, #f6941f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-left: 8px;
-        }
-
-        .hero {
-            position: relative;
-            min-height: 80vh;
-            background: url("{{ asset('build/images/landing/backgroundlanding.png') }}") center center / cover no-repeat fixed;
-
-            display: flex;
-            align-items: flex-start;
-            justify-content: flex-start;
-            padding: 2rem;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-        }
-
-        .hero::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 150px;
-            background: linear-gradient(transparent, #fff);
-            z-index: 2;
-        }
-
-        .custom-card {
-            position: relative;
-            z-index: 3;
-            background: #fff;
-            border-radius: 3rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 700px;
-            height: 400px;
-            padding: 5rem;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-
-        .gradient-text {
-            font-family: 'UrbaneRounded', sans-serif;
-            background: linear-gradient(to right, #ec008c, #f6941f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .btn-gradient {
-            background: linear-gradient(to right, #ec008c, #f6941f);
-            border: none;
-            color: #fff;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 30px;
-        }
-
-        .btn-gradient:hover {
-            opacity: 0.9;
-            color: #fff;
-        }
-
-        .offers {
-            margin-top: 100px;
-            padding: 4rem 0;
-            background: #fff;
-        }
-
-        .offers h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .offers h2 span {
-            display: block;
-        }
-
-        .pink-circle-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .pink-circle-container::before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 220px;
-            height: 220px;
-            background: radial-gradient(circle, rgba(236, 0, 140, 0.15), transparent 70%);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-        }
-
-        .pink-circle-container img {
-            max-width: 300px;
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        .offers .title-bullet {
-            color: #f58a10;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-
-        .offer-number {
-            font-size: 3.5rem;
-            line-height: 1;
-            font-weight: 700;
-        }
-
-        .item-text {
-            margin-top: 0.5rem;
-            display: block;
-        }
-
-        .offer-title {
-            margin-bottom: 1.5rem;
-        }
-
-        .description {
-            margin-top: 1.5rem;
-        }
-
-        .connect-plus {
-            position: relative;
-            background: linear-gradient(to right, #ec008c 0%, #f6941f 50%, #ffffff 100%);
-        }
-
-        .btn-white-rounded {
-            background-color: #fff;
-            color: #ec008c;
-            border: 2px solid #ec008c;
-            border-radius: 50px;
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            transition: background 0.2s, color 0.2s;
-        }
-
-        .btn-white-rounded:hover {
-            background-color: #ec008c;
-            color: #fff;
-        }
-
-        .btoon {
-            background-color: #fff;
-            border-radius: 50px;
-            padding: 0.75rem 1.5rem;
-            font-weight: 600;
-            text-align: left;
-            display: inline-block;
-            max-width: 100%;
-        }
-
-        .steps-section {
-            background-color: #fff;
-            padding: 4rem 0;
-        }
-
-        .steps-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .step {
-            text-align: center;
-            position: relative;
-            padding: 0 1rem;
-            flex: 0 0 auto;
-        }
-
-        .step-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ec008c, #f6941f);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 1.5rem;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            margin: 0 auto 1rem auto;
-        }
-
-        .step-line {
-            flex: 1;
-            max-width: 100px;
-            height: 4px;
-            background: linear-gradient(to right, #ec008c, #f6941f);
-            margin: 0 1rem;
-            border-radius: 2px;
-        }
-
-        .partner-marquee {
-            background-color: #f9f9f9;
-            padding: 2rem 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .marquee-container {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .marquee {
-            display: flex;
-            align-items: center;
-            animation: marquee 25s linear infinite;
-        }
-
-        .brand-partner {
-            width: 150px;
-            height: 100px;
-            object-fit: contain;
-            margin: 0 2rem;
-            transition: transform 0.3s ease;
-        }
-
-        .brand-partner:hover {
-            transform: scale(1.05);
-        }
-
-        @keyframes marquee {
-            0% {
-                transform: translateX(0);
-            }
-
-            100% {
-                transform: translateX(-50%);
-            }
-        }
-
-        .footer-section {
-            background: url("{{ asset('build/images/landing/background.png') }}") center center / cover no-repeat;
-            color: #fff;
-            padding: 3rem 0;
-            position: relative;
-        }
-
-        .footer-card {
-            background-color: #fff;
-            border-radius: 2rem;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 100%;
-        }
-
-        .footer-brand {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            flex-shrink: 0;
-        }
-
-        .footer-brand .logo-container img {
-            max-width: 80%;
-            max-height: 80%;
-            object-fit: contain;
-        }
-
-        .footer-brand .brand-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            background: linear-gradient(to right, #ec008c, #f6941f);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            white-space: nowrap;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .footer-links .link-column {
-            min-width: 120px;
-        }
-
-        .footer-links .link-column h5 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            text-transform: uppercase;
-            color: #333;
-        }
-
-        .footer-links .link-column ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .footer-links .link-column ul li {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-links .link-column ul li a {
-            color: #555;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links .link-column ul li a:hover {
-            color: #ec008c;
-            text-decoration: underline;
-        }
-
-        .gradient-line {
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(to right, #ec008c, #f6941f);
-            margin: 0 auto;
-        }
-
-        @media (max-width: 992px) {
-            .custom-card {
-                width: 90%;
-                height: auto;
-                padding: 3rem;
-            }
-
-            .offers .row {
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 576px) {
-
-            .hero {
-                padding: 1rem;
-                background-attachment: scroll;
-            }
-
-            .custom-card {
-                width: 90%;
-                height: auto;
-                padding: 2rem;
-            }
-
-            .title-gradient {
-                font-size: 20px;
-            }
-
-            .btn-gradient {
-                padding: 0.5rem 1rem;
-            }
-
-            .offers h2 {
-                font-size: 1.5rem;
-            }
-
-            .pink-circle-container img {
-                max-width: 180px;
-            }
-
-            .connect-plus {
-                padding: 2rem 0;
-            }
-
-            .steps-wrapper {
-                flex-direction: column;
-                gap: 2rem;
-            }
-
-            .step-line {
-                display: none;
-            }
-
-            .brand-partner {
-                width: 120px;
-                height: 80px;
-                margin: 0 1rem;
-            }
-
-            .connect-plus h2 {
-                font-size: 2rem;
-                text-align: center;
-            }
-
-            .connect-plus p {
-                font-size: 1rem;
-                text-align: center;
-            }
-
-            .connect-plus .col-md-6 {
-                text-align: center;
-            }
-        }
-
-        .btn-gradient:hover {
-            transform: translateY(-2px);
-            color: white;
-        }
-
-        @media (max-width: 576px) {
-            .navbar .btn-gradient {
-                padding: 0.375rem 0.75rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            .offers .kit-content {
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .offers .kit-content h3 {
-                justify-content: center;
-            }
-
-            .offers .kit-items {
-                flex-direction: column !important;
-                gap: 2rem !important;
-            }
-
-            .offers .offer-number {
-                font-size: 2.5rem;
-                /* mantiene tamaño */
-            }
-
-            .offers .item-text {
-                font-size: 1rem;
-            }
-
-            .offers .description {
-                margin-top: 2rem;
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            .connect-plus {
-                background: linear-gradient(to bottom, #ec008c 0%, #f6941f 50%, #ffffff 100%);
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            .pink-circle-container img {
-                width: 90% !important;
-                max-width: 320px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <nav class="navbar navbar-light bg-white shadow fixed-top" data-aos-duration="800">
-        <div class="container d-flex justify-content-between align-items-center">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <div class="logo-container me-2">
-                    <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
-                </div>
-                <span class="title-gradient">PARTENAIRES</span>
-            </a>
-
-            <a href="{{ path('app_login') }}" class="btn btn-gradient">
-                Se connecter
-            </a>
-        </div>
-    </nav>
-    <div style="margin-top: 80px;"></div>
-
-    <section class="hero d-flex align-items-center justify-content-center px-3">
-        <div class="custom-card" data-aos="zoom-in" data-aos-duration="1000">
-            <h2 class="mb-3 text-center">
-                <span class="gradient-text">LA PLATEFORME</span> QUI FACILITE LES PROFESSIONNELS
-                <span class="gradient-text">DE L'IRVE</span>
-            </h2>
-            <p class="mb-4 text-center">
-                Sublimez votre prestation et finalisez votre installation en proposant à vos clients
-                nos solutions de supervision.
-            </p>
-            <div class="text-center">
-                <a href="{{ path('app_login') }}" class="btn btn-gradient">COMMENCER</a>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="offers py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">
-                <span class="gradient-text d-block mb-2">NOS OFFRES</span>
-                <span class="textspecial d-block">POUR TOUJOURS MIEUX VOUS ACCOMPAGNER</span>
-            </h2>
-
-            <div class="gradient-line mb-5" data-aos="fade-up" data-aos-duration="800"></div>
-
-            <div class="row align-items-center">
-                <div class="col-md-5 text-center mb-4 mb-md-0" data-aos="fade-right" data-aos-duration="800">
-                    <div class="pink-circle-container">
-                        <img src="{{ asset('build/images/landing/kit.png') }}" alt="Kit de Supervision"
-                            class="img-fluid">
-                    </div>
-                </div>
-
-                <div class="col-md-7 kit-content" data-aos="fade-left" data-aos-duration="800">
-                    <h3 class="mb-3 d-flex align-items-center offer-title">
-                        <span class="title-bullet gradient-text me-2">●</span>
-                        <span class="textspecial">LE KIT DE SUPERVISION</span>
-                    </h3>
-
-                    <p class="mb-4 textnormal">
-                        La solution essentielle pour assurer la connectivité et la supervision de vos bornes de
-                        recharge.
-                    </p>
-
-
-                    <ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
-                        <li class="text-center">
-                            <span class="gradient-text offer-number d-block">1</span>
-                            <span class="item-text d-block">Carte<br>SIM M2M</span>
-                        </li>
-
-                        <li class="text-center align-self-md-start">
-                            <span class="gradient-text offer-number d-block">+</span>
-                        </li>
-
-                        <li class="text-center">
-                            <span class="gradient-text offer-number d-block">1</span>
-                            <span class="item-text d-block">QR Code<br>sécurisé</span>
-                        </li>
-
-                        <li class="text-center align-self-md-start">
-                            <span class="gradient-text offer-number d-block">+</span>
-                        </li>
-
-                        <li class="text-center">
-                            <span class="gradient-text offer-number d-block">1</span>
-                            <span class="item-text d-block">Guide de<br>supervision</span>
-                        </li>
-                    </ul>
-
-
-
-
-                    <p class="description textnormal mt-4">
-                        Idéal pour les bornes équipées d’un emplacement dédié carte SIM.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="connect-plus py-5">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <h2 class="textspecial text-white fw-bold mb-3" style="font-size: 2.5rem;">
-                        LE KIT DE SUPERVISION
-                        <span class="fw-light" style="font-size: 2.2rem;">CONNECT+</span>
-                    </h2>
-                    <p class="textnormal text-white mb-4">
-                        La solution essentielle pour assurer la connectivité et la supervision de vos bornes de
-                        recharge.
-                    </p>
-
-                    <div class="row text-center g-4 justify-content-center">
-
-                        <div class="col-6 col-sm-6 col-lg-2">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Carte<br>SIM
-                                M2M</span>
-                        </div>
-
-                        <div class="col-12 d-block d-lg-none">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
-                        </div>
-
-                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
-                            <span class="textspecial fs-1 fw-bold d-block">+</span>
-                        </div>
-
-                        <div class="col-6 col-sm-6 col-lg-2">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Modeme<br>4G</span>
-                        </div>
-
-                        <div class="col-12 d-block d-lg-none">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
-                        </div>
-
-                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
-                            <span class="textspecial fs-1 fw-bold d-block">+</span>
-                        </div>
-
-                        <div class="col-6 col-sm-6 col-lg-2">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">QR
-                                Code<br>sécurisé</span>
-                        </div>
-
-                        <div class="col-12 d-block d-lg-none">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">+</span>
-                        </div>
-
-                        <div class="col-lg-1 d-none d-lg-block text-white" style="margin-left: -10px;">
-                            <span class="textspecial fs-1 fw-bold d-block">+</span>
-                        </div>
-
-                        <div class="col-6 col-sm-6 col-lg-2">
-                            <span class="textspecial fs-1 fw-bold d-block text-white">1</span>
-                            <span class="textnormal text-white d-block" style="font-size: 1.1rem;">Guide de<br>
-                                supervision</span>
-                        </div>
-                    </div>
-
-
-
-                    <div class="btoon mt-5">
-                        <span class="gradient-text">GESTION DES GRAPPES DE BORNES</span>
-                    </div>
-                </div>
-
-                <div class="col-md-6 text-center mt-4 mt-md-0">
-                    <div class="pink-circle-container">
-                        <img src="{{ asset('build/images/landing/boite.png') }}" alt="Box Connect+"
-                            style="max-width: 600px;" class="img-fluid">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-
-    <section class="steps-section">
-        <div class="container">
-            <div class="steps-wrapper">
-                <div class="step" data-aos="fade-up" data-aos-duration="800">
-                    <div class="step-circle">
-                        <i class="bi bi-person"></i>
-                    </div>
-                    <h5>Je m'identifie</h5>
-                    <p class="text-muted">Votre identification</p>
-                </div>
-                <div class="step-line"></div>
-                <div class="step" data-aos="fade-up" data-aos-duration="800">
-                    <div class="step-circle">
-                        <i class="bi bi-file-earmark-text"></i>
-                    </div>
-                    <h5>Documentation</h5>
-                    <p class="text-muted">Suivez la documentation</p>
-                </div>
-                <div class="step-line"></div>
-                <div class="step" data-aos="fade-up" data-aos-duration="800">
-                    <div class="step-circle">
-                        <i class="bi bi-speedometer2"></i>
-                    </div>
-                    <h5>Supervision</h5>
-                    <p class="text-muted">Mise en supervision</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section class="partner-marquee">
-        <div class="container">
-            <h2 class="text-center mb-4" style="font-weight: 600; letter-spacing: 1px;">Compatible avec</h2>
-            <div class="gradient-line mb-4"></div>
-            <div class="marquee-container">
-                <div class="marquee">
-                    <img src="{{ asset('build/images/landing/Brand/abb.png') }}" alt="ABB" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/alpitronic.png') }}" alt="Alpitronic"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/autel.png') }}" alt="Autel" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/hager.png') }}" alt="Hager" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg') }}" alt="Legrand"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/ohme.png') }}" alt="Ohme" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/schneider.png') }}" alt="Schneider"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/wallbox.jpg') }}" alt="Wallbox"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/abb.png') }}" alt="ABB" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/alpitronic.png') }}" alt="Alpitronic"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/autel.png') }}" alt="Autel" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/hager.png') }}" alt="Hager" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg') }}" alt="Legrand"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/ohme.png') }}" alt="Ohme" class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/schneider.png') }}" alt="Schneider"
-                        class="brand-partner">
-                    <img src="{{ asset('build/images/landing/Brand/wallbox.jpg') }}" alt="Wallbox"
-                        class="brand-partner">
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer-section py-5 bg-white" data-aos-duration="800">
-        <div class="container">
-            <div
-                class="footer-card d-flex flex-column flex-md-row align-items-center text-center text-md-start justify-content-between">
-
-                <!-- Logo + Texto -->
-                <div class="footer-brand mb-4 mb-md-0 text-center text-md-start align-self-md-center">
-                    <div class="logo-container mb-2">
-                        <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi"
-                            style="max-width: 50px;">
-                    </div>
-                    <span class="title-gradient d-none d-md-inline">PARTENAIRES</span>
-                </div>
-
-                <!-- Enlaces -->
-                <div class="footer-links d-flex flex-column flex-md-row gap-4">
-
-                    <div class="link-column">
-                        <h5 class="fw-bold mb-3">Liens</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="{{ path('app_faq') }}">FAQ</a></li>
-                            <li><a href="{{ path('app_aide') }}">Aide</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="link-column">
-                        <h5 class="fw-bold mb-3">Légal</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="{{ path('app_cgu') }}">CGU</a></li>
-                            <li><a href="#">CGV</a></li> <!-- Ruta aún no definida -->
-                            <li><a href="#">RGPD</a></li> <!-- Ruta aún no definida -->
-                        </ul>
-                    </div>
-
-                    <div class="link-column">
-                        <h5 class="fw-bold mb-3">Entreprise</h5>
-                        <ul class="list-unstyled">
-                            <li><a href="{{ path('app_propos') }}">À propos</a></li>
-                            <li><a href="{{ path('app_contact') }}">Contact</a></li>
-                        </ul>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </footer>
-
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-    <script>
-        AOS.init({
-            once: true,
-            duration: 1000
-        });
-    </script>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Partenaires</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+		<link href="https://fonts.cdnfonts.com/css/segoe-script" rel="stylesheet">
+		{{ encore_entry_link_tags('landing') }}
+		<style>
+			html,
+			body {
+				overflow-x: hidden;
+				max-width: 100vw;
+			}
+
+			.logo-container {
+				width: 60px;
+				height: 60px;
+				border-radius: 10px;
+				box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+				overflow: hidden;
+				display: flex;
+				background-color: white;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.logo-container img {
+				max-width: 80%;
+				max-height: 80%;
+				object-fit: contain;
+			}
+
+			.title-gradient {
+				font-family: 'UrbaneRounded', sans-serif;
+				font-size: 24px;
+				font-weight: 600;
+				background: linear-gradient(to right, #ec008c, #f6941f);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				margin-left: 8px;
+			}
+
+			.hero::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+				background: rgba(255, 255, 255, 0.3); /* Voile blanc léger */
+				backdrop-filter: blur(6px); /* Flou d’arrière-plan */
+				-webkit-backdrop-filter: blur(6px);
+			}
+
+
+			.hero {
+				position: relative;
+				min-height: 80vh;
+				background: url("https://installateur-qualifie.com/wp-content/uploads/2023/05/homme-voiture-entreprise-1.jpg") center center / cover no-repeat fixed;
+				display: flex;
+				align-items: flex-start;
+				justify-content: flex-start;
+				padding: 2rem;
+				overflow: hidden;
+			}
+
+			.hero::before {
+				content: "";
+				position: absolute;
+				inset: 0;
+				z-index: 1;
+			}
+
+			.hero::after {
+				content: "";
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 100%;
+				height: 150px;
+				background: linear-gradient(transparent, #fff);
+				z-index: 2;
+			}
+
+			.custom-card {
+				position: relative;
+				z-index: 3;
+				background: #fff;
+				border-radius: 3rem;
+				box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+				width: 700px;
+				height: 400px;
+				padding: 5rem;
+				box-sizing: border-box;
+				overflow: hidden;
+			}
+
+			.gradient-text {
+				font-family: 'UrbaneRounded', sans-serif;
+				background: linear-gradient(to right, #ec008c, #f6941f);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+			}
+
+			.btn-gradient {
+				background: linear-gradient(to right, #ec008c, #f6941f);
+				border: none;
+				color: #fff;
+				font-weight: 600;
+				padding: 0.75rem 1.5rem;
+				border-radius: 30px;
+			}
+
+			.btn-gradient:hover {
+				opacity: 0.9;
+				color: #fff;
+			}
+
+			.offers {
+				margin-top: 100px;
+				padding: 4rem 0;
+				background: #fff;
+			}
+
+			.offers h2 {
+				font-size: 2rem;
+				font-weight: 700;
+				margin-bottom: 2rem;
+				text-align: center;
+			}
+
+			.offers h2 span {
+				display: block;
+			}
+
+			.pink-circle-container {
+				position: relative;
+				display: inline-block;
+			}
+
+			.pink-circle-container::before {
+				content: "";
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				width: 220px;
+				height: 220px;
+				background: radial-gradient(circle, rgba(236, 0, 140, 0.15), transparent 70%);
+				border-radius: 50%;
+				transform: translate(-50%, -50%);
+				z-index: -1;
+			}
+
+			.pink-circle-container img {
+				max-width: 300px;
+				width: 100%;
+				height: auto;
+				display: block;
+			}
+
+			.offers .title-bullet {
+				color: #f58a10;
+				font-weight: bold;
+				margin-right: 8px;
+			}
+
+			.offer-number {
+				font-size: 3.5rem;
+				line-height: 1;
+				font-weight: 700;
+			}
+
+			.item-text {
+				margin-top: 0.5rem;
+				display: block;
+			}
+
+			.offer-title {
+				margin-bottom: 1.5rem;
+			}
+
+			.description {
+				margin-top: 1.5rem;
+			}
+
+			.connect-plus {
+				position: relative;
+				background: linear-gradient(to right, #ec008c 0%, #f6941f 50%, #ffffff 100%);
+			}
+
+			.btn-white-rounded {
+				background-color: #fff;
+				color: #ec008c;
+				border: 2px solid #ec008c;
+				border-radius: 50px;
+				font-weight: 600;
+				padding: 0.75rem 1.5rem;
+				transition: background 0.2s, color 0.2s;
+			}
+
+			.footer-section a {
+				color: white;
+				text-decoration: none;
+			}
+
+			.footer-section a:hover {
+				color: #f6941f; /* ou autre couleur d'accent */
+				text-decoration: underline;
+			}
+
+			.footer-section h5 {
+				color: white;
+			}
+
+			.btn-white-rounded:hover {
+				background-color: #ec008c;
+				color: #fff;
+			}
+
+			.btoon {
+				background-color: #fff;
+				border-radius: 50px;
+				padding: 0.75rem 1.5rem;
+				font-weight: 600;
+				text-align: left;
+				display: inline-block;
+				max-width: 100%;
+			}
+
+			.steps-section {
+				background-color: #fff;
+				padding: 4rem 0;
+			}
+
+			.steps-wrapper {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+
+			.step {
+				text-align: center;
+				position: relative;
+				padding: 0 1rem;
+				flex: 0 0 auto;
+			}
+
+			.step-circle {
+				width: 80px;
+				height: 80px;
+				border-radius: 50%;
+				background: linear-gradient(135deg, #ec008c, #f6941f);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+				font-size: 1.5rem;
+				box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+				margin: 0 auto 1rem;
+			}
+
+			.step-line {
+				flex: 1;
+				max-width: 100px;
+				height: 4px;
+				background: linear-gradient(to right, #ec008c, #f6941f);
+				margin: 0 1rem;
+				border-radius: 2px;
+			}
+
+			.partner-marquee {
+				background-color: #f9f9f9;
+				padding: 2rem 0;
+				overflow: hidden;
+				position: relative;
+			}
+
+			.marquee-container {
+				overflow: hidden;
+				position: relative;
+			}
+
+			.marquee {
+				display: flex;
+				align-items: center;
+				animation: marquee 25s linear infinite;
+			}
+
+			.brand-partner {
+				width: 150px;
+				height: 100px;
+				object-fit: contain;
+				margin: 0 2rem;
+				transition: transform 0.3s ease;
+			}
+
+			.brand-partner:hover {
+				transform: scale(1.05);
+			}
+
+			.kit-items li {
+				min-width: 120px;
+			}
+
+			.kit-items .plus-sign {
+				font-size: 2.5rem;
+				line-height: 1;
+				padding-top: 0.75rem; /* Ajuste la position verticale */
+			}
+
+			.kit-items .offer-number {
+				font-size: 3rem;
+				margin-bottom: 0.25rem;
+			}
+
+			.kit-items .item-text {
+				font-size: 1rem;
+				line-height: 1.3;
+			}
+
+			@media(max-width: 768px) {
+				.kit-items {
+					flex-direction: column !important;
+					gap: 2rem !important;
+				}
+
+				.kit-items li {
+					min-width: unset;
+				}
+
+				.kit-items .plus-sign {
+					padding-top: 0; /* Centré par défaut */
+				}
+			}
+
+
+			@keyframes marquee {
+				0% {
+					transform: translateX(0);
+				}
+
+				100% {
+					transform: translateX(-50%);
+				}
+			}
+
+			.footer-section {
+				background: url("{{ asset('build/images/landing/background.png') }}") center center / cover no-repeat;
+				color: white;
+				padding: 3rem 0;
+				position: relative;
+			}
+
+			.footer-card {
+				padding: 2rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				max-width: 100%;
+			}
+
+			.footer-brand {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				flex-shrink: 0;
+			}
+
+			.footer-brand .logo-container img {
+				max-width: 80%;
+				max-height: 80%;
+				object-fit: contain;
+			}
+
+			.footer-brand .brand-title {
+				font-size: 1.8rem;
+				font-weight: bold;
+				background: linear-gradient(to right, #ec008c, #f6941f);
+				-webkit-background-clip: text;
+				-webkit-text-fill-color: transparent;
+				white-space: nowrap;
+			}
+
+			.footer-links {
+				display: flex;
+				gap: 2rem;
+				flex-wrap: wrap;
+			}
+
+			.footer-links .link-column {
+				min-width: 120px;
+			}
+
+			.footer-links .link-column h5 {
+				font-size: 1rem;
+				font-weight: 600;
+				margin-bottom: 1rem;
+				text-transform: uppercase;
+				color: white;
+			}
+
+			.footer-links .link-column ul {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+
+			.footer-links .link-column ul li {
+				margin-bottom: 0.5rem;
+			}
+
+			.footer-links .link-column ul li a {
+				color: white;
+				text-decoration: none;
+				transition: color 0.3s ease;
+			}
+
+			.footer-links .link-column ul li a:hover {
+				color: #ec008c;
+				text-decoration: underline;
+			}
+
+			.gradient-line {
+				width: 60px;
+				height: 4px;
+				background: linear-gradient(to right, #ec008c, #f6941f);
+				margin: 0 auto;
+			}
+
+			.connect-style {
+				font-family: 'Segoe Script', cursive;
+				margin-left: 5px;
+			}
+
+			@media(max-width: 992px) {
+				.custom-card {
+					width: 90%;
+					height: auto;
+					padding: 3rem;
+				}
+
+				.offers .row {
+					text-align: center;
+				}
+			}
+
+			@media(max-width: 576px) {
+
+				.hero {
+					padding: 1rem;
+					background-attachment: scroll;
+				}
+
+				.custom-card {
+					width: 90%;
+					height: auto;
+					padding: 2rem;
+				}
+
+				.title-gradient {
+					font-size: 20px;
+				}
+
+				.btn-gradient {
+					padding: 0.5rem 1rem;
+				}
+
+				.offers h2 {
+					font-size: 1.5rem;
+				}
+
+				.pink-circle-container img {
+					max-width: 180px;
+				}
+
+				.connect-plus {
+					padding: 2rem 0;
+				}
+
+				.steps-wrapper {
+					flex-direction: column;
+					gap: 2rem;
+				}
+
+				.step-line {
+					display: none;
+				}
+
+				.brand-partner {
+					width: 120px;
+					height: 80px;
+					margin: 0 1rem;
+				}
+
+				.connect-plus h2 {
+					font-size: 2rem;
+					text-align: center;
+				}
+
+				.connect-plus p {
+					font-size: 1rem;
+					text-align: center;
+				}
+
+				.connect-plus .col-md-6 {
+					text-align: center;
+				}
+			}
+
+			.btn-gradient:hover {
+				transform: translateY(-2px);
+				color: white;
+			}
+
+			@media(max-width: 576px) {
+				.navbar .btn-gradient {
+					padding: 0.375rem 0.75rem;
+					font-size: 0.9rem;
+				}
+			}
+
+			@media(max-width: 767.98px) {
+				.offers .kit-content {
+					text-align: center;
+					display: flex;
+					flex-direction: column;
+					align-items: center;
+				}
+
+				.offers .kit-content h3 {
+					justify-content: center;
+				}
+
+				.offers .kit-items {
+					flex-direction: column !important;
+					gap: 2rem !important;
+				}
+
+				.offers .offer-number {
+					font-size: 2.5rem;
+					/* mantiene tamaño */
+				}
+
+				.offers .item-text {
+					font-size: 1rem;
+				}
+
+				.offers .description {
+					margin-top: 2rem;
+				}
+			}
+
+			@media(max-width: 767.98px) {
+				.connect-plus {
+					background: linear-gradient(to bottom, #ec008c 0%, #f6941f 50%, #ffffff 100%);
+				}
+			}
+
+			@media(max-width: 767.98px) {
+				.pink-circle-container img {
+					width: 90% !important;
+					max-width: 320px;
+				}
+			}
+		</style>
+
+		<style>
+
+			.text-center-kit {
+				display: flex;
+				flex-direction: column;
+				align-items: center !important;
+				justify-content: center !important;
+				width: 95px;
+			}
+
+			.text-center-kit {
+				text-align: center;
+			}
+
+			.offer-number-white {
+				font-size: 2.7rem;
+				font-weight: 800;
+				color: #ffffff;
+				line-height: 1;
+			}
+
+			.item-text-white {
+				font-size: 1.2rem;
+				font-weight: 700;
+				color: #ffffff;
+				line-height: 1.3;
+			}
+
+			.segoe-script {
+				font-family: 'Segoe Script', cursive !important;
+			}
+		</style>
+	</head>
+
+	<body>
+		<nav class="navbar navbar-light bg-white shadow fixed-top" data-aos-duration="800">
+			<div class="container d-flex justify-content-between align-items-center">
+				<a class="navbar-brand d-flex align-items-center" href="#">
+					<div class="logo-container me-2">
+						<img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
+					</div>
+					<span class="title-gradient">PARTENAIRES</span>
+				</a>
+
+				<a href="{{ path('app_login') }}" class="btn btn-gradient">
+					Se connecter
+				</a>
+			</div>
+		</nav>
+		<div style="margin-top: 80px;"></div>
+		<section class="hero d-flex align-items-center justify-content-center px-3">
+			<div class="custom-card" data-aos="zoom-in" data-aos-duration="1000">
+				<h2 class="mb-3 text-center">
+					<span class="gradient-text">LA PLATEFORME</span>
+					D'INTEGRATION DES BORNES DE RECHARGE CONÇUE
+					<span class="gradient-text">POUR LES PROS</span>
+				</h2>
+				<p class="mb-4 text-center">
+					LODMI partenaires vous accompagne dans la mise en supervision de vos bornes de recharge grâce à sa solution dédiée. Moins de complécité et plus d'efficacité
+				</p>
+				<div class="text-center">
+					<a href="{{ path('app_login') }}" class="btn btn-gradient">COMMENCER</a>
+				</div>
+			</div>
+		</section>
+
+
+		<section class="offers py-5">
+			<div class="container">
+				<h2 class="text-center mb-4">
+					<span class="gradient-text d-block mb-2">NOS PRODUITS</span>
+					<span class="textspecial d-block">POUR TOUJOURS MIEUX VOUS ACCOMPAGNER</span>
+				</h2>
+
+				<div class="gradient-line mb-5" data-aos="fade-up" data-aos-duration="800"></div>
+
+				<div class="row align-items-center">
+					<div class="col-md-5 text-center mb-4 mb-md-0" data-aos="fade-right" data-aos-duration="800">
+						<div class="pink-circle-container">
+							<img src="{{ asset('build/images/landing/kit.png') }}" alt="Kit de Supervision" class="img-fluid">
+						</div>
+					</div>
+
+					<div class="col-md-7 kit-content" data-aos="fade-left" data-aos-duration="800">
+						<h2 class="mb-3 d-flex align-items-center offer-title">
+							<h3 class="textspecial">LE KIT DE SUPERVISION<span class="connect-style">Connect</span>
+							</h3>
+						</h2>
+
+						<p class="mb-4 textnormal">
+							La solution essentielle pour assurer la connectivité et la supervision de vos bornes de recharge.
+						</p>
+
+						<ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
+							<li class="text-center-kit">
+								<span class="gradient-text offer-number d-block">1</span>
+								<span class="item-text d-block">Carte<br>SIM M2M</span>
+							</li>
+
+							<li class="text-center align-self-md-start">
+								<span class="gradient-text offer-number d-block">+</span>
+							</li>
+
+							<li class="text-center-kit">
+								<span class="gradient-text offer-number d-block">1</span>
+								<span class="item-text d-block">QR Code<br>sécurisé</span>
+							</li>
+
+							<li class="text-center align-self-md-start">
+								<span class="gradient-text offer-number d-block">+</span>
+							</li>
+
+							<li class="text-center-kit">
+								<span class="gradient-text offer-number d-block">1</span>
+								<span class="item-text d-block">Guide de<br>supervision</span>
+							</li>
+						</ul>
+
+						<p class="description textnormal mt-4">
+							Idéal pour les bornes équipées d’un emplacement dédié carte SIM.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="connect-plus py-5">
+			<div class="container">
+				<div class="row align-items-center">
+					<div class="col-md-6">
+						<h2 class="mb-3 d-flex align-items-center offer-title">
+							<h3 class="textspecial">LE KIT DE SUPERVISION<span class="connect-style">Connect +</span>
+							</h3>
+						</h2>
+						<p class="textnormal text-white mb-4">
+							La solution essentielle pour assurer la connectivité et la supervision de vos bornes de recharge.
+						</p>
+
+						<ul class="list-unstyled d-flex flex-column flex-md-row align-items-center gap-4 mt-4">
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white d-block">Carte<br>SIM M2M</span>
+							</li>
+
+							<li class="text-center align-self-md-start">
+								<span class="offer-number-white d-block">+</span>
+							</li>
+
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white d-block">QR Code<br>sécurisé</span>
+							</li>
+
+							<li class="text-center align-self-md-start">
+								<span class="offer-number-white d-block">+</span>
+							</li>
+
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white d-block">Guide de<br>supervision</span>
+							</li>
+
+							<li class="text-center align-self-md-start">
+								<span class="offer-number-white segoe-script d-block">+</span>
+							</li>
+
+							<li class="text-center-kit">
+								<span class="offer-number-white d-block">1</span>
+								<span class="item-text-white segoe-script d-block">Modem<br>4G</span>
+							</li>
+						</ul>
+
+						<div class="btoon mt-5">
+							<span class="gradient-text">Compatible pour toutes type de bornes</span>
+						</div>
+					</div>
+
+					<div class="col-md-6 text-center mt-4 mt-md-0">
+						<div class="pink-circle-container">
+							<img src="{{ asset('build/images/landing/boite.png') }}" alt="Box Connect+" style="max-width: 600px;" class="img-fluid">
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<section class="steps-section">
+			<div class="container">
+				<div class="steps-wrapper">
+					<div class="step" data-aos="fade-up" data-aos-duration="800">
+						<div class="step-circle">
+							<i class="bi bi-person"></i>
+						</div>
+						<h5>Je m'identifie</h5>
+					</div>
+					<div class="step-line"></div>
+					<div class="step" data-aos="fade-up" data-aos-duration="800">
+						<div class="step-circle">
+							<i class="bi bi-file-earmark-text"></i>
+						</div>
+						<h5>Documentation</h5>
+						<p class="text-muted">et process</p>
+					</div>
+					<div class="step-line"></div>
+					<div class="step" data-aos="fade-up" data-aos-duration="800">
+						<div class="step-circle">
+							<i class="bi bi-speedometer2"></i>
+						</div>
+						<h5>Supervision</h5>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="partner-marquee">
+			<div class="container">
+				<h2 class="text-center mb-4" style="font-weight: 600; letter-spacing: 1px;">Nos solutions sont compatible avec</h2>
+				<div class="gradient-line mb-4"></div>
+				<div class="marquee-container">
+					<div class="marquee">
+						<img src="{{ asset('build/images/landing/Brand/abb.png') }}" alt="ABB" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/alpitronic.png') }}" alt="Alpitronic" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/autel.png') }}" alt="Autel" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/hager.png') }}" alt="Hager" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg') }}" alt="Legrand" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/ohme.png') }}" alt="Ohme" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/schneider.png') }}" alt="Schneider" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/wallbox.jpg') }}" alt="Wallbox" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/abb.png') }}" alt="ABB" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/alpitronic.png') }}" alt="Alpitronic" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/autel.png') }}" alt="Autel" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/hager.png') }}" alt="Hager" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/logo-legrand-sa.svg') }}" alt="Legrand" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/ohme.png') }}" alt="Ohme" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/schneider.png') }}" alt="Schneider" class="brand-partner">
+						<img src="{{ asset('build/images/landing/Brand/wallbox.jpg') }}" alt="Wallbox" class="brand-partner">
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<footer class="footer-section py-5" data-aos-duration="800">
+			<div class="container">
+				<div class="footer-card d-flex flex-column flex-md-row align-items-center text-center text-md-start justify-content-between">
+
+					<div class="footer-brand mb-4 mb-md-0 text-center text-md-start align-self-md-center">
+						<div class="logo-container mb-2">
+							<img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi" style="max-width: 50px;">
+						</div>
+						<span class="title-gradient d-none d-md-inline">PARTENAIRES</span>
+					</div>
+
+					<div class="footer-links d-flex flex-column flex-md-row gap-4">
+
+						<div class="link-column">
+							<h5 class="fw-bold mb-3">Liens</h5>
+							<ul class="list-unstyled">
+								<li>
+									<a href="{{ path('app_faq') }}">FAQ</a>
+								</li>
+								<li>
+									<a href="{{ path('app_aide') }}">Aide</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="link-column">
+							<h5 class="fw-bold mb-3">Légal</h5>
+							<ul class="list-unstyled">
+								<li>
+									<a href="{{ path('app_cgu') }}">CGU</a>
+								</li>
+								<li>
+									<a href="#">CGV</a>
+								</li>
+								<li>
+									<a href="#">RGPD</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="link-column">
+							<h5 class="fw-bold mb-3">Entreprise</h5>
+							<ul class="list-unstyled">
+								<li>
+									<a href="{{ path('app_propos') }}">À propos</a>
+								</li>
+								<li>
+									<a href="{{ path('app_contact') }}">Contact</a>
+								</li>
+							</ul>
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</footer>
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+		<script>
+			AOS.init({once: true, duration: 1000});
+		</script>
+		<script>
+		document.addEventListener('scroll', () => {
+			const hero = document.querySelector('.hero');
+			const offset = window.pageYOffset;
+			hero.style.backgroundPositionY = `${offset * 0.3}px`;
+		});
+		</script>
+
+	</body>
 
 </html>

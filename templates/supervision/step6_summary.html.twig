@@ -1,0 +1,66 @@
+{% extends 'base.client.html.twig' %}
+
+{% block body %}
+<div class="container my-5">
+    <h2 class="mb-4">📝 Récapitulatif de la supervision</h2>
+
+    <h4 class="mt-4">👤 Informations client</h4>
+    <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Nom :</strong> {{ client.firstname }} {{ client.lastname }}</li>
+        <li class="list-group-item"><strong>Email :</strong> {{ client.email }}</li>
+        <li class="list-group-item"><strong>Société :</strong> {{ client.societyName }}</li>
+        <li class="list-group-item"><strong>Téléphone :</strong> {{ client.phone }}</li>
+    </ul>
+
+    <h4 class="mt-4">🔌 Bornes configurées</h4>
+    <ul class="list-group mb-3">
+        {% for intervention in interventions %}
+            {% set station = intervention.chargingStation %}
+            <li class="list-group-item">
+                <strong>Borne {{ loop.index }} :</strong>
+                {{ station.model }} {% if station.reference %}- Réf : {{ station.reference }}{% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h4 class="mt-4">⚙️ Configuration & Tarification</h4>
+    <ul class="list-group mb-3">
+        <li class="list-group-item"><strong>Type :</strong> {{ config.type|capitalize }}</li>
+        {% if config.prix_collab is defined %}
+            <li class="list-group-item"><strong>Prix collaborateurs :</strong> {{ config.prix_collab }} € HT/kWh</li>
+        {% endif %}
+        {% if config.prix_public is defined %}
+            <li class="list-group-item"><strong>Prix public :</strong> {{ config.prix_public }} € HT/kWh</li>
+        {% endif %}
+        {% if config.cout_minute is defined %}
+            <li class="list-group-item"><strong>Coût à la minute :</strong> {{ config.cout_minute }} €</li>
+        {% endif %}
+        {% if config.penalite is defined %}
+            <li class="list-group-item"><strong>Pénalité après recharge :</strong> {{ config.penalite }} €</li>
+        {% endif %}
+    </ul>
+
+    <h4 class="mt-4">📍 Localisation des bornes</h4>
+    <ul class="list-group mb-3">
+        {% for setting in settings %}
+            <li class="list-group-item">
+                <strong>Borne {{ loop.index }} :</strong>
+                {{ setting.addressLine }}, {{ setting.postalCode }} {{ setting.city }} – 
+                <small>Lat: {{ setting.latitude }}, Long: {{ setting.longitude }}</small>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="d-flex justify-content-between mt-5">
+        <a href="{{ path('supervision_step', { step: 5, token: token }) }}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour
+        </a>
+
+        <form method="post">
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Confirmer et envoyer
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

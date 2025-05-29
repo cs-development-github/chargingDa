@@ -15,7 +15,7 @@ class AddressType extends AbstractType
     {
         $builder
             ->add('fullAddress', TextType::class, [
-                'label' => 'Adresse',
+                'label' => 'Adresse complete',
                 'attr' => [
                     'class' => 'form-control',
                     'id' => 'address-autocomplete',
@@ -25,8 +25,16 @@ class AddressType extends AbstractType
             ])
             ->add('streetNumber', HiddenType::class, ['required' => true])
             ->add('streetName', HiddenType::class, ['required' => true])
-            ->add('postalCode', TextType::class, ['label' => 'Code postal', 'required' => true])
-            ->add('city', TextType::class, ['label' => 'Ville','required' => true])
+            ->add('postalCode', TextType::class, [
+                'label' => 'Code postal', 
+                'required' => true,                
+                'attr' => ['class' => 'form-control']
+            ])
+            ->add('city', TextType::class, [
+                'label' => 'Ville', 
+                'required' => true,                
+                'attr' => ['class' => 'form-control']
+            ])
             ->add('country', HiddenType::class, ['required' => true, 'data' => 'France'])
             ->add('latitude', HiddenType::class, ['required' => true])
             ->add('longitude', HiddenType::class, ['required' => true])

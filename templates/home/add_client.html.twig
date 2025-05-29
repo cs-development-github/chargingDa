@@ -384,7 +384,8 @@
 						<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width:80px;border-radius:6px;" />
 						<div>
 							<strong>{{ model.model }}</strong><br>
-							<small>{{ model.manufacturer.name }} – 7 kW</small>
+							<small>{{ model.manufacturer.name }} – {{ model.power }} kW</small>
+							<small>Ref fab {{ model.reference }} </small>
 						</div>
 					</div>
 					<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius:8px;" />
@@ -478,6 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
 				<div class="flex-grow-1">
 					<strong>${name}</strong><br>
+					ref fab ${reference} </br>
 					<small class="text-muted">${manuName}</small>
 					<div class="mt-2">
 						<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>

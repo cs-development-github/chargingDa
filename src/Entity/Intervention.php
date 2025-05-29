@@ -14,7 +14,7 @@ class Intervention
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
-    private ?Client $Client = null;
+    private ?Client $client = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
     private ?User $installator = null;
@@ -22,7 +22,7 @@ class Intervention
     #[ORM\Column(length: 255)]
     private ?string $sim = null;
 
-    #[ORM\ManyToOne(inversedBy: 'interventions')]
+    #[ORM\ManyToOne(targetEntity: ChargingStations::class, cascade: ['persist'])]
     private ?ChargingStations $chargingStation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -38,12 +38,12 @@ class Intervention
 
     public function getClient(): ?Client
     {
-        return $this->Client;
+        return $this->client;
     }
 
-    public function setClient(?Client $Client): static
+    public function setClient(?Client $client): static
     {
-        $this->Client = $Client;
+        $this->client = $client;
 
         return $this;
     }
