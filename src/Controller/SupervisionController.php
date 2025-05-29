@@ -2,20 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\Address;
-use App\Entity\ChargingStationSetting;
 use App\Entity\Client;
-use App\Form\ConfigFlotteType;
 use App\Form\ConfigMixteType;
-use App\Form\ConfigPubliqueType;
 use App\Form\Step2ClientType;
 use App\Form\Step4ChoiceType;
-use App\Form\Step5SettingsCollectionType as FormStep5SettingsCollectionType;
+use App\Form\ConfigFlotteType;
+use App\Form\ConfigPubliqueType;
+use App\Entity\ChargingStationSetting;
 use Doctrine\ORM\EntityManagerInterface;
-use Step5SettingsCollectionType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Form\Step5SettingsCollectionType as FormStep5SettingsCollectionType;
+use Symfony\Component\HttpFoundation\Response;
 
 class SupervisionController extends AbstractController
 {
@@ -137,8 +136,8 @@ class SupervisionController extends AbstractController
                 throw $this->createNotFoundException('Client introuvable en session.');
             }
 
+            // Génération des settings à partir des bornes
             $settings = [];
-
             foreach ($client->getInterventions() as $intervention) {
                 $station = $intervention->getChargingStation();
                 if ($station) {
@@ -148,29 +147,73 @@ class SupervisionController extends AbstractController
                 }
             }
 
-            $form = $this->createForm(FormStep5SettingsCollectionType::class, []);
+            // Préparation du formulaire avec les settings
+            $data = ['settings' => $settings];
+            $form = $this->createForm(FormStep5SettingsCollectionType::class, $data);
             $form->handleRequest($request);
 
+            // Si le formulaire est soumis et valide, on stocke les données en session et on passe au step 6
             if ($form->isSubmitted() && $form->isValid()) {
-                $submitted = $form->get('settings')->getData();
+                $submittedSettings = $form->get('settings')->getData();
+                $session->set('supervision_step_5', $submittedSettings);
 
-                foreach ($submitted as $setting) {
-                    $em->persist($setting);
-                }
-
-                $em->flush();
-
-                $session->clear();
-                $this->addFlash('success', 'Supervision enregistrée avec succès !');
-                return $this->redirectToRoute('homepage');
+                return $this->redirectToRoute('supervision_step_6', [
+                    'token' => $token,
+                ]);
             }
 
             return $this->render('supervision/step5_settings.html.twig', [
                 'form' => $form->createView(),
                 'currentStep' => 5,
+                'token' => $token,
             ]);
         }
-
         throw $this->createNotFoundException('Étape non gérée.');
+    }
+
+    #[Route('/supervision/recap/{token}', name: 'supervision_step_6', methods: ['GET', 'POST'])]
+    public function recap(
+        string $token,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $session = $request->getSession();
+
+        // 1. Récupération des données de session
+        $client = $session->get('supervision_step_2');
+        $interventions = $client?->getInterventions() ?? [];
+        $config = $session->get('supervision_step_4');
+        $settings = $session->get('supervision_step_5');
+
+        // 2. Sécurité : vérification des données nécessaires
+        if (!$client || !$settings || !$config) {
+            $this->addFlash('error', 'Des informations sont manquantes pour valider la supervision.');
+            return $this->redirectToRoute('supervision_step', ['step' => 1, 'token' => $token]);
+        }
+
+        // 3. Soumission : on valide et on persiste tout
+        if ($request->isMethod('POST')) {
+            foreach ($settings as $setting) {
+                $em->persist($setting);
+            }
+
+            $em->flush();
+
+            // Nettoyage de la session
+            $session->clear();
+
+            $this->addFlash('success', 'Supervision enregistrée avec succès !');
+            return $this->redirectToRoute('homepage');
+        }
+
+        // 4. Affichage du récapitulatif
+        return $this->render('supervision/step6_summary.html.twig', [
+            'client' => $client,
+            'interventions' => $interventions,
+            'config' => $config,
+            'settings' => $settings,
+            'token' => $token,
+            'currentStep' => 6,
+        ]);
     }
 }

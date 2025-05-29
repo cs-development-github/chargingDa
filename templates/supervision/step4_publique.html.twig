@@ -2,6 +2,12 @@
 
 {% block body %}
 	<div class="container my-4">
+		<div class="d-flex justify-content-between mt-4">
+			<a href="{{ path('supervision_step', { step: 4 }) }}" class="btn btn-secondary">
+				<i class="bi bi-arrow-left"></i> Retour
+			</a>
+		</div>
+
 		<div id="tarif-intro-mixte" class="transition-text">
 			<p>
 				<strong>Merci de compléter chaque champ avec attention.</strong>
@@ -12,7 +18,8 @@
 
 			<p>
 				Pour gérer l’exploitation et la refacturation de l’énergie de mes
-				<strong>{{ totalConnectors }} points de charge</strong>,je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
+				<strong>{{ totalConnectors }}
+					points de charge</strong>,je renseigne les éléments suivants et je paramètre les tarifs d’utilisation.
 			</p>
 
 			<h5>Tarification pour les différentes utilisations et utilisateurs :</h5>
@@ -145,15 +152,13 @@
 	#step4 {
 		font-size: 18px;
 	}
-</style>
-{% endblock %}
-
-{% block javascript %}
+</style>{% endblock %}{% block javascript %}
  <script>
     document.addEventListener('DOMContentLoaded', () => {
         const revealBtn = document.getElementById('revealButtonPublique');
         const intro = document.getElementById('tarif-intro-mixte');
         const details = document.getElementById('tarif-details-mixte');
+		const backBtn = document.getElementById('btnBackToStep4');
 
         revealBtn.addEventListener('click', () => {
             intro.classList.add('shrink');
@@ -192,5 +197,21 @@
                 }
             });
         }
+
+		if (backBtn) {
+			backBtn.addEventListener('click', () => {
+				const currentStep = document.getElementById('step-5');
+				const prevStep = document.getElementById('step-4');
+				if (currentStep && prevStep) {
+					currentStep.classList.remove('active');
+					prevStep.classList.remove('d-none');
+					prevStep.classList.add('active');
+
+					if (typeof updateSidebar === 'function') {
+						updateSidebar(4);
+					}
+				}
+			});
+		}
     });
 </script>{% endblock %}
