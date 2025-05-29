@@ -1,0 +1,26 @@
+{% extends 'base.client.html.twig' %}
+{% block body %}
+<div class="container my-4">
+    <h3>Paramètres de géolocalisation des bornes</h3>
+
+    {{ form_start(form, { method: 'POST' }) }}
+        {% for setting in form.settings %}
+            <div class="card shadow-sm p-3 mb-4">
+                <h5>Borne {{ loop.index }}</h5>
+                <div class="row g-3">
+                    <div class="col-md-4">{{ form_row(setting.public) }}</div>
+                    <div class="col-md-8">{{ form_row(setting.addressLine) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.postalCode) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.city) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.country) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.latitude) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.longitude) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.region) }}</div>
+                    <div class="col-md-4">{{ form_row(setting.department) }}</div>
+                </div>
+            </div>
+        {% endfor %}
+        <button type="button" class="btn btn-primary mt-3">Valider</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

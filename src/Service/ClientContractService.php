@@ -95,11 +95,16 @@ class ClientContractService
         $totalConnectors = 0;
         $chargingStationsNames = [];
         $tarifsData = [];
+        $typeOfs = [];
 
         foreach ($tarifications as $tarification) {
             $chargingStation = $tarification->getChargingStation();
             if (!$chargingStation) {
-                throw new \RuntimeException("Aucune borne associée pour le client ID {$client->getId()} dans la tarification ID {$tarification->getId()}");
+                throw new \RuntimeException(sprintf(
+                    "Aucune borne associée pour le client ID %d dans la tarification ID %d",
+                    $client->getId(),
+                    $tarification->getId()
+                ));
             }
 
             $pdc = $chargingStation->getConnectors();
@@ -110,17 +115,25 @@ class ClientContractService
 
             $tarifsData[] = [
                 'chargingStationModel' => $chargingStation->getModel(),
-                'purchasePrice' => $tarification->getPurcharsePrice(),
-                'resalePrice'   => $tarification->getResalePrice(),
-                'publicPrice'   => $tarification->getPublicPrice(),
-                'reducedPrice'  => $tarification->getReducedPrice(),
+                'resalePrice'          => $tarification->getResalePrice(),
+                'publicPrice'          => $tarification->getPublicPrice(),
+                'reducedPrice'         => $tarification->getReducedPrice(),
+                'parkingTime'          => $tarification->getParkingTimeResale(),
+                'minutePrice'          => $tarification->getRechargeTimeResale(),
+                'typeOf'               => $tarification->getOfferType(),
             ];
+
+            $typeOfs[] = $tarification->getOfferType();
         }
+
+        $typeOfs = array_unique($typeOfs);
+        $unifiedTypeOf = count($typeOfs) === 1 ? $typeOfs[0] : null;
 
         return [
             'chargingStationName' => implode(', ', array_unique($chargingStationsNames)),
             'totalConnectors'     => $totalConnectors,
             'tarifications'       => $tarifsData,
+            'typeOf'              => $unifiedTypeOf,
         ];
     }
 }

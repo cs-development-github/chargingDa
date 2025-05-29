@@ -16,4 +16,16 @@ class ClientRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Client::class);
     }
+
+    public function findOneWithAddressByToken(string $token): ?Client
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.address', 'a')->addSelect('a')
+            ->leftJoin('c.interventions', 'i')->addSelect('i')
+            ->leftJoin('i.chargingStation', 's')->addSelect('s') // optionnel
+            ->where('c.secureToken = :token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

@@ -2,44 +2,56 @@
 
 namespace App\Form;
 
-use App\Entity\ChargingStations;
 use App\Entity\ChargingStationSetting;
-use App\Entity\Client;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ChargingStationSettingType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('public')
-            ->add('adress')
-            ->add('installedAt', null, [
-                'widget' => 'single_text',
+            ->add('public', ChoiceType::class, [
+                'required' => false,
+                'choices' => [
+                    'Oui' => true,
+                    'Non' => false
+                ],
+                'data' => false,
+                'label' => 'Mettre la borne en publique',
+                'attr' => ['class' => 'form-control'],
             ])
-            ->add('supervisedAt', null, [
-                'widget' => 'single_text',
+            ->add('addressLine', TextType::class, [
+                'label' => 'Adresse de la borne',
+                'attr' => ['class' => 'form-control'],
             ])
-            ->add('streetNumber', HiddenType::class, ['required' => true])
-            ->add('streetName', HiddenType::class, ['required' => true])
-            ->add('postalCode', HiddenType::class, ['required' => true])
-            ->add('city', HiddenType::class, ['required' => true])
-            ->add('country', HiddenType::class, ['required' => true, 'data' => 'France'])
-            ->add('latitude', HiddenType::class, ['required' => true])
-            ->add('longitude', HiddenType::class, ['required' => true])
-            ->add('region', HiddenType::class, ['required' => true])
-            ->add('department', HiddenType::class, ['required' => true]);
-        ;
+            ->add('postalCode', TextType::class, [
+                'label' => 'Code postal de la borne',
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('city', TextType::class, [
+                'label' => 'Ville de la borne',
+                'attr' => ['class' => 'form-control'],
+            ])
+            ->add('longitude', HiddenType::class)
+            ->add('latitude', HiddenType::class)
+            ->add('country', HiddenType::class)
+            ->add('latitude', HiddenType::class)
+            ->add('longitude', HiddenType::class)
+            ->add('region', HiddenType::class)
+            ->add('department', HiddenType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => ChargingStationSetting::class,
         ]);
     }
 }
+
