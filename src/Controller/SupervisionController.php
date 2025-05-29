@@ -35,7 +35,9 @@ class SupervisionController extends AbstractController
                 $request->getSession()->set('supervision_step_2', $client);
             }
 
-            return $this->render('supervision/step1_warning.html.twig');
+            return $this->render('supervision/step1_warning.html.twig', [
+                'currentStep' => 1,
+            ]);
         }
 
         if ($step === 2) {
@@ -54,6 +56,7 @@ class SupervisionController extends AbstractController
 
             return $this->render('supervision/step2_client.html.twig', [
                 'form' => $form->createView(),
+                'currentStep' => 1,
             ]);
         }
 
@@ -67,6 +70,7 @@ class SupervisionController extends AbstractController
 
             return $this->render('supervision/step3_recap_stations.html.twig', [
                 'interventions' => $interventions,
+                'currentStep' => 3,
             ]);
         }
 
@@ -81,6 +85,7 @@ class SupervisionController extends AbstractController
 
             return $this->render('supervision/step4_choice.html.twig', [
                 'form' => $choiceForm->createView(),
+                'currentStep' => 4,
             ]);
         }
 
@@ -120,6 +125,7 @@ class SupervisionController extends AbstractController
             return $this->render("supervision/step4_{$configType}.html.twig", [
                 'form' => $form->createView(),
                 'totalConnectors' => $totalConnectors,
+                'currentStep' => 4,
             ]);
         }
 
@@ -161,6 +167,7 @@ class SupervisionController extends AbstractController
 
             return $this->render('supervision/step5_settings.html.twig', [
                 'form' => $form->createView(),
+                'currentStep' => 5,
             ]);
         }
 

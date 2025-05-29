@@ -425,28 +425,28 @@
 	</head>
 
 	<body>
-		{# <div class="sidebar-lodmi">
+		<div class="sidebar-lodmi">
 			<div class="section">
 				<img class="logo" src="{{asset('build/images/landing/lodmico.png')}}" alt="">
 				<h2>Parametrage de votre offre</h2>
 				<h5 class="text-black fw-bold">Configuration des bornes</h5>
 				<div class="sidebar-step">
 					<div class="text-center" style="flex:1">
-						<div class="circle-step step-admin" data-step="1">1</div>
+						<div class="circle-step step-admin {{ currentStep <= 5 ? 'active' : '' }}" data-step="1">1</div>
 						<div class="small mt-1">Administration</div>
 					</div>
 					<div class="text-center" style="flex:1">
-						<div class="circle-step step-config" data-step="2">2</div>
+						<div class="circle-step step-config {{ currentStep >= 4 and currentStep <= 5 ? 'active' : '' }}" data-step="2">2</div>
 						<div class="small mt-1">Configuration</div>
 					</div>
 					<div class="text-center" style="flex:1">
-						<div class="circle-step step-final" data-step="3">3</div>
+						<div class="circle-step step-final {{ currentStep >= 6 ? 'active' : '' }}" data-step="3">3</div>
 						<div class="small mt-1">Finalisation</div>
 					</div>
 				</div>
 				<p class="mt-3 small">Remplissez chaque étape pour finaliser la configuration.</p>
 			</div>
-		</div> #}
+		</div>
 		<div class="form-container">
 			<div class="form-content"> {% block body %}{% endblock %}
 				</div>
