@@ -236,11 +236,6 @@
 				</div>
 				{% endif %}
 			</div>
-
-
-
-
-
 		</div>
 		{% else %}
 		<p class="text-center text-muted">Aucun client trouvé.</p>
@@ -338,6 +333,38 @@
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="noInterventionModal" tabindex="-1" aria-labelledby="noInterventionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title" id="noInterventionLabel">Aucune intervention détectée</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+       Avant de commencer, assurez-vous d'avoir l'e-mail et le nom de l'entreprise de votre client.
+
+	   Munissez-vous de votre kit de supervision
+
+	   Choisissez le modele de borne de recharge, attention à bien vérifier la REF fabriquant du model
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-gradient" data-bs-dismiss="modal">J'ai compris</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const hasStations = {{ clientsData|filter(client => client.stations is defined and client.stations|length > 0)|length > 0 ? 'true' : 'false' }};
+
+		if (!hasStations) {
+			const modal = new bootstrap.Modal(document.getElementById('noInterventionModal'));
+			modal.show();
+		}
+	});
+</script>
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
