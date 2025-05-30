@@ -139,6 +139,8 @@
 </style>
 
 <style>
+@import url('https://fonts.cdnfonts.com/css/montserrat');
+
 .intervention-notice {
 	position: fixed;
 	top: 0;
@@ -154,21 +156,19 @@
 }
 
 .intervention-card {
-	max-width: 520px;
+	max-width: 900px;
 	width: 100%;
 	background: #fff;
 	border-radius: 16px;
 	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 	padding: 2.5rem;
 	text-align: center;
+	font-family: ;
 }
 
 .intervention-title {
-	font-size: 1.25rem;
-	font-weight: 600;
 	color: #333;
 	margin-bottom: 2rem;
-	line-height: 1.5;
 }
 
 .intervention-text-wrapper p {
@@ -176,6 +176,7 @@
 	color: #555;
 	margin-bottom: 1.2rem;
 	line-height: 1.6;
+	font-family: 'montserrat';
 }
 
 .btn-gradient {
@@ -192,6 +193,10 @@
 	background: linear-gradient(90deg, #ff3f81, #ff7e5f);
 	transform: translateY(-2px);
 	color: #fff;
+}
+
+.intervention-title b {
+	font-weight: 600 !important;
 }
 
 </style>
@@ -394,20 +399,18 @@
 
 <div id="interventionNotice" class="intervention-notice d-none">
 	<div class="intervention-card">
-		<h4 class="intervention-title">
-			Avant de commencer, assurez-vous d'avoir l'e-mail et le nom de l'entreprise de votre client
-		</h4>
+		<p class="intervention-title">
+			Avant de commencer, assurez-vous d'avoir <b> l'e-mail et le nom </b>  de l'entreprise de votre client
+		</p>
 
 		<div class="intervention-text-wrapper">
-			<p class="intervention-text">Munissez-vous de votre Kit de supervision</p>
-			<p class="intervention-text">Choisissez le modèle de borne de recharge, attention à bien vérifier la référence fabricant du modèle.</p>
+			<p class="intervention-text">Munissez-vous de votre <b> Kit de supervision </b></p>
+			<p class="intervention-text">Choisissez le modèle de borne de recharge, attention à bien vérifier la <b>référence fabricant du modèle.</b> </p>
 		</div>
 
 		<a href="{{ path('dashboard_add_client') }}" class="btn-gradient mt-4 d-inline-block">J'ai compris</a>
 	</div>
 </div>
-
-
 
 <script>
 	document.addEventListener("DOMContentLoaded", function () {
