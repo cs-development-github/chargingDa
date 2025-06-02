@@ -1,15 +1,33 @@
 {% extends 'base.client.html.twig' %}
+
 {% block body %}
 <div class="container my-4">
     <h3>Paramètres de géolocalisation des bornes</h3>
 
-    {{ form_start(form, { method: 'POST' }) }}
+   {{ form_start(form, {
+    method: 'POST',
+    action: path('supervision_step', {
+        step: 5,
+        token: token
+    })
+}) }}
+<input type="hidden" name="token" value="{{ token }}">
         {% for setting in form.settings %}
-            <div class="card shadow-sm p-3 mb-4">
+            <div class="card shadow-sm p-3 mb-4 position-relative">
                 <h5>Borne {{ loop.index }}</h5>
                 <div class="row g-3">
                     <div class="col-md-4">{{ form_row(setting.public) }}</div>
-                    <div class="col-md-8">{{ form_row(setting.addressLine) }}</div>
+
+                    <div class="col-md-8 position-relative">
+                        {{ form_row(setting.addressLine, {
+                            'attr': {
+                                'autocomplete': 'off',
+                                'id': 'setting_addressLine_' ~ loop.index0
+                            }
+                        }) }}
+                        <div id="results_{{ loop.index0 }}" class="list-group position-absolute z-3 bg-white" style="width: 100%; display: none;"></div>
+                    </div>
+
                     <div class="col-md-4">{{ form_row(setting.postalCode) }}</div>
                     <div class="col-md-4">{{ form_row(setting.city) }}</div>
                     <div class="col-md-4">{{ form_row(setting.country) }}</div>
@@ -20,7 +38,102 @@
                 </div>
             </div>
         {% endfor %}
-        <button type="button" class="btn btn-primary mt-3">Valider</button>
+
+        <button type="submit" class="btn btn-primary mt-3">Valider</button>
     {{ form_end(form) }}
 </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[DEBUG] DOM loaded');
+
+    const inputs = document.querySelectorAll('input[id$="_addressLine"]');
+    console.log(`[DEBUG] ${inputs.length} input(s) addressLine found`);
+
+    inputs.forEach(input => {
+        const indexMatch = input.id.match(/settings_(\d+)_addressLine/);
+        if (!indexMatch) {
+            console.warn(`[DEBUG] Could not extract index from ID: ${input.id}`);
+            return;
+        }
+
+        const index = indexMatch[1];
+        const resultBox = document.createElement('div');
+        resultBox.id = `results_${index}`;
+        resultBox.classList.add('list-group', 'position-absolute', 'z-3', 'bg-white');
+        resultBox.style.width = '100%';
+        resultBox.style.display = 'none';
+        input.parentNode.appendChild(resultBox);
+
+        console.log(`[DEBUG] Init autocomplete for index ${index}`);
+
+        input.addEventListener('input', async () => {
+            const query = input.value.trim();
+            console.log(`[DEBUG] Query: "${query}"`);
+
+            if (query.length < 3) {
+                resultBox.innerHTML = '';
+                resultBox.style.display = 'none';
+                return;
+            }
+
+            try {
+                const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
+                const data = await res.json();
+                console.log('[DEBUG] API results:', data);
+
+                resultBox.innerHTML = '';
+                data.features.forEach(f => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.textContent = f.properties.label;
+                    btn.classList.add('list-group-item', 'list-group-item-action');
+
+                    btn.addEventListener('click', () => {
+                        input.value = f.properties.label;
+                        resultBox.innerHTML = '';
+                        resultBox.style.display = 'none';
+
+                        const path = `step5_settings_collection_settings_${index}`;
+                        const set = (suffix, value) => {
+                            const el = document.getElementById(`${path}_${suffix}`);
+                            if (el) {
+                                el.value = value || '';
+                                console.log(`[DEBUG] Set ${suffix} = ${value}`);
+                            } else {
+                                console.warn(`[DEBUG] Element ${path}_${suffix} not found`);
+                            }
+                        };
+
+                        const p = f.properties;
+                        const g = f.geometry.coordinates;
+
+                        set('postalCode', p.postcode);
+                        set('city', p.city);
+                        set('country', 'France');
+                        set('latitude', g[1]);
+                        set('longitude', g[0]);
+                        set('region', p.context?.split(',')[1]?.trim());
+                        set('department', p.context?.split(',')[0]?.trim());
+                    });
+
+                    resultBox.appendChild(btn);
+                });
+
+                resultBox.style.display = 'block';
+            } catch (error) {
+                console.error('[ERROR] API fetch failed:', error);
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!input.contains(e.target) && !resultBox.contains(e.target)) {
+                resultBox.style.display = 'none';
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
