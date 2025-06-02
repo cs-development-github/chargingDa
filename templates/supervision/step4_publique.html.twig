@@ -152,7 +152,12 @@
 	#step4 {
 		font-size: 18px;
 	}
-</style>{% endblock %}{% block javascript %}
+</style>{% endblock %}
+
+
+
+
+{% block javascripts %}
  <script>
     document.addEventListener('DOMContentLoaded', () => {
         const revealBtn = document.getElementById('revealButtonPublique');
@@ -214,4 +219,5 @@
 			});
 		}
     });
-</script>{% endblock %}
+</script>
+{% endblock %}
