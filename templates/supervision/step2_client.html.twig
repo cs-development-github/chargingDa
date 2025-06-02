@@ -17,7 +17,7 @@
 
     <h4>Adresse</h4>
     <div class="row">
-        <div class="col-md-6">{{ form_row(form.address.fullAddress) }}</div>
+        <div class="col-md-6">{{ form_row(form.address.fullAddress, {'attr': {'autocomplete': 'off'}}) }}</div>
         <div class="col-md-6">{{ form_row(form.address.city) }}</div>
         <div class="col-md-6">{{ form_row(form.address.postalCode) }}</div>
         <div class="col-md-6">{{ form_row(form.address.streetNumber) }}</div>
@@ -38,7 +38,7 @@
 {% block javascripts %}
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const input = document.getElementById('client_address_fullAddress');
+    const input = document.getElementById('step2_client_address_fullAddress');
     const resultBox = document.createElement('div');
     resultBox.classList.add('list-group');
     resultBox.style.position = 'absolute';
@@ -70,15 +70,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 const p = feature.properties;
                 const g = feature.geometry.coordinates;
 
-                document.getElementById('client_address_streetNumber').value = p.housenumber || '';
-                document.getElementById('client_address_streetName').value = p.street || '';
-                document.getElementById('client_address_postalCode').value = p.postcode || '';
-                document.getElementById('client_address_city').value = p.city || '';
-                document.getElementById('client_address_country').value = 'France';
-                document.getElementById('client_address_latitude').value = g[1];
-                document.getElementById('client_address_longitude').value = g[0];
-                document.getElementById('client_address_region').value = p.context?.split(',')[1]?.trim() || '';
-                document.getElementById('client_address_department').value = p.context?.split(',')[0]?.trim() || '';
+                document.getElementById('step2_client_address_streetNumber').value = p.housenumber || '';
+                document.getElementById('step2_client_address_streetName').value = p.street || '';
+                document.getElementById('step2_client_address_postalCode').value = p.postcode || '';
+                document.getElementById('step2_client_address_city').value = p.city || '';
+                document.getElementById('step2_client_address_country').value = 'France';
+                document.getElementById('step2_client_address_latitude').value = g[1];
+                document.getElementById('step2_client_address_longitude').value = g[0];
+                document.getElementById('step2_client_address_region').value = p.context?.split(',')[1]?.trim() || '';
+                document.getElementById('step2_client_address_department').value = p.context?.split(',')[0]?.trim() || '';
             });
             resultBox.appendChild(item);
         });
