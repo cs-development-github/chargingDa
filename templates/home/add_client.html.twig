@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
 	}
 
-	function selectModel(id, name, image, manuImage, manuName) {
+	function selectModel(id, name, image, manuImage, manuName, reference) {
 		if (!currentHiddenInput) return;
 
 		currentHiddenInput.value = id;
@@ -470,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
 				<div class="flex-grow-1">
 					<strong>${name}</strong><br>
-					ref fab ${reference} </br>
+					Référence fabriquant : ${reference} </br>
 					<small class="text-muted">${manuName}</small>
 					<div class="mt-2">
 						<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
