@@ -281,55 +281,51 @@
 
 		<h2>Informations Client</h2>
 		{{ form_widget(clientForm) }}
+			{% set prototype %}
+				<div class="sim-block position-relative border bg-white p-3 mb-3 rounded">
+					<button type="button" class="btn btn-sm btn-danger remove-connection-btn" onclick="this.closest('.sim-block').remove()">
+						<i class="bi bi-x-lg"></i>
+					</button>
 
-{% set prototype %}
-	<div class="sim-block position-relative border bg-white p-3 mb-3 rounded">
-		<button type="button" class="btn btn-sm btn-danger remove-connection-btn" onclick="this.closest('.sim-block').remove()">
-			<i class="bi bi-x-lg"></i>
-		</button>
+					<div class="form-group mb-3">
+						<label class="form-label">
+							Carte SIM
+							<i class="bi bi-info-circle-fill text-primary ms-1"
+							data-bs-toggle="tooltip"
+							data-bs-placement="top"
+							title="Numéro de carte SIM au format ICCID (ex: 893301234567890123)">
+							</i>
+						</label>
+						{{ form_widget(interventionForm.interventions.vars.prototype.sim, { 'attr': { 'class': 'form-control' } }) }}
+					</div>
 
-		<div class="form-group mb-3">
-			<label class="form-label">
-				Carte SIM
-				<i class="bi bi-info-circle-fill text-primary ms-1"
-				data-bs-toggle="tooltip"
-				data-bs-placement="top"
-				title="Numéro de carte SIM au format ICCID (ex: 893301234567890123)">
-				</i>
-			</label>
-			{{ form_widget(interventionForm.interventions.vars.prototype.sim, { 'attr': { 'class': 'form-control' } }) }}
-		</div>
+					<div class="form-group mb-3">
+						<label class="form-label">
+							Nom de la borne
+							<i class="bi bi-info-circle-fill text-primary ms-1"
+							data-bs-toggle="tooltip"
+							data-bs-placement="top"
+							data-bs-html="true"
+							title="<img src='{{ asset('build/images/Qrcode_exemple.png') }}' alt='Exemple QR Code' style='max-width:150px;border-radius:8px;'>">
+							</i>
+						</label>
+						{{ form_widget(interventionForm.interventions.vars.prototype.borneName, { 'attr': { 'class': 'form-control' } }) }}
+					</div>
 
-		<div class="form-group mb-3">
-			<label class="form-label">
-				Nom de la borne
-				<i class="bi bi-info-circle-fill text-primary ms-1"
-				data-bs-toggle="tooltip"
-				data-bs-placement="top"
-				data-bs-html="true"
-				title="<img src='{{ asset('build/images/Qrcode_exemple.png') }}' alt='Exemple QR Code' style='max-width:150px;border-radius:8px;'>">
-				</i>
-			</label>
-			{{ form_widget(interventionForm.interventions.vars.prototype.borneName, { 'attr': { 'class': 'form-control' } }) }}
-		</div>
+					<div style="display:none;">
+						{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {'attr':{'class':'charging-station-hidden'}}) }}
+					</div>
 
-		<div style="display:none;">
-			{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {'attr':{'class':'charging-station-hidden'}}) }}
-		</div>
-
-		<div class="form-group">
-			<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
-				<i class="bi bi-search me-1"></i>Choisir une borne
-			</button>
-			<div class="model-selected text-muted small mt-1"></div>
-		</div>
-	</div>
-{% endset %}
-
+					<div class="form-group">
+						<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
+							<i class="bi bi-search me-1"></i>Choisir une borne
+						</button>
+						<div class="model-selected text-muted small mt-1"></div>
+					</div>
+			{% endset %}
 		<h2>Interventions</h2>
 		{{ form_errors(interventionForm) }}
 		<div id="connectionsWrapper" data-prototype="{{ prototype|e('html_attr') }}">
-			{# Initialisation avec une connexion par défaut #}
 			{% if interventionForm.interventions|length > 0 %}
 				<div class="connection-group mb-4 p-3 border rounded shadow-sm bg-white position-relative">
 					<div class="connection-content">
@@ -388,7 +384,7 @@
 						</div>
 					</div>
 					<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius:8px;" />
-					<button class="btn btn-sm btn-outline-success" onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}')">
+					<button class="btn btn-sm btn-outline-success" onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}', '{{ model.reference }}')">
 						Choisir
 					</button>
 				</div>
@@ -403,14 +399,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	const addBtn = document.getElementById('addConnectionBtn');
 	let index = 0;
 
-	// Fonction pour ajouter une nouvelle intervention
 	function addIntervention() {
 		const prototype = wrapper.dataset.prototype;
 		const newForm = prototype.replace(/__name__/g, index);
 		const div = document.createElement('div');
 		div.innerHTML = newForm;
 
-		// Protection suppression si plus d'une
 		const deleteBtn = div.querySelector('.remove-connection-btn');
 		if (deleteBtn) {
 			deleteBtn.addEventListener('click', () => {
@@ -426,11 +420,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		index++;
 	}
 
-	// Ajout d'une intervention par défaut si aucune
 	if (wrapper.querySelectorAll('.sim-block').length === 0) {
 		addIntervention();
 	} else {
-		// Ajoute la protection sur celle déjà rendue par Twig
 		wrapper.querySelectorAll('.sim-block').forEach((div) => {
 			const deleteBtn = div.querySelector('.remove-connection-btn');
 			if (deleteBtn) {
@@ -446,7 +438,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	}
 
-	// Bouton "Ajouter une connexion"
 	addBtn.addEventListener('click', () => {
 		addIntervention();
 	});
@@ -467,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
 	}
 
-	function selectModel(id, name, image, manuImage, manuName) {
+	function selectModel(id, name, image, manuImage, reference) {
 		if (!currentHiddenInput) return;
 
 		currentHiddenInput.value = id;
@@ -478,8 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
 				<div class="flex-grow-1">
 					<strong>${name}</strong><br>
-					ref fab ${reference} </br>
-					<small class="text-muted">${manuName}</small>
+					référence fabricant : ${reference} </br>
 					<div class="mt-2">
 						<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
 					</div>
