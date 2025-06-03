@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="fr">
 
 	<head>
 		<meta charset="UTF-8">
@@ -51,16 +51,16 @@
 				position: absolute;
 				inset: 0;
 				z-index: 1;
-				background: rgba(255, 255, 255, 0.3); /* Voile blanc léger */
-				backdrop-filter: blur(6px); /* Flou d’arrière-plan */
-				-webkit-backdrop-filter: blur(6px);
+				background: rgba(255, 255, 255, 0.3);
+				backdrop-filter: blur(10px);
+				-webkit-backdrop-filter: blur(10px);
 			}
 
 
 			.hero {
 				position: relative;
 				min-height: 80vh;
-				background: url("https://installateur-qualifie.com/wp-content/uploads/2023/05/homme-voiture-entreprise-1.jpg") center center / cover no-repeat fixed;
+				background: url('{{ asset('build/images/background-homepagz.png') }}') center center / cover no-repeat fixed;
 				display: flex;
 				align-items: flex-start;
 				justify-content: flex-start;
@@ -542,7 +542,6 @@
 
 				.offers .offer-number {
 					font-size: 2.5rem;
-					/* mantiene tamaño */
 				}
 
 				.offers .item-text {
@@ -566,9 +565,6 @@
 					max-width: 320px;
 				}
 			}
-		</style>
-
-		<style>
 
 			.text-center-kit {
 				display: flex;
@@ -599,6 +595,7 @@
 			.segoe-script {
 				font-family: 'Segoe Script', cursive !important;
 			}
+
 			.gradient-text,
 			.textspecial,
 			.item-text,
