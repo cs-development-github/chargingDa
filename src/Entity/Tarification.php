@@ -13,16 +13,16 @@ class Tarification
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tarifications')]
+    #[ORM\ManyToOne(inversedBy: 'tarifications', cascade: ['persist'])]
     private ?Client $client = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tarifications')]
+    #[ORM\ManyToOne(inversedBy: 'tarifications', cascade: ['persist'])]
     private ?ChargingStations $chargingStation = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable: true)]
     private ?string $resalePrice = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255,nullable: true)]
     private ?string $reducedPrice = null;
 
     #[ORM\Column(nullable: true)]
