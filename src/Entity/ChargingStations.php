@@ -34,7 +34,7 @@ class ChargingStations
     #[ORM\Column]
     private ?bool $isActive = null;
 
-    #[ORM\ManyToOne(inversedBy: 'chargingStations')]
+    #[ORM\ManyToOne(inversedBy: 'chargingStations' , cascade: ['persist'])]
     #[ORM\JoinColumn(nullable: false)]
     private ?Manufacturer $manufacturer = null;
 

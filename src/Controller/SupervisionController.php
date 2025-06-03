@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
+use App\Entity\ChargingStations;
 use App\Entity\Client;
 use App\Form\ConfigMixteType;
 use App\Form\Step2ClientType;
@@ -9,6 +11,9 @@ use App\Form\Step4ChoiceType;
 use App\Form\ConfigFlotteType;
 use App\Form\ConfigPubliqueType;
 use App\Entity\ChargingStationSetting;
+use App\Entity\Manufacturer;
+use App\Entity\Tarification;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -41,24 +46,48 @@ class SupervisionController extends AbstractController
         }
 
         if ($step === 2) {
-            $client = $request->getSession()->get('supervision_step_2');
-            if (!$client instanceof Client) {
-                throw $this->createNotFoundException('Client introuvable en session.');
+
+            $session = $request->getSession();
+            $token = $token ?? $request->get('token') ?? $request->query->get('token');
+
+            if (!$token) {
+                throw $this->createAccessDeniedException('Token manquant.');
+            }
+
+            $client = $em->getRepository(Client::class)->findOneBy(['secureToken' => $token]);
+
+            if (!$client) {
+                throw $this->createNotFoundException('Client introuvable pour ce token.');
             }
 
             $form = $this->createForm(Step2ClientType::class, $client);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $request->getSession()->set('supervision_step_2', $form->getData());
-                return $this->redirectToRoute('supervision_step', ['step' => 3]);
+                $createdBy = $client->getCreatedBy();
+                if ($createdBy && !$em->contains($createdBy)) {
+                    $createdBy = $em->getRepository(User::class)->find($createdBy->getId());
+                    $client->setCreatedBy($createdBy);
+                }
+
+                $address = $client->getAddress();
+                if ($address !== null && $address->getId() === null) {
+                    $em->persist($address);
+                }
+
+                $em->flush();
+
+                $session->set('supervision_step_2_id', $client->getId());
+
+                return $this->redirectToRoute('supervision_step', ['step' => 3, 'token' => $token]);
             }
 
             return $this->render('supervision/step2_client.html.twig', [
                 'form' => $form->createView(),
-                'currentStep' => 1,
+                'currentStep' => 2,
             ]);
         }
+
 
         if ($step === 3) {
             $data = $request->getSession()->get('supervision_step_2');
@@ -90,6 +119,7 @@ class SupervisionController extends AbstractController
         }
 
         if ($step === 4 && $request->query->has('config')) {
+
             $configType = $request->query->get('config');
 
             $types = [
@@ -107,6 +137,73 @@ class SupervisionController extends AbstractController
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $request->getSession()->set('supervision_step_4', $form->getData());
+
+                /** @var Client $clientSession */
+                $clientSession = $request->getSession()->get('supervision_step_2');
+                $client = $em->getRepository(Client::class)->find($clientSession->getId());
+
+                if ($configType === 'flotte') {
+
+                    $client = $em->getRepository(Client::class)->find($clientSession->getId());
+
+                    foreach ($client->getInterventions() as $intervention) {
+                        $stationSession = $intervention->getChargingStation();
+
+                        if ($stationSession) {
+                            $station = $em->getRepository(ChargingStations::class)->find($stationSession->getId());
+
+                            $tarif = new Tarification();
+                            $tarif->setClient($client);
+                            $tarif->setChargingStation($station);
+                            $tarif->setOfferType('flotte');
+
+                            $em->persist($tarif);
+                        }
+                    }
+
+                    $em->flush();
+                }
+
+                if ($configType === 'mixte') {
+                    $data = $form->getData();
+                    
+                    foreach ($client->getInterventions() as $intervention) {
+                        $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
+
+                        $tarif = new Tarification();
+                        $tarif->setClient($client);
+                        $tarif->setChargingStation($station);
+                        $tarif->setOfferType('mixte');
+                        $tarif->setReducedPrice((string) $data['prix_collab']);
+                        $tarif->setPublicPrice((string) $data['prix_public']);
+                        $tarif->setRechargeTimeResale((string) $data['cout_minute']);
+                        $tarif->setParkingTimeResale((string) $data['penalite']);
+
+                        $em->persist($tarif);
+                    }
+                    $em->flush();
+                }
+
+                if ($configType === 'publique') {
+                    $data = $form->getData();
+
+                    foreach ($client->getInterventions() as $intervention) {
+                        $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
+
+                        $tarif = new Tarification();
+                        $tarif->setClient($client);
+                        $tarif->setChargingStation($station);
+                        $tarif->setOfferType('publique');
+                        $tarif->setReducedPrice((string) $data['prix_collab']);
+                        $tarif->setPublicPrice((string) $data['prix_public']);
+                        $tarif->setRechargeTimeResale((string) $data['cout_minute']);
+                        $tarif->setParkingTimeResale((string) $data['penalite']);
+
+                        $em->persist($tarif);
+                    }
+                    $em->flush();
+                }
+
                 return $this->redirectToRoute('supervision_step', ['step' => 5]);
             }
 
@@ -158,6 +255,7 @@ class SupervisionController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 $submittedSettings = $form->get('settings')->getData();
 
+                /** @var Client|null $client */
                 $client = $session->get('supervision_step_2');
                 $config = $session->get('supervision_step_4');
 
@@ -166,22 +264,35 @@ class SupervisionController extends AbstractController
                     return $this->redirectToRoute('supervision_step', ['step' => 1, 'token' => $token]);
                 }
 
-                foreach ($submittedSettings as $setting) {
-                    $em->persist($setting);
+                $address = $client->getAddress();
+                if ($address instanceof Address && !$em->contains($address)) {
+                    $em->persist($address); // important pour éviter les erreurs
                 }
 
                 foreach ($client->getInterventions() as $intervention) {
                     $em->persist($intervention);
                 }
 
-                $em->persist($client);
+                foreach ($submittedSettings as $setting) {
+                    $station = $setting->getChargingStation();
 
-                if (is_object($config)) {
-                    $em->persist($config);
+                    if ($station !== null && !$em->contains($station)) {
+                        $station = $em->getRepository(ChargingStations::class)->find($station->getId());
+                        $setting->setChargingStation($station);
+                    }
+
+                    if ($station && $station->getManufacturer() && !$em->contains($station->getManufacturer())) {
+                        $manufacturer = $em->getRepository(Manufacturer::class)->find($station->getManufacturer()->getId());
+                        $station->setManufacturer($manufacturer);
+                    }
+
+                    $em->persist($setting);
                 }
 
-                $em->flush();
+                $em->persist($client); // persist le client ici, après l’adresse
+                $em->persist($config);
 
+                $em->flush();
                 $session->clear();
 
                 $this->addFlash('success', 'Supervision enregistrée avec succès.');
