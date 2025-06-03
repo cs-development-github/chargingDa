@@ -384,7 +384,8 @@
 						</div>
 					</div>
 					<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius:8px;" />
-					<button class="btn btn-sm btn-outline-success" onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}', '{{ model.reference }}')">
+					<button class="btn btn-sm btn-outline-success"
+							onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}','{{ model.reference }}')">
 						Choisir
 					</button>
 				</div>
@@ -458,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
 	}
 
-	function selectModel(id, name, image, manuImage, reference) {
+	function selectModel(id, name, image, manuImage, manuName) {
 		if (!currentHiddenInput) return;
 
 		currentHiddenInput.value = id;
@@ -469,7 +470,8 @@ document.addEventListener('DOMContentLoaded', () => {
 				<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
 				<div class="flex-grow-1">
 					<strong>${name}</strong><br>
-					référence fabricant : ${reference} </br>
+					ref fab ${reference} </br>
+					<small class="text-muted">${manuName}</small>
 					<div class="mt-2">
 						<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
 					</div>
