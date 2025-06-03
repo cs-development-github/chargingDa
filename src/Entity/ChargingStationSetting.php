@@ -14,7 +14,7 @@ class ChargingStationSetting
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'chargingStationSettings')]
+    #[ORM\ManyToOne(inversedBy: 'chargingStationSettings', cascade: ['persist'])]
     private ?ChargingStations $chargingStation = null;
 
     #[ORM\ManyToOne(inversedBy: 'chargingStationSettings')]

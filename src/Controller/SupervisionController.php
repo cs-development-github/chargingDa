@@ -227,19 +227,23 @@ class SupervisionController extends AbstractController
         }
 
         if ($step === 5) {
-
             if (!$token) {
                 $token = $request->get('token') ?? $request->query->get('token');
             }
-            $session = $request->getSession();
-            $client = $session->get('supervision_step_2');
 
-            if (!$client instanceof Client) {
+            $session = $request->getSession();
+            $clientSession = $session->get('supervision_step_2');
+
+
+            dd($clientSession);
+
+            
+            if (!$clientSession instanceof Client) {
                 throw $this->createNotFoundException('Client introuvable en session.');
             }
 
             $settings = [];
-            foreach ($client->getInterventions() as $intervention) {
+            foreach ($clientSession->getInterventions() as $intervention) {
                 $station = $intervention->getChargingStation();
                 if ($station) {
                     $setting = new ChargingStationSetting();
@@ -248,53 +252,22 @@ class SupervisionController extends AbstractController
                 }
             }
 
-            $data = ['settings' => $settings];
-            $form = $this->createForm(FormStep5SettingsCollectionType::class, $data);
+            $form = $this->createForm(FormStep5SettingsCollectionType::class, ['settings' => $settings]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $submittedSettings = $form->get('settings')->getData();
 
-                /** @var Client|null $client */
-                $client = $session->get('supervision_step_2');
+                $client = $em->getRepository(Client::class)->find($clientSession->getId());
                 $config = $session->get('supervision_step_4');
 
-                if (!$client || !$config) {
-                    $this->addFlash('error', 'Des données sont manquantes pour finaliser.');
-                    return $this->redirectToRoute('supervision_step', ['step' => 1, 'token' => $token]);
-                }
-
-                $address = $client->getAddress();
-                if ($address instanceof Address && !$em->contains($address)) {
-                    $em->persist($address); // important pour éviter les erreurs
-                }
-
-                foreach ($client->getInterventions() as $intervention) {
-                    $em->persist($intervention);
-                }
-
                 foreach ($submittedSettings as $setting) {
-                    $station = $setting->getChargingStation();
-
-                    if ($station !== null && !$em->contains($station)) {
-                        $station = $em->getRepository(ChargingStations::class)->find($station->getId());
-                        $setting->setChargingStation($station);
-                    }
-
-                    if ($station && $station->getManufacturer() && !$em->contains($station->getManufacturer())) {
-                        $manufacturer = $em->getRepository(Manufacturer::class)->find($station->getManufacturer()->getId());
-                        $station->setManufacturer($manufacturer);
-                    }
-
+                    $setting->setClient($client);
                     $em->persist($setting);
                 }
 
-                $em->persist($client); // persist le client ici, après l’adresse
-                $em->persist($config);
-
                 $em->flush();
                 $session->clear();
-
                 $this->addFlash('success', 'Supervision enregistrée avec succès.');
 
                 return $this->redirectToRoute('homepage');
@@ -306,6 +279,7 @@ class SupervisionController extends AbstractController
                 'token' => $token,
             ]);
         }
+        
         throw $this->createNotFoundException('Étape non gérée.');
     }
 }
