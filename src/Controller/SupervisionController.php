@@ -14,11 +14,13 @@ use App\Entity\ChargingStationSetting;
 use App\Entity\Manufacturer;
 use App\Entity\Tarification;
 use App\Entity\User;
+use App\Form\ChargingStationSettingType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Step5SettingsCollectionType as FormStep5SettingsCollectionType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\HttpFoundation\Response;
 
 class SupervisionController extends AbstractController
@@ -166,7 +168,7 @@ class SupervisionController extends AbstractController
 
                 if ($configType === 'mixte') {
                     $data = $form->getData();
-                    
+
                     foreach ($client->getInterventions() as $intervention) {
                         $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
 
@@ -227,59 +229,71 @@ class SupervisionController extends AbstractController
         }
 
         if ($step === 5) {
-            if (!$token) {
-                $token = $request->get('token') ?? $request->query->get('token');
+            // 🔁 Récupération du client depuis la session
+            $sessionClient = $request->getSession()->get('supervision_step_2');
+            if (!$sessionClient instanceof Client) {
+                throw $this->createNotFoundException('Client invalide ou absent en session.');
             }
 
-            $session = $request->getSession();
-            $clientSession = $session->get('supervision_step_2');
-
-
-            dd($clientSession);
-
-            
-            if (!$clientSession instanceof Client) {
-                throw $this->createNotFoundException('Client introuvable en session.');
+            // ✅ Recharge managée depuis Doctrine (évite l'INSERT implicite)
+            $client = $em->getRepository(Client::class)->find($sessionClient->getId());
+            if (!$client) {
+                throw $this->createNotFoundException('Client introuvable en base.');
             }
 
-            $settings = [];
-            foreach ($clientSession->getInterventions() as $intervention) {
+            // 🔁 Recharge le createdBy si nécessaire
+            $createdBy = $client->getCreatedBy();
+            if ($createdBy && !$em->contains($createdBy)) {
+                $user = $em->getRepository(User::class)->find($createdBy->getId());
+                $client->setCreatedBy($user);
+            }
+
+            // 🧲 Récupération des bornes liées
+            $chargingStations = [];
+            foreach ($client->getInterventions() as $intervention) {
                 $station = $intervention->getChargingStation();
-                if ($station) {
-                    $setting = new ChargingStationSetting();
-                    $setting->setChargingStation($station);
-                    $settings[] = $setting;
+                if ($station && $station->getId()) {
+                    $stationRefreshed = $em->getRepository(ChargingStations::class)->find($station->getId());
+                    if ($stationRefreshed) {
+                        $chargingStations[] = $stationRefreshed;
+                    }
                 }
             }
 
+            if (empty($chargingStations)) {
+                throw $this->createNotFoundException('Aucune borne trouvée pour ce client.');
+            }
+
+            // 🧾 Préparation des settings liés aux bornes
+            $settings = [];
+            foreach ($chargingStations as $station) {
+                $setting = new ChargingStationSetting();
+                $setting->setChargingStation($station);
+                $setting->setClient($client);
+                $settings[] = $setting;
+            }
+
+            // 🔧 Création du formulaire
             $form = $this->createForm(FormStep5SettingsCollectionType::class, ['settings' => $settings]);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $submittedSettings = $form->get('settings')->getData();
-
-                $client = $em->getRepository(Client::class)->find($clientSession->getId());
-                $config = $session->get('supervision_step_4');
-
-                foreach ($submittedSettings as $setting) {
-                    $setting->setClient($client);
+                foreach ($form->getData()['settings'] as $setting) {
                     $em->persist($setting);
                 }
 
                 $em->flush();
-                $session->clear();
-                $this->addFlash('success', 'Supervision enregistrée avec succès.');
 
                 return $this->redirectToRoute('homepage');
             }
 
-            return $this->render('supervision/step5_settings.html.twig', [
+            return $this->render('supervision/step5_localisation.html.twig', [
                 'form' => $form->createView(),
+                'chargingStations' => $chargingStations,
                 'currentStep' => 5,
-                'token' => $token,
             ]);
         }
-        
+
         throw $this->createNotFoundException('Étape non gérée.');
     }
 }
