@@ -161,9 +161,11 @@ class HomeController extends AbstractController
 
             $entityManager->flush();
 
-            $completionUrl = $urlGenerator->generate('client_complete_info', [
+            $completionUrl = $urlGenerator->generate('supervision_step', [
+                'step' => 1,
                 'token' => $token,
             ], UrlGeneratorInterface::ABSOLUTE_URL);
+
 
             $this->clientMailService->sendClientCompletionEmail($client, $completionUrl);
             $this->clientMailService->sendSupportNotification($client, $completionUrl);

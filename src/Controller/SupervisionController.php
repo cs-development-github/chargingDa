@@ -2,31 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity\Address;
-use App\Entity\ChargingStations;
+use App\Entity\User;
 use App\Entity\Client;
+use App\Entity\Tarification;
 use App\Form\ConfigMixteType;
 use App\Form\Step2ClientType;
 use App\Form\Step4ChoiceType;
 use App\Form\ConfigFlotteType;
 use App\Form\ConfigPubliqueType;
+use App\Entity\ChargingStations;
 use App\Entity\ChargingStationSetting;
-use App\Entity\Manufacturer;
-use App\Entity\Tarification;
-use App\Entity\User;
-use App\Form\ChargingStationSettingType;
+use App\Service\ClientContractService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Form\Step5SettingsCollectionType as FormStep5SettingsCollectionType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\HttpFoundation\Response;
 
 class SupervisionController extends AbstractController
 {
     #[Route('/supervision/step/{step}/{token}', name: 'supervision_step')]
-    public function step(int $step, Request $request, EntityManagerInterface $em, ?string $token = null)
+    public function step(int $step, Request $request, EntityManagerInterface $em, ?string $token = null, ClientContractService $contractService)
     {
         if ($step === 1) {
             if ($token) {
@@ -90,7 +86,6 @@ class SupervisionController extends AbstractController
             ]);
         }
 
-
         if ($step === 3) {
             $data = $request->getSession()->get('supervision_step_2');
             if (!$data instanceof Client) {
@@ -102,8 +97,10 @@ class SupervisionController extends AbstractController
             return $this->render('supervision/step3_recap_stations.html.twig', [
                 'interventions' => $interventions,
                 'currentStep' => 3,
+                'token' => $data->getSecureToken(),
             ]);
         }
+
 
         if ($step === 4 && !$request->query->has('config')) {
             $choiceForm = $this->createForm(Step4ChoiceType::class);
@@ -111,12 +108,13 @@ class SupervisionController extends AbstractController
 
             if ($choiceForm->isSubmitted() && $choiceForm->isValid()) {
                 $selected = $choiceForm->getData()['type'];
-                return $this->redirectToRoute('supervision_step', ['step' => 4, 'config' => $selected]);
+                return $this->redirectToRoute('supervision_step', ['step' => 4, 'config' => $selected, 'token' => $token]);
             }
 
             return $this->render('supervision/step4_choice.html.twig', [
                 'form' => $choiceForm->createView(),
                 'currentStep' => 4,
+                'token' => $token
             ]);
         }
 
@@ -206,7 +204,10 @@ class SupervisionController extends AbstractController
                     $em->flush();
                 }
 
-                return $this->redirectToRoute('supervision_step', ['step' => 5]);
+                return $this->redirectToRoute('supervision_step', [
+                    'step' => 5,
+                    'token' => $token,
+                ]);
             }
 
             $client = $request->getSession()->get('supervision_step_2');
@@ -225,30 +226,27 @@ class SupervisionController extends AbstractController
                 'form' => $form->createView(),
                 'totalConnectors' => $totalConnectors,
                 'currentStep' => 4,
+                'token' => $client instanceof Client ? $client->getSecureToken() : null,
             ]);
         }
 
         if ($step === 5) {
-            // 🔁 Récupération du client depuis la session
             $sessionClient = $request->getSession()->get('supervision_step_2');
             if (!$sessionClient instanceof Client) {
                 throw $this->createNotFoundException('Client invalide ou absent en session.');
             }
 
-            // ✅ Recharge managée depuis Doctrine (évite l'INSERT implicite)
             $client = $em->getRepository(Client::class)->find($sessionClient->getId());
             if (!$client) {
                 throw $this->createNotFoundException('Client introuvable en base.');
             }
 
-            // 🔁 Recharge le createdBy si nécessaire
             $createdBy = $client->getCreatedBy();
             if ($createdBy && !$em->contains($createdBy)) {
                 $user = $em->getRepository(User::class)->find($createdBy->getId());
                 $client->setCreatedBy($user);
             }
 
-            // 🧲 Récupération des bornes liées
             $chargingStations = [];
             foreach ($client->getInterventions() as $intervention) {
                 $station = $intervention->getChargingStation();
@@ -264,7 +262,6 @@ class SupervisionController extends AbstractController
                 throw $this->createNotFoundException('Aucune borne trouvée pour ce client.');
             }
 
-            // 🧾 Préparation des settings liés aux bornes
             $settings = [];
             foreach ($chargingStations as $station) {
                 $setting = new ChargingStationSetting();
@@ -273,7 +270,6 @@ class SupervisionController extends AbstractController
                 $settings[] = $setting;
             }
 
-            // 🔧 Création du formulaire
             $form = $this->createForm(FormStep5SettingsCollectionType::class, ['settings' => $settings]);
             $form->handleRequest($request);
 
@@ -284,10 +280,12 @@ class SupervisionController extends AbstractController
 
                 $em->flush();
 
-                return $this->redirectToRoute('homepage');
+                $contractService->generateAndSendContract($client);
+
+                return $this->redirectToRoute('client_success_page', ['token' => $client->getSecureToken()]);
             }
 
-            return $this->render('supervision/step5_localisation.html.twig', [
+            return $this->render('supervision/step5_settings.html.twig', [
                 'form' => $form->createView(),
                 'chargingStations' => $chargingStations,
                 'currentStep' => 5,
