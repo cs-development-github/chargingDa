@@ -289,6 +289,7 @@ class SupervisionController extends AbstractController
                 'form' => $form->createView(),
                 'chargingStations' => $chargingStations,
                 'currentStep' => 5,
+                'token' => $token
             ]);
         }
 
