@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Utilisateur{% endblock %}
+
+{% block body %}
+<style>
+    main.container {
+        padding-top: 10rem;
+        padding-bottom: 2rem;
+        max-width: 600px;
+    }
+
+    .card-user-detail {
+        border-radius: 1rem;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        background: #fff;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .card-user-detail:hover {
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .card-header {
+        background: linear-gradient(to right, #ec008c, #f6941f);
+        color: white;
+        text-align: center;
+        padding: 2rem 1.5rem;
+        font-weight: 600;
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+    }
+
+    .card-header i {
+        font-size: 1.2rem;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+    }
+
+    .list-group-item {
+        font-size: 1rem;
+        border: none;
+        padding-left: 0;
+        padding-right: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #f1f1f1;
+    }
+
+    .list-group-item:last-child {
+        border-bottom: none;
+    }
+
+    .list-group-item strong {
+        color: #555;
+        font-weight: 600;
+    }
+
+    .badge {
+        font-size: 0.9rem;
+        padding: 0.35em 0.7em;
+        border-radius: 0.5rem;
+    }
+
+    .btn-group-actions > a, 
+    .btn-group-actions > form {
+        display: inline-block;
+    }
+</style>
+
+<main class="container">
+    <div class="card card-user-detail">
+        <div class="card-header">
+            <h2 class="mb-1">{{ user.name }} {{ user.lastname }}</h2>
+            <p class="mb-0"><i class="bi bi-envelope"></i> {{ user.email }}</p>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush mb-4">
+                <li class="list-group-item"><strong><i class="bi bi-person-badge"></i> ID:</strong> <span>{{ user.id }}</span></li>
+                <li class="list-group-item"><strong><i class="bi bi-person"></i> Nom:</strong> <span>{{ user.name }}</span></li>
+                <li class="list-group-item"><strong><i class="bi bi-person-circle"></i> Prénom:</strong> <span>{{ user.lastname }}</span></li>
+                <li class="list-group-item"><strong><i class="bi bi-envelope"></i> Email:</strong> <span>{{ user.email }}</span></li>
+                <li class="list-group-item"><strong><i class="bi bi-shield-lock"></i> Rôle(s):</strong> <span>{{ user.roles|join(', ') }}</span></li>
+                <li class="list-group-item">
+                    <strong><i class="bi bi-check-circle"></i> Actif:</strong>
+                    {% if user.isActive %}
+                        <span class="badge bg-success">Oui</span>
+                    {% else %}
+                        <span class="badge bg-danger">Non</span>
+                    {% endif %}
+                </li>
+            </ul>
+
+            <div class="d-flex justify-content-between btn-group-actions">
+                <a href="{{ path('app_user') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+
+                <div>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary me-2">
+                        <i class="bi bi-pencil-square"></i> Modifier
+                    </a>
+
+                    {{ include('user/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}
