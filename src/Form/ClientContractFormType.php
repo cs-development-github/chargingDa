@@ -75,6 +75,8 @@ class ClientContractFormType extends AbstractType
                     'SAS' => 'SAS',
                     'EI' => 'EI',
                     'EURL' => 'EURL',
+                    'SASU' => 'SASU',
+
                 ],
                 'attr' => ['class' => 'form-control'],
                 'constraints' => [
