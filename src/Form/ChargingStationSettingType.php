@@ -41,8 +41,6 @@ class ChargingStationSettingType extends AbstractType
             ->add('longitude', HiddenType::class)
             ->add('latitude', HiddenType::class)
             ->add('country', HiddenType::class)
-            ->add('latitude', HiddenType::class)
-            ->add('longitude', HiddenType::class)
             ->add('region', HiddenType::class)
             ->add('department', HiddenType::class);
     }
