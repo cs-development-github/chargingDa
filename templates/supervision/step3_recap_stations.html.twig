@@ -36,7 +36,7 @@
             {% endfor %}
         </div>
 
-        <form method="post" action="{{ path('supervision_step', { step: 4 }) }}">
+        <form method="post" action="{{ path('supervision_step', { step: 4, token: token }) }}">
             <button type="submit" class="btn btn-primary mt-4">Continuer</button>
         </form>
     {% else %}

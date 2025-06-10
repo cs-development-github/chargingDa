@@ -3,7 +3,7 @@
 {% block body %}
 	<div class="container my-4">
 		<div class="d-flex justify-content-between mt-4">
-			<a href="{{ path('supervision_step', { step: 4 }) }}" class="btn btn-secondary">
+		        <a href="{{ path('supervision_step', { step: 4, token: token }) }}" class="btn btn-secondary">
 				<i class="bi bi-arrow-left"></i> Retour
 			</a>
 		</div>
@@ -152,10 +152,8 @@
 	#step4 {
 		font-size: 18px;
 	}
-</style>{% endblock %}
-
-
-
+	</style>
+{% endblock %}
 
 {% block javascripts %}
  <script>
@@ -219,5 +217,5 @@
 			});
 		}
     });
-</script>
+	</script>
 {% endblock %}
