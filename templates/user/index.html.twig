@@ -23,7 +23,7 @@
         display: inline-flex;
         align-items: center;
     }
-    .role-badge svg {
+    .role-badge svg, .role-badge i {
         margin-right: 4px;
     }
 </style>
@@ -31,9 +31,69 @@
 <div class="container py-4">
     <h1 class="mb-4 text-center">Liste des Utilisateurs</h1>
 
-    <div class="row">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-6 mb-2">
+            <div class="input-group">
+                <span class="input-group-text" id="search-icon"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom ou email..." aria-label="Recherche" aria-describedby="search-icon">
+            </div>
+        </div>
+        <div class="col-md-5 mb-2">
+            <div class="dropdown w-100">
+                <button class="btn btn-outline-secondary w-100 text-start d-flex justify-content-between align-items-center" type="button" id="rolesDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                    <span id="selectedRolesText">Tous les rôles</span>
+                    <i class="bi bi-caret-down-fill"></i>
+                </button>
+                <ul class="dropdown-menu p-3" aria-labelledby="rolesDropdown" style="max-height: 200px; overflow-y: auto; min-width: 200px;">
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input role-checkbox" type="checkbox" value="ROLE_ADMIN" id="roleAdmin" checked>
+                            <label class="form-check-label" for="roleAdmin">
+                                <i class="bi bi-shield-lock-fill text-danger"></i> Admin
+                            </label>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input role-checkbox" type="checkbox" value="ROLE_USER" id="roleUser" checked>
+                            <label class="form-check-label" for="roleUser">
+                                <i class="bi bi-person-fill text-primary"></i> User
+                            </label>
+                        </div>
+                    </li>
+                    {% set otherRoles = [] %}
+                    {% for user in users %}
+                        {% for role in user.roles %}
+                            {% if role != 'ROLE_ADMIN' and role != 'ROLE_USER' and role not in otherRoles %}
+                                {% set otherRoles = otherRoles|merge([role]) %}
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                    {% for role in otherRoles %}
+                    <li>
+                        <div class="form-check">
+                            <input class="form-check-input role-checkbox" type="checkbox" value="{{ role }}" id="role{{ loop.index }}" checked>
+                            <label class="form-check-label" for="role{{ loop.index }}">
+                                <i class="bi bi-person-badge text-secondary"></i> {{ role|replace({'ROLE_': ''})|capitalize }}
+                            </label>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-1 mb-2 d-grid">
+            <button id="resetFilters" class="btn btn-outline-secondary" title="Restaurer les filtres">
+                <i class="bi bi-arrow-clockwise"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="row" id="usersContainer">
         {% for user in users %}
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4 user-item" 
+             data-name="{{ (user.name ~ ' ' ~ user.lastname ~ ' ' ~ user.email)|lower }}" 
+             data-roles="{{ user.roles|join(',') }}">
             <div class="user-card">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="mb-0">{{ user.name }} {{ user.lastname }}</h5>
@@ -42,7 +102,6 @@
                 <p class="mb-1"><i class="bi bi-envelope-fill me-2"></i> {{ user.email }}</p>
                 <p class="mb-2">
                     {% for role in user.roles %}
-                        {% set roleLower = role|lower %}
                         {% if role == 'ROLE_ADMIN' %}
                             <span class="badge bg-danger role-badge" title="Administrateur">
                                 <i class="bi bi-shield-lock-fill"></i> Admin
@@ -87,4 +146,69 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+(() => {
+    const searchInput = document.getElementById('searchInput');
+    const usersContainer = document.getElementById('usersContainer');
+    const userItems = Array.from(usersContainer.querySelectorAll('.user-item'));
+
+    const roleCheckboxes = Array.from(document.querySelectorAll('.role-checkbox'));
+    const selectedRolesText = document.getElementById('selectedRolesText');
+    const resetBtn = document.getElementById('resetFilters');
+
+    function updateSelectedRolesText() {
+        const checkedRoles = roleCheckboxes.filter(cb => cb.checked).map(cb => {
+            switch(cb.value) {
+                case 'ROLE_ADMIN': return '<i class="bi bi-shield-lock-fill text-danger"></i> Admin';
+                case 'ROLE_USER': return '<i class="bi bi-person-fill text-primary"></i> User';
+                default: return `<i class="bi bi-person-badge text-secondary"></i> ${cb.value.replace('ROLE_', '').toLowerCase().replace(/^\w/, c => c.toUpperCase())}`;
+            }
+        });
+
+        if (checkedRoles.length === 0) {
+            selectedRolesText.innerHTML = '<em>Aucun rôle sélectionné</em>';
+        } else if (checkedRoles.length === roleCheckboxes.length) {
+            selectedRolesText.textContent = 'Tous les rôles';
+        } else {
+            selectedRolesText.innerHTML = checkedRoles.join(', ');
+        }
+    }
+
+    function filterUsers() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
+        const selectedRoles = roleCheckboxes.filter(cb => cb.checked).map(cb => cb.value);
+
+        userItems.forEach(userItem => {
+            const name = userItem.getAttribute('data-name');
+            const roles = userItem.getAttribute('data-roles').split(',');
+
+            const matchesSearch = !searchTerm || name.includes(searchTerm);
+            const matchesRole = selectedRoles.length === 0 || roles.some(r => selectedRoles.includes(r));
+
+            if (matchesSearch && matchesRole) {
+                userItem.style.display = '';
+            } else {
+                userItem.style.display = 'none';
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', filterUsers);
+    roleCheckboxes.forEach(cb => cb.addEventListener('change', () => {
+        updateSelectedRolesText();
+        filterUsers();
+    }));
+
+    resetBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        roleCheckboxes.forEach(cb => cb.checked = true);
+        updateSelectedRolesText();
+        filterUsers();
+    });
+
+    updateSelectedRolesText();
+    filterUsers();
+})();
+</script>
 {% endblock %}
