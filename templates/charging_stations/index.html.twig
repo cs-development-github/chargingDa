@@ -1,319 +1,329 @@
-{# templates/charging_station/index.html.twig #}
 {% extends 'base.html.twig' %}
-
+ 
 {% block title %}Documentations – Borne de recharge{% endblock %}
-
+ 
 {% block body %}
 <style>
-	:root {
-		--pink: #ff4081;
-		--orange: #ff8c00;
-		--gradient: linear-gradient(135deg, var(--pink), var(--orange));
-		--bg: #f5f7fa;
-		--card-radius: 1rem;
-		--shadow: 0 6px 18px rgba(0, 0, 0, .12);
-	}
-
-	body {
-		background: var(--bg);
-		padding-top: 70px
-	}
-
-	.page-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		margin-bottom: 2rem
-	}
-
-	.page-header h2 {
-		font-weight: 700;
-		color: #333
-	}
-
-	.search-wrapper {
-		max-width: 380px;
-		margin-bottom: 2rem
-	}
-
-	.search-wrapper .input-group-text {
-		background: var(--gradient);
-		color: #fff;
-		border: none;
-		border-radius: 999px 0 0 999px
-	}
-
-	.search-wrapper .form-control {
-		border: none;
-		border-radius: 0 999px 999px 0;
-		padding-left: 1rem;
-		outline: none;
-		box-shadow: none;
-	}
-
-	.search-wrapper .form-control:focus {
-		border: none;
-		outline: none;
-		box-shadow: none;
-	}
-
-	.btn-pill {
-		background: var(--gradient);
-		color: #fff;
-		border: none;
-		border-radius: 999px;
-		padding: .3rem 1.1rem;
-		font-size: .8rem;
-		font-weight: 500;
-		display: inline-flex;
-		align-items: center;
-		gap: .3rem;
-		transition: transform .2s, box-shadow .2s;
-		text-decoration: none
-	}
-
-	.btn-pill:hover {
-		transform: translateY(-2px);
-		box-shadow: var(--shadow);
-		text-decoration: none
-	}
-
-	.stations-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-		gap: 1.25rem
-	}
-
-	.station-card {
-		background: #fff;
-		border-radius: var(--card-radius);
-		box-shadow: var(--shadow);
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-		transition: transform .25s
-	}
-
-	.station-card:hover {
-		transform: translateY(-3px)
-	}
-
-	.header {
-		height: 140px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: #fff
-	}
-
-	.device-img {
-		max-height: 110px;
-		width: auto;
-		object-fit: contain
-	}
-
-	.body {
-		flex: 1;
-		padding: 1rem;
-		text-align: center
-	}
-
-
-	.body h5 {
-		font-size: 1rem;
-		font-weight: 600;
-		margin-bottom: .35rem
-	}
-
-	.stats {
-		font-size: .8rem;
-		color: #666;
-		margin-bottom: .8rem
-	}
-
-	.maker {
-		padding: .65rem;
-		display: flex;
-		justify-content: center
-	}
-
-	.maker img {
-		height: 40px;
-		width: auto;
-		object-fit: contain
-	}
-
-	.footer {
-		padding: .65rem;
-		display: flex;
-		justify-content: center;
-		gap: .4rem
-	}
-
-	.modal-header {
-		background: var(--gradient);
-		color: #fff;
-		border-top-left-radius: var(--card-radius);
-		border-top-right-radius: var(--card-radius)
-	}
-
-	.modal-content {
-		border-radius: var(--card-radius)
-	}
+    :root {
+        --pink: #ff4081;
+        --orange: #ff8c00;
+        --gradient: linear-gradient(135deg, var(--pink), var(--orange));
+        --bg: #f5f7fa;
+        --card-radius: 1rem;
+        --shadow: 0 6px 18px rgba(0, 0, 0, .12);
+    }
+ 
+    body {
+        background: var(--bg);
+        padding-top: 70px
+    }
+ 
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem
+    }
+ 
+    .page-header h2 {
+        font-weight: 700;
+        color: #333
+    }
+ 
+    .search-wrapper {
+        max-width: 380px;
+        margin-bottom: 2rem
+    }
+ 
+    .search-wrapper .input-group-text {
+        background: var(--gradient);
+        color: #fff;
+        border: none;
+        border-radius: 999px 0 0 999px
+    }
+ 
+    .search-wrapper .form-control {
+        border: none;
+        border-radius: 0 999px 999px 0;
+        padding-left: 1rem;
+        outline: none;
+        box-shadow: none;
+    }
+ 
+    .search-wrapper .form-control:focus {
+        border: none;
+        outline: none;
+        box-shadow: none;
+    }
+ 
+    .btn-pill {
+        background: var(--gradient);
+        color: #fff;
+        border: none;
+        border-radius: 999px;
+        padding: .3rem 1.1rem;
+        font-size: .8rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: .3rem;
+        transition: transform .2s, box-shadow .2s;
+        text-decoration: none
+    }
+ 
+    .btn-pill:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        text-decoration: none
+    }
+ 
+    .stations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.25rem
+    }
+ 
+    .station-card {
+        background: #fff;
+        border-radius: var(--card-radius);
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        transition: transform .25s
+    }
+ 
+    .station-card:hover {
+        transform: translateY(-3px)
+    }
+ 
+    .header {
+        height: 140px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff
+    }
+ 
+    .device-img {
+        max-height: 110px;
+        width: auto;
+        object-fit: contain
+    }
+ 
+    .body {
+        flex: 1;
+        padding: 1rem;
+        text-align: center
+    }
+ 
+ 
+    .body h5 {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: .35rem
+    }
+ 
+    .stats {
+        font-size: .8rem;
+        color: #666;
+        margin-bottom: .8rem
+    }
+ 
+    .maker {
+        padding: .65rem;
+        display: flex;
+        justify-content: center
+    }
+ 
+    .maker img {
+        height: 40px;
+        width: auto;
+        object-fit: contain
+    }
+ 
+    .footer {
+        padding: .65rem;
+        display: flex;
+        justify-content: center;
+        gap: .4rem
+    }
+ 
+    .modal-header {
+        background: var(--gradient);
+        color: #fff;
+        border-top-left-radius: var(--card-radius);
+        border-top-right-radius: var(--card-radius)
+    }
+ 
+    .modal-content {
+        border-radius: var(--card-radius)
+    }
+ 
+    .modalPos {
+        position: fixed !important;
+        z-index: 11000 !important;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 </style>
-
+ 
 <div class="container py-4">
-	<div class="page-header">
-		<h2><i class="bi bi-plug-fill me-2"></i>Documentation des bornes</h2>
-		{% if is_granted('ROLE_ADMIN') %}
-		<div class="d-flex gap-2">
-			<button class="btn-pill" data-bs-toggle="modal" data-bs-target="#addStationModal">
-				<i class="bi bi-plus-lg"></i> Ajouter Borne
-			</button>
-			<button class="btn-pill" data-bs-toggle="modal" data-bs-target="#addManufacturerModal">
-				<i class="bi bi-building"></i> Ajouter Constructeur
-			</button>
-		</div>
-		{% endif %}
-	</div>
-
-	<div class="search-wrapper">
-		<div class="input-group">
-			<span class="input-group-text"><i class="bi bi-search"></i></span>
-			<input id="global-search" type="text" class="form-control" placeholder="Rechercher une borne…">
-		</div>
-	</div>
-
-	{% if chargingStations is not empty %}
-	<div class="stations-grid">
-		{% for station in chargingStations %}
-		<div class="station-card"
-			data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~ station.power~' '~station.reference) | lower }}">
-			<div class="header">
-				<img src="{{ station.image ? asset('uploads/'~station.image) : asset('images/placeholder.jpg') }}"
-					alt="{{ station.model }}" class="device-img">
-			</div>
-
-			<div class="body">
-				<h5>{{ station.model }}</h5>
-				<p class="stats">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
-				<p>Réference : {{station.reference}} </p>
-			</div>
-
-			<div class="maker">
-				{% if station.manufacturer.image %}
-				<img src="{{ asset('uploads/'~station.manufacturer.image) }}" alt="{{ station.manufacturer.name }}">
-				{% else %}
-				<i class="bi bi-building fs-4 text-muted"></i>
-				{% endif %}
-			</div>
-
-			{% if is_granted('ROLE_ADMIN') %}
-			<div class="footer">
-				<a href="{{ path('charging_station_show',{slug:station.slug}) }}" class="btn-pill">
-					<i class="bi bi-pencil"></i> Modifier
-				</a>
-				<button class="btn-pill" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.slug }}">
-					<i class="bi bi-trash"></i> Supprimer
-				</button>
-			</div>
-			{% endif %}
-		</div>
-
-		{% if is_granted('ROLE_ADMIN') %}
-		<div class="modal fade" id="deleteStationModal{{ station.slug }}" tabindex="-1" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title">
-							<i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer {{ station.model }}
-						</h5>
-						<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-					</div>
-					<div class="modal-body">
-						Voulez-vous vraiment supprimer <strong>{{ station.model }}</strong> ?
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-						<form method="POST" action="{{ path('charging_station_delete',{slug:station.slug}) }}">
-							<button type="submit" class="btn btn-danger">Confirmer</button>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-		{% endif %}
-		{% endfor %}
-	</div>
-	{% else %}
-	<div class="alert alert-warning text-center">
-		<i class="bi bi-info-circle me-1"></i>Aucune borne enregistrée.
-	</div>
-	{% endif %}
+    <div class="page-header">
+        <h2><i class="bi bi-plug-fill me-2"></i>Documentation des bornes</h2>
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="d-flex gap-2">
+            <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#addStationModal">
+                <i class="bi bi-plus-lg"></i> Ajouter Borne
+            </button>
+            <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#addManufacturerModal">
+                <i class="bi bi-building"></i> Ajouter Constructeur
+            </button>
+        </div>
+        {% endif %}
+    </div>
+ 
+    <div class="search-wrapper">
+        <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input id="global-search" type="text" class="form-control" placeholder="Rechercher une borne…">
+        </div>
+    </div>
+ 
+    {% if chargingStations is not empty %}
+    <div class="stations-grid">
+        {% for station in chargingStations %}
+        <div class="station-card"
+            data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~ station.power~' '~station.reference) | lower }}">
+            <div class="header">
+                <img src="{{ station.image ? asset('uploads/'~station.image) : asset('images/placeholder.jpg') }}"
+                    alt="{{ station.model }}" class="device-img">
+            </div>
+ 
+            <div class="body">
+                <h5>{{ station.model }}</h5>
+                <p class="stats">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
+                <p>Réference : {{station.reference}} </p>
+            </div>
+ 
+            <div class="maker">
+                {% if station.manufacturer.image %}
+                <img src="{{ asset('uploads/'~station.manufacturer.image) }}" alt="{{ station.manufacturer.name }}">
+                {% else %}
+                <i class="bi bi-building fs-4 text-muted"></i>
+                {% endif %}
+            </div>
+ 
+            {% if is_granted('ROLE_ADMIN') %}
+            <div class="footer">
+                <a href="{{ path('charging_station_show',{slug:station.slug}) }}" class="btn-pill">
+                    <i class="bi bi-pencil"></i> Modifier
+                </a>
+                <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.slug }}">
+                    <i class="bi bi-trash"></i> Supprimer
+                </button>
+            </div>
+            {% endif %}
+        </div>
+ 
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="modal fade" id="deleteStationModal{{ station.slug }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer {{ station.model }}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        Voulez-vous vraiment supprimer <strong>{{ station.model }}</strong> ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <form method="POST" action="{{ path('charging_station_delete',{slug:station.slug}) }}">
+                            <button type="submit" class="btn btn-danger">Confirmer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning text-center">
+        <i class="bi bi-info-circle me-1"></i>Aucune borne enregistrée.
+    </div>
+    {% endif %}
 </div>
-
-<div class="modal fade" id="addStationModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-lg modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title"><i class="bi bi-plus-lg me-2"></i>Ajouter une Borne</h5>
-				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				{{ form_start(form, {
-					action: path('charging_station_add'),
-					attr: { novalidate: 'novalidate' }
-				}) }}
-
-				<div class="row gy-3">
-					<div class="col-md-6">{{ form_row(form.model) }}</div>
-					<div class="col-md-6">{{ form_row(form.power) }}</div>
-					<div class="col-md-6">{{ form_row(form.reference) }}</div>
-					<div class="col-md-6">{{ form_row(form.connectors) }}</div>
-					<div class="col-md-6">{{ form_row(form.manufacturer) }}</div>
-					<div class="col-md-6">{{ form_row(form.image) }}</div>
-					<div class="col-md-6 d-flex align-items-center">{{ form_row(form.isActive) }}</div>
-				</div>
-				<div class="text-end mt-4">
-					<button type="submit" class="btn-pill"><i class="bi bi-check-lg"></i> Enregistrer</button>
-				</div>
-				{{ form_end(form) }}
-			</div>
-		</div>
-	</div>
+ 
+<div class="modal fade modalPos" id="addStationModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-plus-lg me-2"></i>Ajouter une Borne</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form, {
+                action: path('charging_station_add'),
+                attr: { novalidate: 'novalidate' }
+                }) }}
+ 
+                <div class="row gy-3">
+                    <div class="col-md-6">{{ form_row(form.model) }}</div>
+                    <div class="col-md-6">{{ form_row(form.power) }}</div>
+                    <div class="col-md-6">{{ form_row(form.reference) }}</div>
+                    <div class="col-md-6">{{ form_row(form.connectors) }}</div>
+                    <div class="col-md-6">{{ form_row(form.manufacturer) }}</div>
+                    <div class="col-md-6">{{ form_row(form.image) }}</div>
+                    <div class="col-md-6 d-flex align-items-center">{{ form_row(form.isActive) }}</div>
+                </div>
+                <div class="text-end mt-4">
+                    <button type="submit" class="btn-pill"><i class="bi bi-check-lg"></i> Enregistrer</button>
+                </div>
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </div>
 </div>
-
-<div class="modal fade" id="addManufacturerModal" tabindex="-1" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title"><i class="bi bi-building me-2"></i>Ajouter un Constructeur</h5>
-				<button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-			</div>
-			<div class="modal-body">
-				{{ form_start(manufacturerForm, {
-					action: path('manufacturer_add'),
-					attr: { novalidate: 'novalidate' }
-				}) }}
-				<div class="mb-3">{{ form_row(manufacturerForm.name) }}</div>
-				<div class="mb-3">{{ form_row(manufacturerForm.image) }}</div>
-				<div class="text-end">
-					<button type="submit" class="btn-pill"><i class="bi bi-check-lg"></i> Ajouter</button>
-				</div>
-				{{ form_end(manufacturerForm) }}
-			</div>
-		</div>
-	</div>
+ 
+<div class="modal fade modalPos" id="addManufacturerModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bi bi-building me-2"></i>Ajouter un Constructeur</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(manufacturerForm, {
+                action: path('manufacturer_add'),
+                attr: { novalidate: 'novalidate' }
+                }) }}
+                <div class="mb-3">{{ form_row(manufacturerForm.name) }}</div>
+                <div class="mb-3">{{ form_row(manufacturerForm.image) }}</div>
+                <div class="text-end">
+                    <button type="submit" class="btn-pill"><i class="bi bi-check-lg"></i> Ajouter</button>
+                </div>
+                {{ form_end(manufacturerForm) }}
+            </div>
+        </div>
+    </div>
 </div>
-
+ 
 <script>
-	document.addEventListener('DOMContentLoaded', () => {
-		const input = document.getElementById('global-search');
-		const cards = document.querySelectorAll('.station-card');
-		input.addEventListener('input', () => {
-			const q = input.value.toLowerCase();
-			cards.forEach(c => c.style.display = c.dataset.search.includes(q) ? '' : 'none');
-		});
-	});
+    document.addEventListener('DOMContentLoaded', () => {
+        const input = document.getElementById('global-search');
+        const cards = document.querySelectorAll('.station-card');
+        input.addEventListener('input', () => {
+            const q = input.value.toLowerCase();
+            cards.forEach(c => c.style.display = c.dataset.search.includes(q) ? '' : 'none');
+        });
+    });
 </script>
 {% endblock %}
