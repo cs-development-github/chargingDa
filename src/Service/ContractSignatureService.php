@@ -3,30 +3,33 @@
 namespace App\Service;
 
 use App\Entity\Client;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use App\Service\MailService;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ContractSignatureService
 {
     private string $universignApiUrl;
     private string $apiKey;
-    private string $pdfDir;
+    private string $baseDir;
 
     public function __construct(
         private HttpClientInterface $httpClient,
         private MailService $mailService,
-        private EntityManagerInterface $em
+        private EntityManagerInterface $em,
+        private KernelInterface $kernel
     ) {
-        $this->universignApiUrl = getenv('UNIVERSIGN_API_URL') ?: $_ENV['UNIVERSIGN_API_URL'] ?? throw new \RuntimeException('UNIVERSIGN_API_URL non défini');
-        $this->apiKey = getenv('UNIVERSIGN_API_KEY') ?: $_ENV['UNIVERSIGN_API_KEY'] ?? throw new \RuntimeException('UNIVERSIGN_API_KEY non défini');
+        $this->universignApiUrl = $_ENV['UNIVERSIGN_API_URL'] ?? throw new \RuntimeException('UNIVERSIGN_API_URL non défini');
+        $this->apiKey = $_ENV['UNIVERSIGN_API_KEY'] ?? throw new \RuntimeException('UNIVERSIGN_API_KEY non défini');
 
-        $this->pdfDir = __DIR__ . '/../../public/pdf';
+        $this->baseDir = $this->kernel->getProjectDir() . '/var/contracts';
     }
 
     public function sign(Client $client): string
     {
-        $pdfPath = "{$this->pdfDir}/contrat_final_{$client->getDocumentId()}.pdf";
+        $pdfPath = "{$this->baseDir}/contrat_final_{$client->getDocumentId()}.pdf";
 
         if (!file_exists($pdfPath)) {
             throw new \RuntimeException("Le fichier PDF du contrat est introuvable.");

@@ -10,6 +10,8 @@
             margin: 40px;
             line-height: 1.6;
             background-color: #f9f9f9;
+            position: relative;
+            min-height: 100vh;
         }
         .container {
             width: 80%;
@@ -59,6 +61,13 @@
         }
         .tooltip {
             z-index: 1070 !important;
+        }
+        .page-number {
+            position: fixed;
+            bottom: 10px;
+            right: 20px;
+            font-size: 14px;
+            color: #666;
         }
     </style>
 </head>
@@ -115,7 +124,6 @@
                 </tbody>
             </table>
         </div>
-
         {% endif %}
 
         <div class="section">
@@ -149,8 +157,6 @@
             <p><strong>Toute modification des nouveaux prix sera effective sous 1 mois.</strong></p>
         </div>
 
-        <br><br><br><br><br><br><br><br><br><br><br>
-
         <div class="footer">
             <p>LODMI, société de droit Français enregistrée au RCS Arras sous le numéro B 901 360 602.</p>
             <p>Siège social : 11 Rue Willy Brandt, 62000 ARRAS.</p>
@@ -159,5 +165,8 @@
             <p><a href="https://www.lodmi.com" target="_blank">www.lodmi.com</a></p>
         </div>
     </div>
+
+    <div class="page-number">23</div>
+
 </body>
 </html>

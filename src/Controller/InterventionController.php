@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class InterventionController extends AbstractController
 {
-    #[Route('/intervention', name: 'app_intervention')]
+    #[Route('/tableau-de-bord/intervention', name: 'app_intervention')]
     public function index(Request $request, InterventionRepository $repo, PaginatorInterface $paginator): Response
     {
         $user = $this->getUser();
@@ -54,7 +54,7 @@ final class InterventionController extends AbstractController
         ]);
     }
 
-    #[Route('/intervention/{id}', name: 'intervention_client_show', methods: ['GET'])]
+    #[Route('/tableau-de-bord/intervention/{id}', name: 'intervention_client_show', methods: ['GET'])]
     public function show(int $id, InterventionRepository $repo): Response
     {
         $intervention = $repo->find($id);
@@ -72,7 +72,7 @@ final class InterventionController extends AbstractController
         ]);
     }
 
-    #[Route('/intervention/{id}', name: 'intervention_delete', methods: ['POST'])]
+    #[Route('/tableau-de-bord/intervention/{id}', name: 'intervention_delete', methods: ['POST'])]
     public function delete(Request $request, Intervention $intervention, EntityManagerInterface $em): Response
     {
         if ($this->isCsrfTokenValid('delete' . $intervention->getId(), $request->request->get('_token'))) {
