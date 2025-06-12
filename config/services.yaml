@@ -3,6 +3,7 @@ parameters:
     uploads_documentation: '%kernel.project_dir%/public/uploads/Documentations'
     universign_api_url: '%env(UNIVERSIGN_API_URL)%'
     universign_api_key: '%env(UNIVERSIGN_API_KEY)%'
+    github_api_token: '%env(GITHUB_API_TOKEN)%'
 
 services:
     Symfony\Component\HttpFoundation\Session\SessionInterface: '@session.factory'
@@ -33,3 +34,7 @@ services:
     App\Session\FormSessionManager:
         arguments:
             $session: '@Symfony\Component\HttpFoundation\Session\SessionInterface'
+    
+    App\Service\GithubService:
+        arguments:
+            $githubToken: '%github_api_token%'
