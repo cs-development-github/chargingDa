@@ -68,6 +68,25 @@ class ChargingStationType extends AbstractType
                 'mapped' => false,
                 'required' => false,
             ])
+            ->add('platform', ChoiceType::class, [
+                'label' => 'Platforme pour la supervision',
+                'attr' => ['class' => 'form-control'],
+                'placeholder' => 'Sélectionnez la plateforme',
+                'choices' => [
+                    'Téléphone' => 'phone',
+                    'Ordinateur' => 'pc',
+                ],
+            ])
+            ->add('difficulty', ChoiceType::class, [
+                'label' => 'Difficultés de la supervision',
+                'attr' => ['class' => 'form-control'],
+                'placeholder' => 'Choisir la difficultés',
+                'choices' => [
+                    'Facile' => 'easy',
+                    'Moyens' => 'mid',
+                    'Difficile' => 'hard',
+                ],
+            ])
             ->add('isActive', CheckboxType::class, [
                 'label' => 'Publiée la borne',
                 'required' => false,

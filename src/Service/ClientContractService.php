@@ -2,14 +2,14 @@
 
 namespace App\Service;
 
-use Twig\Environment;
 use App\Entity\Client;
 use App\Entity\Tarification;
-use App\Service\ContractSignatureService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Environment;
+use Psr\Log\LoggerInterface;
 
 class ClientContractService
 {
@@ -21,71 +21,83 @@ class ClientContractService
         private Environment $twig,
         private HttpClientInterface $httpClient,
         private UrlGeneratorInterface $urlGenerator,
-        private ContractSignatureService $contractSignatureService
+        private ContractSignatureService $contractSignatureService,
+        private LoggerInterface $logger
     ) {}
 
-    public function generateAndSendContract(Client $client, bool $sendEmail = true, bool $requestSignature = true): ?string
+    public function generateAndSendContract(Client $client, bool $requestSignature = true): ?string
     {
-        $projectDir = $this->kernel->getProjectDir() . "/public/pdf";
+        $baseDir = $this->kernel->getProjectDir() . '/var/contracts';
         $clientId = $client->getDocumentId();
+        $tmpDir = $baseDir . "/tmp/{$clientId}";
 
-        if (!is_dir($projectDir)) {
-            mkdir($projectDir, 0777, true);
+        if (!is_dir($tmpDir)) {
+            mkdir($tmpDir, 0775, true);
         }
 
         $pdfFiles = [];
-        $templateMap = [
-            'first_page' => 'pdf/first_page_template.html.twig',
-            'third_page' => 'pdf/third_page_template.html.twig',
-            'twenty_second' => 'pdf/twenty_second_template.html.twig',
-        ];
 
-        foreach ($templateMap as $prefix => $template) {
-            $html = $this->renderPdf($template, $client);
-            $pdfPath = "$projectDir/{$prefix}_{$clientId}.pdf";
+        $pdfFiles[] = $this->generateCustomPdf("pdf/first_page_template.html.twig", "$tmpDir/first_page.pdf", ['client' => $client]);
 
-            $this->pdfEditorService->createCustomPdf($pdfPath, $html);
-            if (file_exists($pdfPath) && filesize($pdfPath) > 0) {
-                $pdfFiles[] = $pdfPath;
-            }
-        }
+        $pdfFiles[] = $this->getExistingPdf("$baseDir/contrat_exploitation-2.pdf");
 
-        // Génération de la page 23 avec données supplémentaires
+        $pdfFiles[] = $this->generateCustomPdf("pdf/third_page_template.html.twig", "$tmpDir/third_page.pdf", ['client' => $client]);
+
+        $pdfFiles[] = $this->getExistingPdf("$baseDir/contrat_exploitation-4-21.pdf");
+
+        $pdfFiles[] = $this->generateCustomPdf("pdf/twenty_second_template.html.twig", "$tmpDir/twenty_second.pdf", ['client' => $client]);
+
         $chargingData = $this->getChargingStationData($client);
-        $html23 = $this->renderPdf('pdf/twenty_third_template.html.twig', $client, $chargingData);
-        $pdfPath23 = "$projectDir/twenty_third_{$clientId}.pdf";
+        $pdfFiles[] = $this->generateCustomPdf("pdf/twenty_third_template.html.twig", "$tmpDir/twenty_third.pdf", ['client' => $client] + $chargingData);
 
-        $this->pdfEditorService->createCustomPdf($pdfPath23, $html23);
-        if (file_exists($pdfPath23) && filesize($pdfPath23) > 0) {
-            $pdfFiles[] = $pdfPath23;
-        }
+        $pdfFiles[] = $this->getExistingPdf("$baseDir/contrat_exploitation-24-25.pdf");
 
-        // Fichiers fixes existants
-        $fixedPaths = [
-            "$projectDir/contrat_exploitation-2.pdf",
-            "$projectDir/contrat_exploitation-4-21.pdf",
-            "$projectDir/contrat_exploitation-24-25.pdf"
-        ];
-        $pdfFiles = array_merge($pdfFiles, array_filter($fixedPaths, 'file_exists'));
+        $pdfFiles = array_filter($pdfFiles);
 
-        // Fusion en PDF final
-        $finalPath = "$projectDir/contrat_final_{$clientId}.pdf";
+        $finalPath = "$baseDir/contrat_final_{$clientId}.pdf";
         $success = $this->pdfEditorService->mergePdfs($pdfFiles, $finalPath);
 
         if (!$success || !file_exists($finalPath) || filesize($finalPath) === 0) {
+            $this->logger->error("Erreur de fusion de contrat pour client ID $clientId");
             throw new \RuntimeException("Échec de la fusion des PDFs pour le client ID {$clientId}");
         }
+
+        $this->logger->info("Contrat généré avec succès pour le client ID $clientId");
 
         if ($requestSignature) {
             $this->contractSignatureService->sign($client);
         }
 
+        $this->cleanupTempFiles($tmpDir);
+
         return $finalPath;
     }
-
-    private function renderPdf(string $template, Client $client, array $data = []): string
+    
+    private function cleanupTempFiles(string $tmpDir): void
     {
-        return $this->twig->render($template, array_merge(['client' => $client], $data));
+        if (!is_dir($tmpDir)) {
+            return;
+        }
+
+        $files = glob($tmpDir . '/*.pdf');
+        foreach ($files as $file) {
+            @unlink($file);
+        }
+
+        @rmdir($tmpDir);
+    }
+
+    private function generateCustomPdf(string $template, string $outputPath, array $params): ?string
+    {
+        $html = $this->twig->render($template, $params);
+        $this->pdfEditorService->createCustomPdf($outputPath, $html);
+
+        return (file_exists($outputPath) && filesize($outputPath) > 0) ? $outputPath : null;
+    }
+
+    private function getExistingPdf(string $path): ?string
+    {
+        return (file_exists($path) && filesize($path) > 0) ? $path : null;
     }
 
     private function getChargingStationData(Client $client): array

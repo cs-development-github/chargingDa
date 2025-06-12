@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Contrat Exploitation</title>
     <style>
-      /* Style global */
       body {
         font-family: Arial, sans-serif;
         line-height: 1.6;
         margin: 40px;
         padding: 20px;
         background-color: #f4f4f4;
+        position: relative;
+        min-height: 100vh;
       }
+
       .container {
         max-width: 900px;
         background: white;
@@ -21,10 +23,12 @@
         border-radius: 5px;
         margin: auto;
       }
+
       h1,
       h2 {
         color: #333;
       }
+
       h1 {
         text-align: center;
         font-size: 24px;
@@ -33,6 +37,7 @@
         padding-bottom: 5px;
         margin-bottom: 20px;
       }
+
       .section-title {
         font-size: 18px;
         font-weight: bold;
@@ -40,9 +45,11 @@
         border-bottom: 2px solid #ccc;
         padding-bottom: 5px;
       }
+
       p {
         margin: 10px 0;
       }
+
       table {
         width: 100%;
         border-collapse: collapse;
@@ -61,8 +68,17 @@
         font-weight: bold;
         width: 30%;
       }
+
       tbody tr:nth-child(even) {
         background-color: #f9f9f9;
+      }
+
+      .page-number {
+        position: fixed;
+        bottom: 10px;
+        right: 20px;
+        font-size: 14px;
+        color: #666;
       }
     </style>
   </head>
@@ -83,45 +99,24 @@
       <h2 class="section-title">2) Le client :</h2>
       <table>
         <tbody>
-          <tr>
-            <th>Raison sociale</th>
-            <td>{{ client.societyName }}</td>
-        </tr>
-          <tr>
-            <th>Siret</th>
-            <td>{{ client.siret }}</td>
-        </tr>
-          <tr>
-            <th>Forme juridique</th>
-            <td>{{ client.legalForm }}</td>
-        </tr>
-          <tr>
-            <th>Code Naf</th>
-            <td>{{ client.codeNaf }}</td>
-        </tr>
-          <tr>
-            <th>Numéro de TVA</th>
-            <td>{{ client.numberTva }}</td>
-        </tr>
-          <tr>
-            <th>Adresse</th>
-            <td>{{ client.address.fullAddress }}</td>
-          </tr>
-          <tr>
-            <th>Représentant</th>
-            <td>{{ client.name|capitalize }} {{ client.lastname }}</td>
-        </tr>
-          <tr>
-            <th>Numéro de contrat</th>
-            <td>{{ client.documentId }}</td>
-        </tr>
+          <tr><th>Raison sociale</th><td>{{ client.societyName }}</td></tr>
+          <tr><th>Siret</th><td>{{ client.siret }}</td></tr>
+          <tr><th>Forme juridique</th><td>{{ client.legalForm }}</td></tr>
+          <tr><th>Code Naf</th><td>{{ client.codeNaf }}</td></tr>
+          <tr><th>Numéro de TVA</th><td>{{ client.numberTva }}</td></tr>
+          <tr><th>Adresse</th><td>{{ client.address.fullAddress }}</td></tr>
+          <tr><th>Représentant</th><td>{{ client.name|capitalize }} {{ client.lastname }}</td></tr>
+          <tr><th>Numéro de contrat</th><td>{{ client.documentId }}</td></tr>
         </tbody>
       </table>
+
       <p>
         Agissant en qualités, les Parties reconnaissent avoir la capacité
         juridique suffisante pour conclure le présent contrat de service de
         plateforme de gestion.
       </p>
     </div>
+
+    <div class="page-number">3</div>
   </body>
 </html>

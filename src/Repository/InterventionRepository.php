@@ -28,7 +28,7 @@ class InterventionRepository extends ServiceEntityRepository
     public function findAllForGrouping(?string $borneName, ?string $clientName, ?string $referencePrefix)
     {
         $qb = $this->createQueryBuilder('i')
-            ->leftJoin('i.Client', 'c')
+            ->leftJoin('i.client', 'c')
             ->leftJoin('i.installator', 'u');
 
         if ($borneName) {
