@@ -2,11 +2,13 @@
 namespace App\Service;
 
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use IntlDateFormatter;
+use Locale;
 
 class GithubService
 {
     private string $repo = 'cs-development-github/chargingDa';
-    private string $branch = 'dev';
+    private string $branch = 'dev'; 
 
     public function __construct(
         private HttpClientInterface $client,
@@ -18,6 +20,16 @@ class GithubService
         $allCommits = [];
         $seenShas = [];
         $page = 1;
+
+        Locale::setDefault('fr_FR');
+        $formatter = new IntlDateFormatter(
+            'fr_FR',
+            IntlDateFormatter::LONG,
+            IntlDateFormatter::SHORT,
+            'Europe/Paris',
+            null,
+            "d MMMM y 'à' HH:mm"
+        );
 
         do {
             $commitsUrl = sprintf(
@@ -38,9 +50,7 @@ class GithubService
 
             $commits = $commitsResponse->toArray();
 
-            if (empty($commits)) {
-                break;
-            }
+            if (empty($commits)) break;
 
             foreach ($commits as $commit) {
                 $sha = $commit['sha'];
@@ -53,11 +63,16 @@ class GithubService
                 $rawAuthor = $commit['commit']['author']['name'];
                 $normalizedAuthor = $rawAuthor === 'cs-development-github' ? 'Chris' : $rawAuthor;
 
+                $timestamp = strtotime($commit['commit']['author']['date']);
+                $formattedDate = $formatter->format($timestamp);
+                $dateRaw = date('Y-m-d', $timestamp);
+
                 $allCommits[] = [
                     'sha' => $sha,
                     'message' => $msg,
                     'author' => $normalizedAuthor,
-                    'date' => $commit['commit']['author']['date'],
+                    'date' => $formattedDate,
+                    'dateRaw' => $dateRaw,
                     'branch' => $this->branch,
                 ];
 
@@ -67,7 +82,7 @@ class GithubService
             $page++;
         } while (count($commits) === $perPage);
 
-        usort($allCommits, fn($a, $b) => strtotime($b['date']) <=> strtotime($a['date']));
+        usort($allCommits, fn($a, $b) => strtotime($b['dateRaw']) <=> strtotime($a['dateRaw']));
 
         return $allCommits;
     }

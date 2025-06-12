@@ -4,7 +4,8 @@
 
 {% block body %}
 <div class="container mt-5 pt-5" style="min-height: 80vh;">
-    <h1 class="mb-5 fw-bold text-center" style="background: linear-gradient(45deg, #ec008c, #f6941f); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+    <h1 class="mb-5 fw-bold text-center"
+        style="background: linear-gradient(45deg, #ec008c, #f6941f); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
         Journal des modifications
     </h1>
 
@@ -13,82 +14,57 @@
             <label for="filterAuthor" class="form-label fw-semibold">
                 <i class="bi bi-person-fill me-2"></i> Filtrer par auteur
             </label>
-            <input
-                type="text"
-                id="filterAuthor"
-                class="form-control"
-                placeholder="Nom de l'auteur"
-                autocomplete="off"
-            >
+            <input type="text" id="filterAuthor" class="form-control" placeholder="Nom de l'auteur" autocomplete="off">
         </div>
-    
+
         <div class="col-md-3">
             <label for="filterDateFrom" class="form-label fw-semibold">
                 <i class="bi bi-calendar-event me-2"></i> Date de début
             </label>
-            <input
-                type="date"
-                id="filterDateFrom"
-                class="form-control"
-            >
+            <input type="date" id="filterDateFrom" class="form-control">
         </div>
-    
+
         <div class="col-md-3">
             <label for="filterDateTo" class="form-label fw-semibold">
                 <i class="bi bi-calendar-event me-2"></i> Date de fin
             </label>
-            <input
-                type="date"
-                id="filterDateTo"
-                class="form-control"
-            >
+            <input type="date" id="filterDateTo" class="form-control">
         </div>
-    
+
         <div class="col-md-2 d-flex gap-2" style="align-items: flex-end;">
-            <button 
-                type="button" 
-                id="btnReset" 
-                class="btn btn-outline-secondary flex-grow-1" 
-                style="height: calc(1.5em + .75rem + 2px);" 
-                title="Réinitialiser les filtres"
-            >
-                <i class="bi bi-arrow-counterclockwise"></i> 
+            <button type="button" id="btnReset" class="btn btn-outline-secondary flex-grow-1"
+                style="height: calc(1.5em + .75rem + 2px);" title="Réinitialiser les filtres">
+                <i class="bi bi-arrow-counterclockwise"></i>
             </button>
-            <button 
-                type="button" 
-                id="btnApply" 
-                class="btn btn-primary flex-grow-1" 
-                style="height: calc(1.5em + .75rem + 2px);" 
-                title="Appliquer les filtres"
-            >
-                <i class="bi bi-funnel-fill"></i> 
+            <button type="button" id="btnApply" class="btn btn-primary flex-grow-1"
+                style="height: calc(1.5em + .75rem + 2px);" title="Appliquer les filtres">
+                <i class="bi bi-funnel-fill"></i>
             </button>
         </div>
     </form>
-    
+
 
     <div id="noResults" class="alert alert-info d-none">
         Aucun commit ne correspond aux filtres sélectionnés.
     </div>
 
     <div id="commitsList">
-        {% set sortedCommits = commits|sort((a, b) => b.date <=> a.date) %}
-        {% for commit in sortedCommits %}
-            <div class="card mb-3 shadow-sm border-0 rounded commit-item" 
-                 data-author="{{ commit.author|lower }}" 
-                 data-date="{{ commit.date }}">
-                <div class="card-body">
-                    <h5 class="card-title text-truncate" title="{{ commit.message }}">{{ commit.message }}</h5>
-                    <p class="card-text mb-1">
-                        <small class="text-muted">
-                            <i class="bi bi-person-circle"></i> {{ commit.author }} &nbsp;&bull;&nbsp;
-                            <i class="bi bi-clock"></i> {{ commit.date|date('Y-m-d H:i') }}
-                        </small>
-                    </p>
-                </div>
+        {% for commit in commits %}
+        <div class="card mb-3 shadow-sm border-0 rounded commit-item" data-author="{{ commit.author|lower }}"
+            data-date="{{ commit.dateRaw }}">
+            <div class="card-body">
+                <h5 class="card-title text-truncate" title="{{ commit.message }}">{{ commit.message }}</h5>
+                <p class="card-text mb-1">
+                    <small class="text-muted">
+                        <i class="bi bi-person-circle"></i> {{ commit.author }} &nbsp;&bull;&nbsp;
+                        <i class="bi bi-clock"></i> {{ commit.date }}
+                    </small>
+                </p>
             </div>
+        </div>
         {% endfor %}
     </div>
+
 </div>
 
 <script>
