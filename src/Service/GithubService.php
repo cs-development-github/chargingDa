@@ -6,7 +6,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GithubService
 {
     private string $repo = 'cs-development-github/chargingDa';
-    private string $branch = 'main';
+    private string $branch = 'dev';
 
     public function __construct(
         private HttpClientInterface $client,
