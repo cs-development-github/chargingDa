@@ -1,0 +1,120 @@
+<div class="station-card"
+     data-search="{{ (station.model ~ ' ' ~ station.manufacturer.name|default('') ~ ' ' ~ station.power ~ ' ' ~ station.reference ~ ' ' ~ station.platform|default('')) | lower }}">
+
+    {% if station.platform %}
+        <div class="platform-icon" title="Plateforme : {{ station.platform }}">
+            {% if station.platform == 'phone' %}
+                <i class="bi bi-phone"></i>
+            {% elseif station.platform == 'pc' %}
+                <i class="bi bi-laptop"></i>
+            {% else %}
+                <i class="bi bi-box text-muted"></i>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div class="header">
+        <img src="{{ station.image ? asset('uploads/' ~ station.image) : asset('images/placeholder.jpg') }}"
+             alt="{{ station.model }}" class="device-img">
+    </div>
+
+    <div class="body">
+        <h5>{{ station.model }}</h5>
+        <p class="stats">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
+        <p>Référence : {{ station.reference }}</p>
+
+        {% if station.difficulty is defined %}
+            <div class="difficulty-display text-center mt-3">
+                <div class="difficulty-bars justify-content-center">
+                    {% if station.difficulty == 'low' %}
+                        <div class="difficulty-bar low"></div>
+                        <div class="difficulty-bar"></div>
+                        <div class="difficulty-bar"></div>
+                    {% elseif station.difficulty == 'mid' %}
+                        <div class="difficulty-bar mid"></div>
+                        <div class="difficulty-bar mid"></div>
+                        <div class="difficulty-bar"></div>
+                    {% elseif station.difficulty == 'hard' %}
+                        <div class="difficulty-bar hard"></div>
+                        <div class="difficulty-bar hard"></div>
+                        <div class="difficulty-bar hard"></div>
+                    {% endif %}
+                </div>
+                <div class="difficulty-label text-muted small mt-1">
+                    {% if station.difficulty == 'low' %}
+                        Difficulté : Facile
+                    {% elseif station.difficulty == 'mid' %}
+                        Difficulté : Moyenne
+                    {% elseif station.difficulty == 'hard' %}
+                        Difficulté : Difficile
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="maker">
+        {% if station.manufacturer.image %}
+            <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="{{ station.manufacturer.name }}">
+        {% else %}
+            <i class="bi bi-building fs-4 text-muted"></i>
+        {% endif %}
+    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="footer">
+            <a href="{{ path('charging_station_show', {slug: station.slug}) }}" class="btn-pill">
+                <i class="bi bi-pencil"></i> Modifier
+            </a>
+            <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.slug }}">
+                <i class="bi bi-trash"></i> Supprimer
+            </button>
+        </div>
+        {% include 'charging_stations/_delete_modal.html.twig' with {'station': station} %}
+    {% endif %}
+</div>
+
+<style>
+.station-card {
+    position: relative;
+}
+
+.platform-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 1.3rem;
+    z-index: 2;
+}
+
+.difficulty-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.difficulty-bars {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.difficulty-bar {
+    width: 40px;
+    height: 6px;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+}
+
+.difficulty-bar.low {
+    background-color: #28a745; /* vert */
+}
+
+.difficulty-bar.mid {
+    background-color: #fd7e14; /* orange */
+}
+
+.difficulty-bar.hard {
+    background-color: #dc3545; /* rouge */
+}
+</style>
