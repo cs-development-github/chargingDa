@@ -6,82 +6,66 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GithubService
 {
     private string $repo = 'cs-development-github/chargingDa';
+    private string $branch = 'main';
 
     public function __construct(
         private HttpClientInterface $client,
         private string $githubToken,
     ) {}
 
-    public function getAllCommitsFromAllBranches(): array
+    public function getCommitsFromMainBranch(int $perPage = 100): array
     {
-        $branchesUrl = sprintf('https://api.github.com/repos/%s/branches', $this->repo);
-
-        $branchesResponse = $this->client->request('GET', $branchesUrl, [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $this->githubToken,
-                'Accept' => 'application/vnd.github.v3+json',
-                'User-Agent' => 'Symfony-App',
-            ],
-        ]);
-
-        $branches = $branchesResponse->toArray();
-
         $allCommits = [];
         $seenShas = [];
+        $page = 1;
 
-        foreach ($branches as $branch) {
-            $branchName = $branch['name'];
-            $page = 1;
-            $perPage = 100;
+        do {
+            $commitsUrl = sprintf(
+                'https://api.github.com/repos/%s/commits?sha=%s&per_page=%d&page=%d',
+                $this->repo,
+                $this->branch,
+                $perPage,
+                $page
+            );
 
-            do {
-                $commitsUrl = sprintf(
-                    'https://api.github.com/repos/%s/commits?sha=%s&per_page=%d&page=%d',
-                    $this->repo,
-                    $branchName,
-                    $perPage,
-                    $page
-                );
+            $commitsResponse = $this->client->request('GET', $commitsUrl, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $this->githubToken,
+                    'Accept' => 'application/vnd.github.v3+json',
+                    'User-Agent' => 'Symfony-App',
+                ],
+            ]);
 
-                $commitsResponse = $this->client->request('GET', $commitsUrl, [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $this->githubToken,
-                        'Accept' => 'application/vnd.github.v3+json',
-                        'User-Agent' => 'Symfony-App',
-                    ],
-                ]);
+            $commits = $commitsResponse->toArray();
 
-                $commits = $commitsResponse->toArray();
+            if (empty($commits)) {
+                break;
+            }
 
-                if (empty($commits)) {
-                    break;
+            foreach ($commits as $commit) {
+                $sha = $commit['sha'];
+                $msg = $commit['commit']['message'];
+
+                if (str_starts_with($msg, 'Merge pull request') || isset($seenShas[$sha])) {
+                    continue;
                 }
 
-                foreach ($commits as $commit) {
-                    $sha = $commit['sha'];
-                    $msg = $commit['commit']['message'];
+                $rawAuthor = $commit['commit']['author']['name'];
+                $normalizedAuthor = $rawAuthor === 'cs-development-github' ? 'Chris' : $rawAuthor;
 
-                    if (str_starts_with($msg, 'Merge pull request') || isset($seenShas[$sha])) {
-                        continue;
-                    }
+                $allCommits[] = [
+                    'sha' => $sha,
+                    'message' => $msg,
+                    'author' => $normalizedAuthor,
+                    'date' => $commit['commit']['author']['date'],
+                    'branch' => $this->branch,
+                ];
 
-                    $rawAuthor = $commit['commit']['author']['name'];
-                    $normalizedAuthor = $rawAuthor === 'cs-development-github' ? 'Chris' : $rawAuthor;
+                $seenShas[$sha] = true;
+            }
 
-                    $allCommits[] = [
-                        'sha' => $sha,
-                        'message' => $msg,
-                        'author' => $normalizedAuthor,
-                        'date' => $commit['commit']['author']['date'],
-                        'branch' => $branchName,
-                    ];
-
-                    $seenShas[$sha] = true;
-                }
-
-                $page++;
-            } while (count($commits) === $perPage);
-        }
+            $page++;
+        } while (count($commits) === $perPage);
 
         usort($allCommits, fn($a, $b) => strtotime($b['date']) <=> strtotime($a['date']));
 

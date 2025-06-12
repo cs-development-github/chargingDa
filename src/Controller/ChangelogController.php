@@ -12,7 +12,7 @@ class ChangelogController extends AbstractController
     #[Route('/changelog', name: 'app_changelog')]
     public function index(GithubService $githubService): Response
     {
-        $commits = $githubService->getAllCommitsFromAllBranches();
+        $commits = $githubService->getCommitsFromMainBranch();
 
         return $this->render('changelog/index.html.twig', [
             'commits' => $commits,
