@@ -195,70 +195,15 @@
     </div>
  
     {% if chargingStations is not empty %}
-    <div class="stations-grid">
-        {% for station in chargingStations %}
-        <div class="station-card"
-            data-search="{{ (station.model~' '~station.manufacturer.name|default('')~' '~ station.power~' '~station.reference) | lower }}">
-            <div class="header">
-                <img src="{{ station.image ? asset('uploads/'~station.image) : asset('images/placeholder.jpg') }}"
-                    alt="{{ station.model }}" class="device-img">
-            </div>
- 
-            <div class="body">
-                <h5>{{ station.model }}</h5>
-                <p class="stats">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
-                <p>Réference : {{station.reference}} </p>
-            </div>
- 
-            <div class="maker">
-                {% if station.manufacturer.image %}
-                <img src="{{ asset('uploads/'~station.manufacturer.image) }}" alt="{{ station.manufacturer.name }}">
-                {% else %}
-                <i class="bi bi-building fs-4 text-muted"></i>
-                {% endif %}
-            </div>
- 
-            {% if is_granted('ROLE_ADMIN') %}
-            <div class="footer">
-                <a href="{{ path('charging_station_show',{slug:station.slug}) }}" class="btn-pill">
-                    <i class="bi bi-pencil"></i> Modifier
-                </a>
-                <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.slug }}">
-                    <i class="bi bi-trash"></i> Supprimer
-                </button>
-            </div>
-            {% endif %}
+        <div class="stations-grid">
+            {% for station in chargingStations %}
+                {% include 'charging_stations/_card.html.twig' with {'station': station} %}
+            {% endfor %}
         </div>
- 
-        {% if is_granted('ROLE_ADMIN') %}
-        <div class="modal fade" id="deleteStationModal{{ station.slug }}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>Supprimer {{ station.model }}
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        Voulez-vous vraiment supprimer <strong>{{ station.model }}</strong> ?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <form method="POST" action="{{ path('charging_station_delete',{slug:station.slug}) }}">
-                            <button type="submit" class="btn btn-danger">Confirmer</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endif %}
-        {% endfor %}
-    </div>
     {% else %}
-    <div class="alert alert-warning text-center">
-        <i class="bi bi-info-circle me-1"></i>Aucune borne enregistrée.
-    </div>
+        <div class="alert alert-warning text-center">
+            <i class="bi bi-info-circle me-1"></i>Aucune borne enregistrée.
+        </div>
     {% endif %}
 </div>
  
@@ -281,6 +226,8 @@
                     <div class="col-md-6">{{ form_row(form.reference) }}</div>
                     <div class="col-md-6">{{ form_row(form.connectors) }}</div>
                     <div class="col-md-6">{{ form_row(form.manufacturer) }}</div>
+                    <div class="col-md-6">{{ form_row(form.platform) }}</div>
+                    <div class="col-md-6">{{ form_row(form.difficulty) }}</div>
                     <div class="col-md-6">{{ form_row(form.image) }}</div>
                     <div class="col-md-6 d-flex align-items-center">{{ form_row(form.isActive) }}</div>
                 </div>

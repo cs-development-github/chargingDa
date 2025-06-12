@@ -74,6 +74,12 @@ class ChargingStations
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $type = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $platform = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $difficulty = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -317,6 +323,30 @@ class ChargingStations
     public function setType(?string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPlatform(): ?string
+    {
+        return $this->platform;
+    }
+
+    public function setPlatform(?string $platform): static
+    {
+        $this->platform = $platform;
+
+        return $this;
+    }
+
+    public function getDifficulty(): ?string
+    {
+        return $this->difficulty;
+    }
+
+    public function setDifficulty(string $difficulty): static
+    {
+        $this->difficulty = $difficulty;
 
         return $this;
     }
