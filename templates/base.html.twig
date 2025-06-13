@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,12 +18,6 @@
 
 {% block style %}
 <style>
-    .main-content {
-        position: relative;
-        min-height: 100vh;
-        overflow: hidden;
-    }
-
     .background-icon {
         position: absolute;
         top: 65%;
@@ -35,12 +30,19 @@
         width: 75%;
         height: 75%;
         z-index: 0;
+        /* poner bajo */
         pointer-events: none;
     }
 
-    .main-content > *:not(.background-icon) {
+    .main-content>*:not(.background-icon):not(.modal) {
         position: relative;
         z-index: 1;
+    }
+
+    .main-content {
+        position: static;
+        /* o eliminar position si tienes */
+        z-index: auto;
     }
 </style>
 {% endblock %}
@@ -53,4 +55,5 @@
         {% block body %}{% endblock %}
     </main>
 </body>
+
 </html>
