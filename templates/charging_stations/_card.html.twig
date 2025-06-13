@@ -1,120 +1,264 @@
-<div class="station-card"
-     data-search="{{ (station.model ~ ' ' ~ station.manufacturer.name|default('') ~ ' ' ~ station.power ~ ' ' ~ station.reference ~ ' ' ~ station.platform|default('')) | lower }}">
+<div class="station-card card shadow-sm mb-4 position-relative"
+    data-search="{{ (station.model ~ ' ' ~ station.manufacturer.name|default('') ~ ' ' ~ station.power ~ ' ' ~ station.reference ~ ' ' ~ station.platform|default('')) | lower }}">
 
     {% if station.platform %}
-        <div class="platform-icon" title="Plateforme : {{ station.platform }}">
-            {% if station.platform == 'phone' %}
-                <i class="bi bi-phone"></i>
-            {% elseif station.platform == 'pc' %}
-                <i class="bi bi-laptop"></i>
-            {% else %}
-                <i class="bi bi-box text-muted"></i>
-            {% endif %}
-        </div>
+    <div class="platform-icon" title="Plateforme : {{ station.platform }}">
+        {% if station.platform == 'phone' %}
+        <i class="bi bi-phone"></i>
+        {% elseif station.platform == 'pc' %}
+        <i class="bi bi-laptop"></i>
+        {% else %}
+        <i class="bi bi-box text-muted"></i>
+        {% endif %}
+    </div>
     {% endif %}
 
-    <div class="header">
+    <div class="card-header bg-white border-bottom-0 text-center">
         <img src="{{ station.image ? asset('uploads/' ~ station.image) : asset('images/placeholder.jpg') }}"
-             alt="{{ station.model }}" class="device-img">
+            alt="{{ station.model }}" class="device-img img-fluid rounded" style="max-height: 160px;">
     </div>
 
-    <div class="body">
-        <h5>{{ station.model }}</h5>
-        <p class="stats">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
-        <p>Référence : {{ station.reference }}</p>
+    <div class="card-body text-center">
+        <h5 class="card-title fw-bold">{{ station.model }}</h5>
+        <p class="text-muted mb-1">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
+        <p class="small text-muted">Référence : {{ station.reference }}</p>
 
         {% if station.difficulty is defined %}
-            <div class="difficulty-display text-center mt-3">
-                <div class="difficulty-bars justify-content-center">
-                    {% if station.difficulty == 'low' %}
-                        <div class="difficulty-bar low"></div>
-                        <div class="difficulty-bar"></div>
-                        <div class="difficulty-bar"></div>
-                    {% elseif station.difficulty == 'mid' %}
-                        <div class="difficulty-bar mid"></div>
-                        <div class="difficulty-bar mid"></div>
-                        <div class="difficulty-bar"></div>
-                    {% elseif station.difficulty == 'hard' %}
-                        <div class="difficulty-bar hard"></div>
-                        <div class="difficulty-bar hard"></div>
-                        <div class="difficulty-bar hard"></div>
-                    {% endif %}
-                </div>
-                <div class="difficulty-label text-muted small mt-1">
-                    {% if station.difficulty == 'low' %}
-                        Difficulté : Facile
-                    {% elseif station.difficulty == 'mid' %}
-                        Difficulté : Moyenne
-                    {% elseif station.difficulty == 'hard' %}
-                        Difficulté : Difficile
-                    {% endif %}
-                </div>
+        <div class="difficulty-display text-center mt-3">
+            <div class="difficulty-bars justify-content-center">
+                {% if station.difficulty == 'low' %}
+                <div class="difficulty-bar low"></div>
+                <div class="difficulty-bar"></div>
+                <div class="difficulty-bar"></div>
+                {% elseif station.difficulty == 'mid' %}
+                <div class="difficulty-bar mid"></div>
+                <div class="difficulty-bar mid"></div>
+                <div class="difficulty-bar"></div>
+                {% elseif station.difficulty == 'hard' %}
+                <div class="difficulty-bar hard"></div>
+                <div class="difficulty-bar hard"></div>
+                <div class="difficulty-bar hard"></div>
+                {% endif %}
             </div>
-        {% endif %}
-    </div>
-
-    <div class="maker">
-        {% if station.manufacturer.image %}
-            <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="{{ station.manufacturer.name }}">
-        {% else %}
-            <i class="bi bi-building fs-4 text-muted"></i>
-        {% endif %}
-    </div>
-
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="footer">
-            <a href="{{ path('charging_station_show', {slug: station.slug}) }}" class="btn-pill">
-                <i class="bi bi-pencil"></i> Modifier
-            </a>
-            <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#deleteStationModal{{ station.slug }}">
-                <i class="bi bi-trash"></i> Supprimer
-            </button>
+            <div class="difficulty-label text-muted small mt-1">
+                {% if station.difficulty == 'low' %}
+                Difficulté : Facile
+                {% elseif station.difficulty == 'mid' %}
+                Difficulté : Moyenne
+                {% elseif station.difficulty == 'hard' %}
+                Difficulté : Difficile
+                {% endif %}
+            </div>
         </div>
-        {% include 'charging_stations/_delete_modal.html.twig' with {'station': station} %}
-    {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="card-footer d-flex justify-content-between align-items-center bg-white">
+        <div class="maker">
+            {% if station.manufacturer.image %}
+            <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="{{ station.manufacturer.name }}"
+                class="rounded" style="max-height: 40px;">
+            {% else %}
+            <i class="bi bi-building fs-4 text-muted"></i>
+            {% endif %}
+        </div>
+
+        {% if is_granted('ROLE_ADMIN') %}
+        <div class="admin-actions d-flex gap-2">
+            <a href="{{ path('charging_station_show', {slug: station.slug}) }}" class="btn btn-outline-primary btn-sm">
+                <i class="bi bi-pencil"></i>
+            </a>
+            <button class="btn btn-outline-danger btn-sm custom-delete-btn"
+                data-modal-id="customModal{{ station.slug }}">
+                <i class="bi bi-trash"></i>
+            </button>
+
+
+        </div>
+        {% endif %}
+    </div>
 </div>
 
+<div id="customModal{{ station.slug }}" class="custom-modal">
+    <div class="custom-modal-content">
+        <span class="custom-modal-close" data-modal-id="customModal{{ station.slug }}">&times;</span>
+        <h5 class="mb-3">Supprimer la station</h5>
+        <p class="text-center">Êtes-vous sûr de vouloir supprimer cette station&nbsp;?</p>
+        <strong>{{ station.model }}</strong>
+        <form method="post" action="{{ path('charging_station_delete', {'slug': station.slug}) }}" class="mt-3">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ station.slug) }}">
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                <button type="button" class="btn btn-secondary"
+                    data-modal-id="customModal{{ station.slug }}">Annuler</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.custom-delete-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                const modalId = button.getAttribute('data-modal-id');
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.add('show');
+            });
+        });
+
+        document.querySelectorAll('.custom-modal-close, .btn-secondary').forEach(el => {
+            el.addEventListener('click', () => {
+                const modalId = el.getAttribute('data-modal-id');
+                const modal = document.getElementById(modalId);
+                if (modal) modal.classList.remove('show');
+            });
+        });
+
+        window.addEventListener('click', e => {
+            if (e.target.classList.contains('custom-modal')) {
+                e.target.classList.remove('show');
+            }
+        });
+    });
+
+</script>
+
 <style>
-.station-card {
-    position: relative;
-}
+    .custom-modal {
+        display: none;
+        position: fixed;
+        z-index: 1055;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
 
-.platform-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 1.3rem;
-    z-index: 2;
-}
+    /* Nueva clase para mostrar el modal y centrar */
+    .custom-modal.show {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+    }
 
-.difficulty-display {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
-.difficulty-bars {
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-}
+    .custom-modal-content {
+        background-color: #fff;
+        padding: 20px 30px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 500px;
+        position: relative;
+        text-align: center;
+        animation: fadeIn 0.3s ease-in-out;
 
-.difficulty-bar {
-    width: 40px;
-    height: 6px;
-    border-radius: 4px;
-    background-color: #e0e0e0;
-}
+        /* Quitar el margin para usar flexbox */
+        margin: 0;
+        box-sizing: border-box;
+        max-height: 90vh;
+        /* Evitar que se salga de la pantalla en vertical */
+        overflow-y: auto;
+    }
 
-.difficulty-bar.low {
-    background-color: #28a745; /* vert */
-}
+    /* Cerrar botón sin cambios */
+    .custom-modal-close {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        color: #aaa;
+        cursor: pointer;
+    }
 
-.difficulty-bar.mid {
-    background-color: #fd7e14; /* orange */
-}
+    .custom-modal-close:hover {
+        color: #000;
+    }
 
-.difficulty-bar.hard {
-    background-color: #dc3545; /* rouge */
-}
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Media query para pantallas muy pequeñas */
+    @media (max-width: 400px) {
+        .custom-modal-content {
+            padding: 15px 20px;
+            max-width: 90vw;
+            width: 90vw;
+            border-radius: 10px;
+        }
+
+        .custom-modal-close {
+            font-size: 20px;
+            top: 8px;
+            right: 10px;
+        }
+    }
+
+
+
+    .station-card {
+        overflow: hidden;
+    }
+
+    .platform-icon {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 1.3rem;
+        z-index: 3;
+        background: white;
+        padding: 4px;
+        border-radius: 6px;
+    }
+
+    .difficulty-display {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .difficulty-bars {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+    }
+
+    .difficulty-bar {
+        width: 40px;
+        height: 6px;
+        border-radius: 4px;
+        background-color: #e0e0e0;
+    }
+
+    .difficulty-bar.low {
+        background-color: #28a745;
+    }
+
+    .difficulty-bar.mid {
+        background-color: #fd7e14;
+    }
+
+    .difficulty-bar.hard {
+        background-color: #dc3545;
+    }
+
+    .modal-backdrop.show {
+        z-index: 1040;
+    }
+
+    .modal.z-3 {
+        z-index: 1050;
+    }
 </style>

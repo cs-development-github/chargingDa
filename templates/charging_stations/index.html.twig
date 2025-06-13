@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
- 
+
 {% block title %}Documentations – Borne de recharge{% endblock %}
- 
+
 {% block body %}
 <style>
     :root {
@@ -12,36 +12,36 @@
         --card-radius: 1rem;
         --shadow: 0 6px 18px rgba(0, 0, 0, .12);
     }
- 
+
     body {
         background: var(--bg);
         padding-top: 70px
     }
- 
+
     .page-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem
     }
- 
+
     .page-header h2 {
         font-weight: 700;
         color: #333
     }
- 
+
     .search-wrapper {
         max-width: 380px;
         margin-bottom: 2rem
     }
- 
+
     .search-wrapper .input-group-text {
         background: var(--gradient);
         color: #fff;
         border: none;
         border-radius: 999px 0 0 999px
     }
- 
+
     .search-wrapper .form-control {
         border: none;
         border-radius: 0 999px 999px 0;
@@ -49,13 +49,13 @@
         outline: none;
         box-shadow: none;
     }
- 
+
     .search-wrapper .form-control:focus {
         border: none;
         outline: none;
         box-shadow: none;
     }
- 
+
     .btn-pill {
         background: var(--gradient);
         color: #fff;
@@ -70,19 +70,19 @@
         transition: transform .2s, box-shadow .2s;
         text-decoration: none
     }
- 
+
     .btn-pill:hover {
         transform: translateY(-2px);
         box-shadow: var(--shadow);
         text-decoration: none
     }
- 
+
     .stations-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 1.25rem
     }
- 
+
     .station-card {
         background: #fff;
         border-radius: var(--card-radius);
@@ -92,11 +92,11 @@
         overflow: hidden;
         transition: transform .25s
     }
- 
+
     .station-card:hover {
         transform: translateY(-3px)
     }
- 
+
     .header {
         height: 140px;
         display: flex;
@@ -104,62 +104,62 @@
         justify-content: center;
         background: #fff
     }
- 
+
     .device-img {
         max-height: 110px;
         width: auto;
         object-fit: contain
     }
- 
+
     .body {
         flex: 1;
         padding: 1rem;
         text-align: center
     }
- 
- 
+
+
     .body h5 {
         font-size: 1rem;
         font-weight: 600;
         margin-bottom: .35rem
     }
- 
+
     .stats {
         font-size: .8rem;
         color: #666;
         margin-bottom: .8rem
     }
- 
+
     .maker {
         padding: .65rem;
         display: flex;
         justify-content: center
     }
- 
+
     .maker img {
         height: 40px;
         width: auto;
         object-fit: contain
     }
- 
+
     .footer {
         padding: .65rem;
         display: flex;
         justify-content: center;
         gap: .4rem
     }
- 
+
     .modal-header {
         background: var(--gradient);
         color: #fff;
         border-top-left-radius: var(--card-radius);
         border-top-right-radius: var(--card-radius)
     }
- 
+
     .modal-content {
         border-radius: var(--card-radius)
     }
- 
+
     .modalPos {
         position: fixed !important;
         z-index: 11000 !important;
@@ -171,42 +171,48 @@
         background-color: rgba(0, 0, 0, 0.5);
     }
 </style>
- 
+
 <div class="container py-4">
-    <div class="page-header">
-        <h2><i class="bi bi-plug-fill me-2"></i>Documentation des bornes</h2>
+    <div
+        class="page-header d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between mb-4">
+        <h2 class="mb-3 mb-md-0">
+            <i class="bi bi-plug-fill me-2"></i>Documentation des bornes
+        </h2>
         {% if is_granted('ROLE_ADMIN') %}
-        <div class="d-flex gap-2">
-            <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#addStationModal">
+        <div class="d-flex flex-column flex-sm-row gap-2 mt-md-3">
+            <button class="btn btn-primary btn-pill w-100 w-sm-auto" data-bs-toggle="modal"
+                data-bs-target="#addStationModal">
                 <i class="bi bi-plus-lg"></i> Ajouter Borne
             </button>
-            <button class="btn-pill" data-bs-toggle="modal" data-bs-target="#addManufacturerModal">
+            <button class="btn btn-secondary btn-pill w-100 w-sm-auto" data-bs-toggle="modal"
+                data-bs-target="#addManufacturerModal">
                 <i class="bi bi-building"></i> Ajouter Constructeur
             </button>
         </div>
         {% endif %}
     </div>
- 
+
+
     <div class="search-wrapper">
         <div class="input-group">
             <span class="input-group-text"><i class="bi bi-search"></i></span>
             <input id="global-search" type="text" class="form-control" placeholder="Rechercher une borne…">
         </div>
     </div>
- 
+
     {% if chargingStations is not empty %}
-        <div class="stations-grid">
-            {% for station in chargingStations %}
-                {% include 'charging_stations/_card.html.twig' with {'station': station} %}
-            {% endfor %}
-        </div>
+    <div class="stations-grid">
+        {% for station in chargingStations %}
+        {% include 'charging_stations/_card.html.twig' with {'station': station} %}
+        {% endfor %}
+    </div>
     {% else %}
-        <div class="alert alert-warning text-center">
-            <i class="bi bi-info-circle me-1"></i>Aucune borne enregistrée.
-        </div>
+    <div class="alert alert-warning text-center">
+        <i class="bi bi-info-circle me-1"></i>Aucune borne enregistrée.
+    </div>
     {% endif %}
 </div>
- 
+
 <div class="modal fade modalPos" id="addStationModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
@@ -219,7 +225,7 @@
                 action: path('charging_station_add'),
                 attr: { novalidate: 'novalidate' }
                 }) }}
- 
+
                 <div class="row gy-3">
                     <div class="col-md-6">{{ form_row(form.model) }}</div>
                     <div class="col-md-6">{{ form_row(form.power) }}</div>
@@ -239,7 +245,7 @@
         </div>
     </div>
 </div>
- 
+
 <div class="modal fade modalPos" id="addManufacturerModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -262,7 +268,7 @@
         </div>
     </div>
 </div>
- 
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById('global-search');
