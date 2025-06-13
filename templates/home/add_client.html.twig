@@ -1,324 +1,333 @@
 {% extends 'base.html.twig' %}
 
 {% block style %}
-<style>
-	body {
-		background-color: #f0f2f5;
-		font-family: 'Segoe UI', sans-serif;
-	}
+	<style>
+		body {
+			background-color: #f0f2f5;
+			font-family: 'Segoe UI', sans-serif;
+		}
 
-	.wrapper {
-		padding: 80px 30px 30px;
-		max-width: 1100px;
-		margin: auto;
-	}
+		.wrapper {
+			padding: 80px 30px 30px;
+			max-width: 1100px;
+			margin: auto;
+		}
 
-	.containerbox {
-		margin-top: 50px;
-	}
+		.containerbox {
+			margin-top: 50px;
+		}
 
-	h2, h3 {
-		margin-bottom: 20px;
-		color: #333;
-	}
+		h2,
+		h3 {
+			margin-bottom: 20px;
+			color: #333;
+		}
 
-	input[type="text"],
-	input[type="email"],
-	input[type="number"],
-	input[type="password"],
-	select,
-	textarea {
-		width: 100%;
-		padding: 10px 15px;
-		border: 1px solid #ced4da;
-		border-radius: 8px;
-		background-color: #fff;
-		box-shadow: none;
-		font-size: 1rem;
-		transition: all 0.2s;
-		margin-bottom: 15px;
-	}
+		input[type="text"],
+		input[type="email"],
+		input[type="number"],
+		input[type="password"],
+		select,
+		textarea {
+			width: 100%;
+			padding: 10px 15px;
+			border: 1px solid #ced4da;
+			border-radius: 8px;
+			background-color: #fff;
+			box-shadow: none;
+			font-size: 1rem;
+			transition: all 0.2s;
+			margin-bottom: 15px;
+		}
 
-	input:focus,
-	select:focus,
-	textarea:focus {
-		outline: none;
-		border-color: transparent;
-		box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.35);
-	}
+		input:focus,
+		select:focus,
+		textarea:focus {
+			outline: none;
+			border-color: transparent;
+			box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.35);
+		}
 
-	label {
-		font-weight: 600;
-		margin-bottom: 5px;
-		display: inline-block;
-		color: #495057;
-	}
+		label {
+			font-weight: 600;
+			margin-bottom: 5px;
+			display: inline-block;
+			color: #495057;
+		}
 
-	form .form-group,
-	form div:not(.radio-group):not(.connection-box-wrapper):not(.sim-block):not(.connection-content) {
-		margin-bottom: 20px;
-	}
+		form .form-group,
+		form div:not(.radio-group):not(.connection-box-wrapper):not(.sim-block):not(.connection-content) {
+			margin-bottom: 20px;
+		}
 
-	.connection-group .container {
-		position: relative;
-		padding: 20px 25px;
-	}
+		.connection-group .container {
+			position: relative;
+			padding: 20px 25px;
+		}
 
-	.connection-group .container::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 6px;
-		height: 100%;
-		background: linear-gradient(to bottom, #ff4081, #ff8c00);
-		border-top-left-radius: 16px;
-		border-bottom-left-radius: 16px;
-	}
+		.connection-group .container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 6px;
+			height: 100%;
+			background: linear-gradient(to bottom, #ff4081, #ff8c00);
+			border-top-left-radius: 16px;
+			border-bottom-left-radius: 16px;
+		}
 
-	.connection-group {
-		position: relative;
-	}
+		.connection-group {
+			position: relative;
+		}
 
-	.remove-connection-btn {
-		position: absolute;
-		top: 15px;
-		right: 15px;
-		z-index: 10;
-		padding: 6px 10px;
-		font-size: 14px;
-		border-radius: 50%;
-		width: 36px;
-		height: 36px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+		.remove-connection-btn {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			z-index: 10;
+			padding: 6px 10px;
+			font-size: 14px;
+			border-radius: 50%;
+			width: 36px;
+			height: 36px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
-	.remove-connection-btn:hover {
-		transform: scale(1.05);
-	}
+		.remove-connection-btn:hover {
+			transform: scale(1.05);
+		}
 
-	.radio-group {
-		display: flex;
-		gap: 15px;
-		margin-bottom: 20px;
-	}
-
-	.radio-group input[type="radio"] {
-		display: none;
-	}
-
-	.radio-group label {
-		background: #e9ecef;
-		border-radius: 30px;
-		padding: 10px 20px;
-		cursor: pointer;
-		font-weight: 500;
-		color: #333;
-		transition: all 0.2s;
-	}
-
-	.radio-group input[type="radio"]:checked + label {
-		background: linear-gradient(to right, #ff4081, #ff8c00);
-		color: #fff;
-	}
-
-	.radio-group label:hover {
-		background-color: #dee2e6;
-	}
-
-	.sim-block {
-		margin-top: 20px;
-		padding: 20px;
-		border-radius: 12px;
-	}
-
-	.sim-block h3 {
-		font-size: 1.1rem;
-		margin-top: 0;
-	}
-
-	.green { background-color: #198754 !important; }
-	.red { background-color: #dc3545 !important; }
-
-	.btn {
-		border-radius: 30px !important;
-		padding: 10px 20px;
-		font-weight: 500;
-		transition: all 0.2s;
-	}
-
-	.btn-primary {
-		background: linear-gradient(to right, #ff4081, #ff8c00);
-		border: none;
-		color: #fff;
-	}
-
-	.btn-danger {
-		background: #dc3545;
-		border: none;
-		color: #fff;
-	}
-
-	.btn-success {
-		background: #198754;
-		border: none;
-		color: #fff;
-	}
-
-	.btn:hover {
-		transform: translateY(-1px);
-		opacity: .95;
-	}
-
-	.sim-wrapper {
-		display: flex;
-		gap: 20px;
-		align-items: flex-start;
-		justify-content: space-between;
-		margin-top: 20px;
-	}
-
-	.sim-block {
-		flex: 1;
-	}
-
-	.connection-box-wrapper {
-		width: 250px;
-		flex-shrink: 0;
-	}
-
-	.connection-box {
-		color: white;
-		border-radius: 8px;
-		width: 500px;
-		text-align: center;
-	}
-
-	.connection-content {
-		display: flex;
-		align-items: flex-start;
-		justify-content: space-between;
-		gap: 30px;
-	}
-
-	.connection-form {
-		flex: 1;
-	}
-
-	@media(max-width:768px) {
 		.radio-group {
+			display: flex;
+			gap: 15px;
+			margin-bottom: 20px;
+		}
+
+		.radio-group input[type="radio"] {
+			display: none;
+		}
+
+		.radio-group label {
+			background: #e9ecef;
+			border-radius: 30px;
+			padding: 10px 20px;
+			cursor: pointer;
+			font-weight: 500;
+			color: #333;
+			transition: all 0.2s;
+		}
+
+		.radio-group input[type="radio"]:checked + label {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			color: #fff;
+		}
+
+		.radio-group label:hover {
+			background-color: #dee2e6;
+		}
+
+		.sim-block {
+			margin-top: 20px;
+			padding: 20px;
+			border-radius: 12px;
+		}
+
+		.sim-block h3 {
+			font-size: 1.1rem;
+			margin-top: 0;
+		}
+
+		.green {
+			background-color: #198754 !important;
+		}
+		.red {
+			background-color: #dc3545 !important;
+		}
+
+		.btn {
+			border-radius: 30px !important;
+			padding: 10px 20px;
+			font-weight: 500;
+			transition: all 0.2s;
+		}
+
+		.btn-primary {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border: none;
+			color: #fff;
+		}
+
+		.btn-danger {
+			background: #dc3545;
+			border: none;
+			color: #fff;
+		}
+
+		.btn-success {
+			background: #198754;
+			border: none;
+			color: #fff;
+		}
+
+		.btn:hover {
+			transform: translateY(-1px);
+			opacity: .95;
+		}
+
+		.sim-wrapper {
+			display: flex;
+			gap: 20px;
+			align-items: flex-start;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+
+		.sim-block {
+			flex: 1;
+		}
+
+		.connection-box-wrapper {
+			width: 250px;
+			flex-shrink: 0;
+		}
+
+		.connection-box {
+			color: white;
+			border-radius: 8px;
+			width: 500px;
+			text-align: center;
+		}
+
+		.connection-content {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 30px;
+		}
+
+		.connection-form {
+			flex: 1;
+		}
+
+		@media(max-width:768px) {
+			.radio-group {
+				flex-direction: column;
+			}
+		}
+
+		/* ----------- MODAL STYLES ----------- */
+		.custom-modal-overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.6);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+		}
+
+		.custom-modal {
+			background: white;
+			padding: 20px;
+			border-radius: 12px;
+			width: 800px;
+			max-width: 95%;
+			max-height: 90vh;
+			overflow-y: auto;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+			display: flex;
 			flex-direction: column;
 		}
-	}
 
-	/* ----------- MODAL STYLES ----------- */
-	.custom-modal-overlay {
-		position: fixed;
-		inset: 0;
-		background-color: rgba(0, 0, 0, 0.6);
-		display: none;
-		align-items: center;
-		justify-content: center;
-		z-index: 9999;
-	}
+		.custom-modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
 
-	.custom-modal {
-		background: white;
-		padding: 20px;
-		border-radius: 12px;
-		width: 800px;
-		max-width: 95%;
-		max-height: 90vh;
-		overflow-y: auto;
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-	}
+		.custom-modal-close {
+			background: none;
+			border: none;
+			font-size: 24px;
+			cursor: pointer;
+		}
 
-	.custom-modal-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
+		.custom-modal-search {
+			width: 100%;
+			margin-top: 10px;
+			padding: 8px;
+			border-radius: 8px;
+			border: 1px solid #ccc;
+		}
 
-	.custom-modal-close {
-		background: none;
-		border: none;
-		font-size: 24px;
-		cursor: pointer;
-	}
+		.custom-modal-list {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+			gap: 15px;
+			margin-top: 15px;
+			flex: 1;
+			min-height: 200px;
+			position: relative;
+		}
 
-	.custom-modal-search {
-		width: 100%;
-		margin-top: 10px;
-		padding: 8px;
-		border-radius: 8px;
-		border: 1px solid #ccc;
-	}
+		.custom-model-card {
+			min-height: 200px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 15px;
+			border: 1px solid #ddd;
+			border-radius: 10px;
+			background-color: #fff;
+			position: relative;
+			cursor: pointer;
+			transition: box-shadow 0.2s ease, border-color 0.2s ease;
+			overflow: hidden;
+		}
 
-	.custom-modal-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-		gap: 15px;
-		margin-top: 15px;
-	}
+		.custom-model-card:hover {
+			box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+			border-color: #198754;
+		}
 
-	/* ----------- CARTE DE MODÈLE ----------- */
-	.custom-model-card {
-		min-height: 200px;
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		padding: 15px;
-		border: 1px solid #ddd;
-		border-radius: 10px;
-		background-color: #fff;
-		position: relative;
-		cursor: pointer;
-		transition: box-shadow 0.2s ease, border-color 0.2s ease;
-		overflow: hidden;
-	}
+		.custom-model-card .d-flex.align-items-center > img {
+			width: 80px;
+			height: 80px;
+			object-fit: cover;
+			border-radius: 6px;
+		}
 
-	.custom-model-card:hover {
-		box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
-		border-color: #198754;
-	}
+		.custom-model-card .d-flex.align-items-center > div {
+			flex: 1;
+			min-height: 80px;
+		}
 
-	.custom-model-card .d-flex.align-items-center > img {
-		width: 80px;
-		height: 80px;
-		object-fit: cover;
-		border-radius: 6px;
-	}
+		.custom-model-card img[alt="Logo Fabricant"] {
+			width: 80px;
+			height: 40px;
+			object-fit: contain;
+			border-radius: 6px;
+		}
 
-	.custom-model-card .d-flex.align-items-center > div {
-		flex: 1;
-		min-height: 80px;
-	}
+		.custom-model-card .arrow-icon {
+			position: absolute;
+			right: 10px;
+			top: 50%;
+			transform: translateY(-50%) translateX(10px);
+			opacity: 0;
+			transition: transform 0.2s ease, opacity 0.2s ease;
+			font-size: 1.5rem;
+			color: #198754;
+		}
 
-	.custom-model-card img[alt="Logo Fabricant"] {
-		width: 80px;
-		height: 40px;
-		object-fit: contain;
-		border-radius: 6px;
-	}
-
-	.custom-model-card .arrow-icon {
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		transform: translateY(-50%) translateX(10px);
-		opacity: 0;
-		transition: transform 0.2s ease, opacity 0.2s ease;
-		font-size: 1.5rem;
-		color: #198754;
-	}
-
-	.custom-model-card:hover .arrow-icon {
-		transform: translateY(-50%) translateX(0);
-		opacity: 1;
-	}
-</style>
+		.custom-model-card:hover .arrow-icon {
+			transform: translateY(-50%) translateX(0);
+			opacity: 1;
+		}
+	</style>
 {% endblock %}
 
 {% block body %}
@@ -439,131 +448,144 @@
 		</div>
 
 		 <script>
-		document.addEventListener('DOMContentLoaded', () => {
-			const wrapper = document.getElementById('connectionsWrapper');
-			const addBtn = document.getElementById('addConnectionBtn');
-			let index = 0;
-		
-			function addIntervention() {
-				const prototype = wrapper.dataset.prototype;
-				const newForm = prototype.replace(/__name__/g, index);
-				const div = document.createElement('div');
-				div.innerHTML = newForm;
-		
-				const deleteBtn = div.querySelector('.remove-connection-btn');
-				if (deleteBtn) {
-					deleteBtn.addEventListener('click', () => {
-						if (wrapper.querySelectorAll('.sim-block').length > 1) {
-							div.remove();
-						} else {
-							alert("Au moins une intervention est requise.");
+				document.addEventListener('DOMContentLoaded', () => {
+					const wrapper = document.getElementById('connectionsWrapper');
+					const addBtn = document.getElementById('addConnectionBtn');
+					let index = 0;
+				
+					function addIntervention() {
+						const prototype = wrapper.dataset.prototype;
+						const newForm = prototype.replace(/__name__/g, index);
+						const div = document.createElement('div');
+						div.innerHTML = newForm;
+				
+						const deleteBtn = div.querySelector('.remove-connection-btn');
+						if (deleteBtn) {
+							deleteBtn.addEventListener('click', () => {
+								if (wrapper.querySelectorAll('.sim-block').length > 1) {
+									div.remove();
+								} else {
+									alert("Au moins une intervention est requise.");
+								}
+							});
 						}
-					});
-				}
-		
-				wrapper.appendChild(div);
-				index++;
-			}
-		
-			if (wrapper.querySelectorAll('.sim-block').length === 0) {
-				addIntervention();
-			} else {
-				wrapper.querySelectorAll('.sim-block').forEach((div) => {
-					const deleteBtn = div.querySelector('.remove-connection-btn');
-					if (deleteBtn) {
-						deleteBtn.addEventListener('click', () => {
-							if (wrapper.querySelectorAll('.sim-block').length > 1) {
-								div.remove();
-							} else {
-								alert("Au moins une intervention est requise.");
+				
+						wrapper.appendChild(div);
+						index++;
+					}
+				
+					if (wrapper.querySelectorAll('.sim-block').length === 0) {
+						addIntervention();
+					} else {
+						wrapper.querySelectorAll('.sim-block').forEach((div) => {
+							const deleteBtn = div.querySelector('.remove-connection-btn');
+							if (deleteBtn) {
+								deleteBtn.addEventListener('click', () => {
+									if (wrapper.querySelectorAll('.sim-block').length > 1) {
+										div.remove();
+									} else {
+										alert("Au moins une intervention est requise.");
+									}
+								});
 							}
+							index++;
 						});
 					}
-					index++;
+				
+					addBtn.addEventListener('click', () => {
+						addIntervention();
+					});
 				});
-			}
-		
-			addBtn.addEventListener('click', () => {
-				addIntervention();
-			});
-		});
-		
-			let currentHiddenInput, currentDisplayLabel, currentChooseBtn;
-		
-			function openModal(button) {
-				const wrapper = button.closest('.sim-block');
-				currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
-				currentDisplayLabel = wrapper.querySelector('.model-selected');
-				currentChooseBtn = button;
-				document.getElementById('customModal').style.display = 'flex';
-			}
-		
-			function closeModal() {
-				document.getElementById('customModal').style.display = 'none';
-				currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
-			}
-		
-			function selectModel(id, name, image, manuImage, manuName, reference) {
-				if (!currentHiddenInput) return;
-		
-				currentHiddenInput.value = id;
-				currentChooseBtn.classList.add('d-none');
-				currentDisplayLabel.innerHTML = `
-					<div class="d-flex align-items-start gap-3 p-2 border rounded bg-light">
-						<img src="/uploads/${image}" style="width:80px; border-radius:6px; object-fit:cover;" alt="Model">
-						<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
-						<div class="flex-grow-1">
-							<strong>${name}</strong><br>
-							Référence fabriquant : ${reference} </br>
-							<small class="text-muted">${manuName}</small>
-							<div class="mt-2">
-								<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
-							</div>
-						</div>
-					</div>`;
-				closeModal();
-			}
-		
-			function resetModelSelection(button) {
-				const wrapper = button.closest('.sim-block');
-				const input = wrapper.querySelector('input.charging-station-hidden');
-				const label = wrapper.querySelector('.model-selected');
-				const chooseBtn = wrapper.querySelector('.choose-model-btn');
-				if (input) input.value = '';
-				if (label) label.innerHTML = '';
-				if (chooseBtn) chooseBtn.classList.remove('d-none');
-			}
-		</script>
+				
+					let currentHiddenInput, currentDisplayLabel, currentChooseBtn;
+				
+					function openModal(button) {
+						const wrapper = button.closest('.sim-block');
+						currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
+						currentDisplayLabel = wrapper.querySelector('.model-selected');
+						currentChooseBtn = button;
+						document.getElementById('customModal').style.display = 'flex';
+					}
+				
+					function closeModal() {
+						document.getElementById('customModal').style.display = 'none';
+						currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
+					}
+				
+					function selectModel(id, name, image, manuImage, manuName, reference) {
+						if (!currentHiddenInput) return;
+				
+						currentHiddenInput.value = id;
+						currentChooseBtn.classList.add('d-none');
+						currentDisplayLabel.innerHTML = `
+							<div class="d-flex align-items-start gap-3 p-2 border rounded bg-light">
+								<img src="/uploads/${image}" style="width:80px; border-radius:6px; object-fit:cover;" alt="Model">
+								<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
+								<div class="flex-grow-1">
+									<strong>${name}</strong><br>
+									Référence fabriquant : ${reference} </br>
+									<small class="text-muted">${manuName}</small>
+									<div class="mt-2">
+										<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
+									</div>
+								</div>
+							</div>`;
+						closeModal();
+					}
+				
+					function resetModelSelection(button) {
+						const wrapper = button.closest('.sim-block');
+						const input = wrapper.querySelector('input.charging-station-hidden');
+						const label = wrapper.querySelector('.model-selected');
+						const chooseBtn = wrapper.querySelector('.choose-model-btn');
+						if (input) input.value = '';
+						if (label) label.innerHTML = '';
+						if (chooseBtn) chooseBtn.classList.remove('d-none');
+					}
+				</script>
 
 	 <script>
-		document.addEventListener('DOMContentLoaded', function () {
-			const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-			tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-				new bootstrap.Tooltip(tooltipTriggerEl)
-			})
-		})
-	</script>
-
-		 <script>
 			document.addEventListener('DOMContentLoaded', function () {
-				const searchInput = document.getElementById('searchModelInput');
-				const cards = document.querySelectorAll('.custom-model-card');
-		
-				if (searchInput) {
-					searchInput.addEventListener('input', function () {
-						const value = this.value.trim().toLowerCase();
-		
-						cards.forEach(card => {
-							const name = card.dataset.name;
-							if (name.includes(value)) {
-								card.style.display = 'block';
-							} else {
-								card.style.display = 'none';
-							}
-						});
-					});
-				}
-			});
+				const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+				tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+					new bootstrap.Tooltip(tooltipTriggerEl)
+				})
+			})
 		</script>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+			const searchInput = document.getElementById('searchModelInput');
+			const cards = document.querySelectorAll('.custom-model-card');
+			const modalList = document.getElementById('modalModelList');
+		
+			let noResultMessage = document.createElement('div');
+			noResultMessage.textContent = 'Aucune borne trouvée.';
+			noResultMessage.classList.add('text-center', 'text-muted', 'mt-3');
+			noResultMessage.style.display = 'none';
+			noResultMessage.id = 'noResultsFound';
+			modalList.appendChild(noResultMessage);
+		
+			if (searchInput) {
+				searchInput.addEventListener('input', function () {
+					const value = this.value.trim().toLowerCase();
+					let visibleCount = 0;
+		
+					cards.forEach(card => {
+						const name = card.dataset.name;
+						if (name.includes(value)) {
+							card.style.display = 'block';
+							visibleCount++;
+						} else {
+							card.style.display = 'none';
+						}
+					});
+		
+					noResultMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+				});
+			}
+	});
+		
+	</script>
 
 	{% endblock %}
