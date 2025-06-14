@@ -202,20 +202,6 @@
 				transition: background 0.2s, color 0.2s;
 			}
 
-			.footer-section a {
-				color: white;
-				text-decoration: none;
-			}
-
-			.footer-section a:hover {
-				color: #f6941f; /* ou autre couleur d'accent */
-				text-decoration: underline;
-			}
-
-			.footer-section h5 {
-				color: white;
-			}
-
 			.btn-white-rounded:hover {
 				background-color: #ec008c;
 				color: #fff;
@@ -346,82 +332,6 @@
 				100% {
 					transform: translateX(-50%);
 				}
-			}
-
-			.footer-section {
-				background: url("{{ asset('build/images/landing/background.png') }}") center center / cover no-repeat;
-				color: white;
-				padding: 3rem 0;
-				position: relative;
-			}
-
-			.footer-card {
-				padding: 2rem;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				max-width: 100%;
-			}
-
-			.footer-brand {
-				display: flex;
-				align-items: center;
-				gap: 1rem;
-				flex-shrink: 0;
-			}
-
-			.footer-brand .logo-container img {
-				max-width: 80%;
-				max-height: 80%;
-				object-fit: contain;
-			}
-
-			.footer-brand .brand-title {
-				font-size: 1.8rem;
-				font-weight: bold;
-				background: linear-gradient(to right, #ec008c, #f6941f);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-				white-space: nowrap;
-			}
-
-			.footer-links {
-				display: flex;
-				gap: 2rem;
-				flex-wrap: wrap;
-			}
-
-			.footer-links .link-column {
-				min-width: 120px;
-			}
-
-			.footer-links .link-column h5 {
-				font-size: 1rem;
-				font-weight: 600;
-				margin-bottom: 1rem;
-				text-transform: uppercase;
-				color: white;
-			}
-
-			.footer-links .link-column ul {
-				list-style: none;
-				padding: 0;
-				margin: 0;
-			}
-
-			.footer-links .link-column ul li {
-				margin-bottom: 0.5rem;
-			}
-
-			.footer-links .link-column ul li a {
-				color: white;
-				text-decoration: none;
-				transition: color 0.3s ease;
-			}
-
-			.footer-links .link-column ul li a:hover {
-				color: #ec008c;
-				text-decoration: underline;
 			}
 
 			.gradient-line {
@@ -801,62 +711,7 @@
 			</div>
 		</section>
 
-		<footer class="footer-section py-5" data-aos-duration="800">
-			<div class="container">
-				<div class="footer-card d-flex flex-column flex-md-row align-items-center text-center text-md-start justify-content-between">
-
-					<div class="footer-brand mb-4 mb-md-0 text-center text-md-start align-self-md-center">
-						<div class="logo-container mb-2">
-							<img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi" style="max-width: 50px;">
-						</div>
-						<span class="title-gradient d-none d-md-inline">PARTENAIRES</span>
-					</div>
-
-					<div class="footer-links d-flex flex-column flex-md-row gap-4">
-
-						<div class="link-column">
-							<h5 class="fw-bold mb-3">Liens</h5>
-							<ul class="list-unstyled">
-								<li>
-									<a href="{{ path('app_faq') }}">FAQ</a>
-								</li>
-								<li>
-									<a href="{{ path('app_aide') }}">Aide</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="link-column">
-							<h5 class="fw-bold mb-3">Légal</h5>
-							<ul class="list-unstyled">
-								<li>
-									<a href="{{ path('app_cgu') }}">CGU</a>
-								</li>
-								<li>
-									<a href="#">CGV</a>
-								</li>
-								<li>
-									<a href="#">RGPD</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="link-column">
-							<h5 class="fw-bold mb-3">Entreprise</h5>
-							<ul class="list-unstyled">
-								<li>
-									<a href="{{ path('app_propos') }}">À propos</a>
-								</li>
-								<li>
-									<a href="{{ path('app_contact') }}">Contact</a>
-								</li>
-							</ul>
-						</div>
-
-					</div>
-				</div>
-			</div>
-		</footer>
+		{% include 'landing_page/_footer.html.twig' %}
 
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>

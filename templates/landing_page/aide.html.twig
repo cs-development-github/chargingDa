@@ -137,13 +137,6 @@
       box-shadow: 0 8px 25px rgba(236, 0, 140, 0.4);
     }
 
-    footer {
-      background-color: #fff;
-      padding: 2rem 0;
-      text-align: center;
-      border-top: 1px solid #eee;
-    }
-
     .gradient-text {
       background: linear-gradient(to right, #ec008c, #f6941f);
       -webkit-background-clip: text;
@@ -198,90 +191,6 @@
       height: 4px;
       background: linear-gradient(to right, #ec008c, #f6941f);
       margin: 0 auto;
-    }
-
-    .footer-section {
-      background: url("./assets/images/background.png") center center / cover no-repeat;
-      color: #fff;
-      padding: 3rem 0;
-      position: relative;
-    }
-
-    .footer-card {
-      background-color: #fff;
-      border-radius: 2rem;
-      padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 100%;
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-
-    .footer-links .link-column h5 {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      color: #333;
-    }
-
-    .footer-links .link-column ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .footer-links .link-column ul li {
-      margin-bottom: 0.5rem;
-    }
-
-    .footer-links .link-column ul li a {
-      color: #555;
-    }
-
-    .footer-links .link-column ul li a:hover {
-      color: #ec008c;
-    }
-
-    .footer-section {
-      background-color: #f8f9fa;
-      padding: 3rem 1rem;
-    }
-
-    .footer-card {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      text-align: center;
-    }
-
-    @media (min-width: 768px) {
-      .footer-card {
-        flex-direction: row;
-        justify-content: space-between;
-        text-align: left;
-      }
-    }
-
-    .footer-links {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    @media (min-width: 768px) {
-      .footer-links {
-        flex-direction: row;
-        gap: 4rem;
-      }
     }
 
     .link-column ul {
@@ -394,52 +303,7 @@
     </div>
   </section>
 
-  <footer class="footer-section py-5 bg-white" data-aos-duration="800">
-    <div class="container">
-      <div
-        class="footer-card d-flex flex-column flex-md-row align-items-center text-center text-md-start justify-content-between">
-
-        <div
-          class="footer-brand mb-4 mb-md-0 d-flex flex-column flex-md-row align-items-center gap-2 text-center text-md-start align-self-md-center">
-          <div class="logo-container">
-            <img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi" style="max-width: 50px;">
-          </div>
-          <span class="title-gradient">PARTENAIRES</span>
-        </div>
-
-        <div class="footer-links d-flex flex-column flex-md-row gap-4">
-
-          <div class="link-column">
-            <h5 class="fw-bold mb-3">Liens</h5>
-            <ul class="list-unstyled">
-              <li><a href="{{ path('app_faq') }}">FAQ</a></li>
-              <li><a href="{{ path('app_aide') }}">Aide</a></li>
-            </ul>
-          </div>
-
-          <div class="link-column">
-            <h5 class="fw-bold mb-3">Légal</h5>
-            <ul class="list-unstyled">
-              <li><a href="{{ path('app_cgu') }}">CGU</a></li>
-              <li><a href="#">CGV</a></li> <!-- Ruta aún no definida -->
-              <li><a href="#">RGPD</a></li> <!-- Ruta aún no definida -->
-            </ul>
-          </div>
-
-          <div class="link-column">
-            <h5 class="fw-bold mb-3">Entreprise</h5>
-            <ul class="list-unstyled">
-              <li><a href="{{ path('app_propos') }}">À propos</a></li>
-              <li><a href="{{ path('app_contact') }}">Contact</a></li>
-            </ul>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  </footer>
-
-
+		{% include 'landing_page/_footer.html.twig' %}
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
