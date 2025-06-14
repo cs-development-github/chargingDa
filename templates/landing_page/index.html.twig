@@ -518,20 +518,9 @@
 	</head>
 
 	<body>
-		<nav class="navbar navbar-light bg-white shadow fixed-top" data-aos-duration="800">
-			<div class="container d-flex justify-content-between align-items-center">
-				<a class="navbar-brand d-flex align-items-center" href="#">
-					<div class="logo-container me-2">
-						<img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
-					</div>
-					<span class="title-gradient">PARTENAIRES</span>
-				</a>
 
-				<a href="{{ path('app_login') }}" class="btn btn-gradient">
-					Se connecter
-				</a>
-			</div>
-		</nav>
+		{% include 'landing_page/_navbar.html.twig' %}
+
 		<div style="margin-top: 80px;"></div>
 		<section class="hero d-flex align-items-center justify-content-center px-3">
 			<div class="custom-card" data-aos="zoom-in" data-aos-duration="1000">
