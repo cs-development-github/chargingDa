@@ -1,384 +1,399 @@
 {% extends 'base.login.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}Inscription
+{% endblock %}
 
 {% block stylesheet %}
-{{ parent() }}
-<style>
-    .vh-100 {
-        height: 100vh;
-    }
+	{{ parent() }}
+	<style>
+		.vh-100 {
+			height: 100vh;
+		}
 
-    .col-left {
-        background: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem;
-    }
+		.col-left {
+			background: #fff;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 3rem;
+		}
 
-    .col-right {
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 3rem 2rem;
-    }
+		.col-right {
+			position: relative;
+			overflow: hidden;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 3rem 2rem;
+		}
 
-    .col-right .bg-img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        filter: blur(6px);
-        transform: scale(1.1);
-        z-index: 1;
-    }
+		.col-right .bg-img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			filter: blur(6px);
+			transform: scale(1.1);
+			z-index: 1;
+		}
 
-    .col-right .overlay {
-        position: absolute;
-        inset: 0;
-        background: rgba(255, 255, 255, .6);
-        z-index: 2;
-    }
+		.col-right .overlay {
+			position: absolute;
+			inset: 0;
+			background: rgba(255, 255, 255, 0.6);
+			z-index: 2;
+		}
 
-    .left-content {
-        max-width: 300px;
-        text-align: center;
-        opacity: 0;
-        transform: translateY(20px);
-        transition: all .6s ease-out;
-    }
+		.left-content {
+			max-width: 300px;
+			text-align: center;
+			opacity: 0;
+			transform: translateY(20px);
+			transition: all 0.6s ease-out;
+		}
 
-    .left-content.visible {
-        opacity: 1;
-        transform: translateY(0);
-    }
+		.left-content.visible {
+			opacity: 1;
+			transform: translateY(0);
+		}
 
-    .left-content h1 {
-        font-size: 2rem;
-        line-height: 1.2;
-        margin-bottom: 1.5rem;
-    }
+		.left-content h1 {
+			font-size: 2rem;
+			line-height: 1.2;
+			margin-bottom: 1.5rem;
+		}
 
-    .gradient-text,
-    .feature-list li i {
-        background: linear-gradient(90deg, #ff4081, #ff8c00);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+		.gradient-text,
+		.feature-list li i {
+			background: linear-gradient(90deg, #ff4081, #ff8c00);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
 
-    .gradient-text-title {
-        margin-top: 20px;
-        padding-top: 20px;
-    }
+		.gradient-text-title {
+			margin-top: 20px;
+			padding-top: 20px;
+		}
 
-    .gradient-link {
-        background: linear-gradient(90deg, #ff4081, #ff8c00);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+		.gradient-link {
+			background: linear-gradient(90deg, #ff4081, #ff8c00);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+		}
 
-    .progress {
-        background-color: transparent;
-    }
+		.progress {
+			background-color: transparent;
+		}
 
-    .logo-box {
-        width: 80px;
-        height: 80px;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, .2);
-        margin: 2rem auto 1rem;
-    }
+		.logo-box {
+			width: 80px;
+			height: 80px;
+			border-radius: 20px;
+			overflow: hidden;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+			margin: 2rem auto 1rem;
+		}
 
-    .feature-list {
-        list-style: none;
-        padding: 0;
-        margin-bottom: 2rem;
-    }
+		.feature-list {
+			list-style: none;
+			padding: 0;
+			margin-bottom: 2rem;
+		}
 
-    .feature-list li {
-        display: flex;
-        align-items: center;
-        color: #555;
-        font-size: .95rem;
-        margin-bottom: .75rem;
-    }
+		.feature-list li {
+			display: flex;
+			align-items: center;
+			color: #555;
+			font-size: 0.95rem;
+			margin-bottom: 0.75rem;
+		}
 
-    .feature-list li i {
-        font-size: 1.2rem;
-        margin-right: .75rem;
-    }
+		.feature-list li i {
+			font-size: 1.2rem;
+			margin-right: 0.75rem;
+		}
 
-    .card-login {
-        position: relative;
-        z-index: 3;
-        max-width: 600px;
-        width: 100%;
-        border-radius: 20px;
-        padding: 2.5rem 2rem;
-        background: #fff;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
-    }
+		.card-login {
+			position: relative;
+			z-index: 3;
+			max-width: 600px;
+			width: 100%;
+			border-radius: 20px;
+			padding: 2.5rem 2rem;
+			background: #fff;
+			box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+		}
 
-    .card-login h2 {
-        font-size: 1.75rem;
-        margin-bottom: 1rem;
-        text-align: center;
-    }
+		.card-login h2 {
+			font-size: 1.75rem;
+			margin-bottom: 1rem;
+			text-align: center;
+		}
 
-    .card-login .mb-3,
-    .card-login .form-check {
-        margin-bottom: 1rem !important;
-    }
+		.card-login .mb-3,
+		.card-login .form-check {
+			margin-bottom: 1rem !important;
+		}
 
-    .form-label {
-        font-size: .95rem;
-        margin-bottom: .5rem;
-        font-weight: 500;
-    }
+		.form-label {
+			font-size: 0.95rem;
+			margin-bottom: 0.5rem;
+			font-weight: 500;
+		}
 
-    .form-control {
-        padding: .75rem 1rem;
-        font-size: 1rem;
-    }
+		.form-control {
+			padding: 0.75rem 1rem;
+			font-size: 1rem;
+		}
 
-    .input-group .btn-eye {
-        border: 0;
-        background: #f8f9fa;
-        padding: .4rem .8rem;
-        display: flex;
-        align-items: center;
-    }
+		.input-group .btn-eye {
+			border: 0;
+			background: #f8f9fa;
+			padding: 0.4rem 0.8rem;
+			display: flex;
+			align-items: center;
+		}
 
-    .btn-gradient {
-        background: linear-gradient(90deg, #ff4081, #ff8c00);
-        border: none;
-        color: #fff;
-        padding: .75rem;
-        font-size: 1rem;
-        width: 100%;
-        border-radius: 8px;
-        transition: opacity .3s;
-    }
+		.btn-gradient {
+			background: linear-gradient(90deg, #ff4081, #ff8c00);
+			border: none;
+			color: #fff;
+			padding: 0.75rem;
+			font-size: 1rem;
+			width: 100%;
+			border-radius: 8px;
+			transition: opacity 0.3s;
+		}
 
-    .btn-gradient:hover {
-        opacity: .9;
-    }
+		.btn-gradient:hover {
+			opacity: .9;
+		}
 
-    #passwordStrengthBar {
-        width: 0;
-        height: 5px;
-        transition: width .3s;
-    }
+		#passwordStrengthBar {
+			width: 0;
+			height: 5px;
+			transition: width 0.3s;
+		}
 
-    @media (max-width: 767.98px) {
-        .vh-100 {
-            height: auto !important;
-        }
+		@media(max-width: 767.98px) {
+			.vh-100 {
+				height: auto !important;
+			}
 
-        .col-left {
-            display: none !important;
-        }
+			.col-left {
+				display: none !important;
+			}
 
-        .col-right,
-        .container-fluid {
-            background: #fff !important;
-        }
+			.col-right,
+			.container-fluid {
+				background: #fff !important;
+			}
 
-        .col-right .bg-img,
-        .col-right .overlay {
-            display: none;
-        }
+			.col-right .bg-img,
+			.col-right .overlay {
+				display: none;
+			}
 
-        .col-right {
-            padding: 2rem 1rem;
-        }
+			.col-right {
+				padding: 2rem 1rem;
+			}
 
-        .card-login {
-            max-width: 95%;
-            width: auto;
-            margin: 1rem auto;
-            padding: 2rem 1rem;
-        }
-    }
-</style>
+			.card-login {
+				max-width: 95%;
+				width: auto;
+				margin: 1rem auto;
+				padding: 2rem 1rem;
+			}
+
+			input.form-control,
+			.input-group > .form-control,
+			.styled-input {
+				width: 100% !important;
+				box-sizing: border-box;
+			}
+
+			.input-group {
+				flex-wrap: nowrap;
+			}
+
+			.row > .col,
+			.row > .col-md-6 {
+				flex: 0 0 100%;
+				max-width: 100%;
+			}
+		}
+	</style>
 {% endblock %}
 
 {% block body %}
-<div class="container-fluid p-0">
-    <div class="row g-0 vh-100">
+	<div class="container-fluid p-0">
+		<div class="row g-0 vh-100">
 
-        <div class="col-md-4 col-left d-none d-md-flex align-items-center">
-            <div class="left-content">
-                <div
-                    style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; justify-content: center;">
-                    <img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi"
-                        style="width: 100%; height: auto;">
-                </div>
-                <h1 class="fw-bold gradient-text-title">
-                    Rejoignez-nous et
-                    Profitez de<br />notre <span class="gradient-text">Solution!</span>
-                </h1>
-            </div>
-        </div>
+			<div class="col-md-4 col-left d-none d-md-flex align-items-center">
+				<div class="left-content">
+					<div style="width: 80px; height: 80px; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); display: inline-flex; align-items: center; justify-content: center;">
+						<img src="{{ asset('build/images/lodmico.png') }}" alt="Logo Lodmi" style="width: 100%; height: auto;">
+					</div>
+					<h1 class="fw-bold gradient-text-title">
+						Rejoignez-nous et
+						                    Profitez de<br/>notre
+						<span class="gradient-text">Solution!</span>
+					</h1>
+				</div>
+			</div>
 
-        <div class="col-12 col-md-8 col-right">
-            <img src="{{ asset('build/images/backgroundclient.jpg') }}" class="bg-img" alt="Background">
-            <div class="overlay"></div>
+			<div class="col-12 col-md-8 col-right">
+				<img src="{{ asset('build/images/backgroundclient.jpg') }}" class="bg-img" alt="Background">
+				<div class="overlay"></div>
 
-            <div class="card-login">
+				<div class="card-login">
 
-                <h2>INSCRIPTION PARTENAIRES</h2>
+					<h2>INSCRIPTION</h2>
 
-                {{ form_start(registrationForm, {'attr': {'id':'registration-form'}}) }}
+					{{ form_start(registrationForm, {'attr': {'id':'registration-form'}}) }}
 
-                <div class="mb-3">
-                    <label class="form-label" for="email">Adresse email</label>
-                    {{ form_widget(registrationForm.email,{attr:{class:'form-control',id:'email'}}) }}
-                    {{ form_errors(registrationForm.email) }}
-                </div>
+                    <div class="row g-3 mb-3">
+						<div class="col">
+							<label class="form-label" for="prenom">Prénom</label>
+							{{ form_widget(registrationForm.name,{attr:{class:'form-control',id:'prenom'}}) }}
+						</div>
+						<div class="col">
+							<label class="form-label" for="nom">Nom</label>
+							{{ form_widget(registrationForm.lastname,{attr:{class:'form-control',id:'nom'}}) }}
+						</div>
+					</div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="soc">Nom de l'entreprise</label>
-                    {{ form_widget(registrationForm.societyName,{attr:{class:'form-control',id:'soc'}}) }}
-                </div>
+					<div class="mb-3">
+						<label class="form-label" for="email">Adresse email</label>
+						{{ form_widget(registrationForm.email,{attr:{class:'form-control',id:'email'}}) }}
+						{{ form_errors(registrationForm.email) }}
+					</div>
 
-                <div class="row g-3 mb-3">
-                    <div class="col">
-                        <label class="form-label" for="phone">Téléphone</label>
-                        {{ form_widget(registrationForm.phone,{attr:{class:'form-control',id:'phone'}}) }}
-                    </div>
-                    <div class="col">
-                        <label class="form-label" for="siret">N° SIRET</label>
-                        {{ form_widget(registrationForm.siret,{attr:{class:'form-control',id:'siret'}}) }}
-                    </div>
-                </div>
+					<div class="mb-3">
+						<label class="form-label" for="soc">Nom de l'entreprise</label>
+						{{ form_widget(registrationForm.societyName,{attr:{class:'form-control',id:'soc'}}) }}
+					</div>
 
-                <div class="row g-3 mb-3">
-                    <div class="col">
-                        <label class="form-label" for="prenom">Prénom</label>
-                        {{ form_widget(registrationForm.name,{attr:{class:'form-control',id:'prenom'}}) }}
-                    </div>
-                    <div class="col">
-                        <label class="form-label" for="nom">Nom</label>
-                        {{ form_widget(registrationForm.lastname,{attr:{class:'form-control',id:'nom'}}) }}
-                    </div>
-                </div>
+					<div class="row g-3 mb-3">
+						<div class="col">
+							<label class="form-label" for="phone">Téléphone</label>
+							{{ form_widget(registrationForm.phone,{attr:{class:'form-control',id:'phone'}}) }}
+						</div>
+						<div class="col">
+							<label class="form-label" for="siret">N° SIRET</label>
+							{{ form_widget(registrationForm.siret,{attr:{class:'form-control',id:'siret'}}) }}
+						</div>
+					</div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="{{ registrationForm.password.first.vars.id }}">Mot de passe</label>
+					<div class="mb-3">
+						<label class="form-label" for="{{ registrationForm.password.first.vars.id }}">Mot de passe</label>
 
-                    <div class="input-group position-relative">
-                        {{ form_widget(registrationForm.password.first, {
+						<div class="input-group position-relative">
+							{{ form_widget(registrationForm.password.first, {
                         attr: {
                         class: 'form-control',
                         onkeyup: 'checkPasswordStrength()'
                         }
                         }) }}
 
-                        <button type="button" class="btn-eye toggle-password"
-                            data-target="{{ registrationForm.password.first.vars.id }}">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
+							<button type="button" class="btn-eye toggle-password" data-target="{{ registrationForm.password.first.vars.id }}">
+								<i class="bi bi-eye"></i>
+							</button>
+						</div>
 
-                    <div class="progress mt-2">
-                        <div id="passwordStrengthBar" class="progress-bar" style="width:0%"></div>
-                    </div>
-                    <small id="passwordStrengthText" class="text-muted">Au moins 8 caractères.</small>
-                </div>
+						<div class="progress mt-2">
+							<div id="passwordStrengthBar" class="progress-bar" style="width:0%"></div>
+						</div>
+						<small id="passwordStrengthText" class="text-muted">Au moins 8 caractères.</small>
+					</div>
 
-                <div class="mb-3">
-                    <label class="form-label" for="{{ registrationForm.password.second.vars.id }}">Confirmer le mot de
-                        passe</label>
+					<div class="mb-3">
+						<label class="form-label" for="{{ registrationForm.password.second.vars.id }}">Confirmer le mot de
+							                        passe</label>
 
-                    <div class="input-group position-relative">
-                        {{ form_widget(registrationForm.password.second, {
+						<div class="input-group position-relative">
+							{{ form_widget(registrationForm.password.second, {
                         attr: { class: 'form-control' }
                         }) }}
 
-                        <button type="button" class="btn-eye toggle-password"
-                            data-target="{{ registrationForm.password.second.vars.id }}">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                </div>
+							<button type="button" class="btn-eye toggle-password" data-target="{{ registrationForm.password.second.vars.id }}">
+								<i class="bi bi-eye"></i>
+							</button>
+						</div>
+					</div>
 
-                <div class="form-check mb-4">
-                    {{ form_widget(registrationForm.agreeTerms,{attr:{class:'form-check-input me-2'}}) }}
-                    <label class="form-check-label" for="agreeTerms">
-                        J’accepte les <a href="{{ path('app_cgu') }}"
-                            class="gradient-link text-decoration-underline">conditions générales</a>
-                    </label>
-                </div>
+					<div class="form-check mb-4">
+						{{ form_widget(registrationForm.agreeTerms,{attr:{class:'form-check-input me-2'}}) }}
+						<label class="form-check-label" for="agreeTerms">
+							J’accepte les
+							<a href="{{ path('app_cgu') }}" class="gradient-link text-decoration-underline">conditions générales</a>
+						</label>
+					</div>
 
-                <button type="submit" class="btn-gradient mb-2">S’INSCRIRE</button>
+					<button type="submit" class="btn-gradient mb-2">S’INSCRIRE</button>
 
-                {{ form_end(registrationForm) }}
+					{{ form_end(registrationForm) }}
 
-                <p class="text-center mt-2 mb-0">
-                    Vous avez déjà un compte ?
-                    <a href="{{ path('app_login') }}" class="gradient-link text-decoration-underline">Se connecter</a>
-                </p>
-            </div>
-        </div>
+					<p class="text-center mt-2 mb-0">
+						Vous avez déjà un compte ?
+						<a href="{{ path('app_login') }}" class="gradient-link text-decoration-underline">Se connecter</a>
+					</p>
+				</div>
+			</div>
 
-    </div>
-</div>
+		</div>
+	</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.toggle-password').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const input = document.getElementById(btn.dataset.target);
-                const icon = btn.querySelector('i');
-
-                if (!input) return;                            
-                if (input.type === 'password') {
-                    input.type = 'text';
-                    icon.classList.replace('bi-eye', 'bi-eye-slash');
-                } else {
-                    input.type = 'password';
-                    icon.classList.replace('bi-eye-slash', 'bi-eye');
-                }
-            });
-        });
-    });
-
-    function checkPasswordStrength() {
-        const pwd = document.getElementById('{{ registrationForm.password.first.vars.id }}').value;
-        const bar = document.getElementById('passwordStrengthBar');
-        const text = document.getElementById('passwordStrengthText');
-
-        let s = 0;
-        if (pwd.length >= 8) s++;
-        if (/[A-Z]/.test(pwd)) s++;
-        if (/[0-9]/.test(pwd)) s++;
-        if (/[^A-Za-z0-9]/.test(pwd)) s++;
-
-        const percent = s * 25;
-        bar.style.width = percent + '%';
-
-        if (percent < 25) {
-            bar.className = 'progress-bar bg-danger';
-            text.textContent = 'Très faible';
-        } else if (percent < 50) {
-            bar.className = 'progress-bar bg-warning';
-            text.textContent = 'Moyen';
-        } else if (percent < 75) {
-            bar.className = 'progress-bar bg-info';
-            text.textContent = 'Sécurisé';
-        } else {
-            bar.className = 'progress-bar bg-success';
-            text.textContent = 'Très sécurisé';
-        }
-    }
-
-    setTimeout(() => { document.querySelector('.left-content')?.classList.add('visible'); }, 300);
-</script>
+	 <script>
+	    document.addEventListener('DOMContentLoaded', () => {
+	        document.querySelectorAll('.toggle-password').forEach(btn => {
+	            btn.addEventListener('click', () => {
+	                const input = document.getElementById(btn.dataset.target);
+	                const icon = btn.querySelector('i');
+	
+	                if (!input) return;                            
+	                if (input.type === 'password') {
+	                    input.type = 'text';
+	                    icon.classList.replace('bi-eye', 'bi-eye-slash');
+	                } else {
+	                    input.type = 'password';
+	                    icon.classList.replace('bi-eye-slash', 'bi-eye');
+	                }
+	            });
+	        });
+	    });
+	
+	    function checkPasswordStrength() {
+	        const pwd = document.getElementById('{{ registrationForm.password.first.vars.id }}').value;
+	        const bar = document.getElementById('passwordStrengthBar');
+	        const text = document.getElementById('passwordStrengthText');
+	
+	        let s = 0;
+	        if (pwd.length >= 8) s++;
+	        if (/[A-Z]/.test(pwd)) s++;
+	        if (/[0-9]/.test(pwd)) s++;
+	        if (/[^A-Za-z0-9]/.test(pwd)) s++;
+	
+	        const percent = s * 25;
+	        bar.style.width = percent + '%';
+	
+	        if (percent < 25) {
+	            bar.className = 'progress-bar bg-danger';
+	            text.textContent = 'Très faible';
+	        } else if (percent < 50) {
+	            bar.className = 'progress-bar bg-warning';
+	            text.textContent = 'Moyen';
+	        } else if (percent < 75) {
+	            bar.className = 'progress-bar bg-info';
+	            text.textContent = 'Sécurisé';
+	        } else {
+	            bar.className = 'progress-bar bg-success';
+	            text.textContent = 'Très sécurisé';
+	        }
+	    }
+	
+	    setTimeout(() => { document.querySelector('.left-content')?.classList.add('visible'); }, 300);
+	</script>
 {% endblock %}
