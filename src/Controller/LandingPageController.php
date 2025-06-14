@@ -34,7 +34,7 @@ final class LandingPageController extends AbstractController
         return $this->render('landing_page/contact.html.twig', []);
     }
 
-    #[Route('/faq', name: 'app_faq')]
+    #[Route('/foire-aux-questions', name: 'app_faq')]
     public function faq(): Response
     {
         return $this->render('landing_page/faq.html.twig', []);
