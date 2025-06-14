@@ -42,28 +42,41 @@ class HomeController extends AbstractController
     
         $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user], ['id' => 'DESC']);
     
-        $clientsData = [];
-    
-        foreach ($interventions as $intervention) {
-            $client = $intervention->getClient();
-    
-            if ($client) {
-                $clientId = $client->getId();
-                if (!isset($clientsData[$clientId])) {
-                    $clientsData[$clientId] = [
-                        'email' => $client->getEmail(),
-                        'societyName' => $client->getSocietyName(),
-                        'stations' => []
-                    ];
-                }
-                if ($intervention->getChargingStation()) {
-                    $clientsData[$clientId]['stations'][] = [
-                        'station' => $intervention->getChargingStation(),
-                        'borneName' => $intervention->getBorneName(),
-                    ];
-                }
-            }
-        }
+$clientsData = [];
+
+foreach ($interventions as $intervention) {
+    if ($intervention->isDeleted()) {
+        continue; // skip les interventions supprimées
+    }
+
+    $client = $intervention->getClient();
+
+    if (!$client) {
+        continue;
+    }
+
+    $clientId = $client->getId();
+
+    if (!isset($clientsData[$clientId])) {
+        $clientsData[$clientId] = [
+            'email' => $client->getEmail(),
+            'societyName' => $client->getSocietyName(),
+            'stations' => [],
+            'interventionIds' => [],
+        ];
+    }
+
+    if ($intervention->getChargingStation()) {
+        $clientsData[$clientId]['stations'][] = [
+            'station' => $intervention->getChargingStation(),
+            'borneName' => $intervention->getBorneName(),
+            'interventionId' => $intervention->getId(),
+        ];
+    }
+
+    $clientsData[$clientId]['interventionIds'][] = $intervention->getId();
+}
+
     
         $clientForm = $this->createForm(ClientFormType::class);
         $interventionForm = $this->createForm(InterventionFormType::class);
