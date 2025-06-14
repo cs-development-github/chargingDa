@@ -1,21 +1,123 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {# Bootstrap Icons CDN #}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
+
 {% block body %}
-<div class="container mt-5">
-    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        <div class="mb-3">
-            {{ form_label(form.ocpp) }}
-            {{ form_widget(form.ocpp, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="mb-3">
-            {{ form_label(form.napn) }}
-            {{ form_widget(form.napn, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <div class="mb-3">
-            {{ form_label(form.image) }}
-            {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
-        </div>
-        <button class="btn btn-success">Enregistrer</button>
-    {{ form_end(form) }}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 1rem; 
+    }
+    .card-custom {
+        background: white;
+        color: #333;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        border-radius: 12px;
+        width: 100%;
+        max-width: 700px;  
+        padding: 3rem;     
+    }
+    .form-label {
+        font-weight: 700;
+        color: #444;
+        font-size: 1.2rem;  
+    }
+    .form-control {
+        border-radius: 10px;
+        border: 1.5px solid #ccc;
+        transition: 0.3s;
+        font-size: 1.1rem;  
+        padding: 0.6rem 1rem;
+    }
+    .form-control:focus {
+        border-color: #ec008c;
+        box-shadow: 0 0 10px rgba(236, 0, 140, 0.5);
+        outline: none;
+    }
+    .input-group-text {
+        background: #ec008c;
+        border: none;
+        color: white;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        width: 48px;
+        justify-content: center;
+        font-size: 1.4rem;  
+    }
+    .btn-success {
+        background: linear-gradient(90deg, #ec008c, #f6941f);
+        border: none;
+        font-weight: 700;
+        border-radius: 10px;
+        transition: background 0.3s ease;
+        width: 100%;
+        padding: 1rem;
+        font-size: 1.3rem;
+        color: white;
+    }
+    .btn-success:hover {
+        background: linear-gradient(90deg, #d1007a, #e08218);
+        color: white;
+    }
+    img.img-thumbnail {
+        border-radius: 12px;
+        max-height: 250px; 
+        max-width: 100%;
+        display: block;
+        margin: 1rem auto;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+</style>
+
+<div class="card card-custom">
+    <div class="card-header bg-white border-0 pb-3 text-center">
+        <h5 class="mb-0">Modifier</h5>
+    </div>
+    <div class="card-body">
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+
+            <div class="mb-4">
+                {{ form_label(form.ocpp, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-plug-fill"></i></span>
+                    {{ form_widget(form.ocpp, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                {{ form_label(form.napn, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-hash"></i></span>
+                    {{ form_widget(form.napn, {'attr': {'class': 'form-control'}}) }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                {{ form_label(form.image, null, {'label_attr': {'class': 'form-label'}}) }}
+                {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+                {% if form.image.vars.value %}
+                    <div class="mt-2 text-center">
+                        <img src="{{ asset('uploads/' ~ form.image.vars.value) }}" alt="Image actuelle" class="img-thumbnail">
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-success btn-lg">
+                    <i class="bi bi-save"></i> Enregistrer
+                </button>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
 </div>
 {% endblock %}

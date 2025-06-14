@@ -1,153 +1,180 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détails de la borne - {{ station.model }}{% endblock %}
-
 {% block body %}
 <style>
     .station-card {
-        border-radius: 10px;
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-        background-color: #fff;
-        padding: 20px;
-        margin-top: 90px;
+        border-radius: 16px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+        background-color: #ffffff;
+        padding: 30px;
+        margin-top: 120px;
     }
-    .station-card h4 {
-        font-weight: bold;
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        border-bottom: 2px solid #eaeaea;
+        padding-bottom: 12px;
+        margin-bottom: 30px;
         text-transform: uppercase;
     }
-    .modal-content {
+
+    .info-icon {
+        font-size: 1.3rem;
+        color: #ff9900;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #6c757d;
+        margin: 0;
+    }
+
+    .info-value {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #212529;
+        margin: 0;
+    }
+
+    .img-fixed {
+        max-width: 100%;
+        max-height: 300px;
+        object-fit: contain;
         border-radius: 12px;
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 10px 30px;
-        border: none;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        background: #f8f9fa;
+        padding: 8px;
     }
-    .modal-header {
-        background: linear-gradient(to right, #ff4081, #ff8c00);
-        color: white;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
+
+    .doc-img-container {
+        max-height: 400px;
+        overflow-y: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #f9f9f9;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
     }
-    .btn-close {
-        filter: invert(1);
-    }
-    .btn-save {
-        background: linear-gradient(to right, #ff4081, #ff8c00);
-        border-radius: 10px;
-        color: white;
-        border: none;
-        padding: 10px 20px;
+
+    .doc-img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
     }
 </style>
 
 <div class="container">
     <div class="station-card">
-        <h4 class="text-center mb-4">Détails de la borne</h4>
+        <h4 class="section-title  mb-10">Détails de la borne</h4>
         <div class="row">
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">Modèle</p>
-                <p class="text-dark">{{ station.model }}</p>
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <i class="bi bi-cpu-fill info-icon"></i>
+                    <span class="info-label">Modèle :</span>
+                    <p class="info-value">{{ station.model }}</p>
+                </div>
+                <div class="mb-4">
+                    <i class="bi bi-hash info-icon"></i>
+                    <span class="info-label">Référence fabricant :</span>
+                    <p class="info-value">{{ station.reference }}</p>
+                </div>
+                <div class="mb-4">
+                    <i class="bi bi-building info-icon"></i>
+                    <span class="info-label">Fabricant :</span>
+                    <p class="info-value">{{ station.manufacturer.name }}</p>
+                </div>
+                <div class="mb-4">
+                    <i class="bi bi-lightning-charge-fill info-icon"></i>
+                    <span class="info-label">Puissance :</span>
+                    <p class="info-value">{{ station.power }} kW</p>
+                </div>
+                <div class="mb-4">
+                    <i class="bi bi-plug-fill info-icon"></i>
+                    <span class="info-label">PDC :</span>
+                    <p class="info-value">{{ station.connectors }}</p>
+                </div>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">Référenc fabricant</p>
-                <p class="text-dark">{{ station.reference }}</p>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">Fabricant</p>
-                <p class="text-dark">{{ station.manufacturer.name }}</p>
-            </div>
-            
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">Puissance</p>
-                <p class="text-dark">{{ station.power }} kW</p>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">PDC</p>
-                <p class="text-dark">{{ station.connectors }}</p>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">Logo Fabricant</p>
-                {% if station.manufacturer.image %}
-                    <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo Fabricant" width="120" style="border-radius: 8px;">
-                {% else %}
-                    <span class="text-muted">Non disponible</span>
-                {% endif %}
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <p class="fw-bold mb-1">Photo</p>
-                {% if station.image %}
-                    <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image Borne" width="120" style="border-radius: 8px;">
-                {% else %}
-                    <span class="text-muted">Non disponible</span>
-                {% endif %}
+            <!-- Columna derecha: fotos -->
+            <div class="col-md-6 d-flex flex-column align-items-center gap-4">
+                <div class="text-center">
+                    <p class="info-label mb-2">Photo de la borne</p>
+                    {% if station.image %}
+                        <img src="{{ asset('uploads/' ~ station.image) }}" alt="Image Borne" class="img-fixed">
+                    {% else %}
+                        <span class="text-muted">Non disponible</span>
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <p class="info-label mb-2">Logo Fabricant</p>
+                    {% if station.manufacturer.image %}
+                        <img src="{{ asset('uploads/' ~ station.manufacturer.image) }}" alt="Logo Fabricant" class="img-fixed">
+                    {% else %}
+                        <span class="text-muted">Non disponible</span>
+                    {% endif %}
+                </div>
             </div>
         </div>
-
         {% if is_granted('ROLE_ADMIN') %}
         <div class="d-flex justify-content-center gap-3 mt-4">
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
-                Modifier la borne
+            <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editStationModal">
+                <i class="bi bi-pencil-square me-1"></i> Modifier
             </button>
-            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteStationModal">
-                Supprimer la borne
+            <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteStationModal">
+                <i class="bi bi-trash me-1"></i> Supprimer
             </button>
         </div>
         {% endif %}
     </div>
 
-<div class="station-card mt-5">
-    <h4 class="text-center mb-4">Documentation liée</h4>
+    <div class="station-card mt-5">
+        <h4 class="section-title">Documentation liée</h4>
 
-    {% if station.chargingStationDocumentations|length > 0 %}
-        <div class="row g-4">
-            {% for doc in station.chargingStationDocumentations %}
-                <div class="col-md-4 col-sm-6 text-center">
-                    <div class="card h-100 shadow-sm border-0">
-                        {% if doc.image %}
-                            <img src="{{ asset('uploads/Documentations/' ~ doc.image) }}" class="card-img-top rounded-top" alt="Étape">
-                        {% endif %}
-
-                        <div class="card-body">
-                            {% if doc.ocpp or doc.napn %}
-                                <p class="mb-1"><strong>OCPP :</strong> {{ doc.ocpp ?: '—' }}</p>
-                                <p><strong>NAPN :</strong> {{ doc.napn ?: '—' }}</p>
+        {% if station.chargingStationDocumentations|length > 0 %}
+            <div class="row g-4">
+                {% for doc in station.chargingStationDocumentations %}
+                    <div class="col-md-4 col-sm-6">
+                        <div class="card h-100 shadow-sm border-0">
+                            {% if doc.image %}
+                                <div class="doc-img-container">
+                                    <img src="{{ asset('uploads/Documentations/' ~ doc.image) }}" alt="Documentation" class="doc-img">
+                                </div>
                             {% endif %}
-                        </div>
-
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <div class="card-footer bg-transparent">
-                                <a href="{{ path('charging_station_doc_edit', { id: doc.id }) }}" class="btn btn-sm btn-warning me-1">
+                            <div class="card-body text-center">
+                                <p><i class="bi bi-diagram-3-fill me-1 text-primary"></i><strong>OCPP :</strong> {{ doc.ocpp ?: '—' }}</p>
+                                <p><i class="bi bi-file-earmark-code-fill me-1 text-primary"></i><strong>NAPN :</strong> {{ doc.napn ?: '—' }}</p>
+                            </div>
+                            {% if is_granted('ROLE_ADMIN') %}
+                            <div class="card-footer bg-white text-center border-top-0">
+                                <a href="{{ path('charging_station_doc_edit', { id: doc.id }) }}" class="btn btn-sm btn-outline-warning me-2">
                                     Modifier
                                 </a>
                                 <form action="{{ path('charging_station_doc_delete', { id: doc.id }) }}" method="post" class="d-inline" onsubmit="return confirm('Supprimer cette documentation ?')">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ doc.id) }}">
-                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
                                 </form>
                             </div>
-                        {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="text-muted text-center">Aucune documentation disponible.</p>
-    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted text-center">Aucune documentation disponible.</p>
+        {% endif %}
 
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="text-center mt-4">
-            <a href="{{ path('charging_station_add_multiple_docs', { slug: station.slug }) }}" class="btn btn-outline-primary">
-                Ajouter des étapes de documentation
-            </a>
-        </div>
-    {% endif %}
+        {% if is_granted('ROLE_ADMIN') %}
+            <div class="text-center mt-4">
+                <a href="{{ path('charging_station_add_multiple_docs', { slug: station.slug }) }}" class="btn btn-outline-primary">
+                    <i class="bi bi-plus-circle me-1"></i> Ajouter des étapes de documentation
+                </a>
+            </div>
+        {% endif %}
+    </div>
 </div>
-
-</div>
-
-{# Modals #}
 {% include 'charging_stations/_modal_edit.html.twig' %}
 {% include 'charging_stations/_modal_delete.html.twig' %}
 {% endblock %}
+
