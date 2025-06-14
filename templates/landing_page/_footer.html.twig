@@ -1,0 +1,167 @@
+<footer class="footer-section">
+	<style>
+		.footer-section {
+			background: url("{{ asset('build/images/landing/background.png') }}") center center / cover no-repeat;
+			color: white;
+			padding: 3rem 0;
+		}
+
+		.footer-card {
+			max-width: 1100px;
+			margin: 0 auto;
+			padding: 2rem;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 3rem;
+		}
+
+		.footer-brand {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+
+		.footer-brand .logo-container {
+			width: 60px;
+			height: 60px;
+			border-radius: 10px;
+			background-color: white;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-bottom: 0.5rem;
+		}
+
+		.footer-brand .logo-container img {
+			max-width: 80%;
+			max-height: 80%;
+			object-fit: contain;
+		}
+
+		.footer-brand .title-gradient {
+			font-size: 1.8rem;
+			font-weight: bold;
+			background: linear-gradient(to right, #ec008c, #f6941f);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			white-space: nowrap;
+		}
+
+		.footer-links {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			grid-template-areas:
+				"liens legal"
+				"entreprise entreprise";
+			gap: 2rem;
+			width: 100%;
+			max-width: 600px;
+		}
+
+		.footer-links .link-column {
+			text-align: center;
+		}
+
+		.link-column h5 {
+			font-size: 1rem;
+			font-weight: 600;
+			margin-bottom: 1rem;
+			text-transform: uppercase;
+			color: white;
+		}
+
+		.link-column ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.link-column ul li {
+			margin-bottom: 0.5rem;
+		}
+
+		.link-column ul li a {
+			color: white;
+			text-decoration: none;
+			transition: color 0.3s ease;
+		}
+
+		.link-column ul li a:hover {
+			color: #ec008c;
+			text-decoration: underline;
+		}
+
+		/* Placement des colonnes */
+		.link-liens { grid-area: liens; }
+		.link-legal { grid-area: legal; }
+		.link-entreprise { grid-area: entreprise; }
+
+		/* Desktop layout */
+		@media (min-width: 992px) {
+			.footer-card {
+				flex-direction: row;
+				align-items: flex-start;
+				justify-content: space-between;
+			}
+
+			.footer-brand {
+				flex-direction: row;
+				align-items: center;
+				gap: 1rem;
+			}
+
+			.footer-brand .title-gradient {
+				margin-bottom: 0;
+				font-size: 2rem;
+			}
+
+			.footer-links {
+				display: flex;
+				justify-content: flex-end;
+				gap: 3rem;
+				max-width: none;
+				width: auto;
+			}
+
+			.footer-links .link-column {
+				text-align: left;
+			}
+		}
+	</style>
+
+	<div class="footer-card">
+		<div class="footer-brand">
+			<div class="logo-container">
+				<img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
+			</div>
+			<span class="title-gradient">PARTENAIRES</span>
+		</div>
+
+		<div class="footer-links">
+			<div class="link-column link-liens">
+				<h5>Liens</h5>
+				<ul>
+					<li><a href="{{ path('app_faq') }}">FAQ</a></li>
+					<li><a href="{{ path('app_aide') }}">Aide</a></li>
+				</ul>
+			</div>
+			<div class="link-column link-legal">
+				<h5>Légal</h5>
+				<ul>
+					<li><a href="{{ path('app_cgu') }}">CGU</a></li>
+					<li><a href="#">CGV</a></li>
+					<li><a href="#">RGPD</a></li>
+				</ul>
+			</div>
+			<div class="link-column link-entreprise">
+				<h5>Entreprise</h5>
+				<ul>
+					<li><a href="{{ path('app_propos') }}">À propos</a></li>
+					<li><a href="{{ path('app_contact') }}">Contact</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</footer>

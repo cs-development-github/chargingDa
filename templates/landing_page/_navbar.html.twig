@@ -1,0 +1,93 @@
+<style>
+.navbar {
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+	padding: 0.75rem 1rem;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 1030; // Bootstrap navbar z-index
+
+	.container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+}
+
+.navbar-brand {
+	display: flex;
+	align-items: center;
+	text-decoration: none;
+}
+
+.logo-container {
+	width: 60px;
+	height: 60px;
+	border-radius: 10px;
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	overflow: hidden;
+
+	img {
+		max-width: 80%;
+		max-height: 80%;
+		object-fit: contain;
+	}
+}
+
+.title-gradient {
+	font-family: 'UrbaneRounded', sans-serif;
+	font-size: 1.5rem;
+	font-weight: 600;
+	background: linear-gradient(to right, #ec008c, #f6941f);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	margin-left: 8px;
+}
+
+.btn-gradient {
+	background: linear-gradient(to right, #ec008c, #f6941f);
+	border: none;
+	color: #fff;
+	font-weight: 600;
+	padding: 0.5rem 1.25rem;
+	border-radius: 30px;
+	text-decoration: none;
+	transition: opacity 0.2s ease, transform 0.2s ease;
+
+	&:hover {
+		opacity: 0.9;
+		transform: translateY(-1px);
+		color: #fff;
+	}
+}
+
+@media (max-width: 576px) {
+	.btn-gradient {
+		padding: 0.375rem 0.75rem;
+		font-size: 0.9rem;
+	}
+	.title-gradient {
+		font-size: 16px;
+	}
+}
+</style>
+
+<nav class="navbar navbar-light bg-white shadow fixed-top" data-aos-duration="800">
+	<div class="container">
+		<a class="navbar-brand" href="{{ path('app_landing_page') }}">
+			<div class="logo-container me-2">
+				<img src="{{ asset('build/images/landing/lodmico.png') }}" alt="Logo Lodmi">
+			</div>
+			<span class="title-gradient">PARTENAIRES</span>
+		</a>
+
+		<a href="{{ path('app_login') }}" class="btn btn-gradient">
+			Se connecter
+		</a>
+	</div>
+</nav>

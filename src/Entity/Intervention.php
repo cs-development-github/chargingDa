@@ -31,6 +31,10 @@ class Intervention
     #[ORM\Column(length: 64, nullable: true)]
     private ?string $reference = null;
 
+    #[ORM\Column(type: 'boolean', options: ['default' => false])]
+    private bool $isDeleted = false;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +108,18 @@ class Intervention
     public function setReference(?string $reference): static
     {
         $this->reference = $reference;
+
+        return $this;
+    }
+
+    public function isDeleted(): ?bool
+    {
+        return $this->isDeleted;
+    }
+
+    public function setIsDeleted(bool $isDeleted): static
+    {
+        $this->isDeleted = $isDeleted;
 
         return $this;
     }
