@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,6 +36,26 @@ class ConfigMixteType extends AbstractType
                 'required' => false,
                 'scale' => 2,
                 'attr' => ['class' => 'styled-input'],
+            ])
+             ->add('prix_collab_dc', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Tarif collaborateurs DC'
+            ])
+            ->add('prix_public_dc', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Tarif public DC'
+            ])
+            ->add('cout_minute_dc', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Coût à la minute DC'
+            ])
+            ->add('penalite_dc', TextType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Pénalité post-recharge DC'
             ]);
     }
 
