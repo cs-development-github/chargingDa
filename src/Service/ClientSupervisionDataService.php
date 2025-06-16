@@ -319,10 +319,10 @@ class ClientSupervisionDataService
             "entityType" => "ChargingStation",
             "issuer" => true,
             "dimensions" => [
-                "flatFee" => ["active" => true, "price" => $tarification->getFixedFeePublic(), "stepSize" => 0],
+                "flatFee" => ["active" => true, "price" => $tarification->getResalePrice(), "stepSize" => 0],
                 "energy" => ["active" => true, "price" => $tarification->getPublicPrice(), "stepSize" => 0],
-                "chargingTime" => ["active" => true, "price" => $tarification->getRechargeTimePublic(), "stepSize" => 0],
-                "parkingTime" => ["active" => true, "price" => $tarification->getParkingTimePublic(), "stepSize" => 0]
+                "chargingTime" => ["active" => true, "price" => $tarification->getRechargeTimeResale(), "stepSize" => 0],
+                "parkingTime" => ["active" => true, "price" => $tarification->getParkingTimeResale(), "stepSize" => 0]
             ]
         ];
 

@@ -26,7 +26,7 @@ class SupervisionController extends AbstractController
             return $this->json(['error' => 'Client introuvable'], 404);
         }
 
-        $interventions = $em->getRepository(Intervention::class)->findBy(['Client' => $client]);
+        $interventions = $em->getRepository(Intervention::class)->findBy(['client' => $client]);
         $dtos = $factory->createFromInterventions($interventions);
 
         $steps = $supervisionService->superviseClientStations($client, $dtos);

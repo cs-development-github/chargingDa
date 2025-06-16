@@ -10,9 +10,6 @@
 		<title>Document</title>
 
 		{% block stylesheet %}
-
-
-		{% endblock %}
 		<style>
 
 			body {
@@ -421,7 +418,25 @@
 			.autocomplete-dropdown .dropdown-item:hover {
 				background-color: #f0f0f0;
 			}
+
+			@media (max-width: 768px) {
+				.sidebar-lodmi {
+					display: none;
+				}
+
+				.form-container {
+					width: 100%;
+					margin-left: 0;
+				}
+
+				body {
+					flex-direction: column;
+				}
+			}
 		</style>
+
+		{% endblock %}
+
 	</head>
 
 	<body>
