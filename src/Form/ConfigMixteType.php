@@ -37,22 +37,22 @@ class ConfigMixteType extends AbstractType
                 'scale' => 2,
                 'attr' => ['class' => 'styled-input'],
             ])
-             ->add('prix_collab_dc', TextType::class, [
+             ->add('prix_collab_dc', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Tarif collaborateurs DC'
             ])
-            ->add('prix_public_dc', TextType::class, [
+            ->add('prix_public_dc', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Tarif public DC'
             ])
-            ->add('cout_minute_dc', TextType::class, [
+            ->add('cout_minute_dc', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Coût à la minute DC'
             ])
-            ->add('penalite_dc', TextType::class, [
+            ->add('penalite_dc', NumberType::class, [
                 'mapped' => false,
                 'required' => false,
                 'label' => 'Pénalité post-recharge DC'
