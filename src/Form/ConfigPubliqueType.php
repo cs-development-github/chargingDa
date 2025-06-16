@@ -11,25 +11,56 @@ class ConfigPubliqueType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // AC
         $builder
             ->add('prix_collab', NumberType::class, [
-                'label' => 'Prix :',
-                'required' => true,
+                'label' => 'Pour les véhicules personnels (AC)',
+                'required' => false,
+                'mapped' => false,
                 'scale' => 2,
             ])
             ->add('prix_public', NumberType::class, [
-                'label' => 'Prix :',
+                'label' => 'Pour les véhicules extérieurs (AC)',
                 'required' => false,
+                'mapped' => false,
                 'scale' => 2,
             ])
             ->add('cout_minute', NumberType::class, [
-                'label' => false,
+                'label' => 'Coût à la minute (AC)',
                 'required' => false,
+                'mapped' => false,
                 'scale' => 2,
             ])
             ->add('penalite', NumberType::class, [
-                'label' => false,
+                'label' => 'Pénalité après recharge (AC)',
                 'required' => false,
+                'mapped' => false,
+                'scale' => 2,
+            ])
+
+        // DC
+            ->add('prix_collab_dc', NumberType::class, [
+                'label' => 'Pour les véhicules personnels (DC)',
+                'required' => false,
+                'mapped' => false,
+                'scale' => 2,
+            ])
+            ->add('prix_public_dc', NumberType::class, [
+                'label' => 'Pour les véhicules extérieurs (DC)',
+                'required' => false,
+                'mapped' => false,
+                'scale' => 2,
+            ])
+            ->add('cout_minute_dc', NumberType::class, [
+                'label' => 'Coût à la minute (DC)',
+                'required' => false,
+                'mapped' => false,
+                'scale' => 2,
+            ])
+            ->add('penalite_dc', NumberType::class, [
+                'label' => 'Pénalité après recharge (DC)',
+                'required' => false,
+                'mapped' => false,
                 'scale' => 2,
             ]);
     }
