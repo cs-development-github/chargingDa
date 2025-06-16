@@ -21,63 +21,62 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class HomeController extends AbstractController
 {
-    public function __construct(private ClientMailService $clientMailService)
-    {
-    }
+    public function __construct(private ClientMailService $clientMailService) {}
 
     #[Route('/tableau-de-bord', name: 'app_home')]
     public function index(EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
-    
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-        
+
         if ($user instanceof \App\Entity\User && $user->isVerified() && !$user->getEmailVerifiedAt()) {
             $this->clientMailService->sendInstallerWelcomeEmail($user); // méthode à créer
             $user->setEmailVerifiedAt(new \DateTimeImmutable());
             $entityManager->flush();
         }
-    
+
         $interventions = $entityManager->getRepository(Intervention::class)->findBy(['installator' => $user], ['id' => 'DESC']);
-    
-$clientsData = [];
 
-foreach ($interventions as $intervention) {
-    if ($intervention->isDeleted()) {
-        continue; // skip les interventions supprimées
-    }
+        $clientsData = [];
 
-    $client = $intervention->getClient();
+        foreach ($interventions as $intervention) {
+            if ($intervention->isDeleted()) {
+                continue;
+            }
 
-    if (!$client) {
-        continue;
-    }
+            $client = $intervention->getClient();
 
-    $clientId = $client->getId();
+            if (!$client) {
+                continue;
+            }
 
-    if (!isset($clientsData[$clientId])) {
-        $clientsData[$clientId] = [
-            'email' => $client->getEmail(),
-            'societyName' => $client->getSocietyName(),
-            'stations' => [],
-            'interventionIds' => [],
-        ];
-    }
+            $clientId = $client->getId();
 
-    if ($intervention->getChargingStation()) {
-        $clientsData[$clientId]['stations'][] = [
-            'station' => $intervention->getChargingStation(),
-            'borneName' => $intervention->getBorneName(),
-            'interventionId' => $intervention->getId(),
-        ];
-    }
+            if (!isset($clientsData[$clientId])) {
+                $clientsData[$clientId] = [
+                    'id' => $clientId,
+                    'email' => $client->getEmail(),
+                    'societyName' => $client->getSocietyName(),
+                    'stations' => [],
+                    'interventionIds' => [],
+                ];
+            }
 
-    $clientsData[$clientId]['interventionIds'][] = $intervention->getId();
-}
+            if ($intervention->getChargingStation()) {
+                $clientsData[$clientId]['stations'][] = [
+                    'station' => $intervention->getChargingStation(),
+                    'borneName' => $intervention->getBorneName(),
+                    'interventionId' => $intervention->getId(),
+                ];
+            }
 
-    
+            $clientsData[$clientId]['interventionIds'][] = $intervention->getId();
+        }
+
+
         $clientForm = $this->createForm(ClientFormType::class);
         $interventionForm = $this->createForm(InterventionFormType::class);
         return $this->render('home/index.html.twig', [
@@ -94,20 +93,20 @@ foreach ($interventions as $intervention) {
         ChargingStationsRepository $chargingStationsRepository
     ): Response {
         $user = $this->getUser();
-    
+
         if (!$user) {
             return $this->redirectToRoute('app_login');
         }
-    
+
         $client = new Client();
         $clientForm = $this->createForm(ClientFormType::class, $client);
         $clientForm->handleRequest($request);
-    
+
         $interventionForm = $this->createForm(InterventionFormType::class);
         $interventionForm->handleRequest($request);
-    
+
         $chargingStationModels = $chargingStationsRepository->findAll();
-    
+
         return $this->render('home/add_client.html.twig', [
             'clientForm' => $clientForm->createView(),
             'interventionForm' => $interventionForm->createView(),
