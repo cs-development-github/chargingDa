@@ -212,6 +212,29 @@ class SupervisionController extends AbstractController
 
             $client = $request->getSession()->get('supervision_step_2');
             $totalConnectors = 0;
+            $acCount = 0;
+            $dcCount = 0;
+
+            if ($client instanceof Client) {
+                foreach ($client->getInterventions() as $intervention) {
+                    $station = $intervention->getChargingStation();
+                    if ($station && is_numeric($station->getConnectors())) {
+                        $totalConnectors += (int) $station->getConnectors();
+                    }
+
+                    if ($station) {
+                        $type = strtoupper($station->getType());
+                        if ($type === 'AC') {
+                            $acCount++;
+                        } elseif ($type === 'DC') {
+                            $dcCount++;
+                        } elseif ($type === 'ACDC') {
+                            $acCount++;
+                            $dcCount++;
+                        }
+                    }
+                }
+            }
 
             if ($client instanceof Client) {
                 foreach ($client->getInterventions() as $intervention) {
@@ -227,6 +250,8 @@ class SupervisionController extends AbstractController
                 'totalConnectors' => $totalConnectors,
                 'currentStep' => 4,
                 'token' => $client instanceof Client ? $client->getSecureToken() : null,
+                'acCount' => $acCount,
+                'dcCount' => $dcCount,
             ]);
         }
 

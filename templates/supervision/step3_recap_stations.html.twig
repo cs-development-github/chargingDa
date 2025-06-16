@@ -30,6 +30,13 @@
                             {% if station.connectors is defined %}
                                 <p><strong>Connecteurs :</strong> {{ station.connectors }}</p>
                             {% endif %}
+                            {% if station.type is defined %}
+                                {% if station.type == 'AC' %}
+                                    <p><strong>Type de la borne :</strong> AC </p>
+                                {% else %}
+                                    <p><strong>Type de la borne :</strong> DC </p>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
