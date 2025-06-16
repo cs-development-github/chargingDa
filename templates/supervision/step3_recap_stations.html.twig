@@ -24,6 +24,9 @@
                             {% if station.model %}
                                 <h5>{{ station.model }}</h5>
                             {% endif %}
+                            {% if station.name %}
+                                <p><strong>Identifiant de la borne :</strong> {{ station.name }}</h5>
+                            {% endif %}
                             {% if station.reference %}
                                 <p><strong>Référence :</strong> {{ station.reference }}</p>
                             {% endif %}
