@@ -339,10 +339,13 @@
 			{{ form_widget(clientForm) }}
 			{% set prototype %}
 			<div class="sim-block position-relative border bg-white p-3 mb-3 rounded">
-				<button type="button" class="btn btn-sm btn-danger remove-connection-btn" onclick="this.closest('.sim-block').remove()">
-					<i class="bi bi-x-lg"></i>
-				</button>
 
+				<button type="button"
+					class="btn btn-danger rounded-circle position-absolute top-0 end-0 m-2 d-flex align-items-center justify-content-center shadow-sm"
+					style="width: 36px; height: 36px; padding: 0;"
+					onclick="this.closest('.sim-block').remove()">
+					<i class="bi bi-trash" style="color: white;"></i>
+				</button>
 				<div class="form-group mb-3">
 					<label class="form-label">
 						Carte SIM
@@ -353,7 +356,7 @@
 
 				<div class="form-group mb-3">
 					<label class="form-label">
-						Nom de la borne
+						Identifiant de la borne
 						<i class="bi bi-info-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<img src='{{ asset('build/images/Qrcode_exemple.png') }}' alt='Exemple QR Code' style='max-width:150px;border-radius:8px;'>"></i>
 					</label>
 					{{ form_widget(interventionForm.interventions.vars.prototype.borneName, { 'attr': { 'class': 'form-control' } }) }}
