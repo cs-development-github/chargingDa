@@ -31,7 +31,15 @@ class SupervisionController extends AbstractController
                 $client = $clientRepo->findOneWithAddressByToken($token);
 
                 if (!$client) {
-                    throw $this->createNotFoundException('Client introuvable pour ce token.');
+                    return $this->render('supervision/_client_not_found.html.twig', [
+                        'currentStep' => 1,
+                    ]);
+                }
+
+                if (!$token) {
+                    return $this->render('supervision/_token_not_found.html.twig', [
+                        'currentStep' => 1,
+                    ]);
                 }
 
                 $request->getSession()->set('supervision_step_2', $client);
@@ -185,7 +193,6 @@ class SupervisionController extends AbstractController
                 }
 
                 if ($form->isSubmitted() && $form->isValid()) {
-                    // ⚠️ ne pas faire $form->getData() car les champs ne sont pas mappés
                     $prixCollab = $form->get('prix_collab')->getData();
                     $prixPublic = $form->get('prix_public')->getData();
                     $coutMinute = $form->get('cout_minute')->getData();
@@ -199,7 +206,6 @@ class SupervisionController extends AbstractController
                         $tarif->setChargingStation($station);
                         $tarif->setOfferType('publique');
 
-                        // si tu veux stocker que les AC (et ignorer les DC)
                         $tarif->setReducedPrice((string) $prixCollab);
                         $tarif->setPublicPrice((string) $prixPublic);
                         $tarif->setRechargeTimeResale((string) $coutMinute);
@@ -254,7 +260,7 @@ class SupervisionController extends AbstractController
 
             return $this->render("supervision/step4_{$configType}.html.twig", [
                 'form' => $form->createView(),
-                'totalConnectors' => $totalConnectors,
+                'totalConnectors' => $totalConnectors/2,
                 'currentStep' => 4,
                 'token' => $client instanceof Client ? $client->getSecureToken() : null,
                 'acCount' => $acCount,

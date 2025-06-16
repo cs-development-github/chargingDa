@@ -23,7 +23,7 @@
         top: 65%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-image: url('{{ asset('build/images/background-icon.png') }}');
+        background-image: url('{{ asset(' build/images/background-icon.png') }}');
         background-repeat: no-repeat;
         background-position: center;
         background-size: 50%;
@@ -34,10 +34,11 @@
         pointer-events: none;
     }
 
-    .main-content>*:not(.background-icon):not(.modal) {
+    .main-content>*:not(.background-icon):not(.modal):not(.modalPos) {
         position: relative;
         z-index: 1;
     }
+
 
     .main-content {
         position: static;
