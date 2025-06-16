@@ -184,8 +184,12 @@ class SupervisionController extends AbstractController
                     $em->flush();
                 }
 
-                if ($configType === 'publique') {
-                    $data = $form->getData();
+                if ($form->isSubmitted() && $form->isValid()) {
+                    // ⚠️ ne pas faire $form->getData() car les champs ne sont pas mappés
+                    $prixCollab = $form->get('prix_collab')->getData();
+                    $prixPublic = $form->get('prix_public')->getData();
+                    $coutMinute = $form->get('cout_minute')->getData();
+                    $penalite   = $form->get('penalite')->getData();
 
                     foreach ($client->getInterventions() as $intervention) {
                         $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
@@ -194,13 +198,16 @@ class SupervisionController extends AbstractController
                         $tarif->setClient($client);
                         $tarif->setChargingStation($station);
                         $tarif->setOfferType('publique');
-                        $tarif->setReducedPrice((string) $data['prix_collab']);
-                        $tarif->setPublicPrice((string) $data['prix_public']);
-                        $tarif->setRechargeTimeResale((string) $data['cout_minute']);
-                        $tarif->setParkingTimeResale((string) $data['penalite']);
+
+                        // si tu veux stocker que les AC (et ignorer les DC)
+                        $tarif->setReducedPrice((string) $prixCollab);
+                        $tarif->setPublicPrice((string) $prixPublic);
+                        $tarif->setRechargeTimeResale((string) $coutMinute);
+                        $tarif->setParkingTimeResale((string) $penalite);
 
                         $em->persist($tarif);
                     }
+
                     $em->flush();
                 }
 
