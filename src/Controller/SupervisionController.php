@@ -31,7 +31,15 @@ class SupervisionController extends AbstractController
                 $client = $clientRepo->findOneWithAddressByToken($token);
 
                 if (!$client) {
-                    throw $this->createNotFoundException('Client introuvable pour ce token.');
+                    return $this->render('supervision/_client_not_found.html.twig', [
+                        'currentStep' => 1,
+                    ]);
+                }
+
+                if (!$token) {
+                    return $this->render('supervision/_token_not_found.html.twig', [
+                        'currentStep' => 1,
+                    ]);
                 }
 
                 $request->getSession()->set('supervision_step_2', $client);
