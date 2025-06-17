@@ -79,11 +79,13 @@
 						<li id="dc-step1">
 							{{ form_label(form.prix_collab_dc) }}
 							{{ form_widget(form.prix_collab_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
 						</li>
 
 						<li id="dc-step2" style="display: none;">
 							{{ form_label(form.prix_public_dc) }}
 							{{ form_widget(form.prix_public_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
 						</li>
 
 						<h6 class="mt-4" id="optionsTitle-dc" style="display: none;">Options complémentaires :</h6>
@@ -92,12 +94,14 @@
 							{{ form_label(form.cout_minute_dc) }}
 							{{ form_widget(form.cout_minute_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
 							<small class="text-muted">Pour limiter les abus d’occupation sur les bornes rapides.</small>
+							<p class="error-message"></p>
 						</li>
 
 						<li id="dc-step4" style="display: none;">
 							{{ form_label(form.penalite_dc) }}
 							{{ form_widget(form.penalite_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
 							<small class="text-muted">Pour favoriser la rotation sur les bornes DC après la recharge.</small>
+							<p class="error-message"></p>
 						</li>
 					</ul>
 				</fieldset>
