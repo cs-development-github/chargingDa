@@ -82,9 +82,11 @@ class ChargingStationType extends AbstractType
                 'attr' => ['class' => 'form-control'],
                 'placeholder' => 'Choisir la difficultés',
                 'choices' => [
+                    'Trés facile' => 'very-easy',
                     'Facile' => 'easy',
                     'Moyens' => 'mid',
                     'Difficile' => 'hard',
+                    'Trés difficile' => 'very-hard',
                 ],
             ])
             ->add('isActive', CheckboxType::class, [
