@@ -2,12 +2,6 @@
 
 {% block body %}
 	<div class="container my-4">
-		<div class="d-flex justify-content-between mt-4">
-		        <a href="{{ path('supervision_step', { step: 4, token: token }) }}" class="btn btn-secondary">
-				<i class="bi bi-arrow-left"></i> Retour
-			</a>
-		</div>
-
 		<div id="tarif-intro-mixte" class="transition-text">
 			<p>
 				<strong>Merci de compléter chaque champ avec attention.</strong>
@@ -34,69 +28,84 @@
 				</li>
 			</ul>
 
+			<p>
+				Vous avez <strong>{{ acCount }} borne(s) AC</strong> et <strong>{{ dcCount }} borne(s) DC</strong>.
+			</p>
+
 			<button id="revealButtonPublique" type="button" class="btn btn-primary mt-3">Configurer la tarification</button>
 		</div>
 
 		<div id="tarif-details-mixte" class="mt-4 fade-expand">
 			{{ form_start(form) }}
 
-<fieldset class="mb-5 border p-3 rounded">
-    <legend class="fw-bold text-primary">Tarification pour les bornes AC</legend>
-    <ul>
-        <li id="ac-step1">
-            {{ form_label(form.prix_collab) }}
-            {{ form_widget(form.prix_collab, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
-        </li>
+			{% if acCount >= 1 %}
+				<fieldset class="mb-5 border p-3 rounded">
+					<legend class="fw-bold text-primary">Tarification pour les bornes AC</legend>
+					<ul>
+						<li id="ac-step1">
+							{{ form_label(form.prix_collab) }}
+							{{ form_widget(form.prix_collab, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
+						</li>
 
-        <li id="ac-step2" style="display: none;">
-            {{ form_label(form.prix_public) }}
-            {{ form_widget(form.prix_public, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
-        </li>
+						<li id="ac-step2" style="display: none;">
+							{{ form_label(form.prix_public) }}
+							{{ form_widget(form.prix_public, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
+						</li>
 
-        <h6 class="mt-4" id="optionsTitle-ac" style="display: none;">Options complémentaires :</h6>
+						<h6 class="mt-4" id="optionsTitle-ac" style="display: none;">Options complémentaires :</h6>
 
-        <li id="ac-step3" style="display: none;">
-            {{ form_label(form.cout_minute) }}
-            {{ form_widget(form.cout_minute, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
-            <small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
-        </li>
+						<li id="ac-step3" style="display: none;">
+							{{ form_label(form.cout_minute) }}
+							{{ form_widget(form.cout_minute, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
+							<small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
+							<p class="error-message"></p>
+						</li>
 
-        <li id="ac-step4" style="display: none;">
-            {{ form_label(form.penalite) }}
-            {{ form_widget(form.penalite, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
-            <small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
-        </li>
-    </ul>
-</fieldset>
+						<li id="ac-step4" style="display: none;">
+							{{ form_label(form.penalite) }}
+							{{ form_widget(form.penalite, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
+							<small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
+							<p class="error-message"></p>
+						</li>
+					</ul>
+				</fieldset>
+			{% endif %}
+			{% if dcCount >= 1 %}
+				<fieldset class="mb-4 border p-3 rounded" id="dc-fields" style="display: none;">
+					<legend class="fw-bold text-success">Tarification pour les bornes DC</legend>
+					<ul>
+						<li id="dc-step1">
+							{{ form_label(form.prix_collab_dc) }}
+							{{ form_widget(form.prix_collab_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
+						</li>
 
-<fieldset class="mb-4 border p-3 rounded" id="dc-fields" style="display: none;">
-    <legend class="fw-bold text-success">Tarification pour les bornes DC</legend>
-    <ul>
-        <li id="dc-step1">
-            {{ form_label(form.prix_collab_dc) }}
-            {{ form_widget(form.prix_collab_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
-        </li>
+						<li id="dc-step2" style="display: none;">
+							{{ form_label(form.prix_public_dc) }}
+							{{ form_widget(form.prix_public_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
+						</li>
 
-        <li id="dc-step2" style="display: none;">
-            {{ form_label(form.prix_public_dc) }}
-            {{ form_widget(form.prix_public_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
-        </li>
+						<h6 class="mt-4" id="optionsTitle-dc" style="display: none;">Options complémentaires :</h6>
 
-        <h6 class="mt-4" id="optionsTitle-dc" style="display: none;">Options complémentaires :</h6>
+						<li id="dc-step3" style="display: none;">
+							{{ form_label(form.cout_minute_dc) }}
+							{{ form_widget(form.cout_minute_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
+							<small class="text-muted">Pour limiter les abus d’occupation sur les bornes rapides.</small>
+							<p class="error-message"></p>
+						</li>
 
-        <li id="dc-step3" style="display: none;">
-            {{ form_label(form.cout_minute_dc) }}
-            {{ form_widget(form.cout_minute_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
-            <small class="text-muted">Pour limiter les abus d’occupation sur les bornes rapides.</small>
-        </li>
-
-        <li id="dc-step4" style="display: none;">
-            {{ form_label(form.penalite_dc) }}
-            {{ form_widget(form.penalite_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
-            <small class="text-muted">Pour favoriser la rotation sur les bornes DC après la recharge.</small>
-        </li>
-    </ul>
-</fieldset>
+						<li id="dc-step4" style="display: none;">
+							{{ form_label(form.penalite_dc) }}
+							{{ form_widget(form.penalite_dc, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
+							<small class="text-muted">Pour favoriser la rotation sur les bornes DC après la recharge.</small>
+							<p class="error-message"></p>
+						</li>
+					</ul>
+				</fieldset>
+			{% endif %}
 
 			<div id="submitBlock-mixte" class="mt-4" style="display: none;">
 				<button type="submit" class="btn btn-primary">Valider les tarifs</button>
@@ -114,6 +123,11 @@
 		--input-bg: #fff;
 		--control-height: 50px;
 		--shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.is-invalid {
+		border-color: #dc3545;
+		box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
 	}
 
 	.transition-text.shrink {
@@ -196,19 +210,27 @@ document.addEventListener('DOMContentLoaded', () => {
 		details.scrollIntoView({ behavior: 'smooth' });
 	});
 
-	// progression champ par champ AC + DC
 	const steps = [
 		{ input: '{{ form.prix_collab.vars.id }}', next: 'ac-step2' },
 		{ input: '{{ form.prix_public.vars.id }}', next: 'optionsTitle-ac' },
 		{ input: '{{ form.prix_public.vars.id }}', next2: 'ac-step3' },
-		{ input: '{{ form.cout_minute.vars.id }}', next: 'ac-step4' },
+		{ input: '{{ form.cout_minute.vars.id }}', next: 'ac-step4' }
+	];
+
+	{% if form.prix_collab_dc is defined %}
+	steps.push(
 		{ input: '{{ form.penalite.vars.id }}', next: 'dc-fields' },
 		{ input: '{{ form.prix_collab_dc.vars.id }}', next: 'dc-step2' },
 		{ input: '{{ form.prix_public_dc.vars.id }}', next: 'optionsTitle-dc' },
 		{ input: '{{ form.prix_public_dc.vars.id }}', next2: 'dc-step3' },
 		{ input: '{{ form.cout_minute_dc.vars.id }}', next: 'dc-step4' },
 		{ input: '{{ form.penalite_dc.vars.id }}', next: 'submitBlock-mixte' }
-	];
+	);
+	{% else %}
+	steps.push(
+		{ input: '{{ form.penalite.vars.id }}', next: 'submitBlock-mixte' }
+	);
+	{% endif %}
 
 	steps.forEach(({ input, next, next2 }) => {
 		const inputEl = document.getElementById(input);
@@ -229,5 +251,45 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const form = document.querySelector('form');
+
+	form.addEventListener('submit', (e) => {
+		let hasError = false;
+
+		// Nettoyage
+		document.querySelectorAll('.styled-input').forEach(input => {
+			input.classList.remove('is-invalid');
+			const errorMsg = input.closest('li')?.querySelector('.error-message');
+			if (errorMsg) errorMsg.textContent = '';
+		});
+
+		// Validation
+		const inputs = form.querySelectorAll('.styled-input');
+		inputs.forEach(input => {
+			const val = input.value.trim();
+			const errorMsg = input.closest('li')?.querySelector('.error-message');
+
+			if (val === '' || isNaN(val)) {
+				hasError = true;
+				input.classList.add('is-invalid');
+				if (errorMsg) {
+					errorMsg.textContent = 'Veuillez entrer un nombre valide';
+					errorMsg.classList.add('text-danger');
+				}
+			}
+		});
+
+		if (hasError) {
+			e.preventDefault();
+			form.scrollIntoView({ behavior: 'smooth' });
+		}
+	});
+});
+</script>
+
+
 {% endblock %}
 

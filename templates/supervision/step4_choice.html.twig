@@ -1,69 +1,100 @@
 {% extends 'base.client.html.twig' %}
 
 {% block body %}
+<style>
+	.option-card {
+		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		cursor: pointer;
+		border: 2px solid transparent;
+		border-radius: 12px;
+		background: #fff;
+		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+		display: flex;
+		flex-direction: column;
+		padding: 1.5rem;
+		margin-bottom: 1.2rem;
+	}
+	.option-card:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+	}
+	.option-card.active {
+		border-color: #0d6efd;
+		background: linear-gradient(135deg, #eaf3ff, #f7fbff);
+	}
+	.option-card h5 {
+		font-size: 1.2rem;
+		font-weight: bold;
+		margin-bottom: 0.5rem;
+	}
+	.option-card p {
+		font-size: 0.95rem;
+		color: #555;
+		margin-bottom: 0.8rem;
+	}
+	.price-block {
+		margin-top: auto;
+		padding-top: 0.8rem;
+		border-top: 1px solid #ddd;
+	}
+</style>
 
-	<style>
+<div class="container py-5" style="max-width: 800px;">
+	<h3 class="mb-4">Quel type de configuration souhaitez-vous ?</h3>
 
-		.option-card {
-			border: 2px solid #ccc;
-			border-radius: 8px;
-			cursor: pointer;
-			transition: all 0.2s;
+	{{ form_start(form) }}
+
+	{% set labels = {
+		'flotte': {
+			'title': 'Bornes privées',
+			'desc': "Destiné uniquement aux véhicules de flotte (Véhicules de fonction et/ou véhicules de services) dont l'énergie est à la charge de l'entreprise, du porteur du contrat d'énergie.",
+			'price': 'Abonnement de 9,90 €HT / Mois / PDC <br> + Commissions opérateur de 0,03 HT / Kwh délivré.'
+		},
+		'publique': {
+			'title': 'Bornes publiques',
+			'desc': "Destiné aux véhicules extérieurs, (Véhicules personnels de collaborateurs et/ou publics extérieurs) dont l'énergie n'est pas à la charge de l'entreprise, du porteur du contrat d'énérgie.",
+			'price': 'Abonnement de 9,90 €HT / Mois / PDC <br> + Commissions opérateur de 10% du CA TTC générée'
+		},
+		'mixte': {
+			'title': 'Bornes privées & publiques',
+			'desc': "Destiné aux véhicules de flotte et véhicules extérieurs (Véhicules de flottes, véhicules personnels de collaborateurs et/ou publics extérieurs) dont l'énergie est à la charge de l'entreprisen du porteur du contrat d'énergie",
+			'price': 'Abonnement de 9,90 €HT / Mois / PDC <br> + Commissions opérateur de 0,03 HT / Kwh délivré <br> + Commissions opérateur de 10% du CA TTC générée'
 		}
-		.option-card.active {
-			border-color: #0d6efd;
-			background-color: #eaf3ff;
-		}
-	</style>
-	<div class="container my-4">
-		<h3>Quel type de configuration souhaitez-vous ?</h3>
-		{{ form_start(form) }}
+	} %}
 
-		<div class="row" id="choicesContainer">
-			{% set labels = {
-            'flotte': {'title': 'Bornes privées', 'desc': 'avec recharge gratuite sans exploitation (véhicules de flotte de fonction et/ou service)'},
-            'publique': {'title': 'Bornes publiques', 'desc': 'Permet d’ouvrir l’accès public à votre borne et de fixer votre prix de revente du kWh. Idéal pour rentabiliser votre installation.'},
-            'mixte': {'title': 'Bornes privées et publiques', 'desc': 'Permet de revendre le kWh au public tout en offrant un accès gratuit aux véhicules de fonction et de service.'}
-        } %}
+	<div class="d-flex flex-column">
+		{% for field in form.type %}
+			{% set value = field.vars.value %}
+			{% set label = labels[value] %}
 
-			{% for field in form.type %}
-				{% set value = field.vars.value %}
-				{% set label = {
-            'flotte': {'title': 'Bornes privées', 'desc': 'avec recharge gratuite sans exploitation (véhicules de flotte de fonction et/ou service)'},
-            'publique': {'title': 'Bornes publiques', 'desc': 'Permet d’ouvrir l’accès public à votre borne et de fixer votre prix de revente du kWh. Idéal pour rentabiliser votre installation.'},
-            'mixte': {'title': 'Bornes privées et publiques', 'desc': 'Permet de revendre le kWh au public tout en offrant un accès gratuit aux véhicules de fonction et de service.'}
-    }[value] %}
-
-				<div class="col-md-4 mb-3">
-					<label class="option-card p-3 d-block text-start" data-value="{{ value }}">
-						{{ form_widget(field, { attr: { class: 'd-none' } }) }}
-						<h5>{{ label.title }}</h5>
-						<p class="mb-0">{{ label.desc }}</p>
-					</label>
-				</div>
-			{% endfor %}
-
-		</div>
-
-		<div class="step-navigation d-flex justify-content-end">
-			<button type="submit" class="btn btn-primary mt-3">Suivant</button>
-		</div>
-
-		{{ form_end(form) }}
+			<label class="option-card" data-value="{{ value }}">
+				{{ form_widget(field, { attr: { class: 'd-none' } }) }}
+				<h5>{{ label.title }}</h5>
+				<p>{{ label.desc }}</p>
+				<div class="price-block text-muted">{{ label.price|raw }}</div>
+			</label>
+		{% endfor %}
 	</div>
 
-	 <script>
-		document.addEventListener('DOMContentLoaded', () => {
-		    const cards = document.querySelectorAll('.option-card input[type="radio"]');
-		
-		    cards.forEach(input => {
-		        input.parentElement.classList.toggle('active', input.checked);
-		
-		        input.addEventListener('change', () => {
-		            cards.forEach(i => i.parentElement.classList.remove('active'));
-		            input.parentElement.classList.add('active');
-		        });
-		    });
+	<div class="text-end mt-4">
+		<button type="submit" class="btn btn-primary px-4">Suivant</button>
+	</div>
+
+	{{ form_end(form) }}
+</div>
+
+<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const cards = document.querySelectorAll('.option-card input[type="radio"]');
+
+		cards.forEach(input => {
+			input.parentElement.classList.toggle('active', input.checked);
+
+			input.addEventListener('change', () => {
+				cards.forEach(i => i.parentElement.classList.remove('active'));
+				input.parentElement.classList.add('active');
+			});
 		});
-		</script>
+	});
+</script>
 {% endblock %}
