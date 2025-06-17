@@ -74,7 +74,6 @@ class ConfigMixteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => null,
             'ac_count' => 0,
             'dc_count' => 0,
         ]);

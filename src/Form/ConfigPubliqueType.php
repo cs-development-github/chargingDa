@@ -11,7 +11,11 @@ class ConfigPubliqueType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // AC
+
+        $acCount = $options['ac_count'] ?? 0;
+        $dcCount = $options['dc_count'] ?? 0;
+
+        if ($acCount > 0) {
         $builder
             ->add('prix_collab', NumberType::class, [
                 'label' => 'Pour les véhicules personnels (AC)',
@@ -36,10 +40,10 @@ class ConfigPubliqueType extends AbstractType
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
-            ])
-
-        // DC
-            ->add('prix_collab_dc', NumberType::class, [
+            ]);
+        }
+       if ($dcCount > 0) {
+            $builder            ->add('prix_collab_dc', NumberType::class, [
                 'label' => 'Pour les véhicules personnels (DC)',
                 'required' => false,
                 'mapped' => false,
@@ -63,10 +67,14 @@ class ConfigPubliqueType extends AbstractType
                 'mapped' => false,
                 'scale' => 2,
             ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([]);
+        $resolver->setDefaults([
+            'ac_count' => 0,
+            'dc_count' => 0,
+        ]);
     }
 }

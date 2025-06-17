@@ -176,6 +176,13 @@ class SupervisionController extends AbstractController
                 ];
             }
 
+            if ($configType === 'publique') {
+                $formOptions = [
+                    'ac_count' => $acCount,
+                    'dc_count' => $dcCount,
+                ];
+            }
+
             $form = $this->createForm($types[$configType], null, $formOptions);
             $form->handleRequest($request);
 
