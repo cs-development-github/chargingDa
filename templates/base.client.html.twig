@@ -20,7 +20,6 @@
 			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 			display: flex;
 			height: 100vh;
-			padding-bottom: 60px;
 			overflow: hidden;
 		}
 
@@ -426,33 +425,21 @@
 			}
 		}
 
-		.support-footer {
-			border-top: 1px solid #dee2e6;
-			padding-top: 1rem;
-			width: 100%;
-			text-align: start;
-			font-size: 0.85rem;
-			color: #6c757d;
-			background-color: white !important;
-			font-weight: 600;
-			position: static;
-			box-shadow: none;
-		}
-
-		/* Para pantallas pequeñas, fijarlo abajo */
 		@media (max-width: 768px) {
 			.support-footer {
-				position: fixed;
-				bottom: 0;
-				left: 0;
-				z-index: 9999;
+				display: none !important;
+			}
+		}
+
+		.mobile-divider {
+			border-top: none;
+			padding-top: 0;
+		}
+
+		@media (max-width: 768px) {
+			.mobile-divider {
 				border-top: 1px solid #dee2e6;
-				padding: 0.75rem 1rem;
-				padding-bottom: 20px;
-				background-color: white !important;
-				width: 100%;
-				box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-				font-size: 0.9rem;
+				padding-top: 0.5rem;
 			}
 		}
 	</style>
@@ -480,12 +467,16 @@
 				</div>
 			</div>
 			<p class="mt-3 small">Remplissez chaque étape pour finaliser la configuration.</p>
+			<p class="mt-3 small mobile-divider mt-2">
+				Support technique de Lodmi <span class="fw-bold">03 74 83 02 50</span>
+			</p>
+
 		</div>
-		<div class="support-footer">
-			<span class="fw-bold">Support technique de lodmi :</span><br>
+		<div class="support-footer mt-auto w-100 text-start small text-muted"
+			style="border-top: 1px solid #dee2e6; padding-top: 1rem;">
+			<span class="fw-bold">Support technique de Lodmi :</span><br>
 			03&nbsp;74&nbsp;83&nbsp;02&nbsp;50
 		</div>
-
 	</div>
 	<div class="form-container">
 		<div class="form-content"> {% block body %}{% endblock %}
