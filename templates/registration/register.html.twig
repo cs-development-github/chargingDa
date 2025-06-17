@@ -223,6 +223,13 @@
 				flex: 0 0 100%;
 				max-width: 100%;
 			}
+
+			.is-valid {
+			border-color: #198754 !important;
+		}
+		.is-invalid {
+			border-color: #dc3545 !important;
+		}
 		}
 	</style>
 {% endblock %}
@@ -249,60 +256,63 @@
 				<div class="overlay"></div>
 
 				<div class="card-login">
-
 					<h2>INSCRIPTION</h2>
 
 					{{ form_start(registrationForm, {'attr': {'id':'registration-form'}}) }}
 
-                    <div class="row g-3 mb-3">
+					<div class="row g-3 mb-3">
 						<div class="col">
 							<label class="form-label" for="prenom">Prénom</label>
-							{{ form_widget(registrationForm.name,{attr:{class:'form-control',id:'prenom'}}) }}
+							{{ form_widget(registrationForm.name, { attr: { class: 'form-control', id: 'prenom' } }) }}
+							<div class="invalid-feedback" id="error-name"></div>
 						</div>
 						<div class="col">
 							<label class="form-label" for="nom">Nom</label>
-							{{ form_widget(registrationForm.lastname,{attr:{class:'form-control',id:'nom'}}) }}
+							{{ form_widget(registrationForm.lastname, { attr: { class: 'form-control', id: 'nom' } }) }}
+							<div class="invalid-feedback" id="error-lastname"></div>
 						</div>
 					</div>
 
 					<div class="mb-3">
 						<label class="form-label" for="email">Adresse email</label>
-						{{ form_widget(registrationForm.email,{attr:{class:'form-control',id:'email'}}) }}
-						{{ form_errors(registrationForm.email) }}
+						{{ form_widget(registrationForm.email, { attr: { class: 'form-control', id: 'email' } }) }}
+						<div class="invalid-feedback" id="error-email"></div>
 					</div>
 
 					<div class="mb-3">
 						<label class="form-label" for="soc">Nom de l'entreprise</label>
-						{{ form_widget(registrationForm.societyName,{attr:{class:'form-control',id:'soc'}}) }}
+						{{ form_widget(registrationForm.societyName, { attr: { class: 'form-control', id: 'soc' } }) }}
+						<div class="invalid-feedback" id="error-societyName"></div>
 					</div>
 
 					<div class="row g-3 mb-3">
 						<div class="col">
 							<label class="form-label" for="phone">Téléphone</label>
-							{{ form_widget(registrationForm.phone,{attr:{class:'form-control',id:'phone'}}) }}
+							{{ form_widget(registrationForm.phone, { attr: { class: 'form-control', id: 'phone' } }) }}
+							<div class="invalid-feedback" id="error-phone"></div>
 						</div>
 						<div class="col">
 							<label class="form-label" for="siret">N° SIRET</label>
-							{{ form_widget(registrationForm.siret,{attr:{class:'form-control',id:'siret'}}) }}
+							{{ form_widget(registrationForm.siret, { attr: { class: 'form-control', id: 'siret' } }) }}
+							<div class="invalid-feedback" id="error-siret"></div>
 						</div>
 					</div>
 
 					<div class="mb-3">
 						<label class="form-label" for="{{ registrationForm.password.first.vars.id }}">Mot de passe</label>
-
 						<div class="input-group position-relative">
 							{{ form_widget(registrationForm.password.first, {
-                        attr: {
-                        class: 'form-control',
-                        onkeyup: 'checkPasswordStrength()'
-                        }
-                        }) }}
-
+								attr: {
+									class: 'form-control',
+									id: registrationForm.password.first.vars.id,
+									onkeyup: 'checkPasswordStrength()'
+								}
+							}) }}
 							<button type="button" class="btn-eye toggle-password" data-target="{{ registrationForm.password.first.vars.id }}">
 								<i class="bi bi-eye"></i>
 							</button>
 						</div>
-
+						<div class="invalid-feedback" id="error-password"></div>
 						<div class="progress mt-2">
 							<div id="passwordStrengthBar" class="progress-bar" style="width:0%"></div>
 						</div>
@@ -310,45 +320,50 @@
 					</div>
 
 					<div class="mb-3">
-						<label class="form-label" for="{{ registrationForm.password.second.vars.id }}">Confirmer le mot de
-							                        passe</label>
-
+						<label class="form-label" for="{{ registrationForm.password.second.vars.id }}">Confirmer le mot de passe</label>
 						<div class="input-group position-relative">
 							{{ form_widget(registrationForm.password.second, {
-                        attr: { class: 'form-control' }
-                        }) }}
-
+								attr: { class: 'form-control', id: registrationForm.password.second.vars.id }
+							}) }}
 							<button type="button" class="btn-eye toggle-password" data-target="{{ registrationForm.password.second.vars.id }}">
 								<i class="bi bi-eye"></i>
 							</button>
 						</div>
+						<div class="invalid-feedback" id="error-passwordConfirm"></div>
 					</div>
 
 					<div class="form-check mb-4">
-						{{ form_widget(registrationForm.agreeTerms,{attr:{class:'form-check-input me-2'}}) }}
-						<label class="form-check-label" for="agreeTerms">
+						{{ form_widget(registrationForm.agreeTerms, { attr: { class: 'form-check-input me-2', id: 'registrationForm_agreeTerms' } }) }}
+						<label class="form-check-label" for="registrationForm_agreeTerms">
 							J’accepte les
 							<a href="{{ path('app_cgu') }}" class="gradient-link text-decoration-underline">conditions générales</a>
 						</label>
+						<div class="invalid-feedback d-block" id="error-terms" style="margin-left: 1.5rem;"></div>
 					</div>
 
-					<button type="submit" class="btn-gradient mb-2">S’INSCRIRE</button>
+					<button type="submit" id="registerButton" class="btn-gradient mb-2">S’INSCRIRE</button>
 
 					{{ form_end(registrationForm) }}
 
-                    <p class="text-center mt-2 mb-0">
-                        Vous avez déjà un compte ?<br>
-                        <a href="{{ path('app_login') }}" class="gradient-link text-decoration-underline">Se connecter</a>
-                    </p>
-
+					<p class="text-center mt-2 mb-0">
+						Vous avez déjà un compte ?<br>
+						<a href="{{ path('app_login') }}" class="gradient-link text-decoration-underline">Se connecter</a>
+					</p>
 				</div>
 			</div>
-
 		</div>
 	</div>
 
 	 <script>
 	    document.addEventListener('DOMContentLoaded', () => {
+
+		document.querySelectorAll('.form-control.is-invalid').forEach(el => {
+			el.classList.remove('is-invalid');
+		});
+		document.querySelectorAll('.is-valid').forEach(el => {
+			el.classList.remove('is-valid');
+		});
+			
 	        document.querySelectorAll('.toggle-password').forEach(btn => {
 	            btn.addEventListener('click', () => {
 	                const input = document.getElementById(btn.dataset.target);
@@ -397,4 +412,88 @@
 	
 	    setTimeout(() => { document.querySelector('.left-content')?.classList.add('visible'); }, 300);
 	</script>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', () => {
+		const submitBtn = document.querySelector('#registerButton');
+		const get = id => document.getElementById(id);
+
+		const errorMessages = {
+			name: 'Le prénom doit contenir au moins 2 caractères.',
+			lastname: 'Le nom doit contenir au moins 2 caractères.',
+			email: 'Veuillez entrer une adresse email valide.',
+			societyName: 'Le nom de l’entreprise est requis.',
+			phone: 'Le numéro de téléphone doit être valide.',
+			siret: 'Le numéro SIRET doit contenir exactement 14 chiffres.',
+			password: 'Le mot de passe doit contenir au moins 8 caractères.',
+			passwordConfirm: 'Les mots de passe ne correspondent pas.',
+			terms: 'Vous devez accepter les conditions générales.'
+		};
+
+		const fields = {
+			name: val => val.trim().length >= 2,
+			lastname: val => val.trim().length >= 2,
+			email: val => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val),
+			societyName: val => val.trim().length >= 2,
+			phone: val => /^0[1-9](\s|-|\.)?(\d{2}(\s|-|\.)?){4}$/.test(val),
+			siret: val => /^\d{14}$/.test(val),
+			password: val => val.length >= 8,
+			passwordConfirm: () => {
+				const pwd = get('registration_form_password_first');
+				const conf = get('registration_form_password_second');
+				return pwd && conf && pwd.value === conf.value;
+			},
+			terms: () => get('registration_form_agreeTerms')?.checked
+		};
+
+		const inputs = {
+			name: get('registration_form_name'),
+			lastname: get('registration_form_lastname'),
+			email: get('registration_form_email'),
+			societyName: get('registration_form_societyName'),
+			phone: get('registration_form_phone'),
+			siret: get('registration_form_siret'),
+			password: get('registration_form_password_first'),
+			passwordConfirm: get('registration_form_password_second'),
+			terms: get('registration_form_agreeTerms')
+		};
+
+		function validate(forceDisplayErrors = false) {
+			let allValid = true;
+
+			for (const [key, validator] of Object.entries(fields)) {
+				let value = '';
+				if (key === 'passwordConfirm' || key === 'terms') {
+				} else {
+					value = inputs[key]?.value || '';
+				}
+
+				const isValid = validator(value);
+				allValid = allValid && isValid;
+
+				const errorEl = document.getElementById(`error-${key}`);
+
+				if (errorEl) {
+					errorEl.textContent = (!isValid && forceDisplayErrors) ? errorMessages[key] : '';
+				}
+
+				if (inputs[key] && key !== 'terms') {
+					inputs[key].classList.toggle('is-valid', isValid && forceDisplayErrors);
+					inputs[key].classList.toggle('is-invalid', !isValid && forceDisplayErrors);
+				}
+			}
+
+			return allValid;
+		}
+
+		submitBtn?.addEventListener('click', (e) => {
+			const isFormValid = validate(true);
+			if (!isFormValid) {
+				e.preventDefault();
+			}
+		});
+	});
+	</script>
+
+
 {% endblock %}
