@@ -17,25 +17,25 @@ class ConfigMixteType extends AbstractType
         if ($acCount > 0) {
             $builder
                 ->add('prix_collab', NumberType::class, [
-                    'label' => 'Prix collaborateurs AC (€HT/kWh)',
+                    'label' => 'Pour les véhicules personnels (collaborateurs) :',
                     'required' => true,
                     'scale' => 2,
                     'attr' => ['class' => 'styled-input'],
                 ])
                 ->add('prix_public', NumberType::class, [
-                    'label' => 'Prix public AC (€HT/kWh)',
+                    'label' => 'Pour les véhicules extérieurs (public) :',
                     'required' => false,
                     'scale' => 2,
                     'attr' => ['class' => 'styled-input'],
                 ])
                 ->add('cout_minute', NumberType::class, [
-                    'label' => 'Coût à la minute AC',
+                    'label' => 'Coût supplémentaire à la minute :',
                     'required' => false,
                     'scale' => 2,
                     'attr' => ['class' => 'styled-input'],
                 ])
                 ->add('penalite', NumberType::class, [
-                    'label' => 'Pénalité post-recharge AC',
+                    'label' => 'Pénalité après recharge (au-delà de 15 min) :',
                     'required' => false,
                     'scale' => 2,
                     'attr' => ['class' => 'styled-input'],
@@ -47,25 +47,25 @@ class ConfigMixteType extends AbstractType
                 ->add('prix_collab_dc', NumberType::class, [
                     'mapped' => false,
                     'required' => false,
-                    'label' => 'Tarif collaborateurs DC',
+                    'label' => 'Pour les véhicules personnels (collaborateurs) :',
                     'attr' => ['class' => 'styled-input'],
                 ])
                 ->add('prix_public_dc', NumberType::class, [
                     'mapped' => false,
                     'required' => false,
-                    'label' => 'Tarif public DC',
+                    'label' => 'Pour les véhicules extérieurs (public) :',
                     'attr' => ['class' => 'styled-input'],
                 ])
                 ->add('cout_minute_dc', NumberType::class, [
                     'mapped' => false,
                     'required' => false,
-                    'label' => 'Coût à la minute DC',
+                    'label' => 'Coût supplémentaire à la minute :',
                     'attr' => ['class' => 'styled-input'],
                 ])
                 ->add('penalite_dc', NumberType::class, [
                     'mapped' => false,
                     'required' => false,
-                    'label' => 'Pénalité post-recharge DC',
+                    'label' => 'Pénalité après recharge (au-delà de 15 min) :',
                     'attr' => ['class' => 'styled-input'],
                 ]);
         }

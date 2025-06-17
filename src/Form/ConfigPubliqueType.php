@@ -18,51 +18,52 @@ class ConfigPubliqueType extends AbstractType
         if ($acCount > 0) {
         $builder
             ->add('prix_collab', NumberType::class, [
-                'label' => 'Pour les véhicules personnels (AC)',
+                'label' => 'Pour les véhicules personnels (collaborateurs) :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ])
             ->add('prix_public', NumberType::class, [
-                'label' => 'Pour les véhicules extérieurs (AC)',
+                'label' => 'Pour les véhicules extérieurs (public) :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ])
             ->add('cout_minute', NumberType::class, [
-                'label' => 'Coût à la minute (AC)',
+                'label' => 'Coût supplémentaire à la minute :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ])
             ->add('penalite', NumberType::class, [
-                'label' => 'Pénalité après recharge (AC)',
+                'label' => 'Pénalité après recharge (au-delà de 15 min) :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ]);
         }
        if ($dcCount > 0) {
-            $builder            ->add('prix_collab_dc', NumberType::class, [
-                'label' => 'Pour les véhicules personnels (DC)',
+            $builder            
+            ->add('prix_collab_dc', NumberType::class, [
+                'label' => 'Pour les véhicules personnels (collaborateurs) :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ])
             ->add('prix_public_dc', NumberType::class, [
-                'label' => 'Pour les véhicules extérieurs (DC)',
+                'label' => 'Pour les véhicules extérieurs (public) :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ])
             ->add('cout_minute_dc', NumberType::class, [
-                'label' => 'Coût à la minute (DC)',
+                'label' => 'Coût supplémentaire à la minute :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
             ])
             ->add('penalite_dc', NumberType::class, [
-                'label' => 'Pénalité après recharge (DC)',
+                'label' => 'Pénalité après recharge (au-delà de 15 min) :',
                 'required' => false,
                 'mapped' => false,
                 'scale' => 2,
