@@ -45,11 +45,13 @@
 						<li id="ac-step1">
 							{{ form_label(form.prix_collab) }}
 							{{ form_widget(form.prix_collab, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
 						</li>
 
 						<li id="ac-step2" style="display: none;">
 							{{ form_label(form.prix_public) }}
 							{{ form_widget(form.prix_public, {'attr': {'class': 'styled-input'}}) }} <span>€HT/KWh</span>
+							<p class="error-message"></p>
 						</li>
 
 						<h6 class="mt-4" id="optionsTitle-ac" style="display: none;">Options complémentaires :</h6>
@@ -58,12 +60,14 @@
 							{{ form_label(form.cout_minute) }}
 							{{ form_widget(form.cout_minute, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
 							<small class="text-muted">En plus du prix du kWh, afin de mieux maîtriser l’usage des bornes.</small>
+							<p class="error-message"></p>
 						</li>
 
 						<li id="ac-step4" style="display: none;">
 							{{ form_label(form.penalite) }}
 							{{ form_widget(form.penalite, {'attr': {'class': 'styled-input'}}) }} <span>€HT</span><br>
 							<small class="text-muted">Pour favoriser la rotation des véhicules après la fin de la recharge.</small>
+							<p class="error-message"></p>
 						</li>
 					</ul>
 				</fieldset>
@@ -115,6 +119,11 @@
 		--input-bg: #fff;
 		--control-height: 50px;
 		--shadow-inset: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+	}
+
+	.is-invalid {
+		border-color: #dc3545;
+		box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
 	}
 
 	.transition-text.shrink {
@@ -238,5 +247,45 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 });
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+	const form = document.querySelector('form');
+
+	form.addEventListener('submit', (e) => {
+		let hasError = false;
+
+		// Nettoyage
+		document.querySelectorAll('.styled-input').forEach(input => {
+			input.classList.remove('is-invalid');
+			const errorMsg = input.closest('li')?.querySelector('.error-message');
+			if (errorMsg) errorMsg.textContent = '';
+		});
+
+		// Validation
+		const inputs = form.querySelectorAll('.styled-input');
+		inputs.forEach(input => {
+			const val = input.value.trim();
+			const errorMsg = input.closest('li')?.querySelector('.error-message');
+
+			if (val === '' || isNaN(val)) {
+				hasError = true;
+				input.classList.add('is-invalid');
+				if (errorMsg) {
+					errorMsg.textContent = 'Veuillez entrer un nombre valide';
+					errorMsg.classList.add('text-danger');
+				}
+			}
+		});
+
+		if (hasError) {
+			e.preventDefault();
+			form.scrollIntoView({ behavior: 'smooth' });
+		}
+	});
+});
+</script>
+
+
 {% endblock %}
 
