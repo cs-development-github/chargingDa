@@ -140,89 +140,7 @@ class SupervisionController extends AbstractController
                 throw $this->createNotFoundException("Type de configuration invalide");
             }
 
-            $form = $this->createForm($types[$configType]);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $request->getSession()->set('supervision_step_4', $form->getData());
-
-                /** @var Client $clientSession */
-                $clientSession = $request->getSession()->get('supervision_step_2');
-                $client = $em->getRepository(Client::class)->find($clientSession->getId());
-
-                if ($configType === 'flotte') {
-
-                    $client = $em->getRepository(Client::class)->find($clientSession->getId());
-
-                    foreach ($client->getInterventions() as $intervention) {
-                        $stationSession = $intervention->getChargingStation();
-
-                        if ($stationSession) {
-                            $station = $em->getRepository(ChargingStations::class)->find($stationSession->getId());
-
-                            $tarif = new Tarification();
-                            $tarif->setClient($client);
-                            $tarif->setChargingStation($station);
-                            $tarif->setOfferType('flotte');
-
-                            $em->persist($tarif);
-                        }
-                    }
-
-                    $em->flush();
-                }
-
-                if ($configType === 'mixte') {
-                    $data = $form->getData();
-
-                    foreach ($client->getInterventions() as $intervention) {
-                        $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
-
-                        $tarif = new Tarification();
-                        $tarif->setClient($client);
-                        $tarif->setChargingStation($station);
-                        $tarif->setOfferType('mixte');
-                        $tarif->setReducedPrice((string) $data['prix_collab']);
-                        $tarif->setPublicPrice((string) $data['prix_public']);
-                        $tarif->setRechargeTimeResale((string) $data['cout_minute']);
-                        $tarif->setParkingTimeResale((string) $data['penalite']);
-
-                        $em->persist($tarif);
-                    }
-                    $em->flush();
-                }
-
-                if ($form->isSubmitted() && $form->isValid()) {
-                    $prixCollab = $form->get('prix_collab')->getData();
-                    $prixPublic = $form->get('prix_public')->getData();
-                    $coutMinute = $form->get('cout_minute')->getData();
-                    $penalite   = $form->get('penalite')->getData();
-
-                    foreach ($client->getInterventions() as $intervention) {
-                        $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
-
-                        $tarif = new Tarification();
-                        $tarif->setClient($client);
-                        $tarif->setChargingStation($station);
-                        $tarif->setOfferType('publique');
-
-                        $tarif->setReducedPrice((string) $prixCollab);
-                        $tarif->setPublicPrice((string) $prixPublic);
-                        $tarif->setRechargeTimeResale((string) $coutMinute);
-                        $tarif->setParkingTimeResale((string) $penalite);
-
-                        $em->persist($tarif);
-                    }
-
-                    $em->flush();
-                }
-
-                return $this->redirectToRoute('supervision_step', [
-                    'step' => 5,
-                    'token' => $token,
-                ]);
-            }
-
+            // Récupération client + calcul AC/DC
             $client = $request->getSession()->get('supervision_step_2');
             $totalConnectors = 0;
             $acCount = 0;
@@ -249,18 +167,92 @@ class SupervisionController extends AbstractController
                 }
             }
 
-            if ($client instanceof Client) {
-                foreach ($client->getInterventions() as $intervention) {
-                    $station = $intervention->getChargingStation();
-                    if ($station && is_numeric($station->getConnectors())) {
-                        $totalConnectors += (int) $station->getConnectors();
+            // Construction du formulaire avec les bons paramètres
+            $formOptions = [];
+            if ($configType === 'mixte') {
+                $formOptions = [
+                    'ac_count' => $acCount,
+                    'dc_count' => $dcCount,
+                ];
+            }
+
+            if ($configType === 'publique') {
+                $formOptions = [
+                    'ac_count' => $acCount,
+                    'dc_count' => $dcCount,
+                ];
+            }
+
+            $form = $this->createForm($types[$configType], null, $formOptions);
+            $form->handleRequest($request);
+
+            // Traitement à la soumission
+            if ($form->isSubmitted() && $form->isValid()) {
+                $request->getSession()->set('supervision_step_4', $form->getData());
+
+                $client = $em->getRepository(Client::class)->find($client->getId());
+
+                if ($configType === 'flotte') {
+                    foreach ($client->getInterventions() as $intervention) {
+                        $station = $intervention->getChargingStation();
+                        if ($station) {
+                            $station = $em->getRepository(ChargingStations::class)->find($station->getId());
+                            $tarif = new Tarification();
+                            $tarif->setClient($client);
+                            $tarif->setChargingStation($station);
+                            $tarif->setOfferType('flotte');
+                            $em->persist($tarif);
+                        }
                     }
                 }
+
+                if ($configType === 'mixte') {
+                    $data = $form->getData();
+                    foreach ($client->getInterventions() as $intervention) {
+                        $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
+                        $tarif = new Tarification();
+                        $tarif->setClient($client);
+                        $tarif->setChargingStation($station);
+                        $tarif->setOfferType('mixte');
+                        $tarif->setReducedPrice((string) $data['prix_collab']);
+                        $tarif->setPublicPrice((string) $data['prix_public']);
+                        $tarif->setRechargeTimeResale((string) $data['cout_minute']);
+                        $tarif->setParkingTimeResale((string) $data['penalite']);
+                        $em->persist($tarif);
+                    }
+                }
+
+                if ($configType === 'publique') {
+                    $prixCollab = $form->get('prix_collab')->getData();
+                    $prixPublic = $form->get('prix_public')->getData();
+                    $coutMinute = $form->get('cout_minute')->getData();
+                    $penalite   = $form->get('penalite')->getData();
+
+                    foreach ($client->getInterventions() as $intervention) {
+                        $station = $em->getRepository(ChargingStations::class)->find($intervention->getChargingStation()->getId());
+                        $tarif = new Tarification();
+                        $tarif->setClient($client);
+                        $tarif->setChargingStation($station);
+                        $tarif->setOfferType('publique');
+                        $tarif->setReducedPrice((string) $prixCollab);
+                        $tarif->setPublicPrice((string) $prixPublic);
+                        $tarif->setRechargeTimeResale((string) $coutMinute);
+                        $tarif->setParkingTimeResale((string) $penalite);
+                        $em->persist($tarif);
+                    }
+                }
+
+                $em->flush();
+
+                return $this->redirectToRoute('supervision_step', [
+                    'step' => 5,
+                    'token' => $token,
+                ]);
             }
 
             return $this->render("supervision/step4_{$configType}.html.twig", [
                 'form' => $form->createView(),
-                'totalConnectors' => $totalConnectors/2,
+                'totalConnectors' => $totalConnectors / 2,
                 'currentStep' => 4,
                 'token' => $client instanceof Client ? $client->getSecureToken() : null,
                 'acCount' => $acCount,
