@@ -20,7 +20,7 @@
 
     <div class="card-body text-center">
         <h5 class="card-title fw-bold">{{ station.model }}</h5>
-        <p class="text-muted mb-1">{{ station.power }} kW – {{ station.connectors|default(1) }} point(s)</p>
+        <p class="text-muted mb-1">{{ station.power }} kW – {{ station.connectors|default(1) }} connecteur(s)</p>
         <p class="small text-muted">Référence : {{ station.reference }}</p>
 
         {% if station.difficulty is defined %}
