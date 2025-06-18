@@ -3,48 +3,112 @@
 {% block body %}
 <style>
 	.option-card {
-		transition: transform 0.2s ease, box-shadow 0.2s ease;
+		transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
 		cursor: pointer;
 		border: 2px solid transparent;
-		border-radius: 12px;
+		border-radius: 14px;
 		background: #fff;
-		box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+		box-shadow: 0 3px 8px rgba(0, 0, 0, 0.07);
 		display: flex;
 		flex-direction: column;
-		padding: 1.5rem;
-		margin-bottom: 1.2rem;
+		padding: 2rem 1.8rem;
+		height: 100%;
+		text-align: center;
 	}
+
 	.option-card:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+		transform: translateY(-4px);
+		box-shadow: 0 8px 18px rgba(0, 0, 0, 0.1);
 	}
+
 	.option-card.active {
-		border-color: #0d6efd;
-		background: linear-gradient(135deg, #eaf3ff, #f7fbff);
+		border-image: linear-gradient(90deg, #ec008c, #f6941f) 1;
+		background: #fff5f2;
 	}
+
+	.gradient-text {
+		background: linear-gradient(90deg, #ec008c, #f6941f);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+	}
+
 	.option-card h5 {
-		font-size: 1.2rem;
-		font-weight: bold;
-		margin-bottom: 0.5rem;
+		font-size: 1.3rem;
+		font-weight: 600;
+		margin-bottom: 0.75rem;
 	}
+
 	.option-card p {
-		font-size: 0.95rem;
+		font-size: 1rem;
 		color: #555;
-		margin-bottom: 0.8rem;
+		margin-bottom: 1.2rem;
+		min-height: 70px;
+		line-height: 1.3;
+		max-width: 90%;
+		margin-left: auto;
+		margin-right: auto;
 	}
+
 	.price-block {
 		margin-top: auto;
-		padding-top: 0.8rem;
-		border-top: 1px solid #ddd;
+		padding-top: 1rem;
+		border-top: 1.5px solid #e1e1e1;
+		color: #444;
+		font-size: 0.95rem;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.price-block div {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 8px;
+		max-width: 95%;
+		text-align: center;
+	}
+
+	.price-block i {
+		font-size: 1.4rem;
+		/* gradiente para iconos */
+		background: linear-gradient(90deg, #ec008c, #f6941f);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		color: transparent;
+	}
+
+	.icon-wrapper {
+		font-size: 2.4rem;
+		margin-bottom: 1.2rem;
+	}
+
+	.btn-gradient {
+		background: linear-gradient(90deg, #ec008c, #f6941f);
+		color: white;
+		border: none;
+		transition: 0.3s ease;
+	}
+
+	.btn-gradient:hover {
+		color: white;
+		transform: scale(1.07);
+		box-shadow: 0 6px 18px rgba(246, 148, 31, 0.4);
 	}
 </style>
 
-<div class="container py-5" style="max-width: 800px;">
-	<h3 class="mb-4">Quel type de configuration souhaitez-vous ?</h3>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<div class="container py-5" style="max-width: 960px;">
+	<h2 class="text-center mb-5 fw-bold gradient-text">Choisissez votre configuration</h2>
 
 	{{ form_start(form) }}
 
 	{% set labels = {
+<<<<<<< HEAD
 		'flotte': {
 			'title': 'Bornes privées',
 			'desc': "Destiné uniquement aux véhicules de flotte (Véhicules de fonction et/ou véhicules de services) dont l'énergie est à la charge de l'entreprise, du porteur du contrat d'énergie.",
@@ -60,25 +124,75 @@
 			'desc': "Destiné aux véhicules de flotte et véhicules extérieurs (Véhicules de flottes, véhicules personnels de collaborateurs et/ou publics extérieurs) dont l'énergie est à la charge de l'entreprisen du porteur du contrat d'énergie",
 			'price': 'Abonnement de 9,90 €HT / Mois / PDC <br> + Commissions opérateur de 0,03 HT / Kwh délivré (Véhicules de flotte) <br> + Commissions opérateur de 10% du CA € TTC généré (Véhicules extérieurs)'
 		}
+=======
+	'flotte': {
+	'title': 'Bornes privées',
+	'desc': "Pour les véhicules de la flotte d'entreprise, énergie prise en charge par l'entreprise.",
+	'price': [
+	{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
+	{ 'icon': 'bi-plus', 'text': '0,03 €HT / kWh' }
+	],
+	'icon': 'bi-shield-lock'
+	},
+	'publique': {
+	'title': 'Bornes publiques',
+	'desc': "Accès aux véhicules externes, facturation aux utilisateurs finaux.",
+	'price': [
+	{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
+	{ 'icon': 'bi-plus', 'text': '10% du CA TTC' }
+	],
+	'icon': 'bi-people'
+	},
+	'mixte': {
+	'title': 'Bornes privées & publiques',
+	'desc': "Usage mixte : flotte interne et utilisateurs externes.",
+	'price': [
+	{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
+	{ 'icon': 'bi-plus', 'text': '0,03 €HT / kWh' },
+	{ 'icon': 'bi-plus', 'text': '10% du CA TTC' }
+	],
+	'icon': 'bi-diagram-3'
+	}
+>>>>>>> 822f768bc810ccf4aa84e5dfc270e0fecc38f376
 	} %}
 
-	<div class="d-flex flex-column">
+	<div class="row g-4">
 		{% for field in form.type %}
-			{% set value = field.vars.value %}
-			{% set label = labels[value] %}
+		{% set value = field.vars.value %}
+		{% set label = labels[value] %}
 
+		<div class="col-md-4">
 			<label class="option-card" data-value="{{ value }}">
 				{{ form_widget(field, { attr: { class: 'd-none' } }) }}
-				<h5>{{ label.title }}</h5>
+				<div class="icon-wrapper gradient-text">
+					<i class="bi {{ label.icon }}"></i>
+				</div>
+				<h5 class="gradient-text">{{ label.title }}</h5>
 				<p>{{ label.desc }}</p>
-				<div class="price-block text-muted">{{ label.price|raw }}</div>
+				<div class="price-block">
+					{% for priceItem in label.price %}
+					<div>
+						<i class="bi {{ priceItem.icon }}"></i>
+						<strong>
+							{% if loop.first %}
+							Abonnement:&nbsp;
+							{% else %}
+							Commission:&nbsp;
+							{% endif %}
+							{{ priceItem.text }}
+						</strong>
+					</div>
+					{% endfor %}
+				</div>
 			</label>
+		</div>
 		{% endfor %}
 	</div>
 
-	<div class="text-end mt-4">
-		<button type="submit" class="btn btn-primary px-4">Suivant</button>
+	<div class="text-center mt-5">
+		<button type="submit" class="btn btn-gradient px-5 py-2 fw-semibold">Suivant</button>
 	</div>
+
 
 	{{ form_end(form) }}
 </div>
