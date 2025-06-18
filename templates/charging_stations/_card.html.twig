@@ -18,13 +18,13 @@
             alt="{{ station.model }}" class="device-img img-fluid rounded" style="max-height: 160px;">
     </div>
 
-    <div class="card-body text-center">
+    <div class="card-body text-center d-flex flex-column align-items-center justify-content-between" style="min-height: 240px;">
         <h5 class="card-title fw-bold">{{ station.model }}</h5>
         <p class="text-muted mb-1">{{ station.power }} kW – {{ station.connectors|default(1) }} connecteur(s)</p>
-        <p class="small text-muted">Référence : {{ station.reference }}</p>
+        <p class="small text-muted">Référence fabriquant : {{ station.reference }}</p>
 
         {% if station.difficulty is defined %}
-        <div class="difficulty-display text-center mt-3">
+        <div class="difficulty-display mt-2">
             <div class="difficulty-bars justify-content-center">
                 {% if station.difficulty == 'very-low' %}
                     <div class="difficulty-bar low"></div>
