@@ -426,9 +426,12 @@
 				<input type="text" id="searchModelInput" class="custom-modal-search" placeholder="Rechercher..."/>
 				<div id="modalModelList" class="custom-modal-list">
 					{% for model in chargingStationModels %}
-						<div class="custom-model-card clickable" data-name="{{ model.model|lower }}" onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}','{{ model.reference }}')">
-							<div class="d-flex align-items-center gap-3 mb-2">
-								<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width:80px;border-radius:6px;"/>
+				<div class="custom-model-card clickable"
+					data-name="{{ model.model|lower }}"
+					data-manufacturer="{{ model.manufacturer.name|lower }}"
+					data-reference="{{ model.reference|lower }}"
+					onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}','{{ model.reference }}')">							<div class="d-flex align-items-center gap-3 mb-2">
+												<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width:80px;border-radius:6px;"/>
 								<div>
 									<strong>{{ model.model }}</strong><br>
 									<small>{{ model.manufacturer.name }}
@@ -575,8 +578,16 @@
 					let visibleCount = 0;
 		
 					cards.forEach(card => {
-						const name = card.dataset.name;
-						if (name.includes(value)) {
+						console.log("On me parle");
+						const name = card.dataset.name || '';
+						const manufacturer = card.dataset.manufacturer || '';
+						const reference = card.dataset.reference || '';
+
+						if (
+							name.includes(value) ||
+							manufacturer.includes(value) ||
+							reference.includes(value)
+						) {
 							card.style.display = 'block';
 							visibleCount++;
 						} else {
