@@ -338,27 +338,49 @@
 											{% if station.station.difficulty is defined %}
 												<div class="difficulty-display text-center mt-3">
 													<div class="difficulty-bars justify-content-center">
-														{% if station.station.difficulty == 'low' %}
+														{% if station.station.difficulty == 'very-low' %}
 															<div class="difficulty-bar low"></div>
+															<div class="difficulty-bar"></div>
+															<div class="difficulty-bar"></div>
+															<div class="difficulty-bar"></div>
+															<div class="difficulty-bar"></div>
+														{% elseif station.station.difficulty == 'low' %}
+															<div class="difficulty-bar low"></div>
+															<div class="difficulty-bar low"></div>
+															<div class="difficulty-bar"></div>
 															<div class="difficulty-bar"></div>
 															<div class="difficulty-bar"></div>
 														{% elseif station.station.difficulty == 'mid' %}
 															<div class="difficulty-bar mid"></div>
 															<div class="difficulty-bar mid"></div>
+															<div class="difficulty-bar mid"></div>
+															<div class="difficulty-bar"></div>
 															<div class="difficulty-bar"></div>
 														{% elseif station.station.difficulty == 'hard' %}
+															<div class="difficulty-bar hard"></div>
+															<div class="difficulty-bar hard"></div>
+															<div class="difficulty-bar hard"></div>
+															<div class="difficulty-bar hard"></div>
+															<div class="difficulty-bar"></div>
+														{% elseif station.station.difficulty == 'very-hard' %}
+															<div class="difficulty-bar hard"></div>
+															<div class="difficulty-bar hard"></div>
 															<div class="difficulty-bar hard"></div>
 															<div class="difficulty-bar hard"></div>
 															<div class="difficulty-bar hard"></div>
 														{% endif %}
 													</div>
 													<div class="difficulty-label text-muted small mt-1">
-														{% if station.station.difficulty == 'low' %}
-															Difficulté : Facile
+														{% if station.station.difficulty == 'very-low' %}
+															Niveau d'expertise : Facile
+														{% elseif station.station.difficulty == 'low' %}
+															Niveau d'expertise : Facile
 														{% elseif station.station.difficulty == 'mid' %}
-															Difficulté : Moyenne
+															Niveau d'expertise : Moyenne
 														{% elseif station.station.difficulty == 'hard' %}
-															Difficulté : Difficile
+															Niveau d'expertise : Difficile
+														{% elseif station.station.difficulty == 'very-hard' %}
+															Niveau d'expertise : Difficile
 														{% endif %}
 													</div>
 												</div>
@@ -527,7 +549,7 @@
 							<div class="text-center mt-3">
 								${step.ocpp ? `
 									<div class="d-flex justify-content-center align-items-center mb-3">
-										<span class="me-2"><strong>OCPPs :</strong> ${step.ocpp}</span>
+										<span class="me-2"><strong>OCPP :</strong> ${step.ocpp}</span>
 										<button class="btn btn-outline-secondary btn-sm copy-btn" data-copy="${step.ocpp}" title="Copiar OCPP">
 											<i class="bi bi-clipboard"></i>
 										</button>
@@ -1025,7 +1047,7 @@
 			            <p><strong>Assurez-vous d'avoir :</strong></p>
 			            <ul>
 			                <li>Votre <strong>téléphone bien chargé</strong></li>
-			                <li>La <strong>carte SIM insérée</strong> dans le terminal</li>
+			                <li>La <strong>carte SIM insérée</strong> dans la borne de recharge</li>
 			                <li>Une <strong>connexion mobile active</strong></li>
 			            </ul>
 			        `,
@@ -1035,6 +1057,7 @@
 			                <li>Un <strong>PC connecté à la borne via un câble RJ45</strong></li>
 			                <li>Le <strong>navigateur prêt</strong> à interagir avec l'interface</li>
 			                <li>Les bons <strong>droits d'administration</strong> si besoin</li>
+							<li>Les bons <strong>droits d'administration</strong> si besoin</li>
 			            </ul>
 			        `,
 			        default: `

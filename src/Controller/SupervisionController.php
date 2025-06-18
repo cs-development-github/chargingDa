@@ -167,7 +167,6 @@ class SupervisionController extends AbstractController
                 }
             }
 
-            // Construction du formulaire avec les bons paramètres
             $formOptions = [];
             if ($configType === 'mixte') {
                 $formOptions = [

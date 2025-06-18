@@ -26,26 +26,48 @@
         {% if station.difficulty is defined %}
         <div class="difficulty-display text-center mt-3">
             <div class="difficulty-bars justify-content-center">
-                {% if station.difficulty == 'low' %}
-                <div class="difficulty-bar low"></div>
-                <div class="difficulty-bar"></div>
-                <div class="difficulty-bar"></div>
+                {% if station.difficulty == 'very-low' %}
+                    <div class="difficulty-bar low"></div>
+                    <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar"></div>
+                {% elseif station.difficulty == 'low' %}
+                    <div class="difficulty-bar low"></div>
+                    <div class="difficulty-bar low"></div>
+                    <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar"></div>
                 {% elseif station.difficulty == 'mid' %}
-                <div class="difficulty-bar mid"></div>
-                <div class="difficulty-bar mid"></div>
-                <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar mid"></div>
+                    <div class="difficulty-bar mid"></div>
+                    <div class="difficulty-bar mid"></div>
+                    <div class="difficulty-bar"></div>
+                    <div class="difficulty-bar"></div>
                 {% elseif station.difficulty == 'hard' %}
-                <div class="difficulty-bar hard"></div>
-                <div class="difficulty-bar hard"></div>
-                <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar"></div>
+                {% elseif station.difficulty == 'very-hard' %}
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
+                    <div class="difficulty-bar hard"></div>
                 {% endif %}
             </div>
             <div class="difficulty-label text-muted small mt-1">
-                {% if station.difficulty == 'low' %}
+                {% if station.difficulty == 'very-low' %}
+                    Niveau d'expertise : Facile
+                {% elseif station.difficulty == 'low' %}
                     Niveau d'expertise : Facile
                 {% elseif station.difficulty == 'mid' %}
                     Niveau d'expertise : Moyenne
                 {% elseif station.difficulty == 'hard' %}
+                    Niveau d'expertise : Difficile
+                {% elseif station.difficulty == 'very-hard' %}
                     Niveau d'expertise : Difficile
                 {% endif %}
             </div>
