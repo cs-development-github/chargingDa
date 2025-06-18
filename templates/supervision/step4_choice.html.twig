@@ -34,9 +34,23 @@
 	}
 
 	.option-card h5 {
-		font-size: 1.3rem;
+		font-size: 1.4rem;
+		font-weight: 700;
+		margin-bottom: 0.4rem;
+	}
+
+	.option-card h6 {
+		font-size: 1.05rem;
 		font-weight: 600;
-		margin-bottom: 0.75rem;
+		margin-bottom: 0.8rem;
+	}
+
+	.subtitle-fixed {
+		max-width: 100%;
+		text-align: center;
+		word-break: break-word;
+		white-space: normal;
+		line-height: 1.2;
 	}
 
 	.option-card p {
@@ -61,6 +75,7 @@
 		gap: 10px;
 		justify-content: center;
 		align-items: center;
+		min-height: 90px;
 	}
 
 	.price-block div {
@@ -74,7 +89,6 @@
 
 	.price-block i {
 		font-size: 1.4rem;
-		/* gradiente para iconos */
 		background: linear-gradient(90deg, #ec008c, #f6941f);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
@@ -108,73 +122,76 @@
 	{{ form_start(form) }}
 
 	{% set labels = {
-	'flotte': {
-	'title': 'Bornes privées',
-	'desc': "Pour les véhicules de la flotte d'entreprise, énergie prise en charge par l'entreprise.",
-	'price': [
-	{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
-	{ 'icon': 'bi-plus', 'text': '0,03 €HT / kWh' }
-	],
-	'icon': 'bi-shield-lock'
-	},
-	'publique': {
-	'title': 'Bornes publiques',
-	'desc': "Accès aux véhicules externes, facturation aux utilisateurs finaux.",
-	'price': [
-	{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
-	{ 'icon': 'bi-plus', 'text': '10% du CA TTC' }
-	],
-	'icon': 'bi-people'
-	},
-	'mixte': {
-	'title': 'Bornes privées & publiques',
-	'desc': "Usage mixte : flotte interne et utilisateurs externes.",
-	'price': [
-	{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
-	{ 'icon': 'bi-plus', 'text': '0,03 €HT / kWh' },
-	{ 'icon': 'bi-plus', 'text': '10% du CA TTC' }
-	],
-	'icon': 'bi-diagram-3'
-	}
+		'flotte': {
+			'title': 'Bornes',
+			'subtitle': 'Privées',
+			'desc': "Pour les véhicules de la flotte d’entreprise. L’énergie est prise en charge par l’entreprise.",
+			'price': [
+				{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
+				{ 'icon': 'bi-plus', 'text': '0,03 €HT / kWh' }
+			],
+			'icon': 'bi-shield-lock'
+		},
+		'publique': {
+			'title': 'Bornes',
+			'subtitle': 'Publiques',
+			'desc': "Accès aux véhicules externes avec facturation aux utilisateurs finaux.",
+			'price': [
+				{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
+				{ 'icon': 'bi-plus', 'text': '10% du CA TTC' }
+			],
+			'icon': 'bi-people'
+		},
+		'mixte': {
+			'title': 'Bornes',
+			'subtitle': 'Privées & Publiques',
+			'desc': "Usage mixte : flotte interne et utilisateurs externes.",
+			'price': [
+				{ 'icon': 'bi-currency-euro', 'text': '9,90 €HT / mois' },
+				{ 'icon': 'bi-plus', 'text': '0,03 €HT / kWh' },
+				{ 'icon': 'bi-plus', 'text': '10% du CA TTC' }
+			],
+			'icon': 'bi-diagram-3'
+		}
 	} %}
 
 	<div class="row g-4">
 		{% for field in form.type %}
-		{% set value = field.vars.value %}
-		{% set label = labels[value] %}
+			{% set value = field.vars.value %}
+			{% set label = labels[value] %}
 
-		<div class="col-md-4">
-			<label class="option-card" data-value="{{ value }}">
-				{{ form_widget(field, { attr: { class: 'd-none' } }) }}
-				<div class="icon-wrapper gradient-text">
-					<i class="bi {{ label.icon }}"></i>
-				</div>
-				<h5 class="gradient-text">{{ label.title }}</h5>
-				<p>{{ label.desc }}</p>
-				<div class="price-block">
-					{% for priceItem in label.price %}
-					<div>
-						<i class="bi {{ priceItem.icon }}"></i>
-						<strong>
-							{% if loop.first %}
-							Abonnement:&nbsp;
-							{% else %}
-							Commission:&nbsp;
-							{% endif %}
-							{{ priceItem.text }}
-						</strong>
+			<div class="col-md-4">
+				<label class="option-card" data-value="{{ value }}">
+					{{ form_widget(field, { attr: { class: 'd-none' } }) }}
+					<div class="icon-wrapper gradient-text">
+						<i class="bi {{ label.icon }}"></i>
 					</div>
-					{% endfor %}
-				</div>
-			</label>
-		</div>
+					<h5 class="gradient-text">{{ label.title }}</h5>
+					<h6 class="gradient-text subtitle-fixed">{{ label.subtitle }}</h6>
+					<p>{{ label.desc }}</p>
+					<div class="price-block">
+						{% for priceItem in label.price %}
+						<div>
+							<i class="bi {{ priceItem.icon }}"></i>
+							<strong>
+								{% if loop.first %}
+									Abonnement:&nbsp;
+								{% else %}
+									Commission:&nbsp;
+								{% endif %}
+								{{ priceItem.text }}
+							</strong>
+						</div>
+						{% endfor %}
+					</div>
+				</label>
+			</div>
 		{% endfor %}
 	</div>
 
 	<div class="text-center mt-5">
 		<button type="submit" class="btn btn-gradient px-5 py-2 fw-semibold">Suivant</button>
 	</div>
-
 
 	{{ form_end(form) }}
 </div>
