@@ -224,7 +224,7 @@ class ClientSupervisionDataService
                     $setting->getLongitude() ?? 0
                 ]
             ],
-            "public" => true,
+            "public" => false,
             "autoUserSiteAssignment" => true,
             "companyID" => $companyId,
             "issuer" => true,
