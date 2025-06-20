@@ -1,0 +1,605 @@
+{% extends 'base.html.twig' %}
+
+{% block style %}
+	<style>
+		body {
+			background-color: #f0f2f5;
+			font-family: 'Segoe UI', sans-serif;
+		}
+
+		.wrapper {
+			padding: 80px 30px 30px;
+			max-width: 1100px;
+			margin: auto;
+		}
+
+		.containerbox {
+			margin-top: 50px;
+		}
+
+		h2,
+		h3 {
+			margin-bottom: 20px;
+			color: #333;
+		}
+
+		input[type="text"],
+		input[type="email"],
+		input[type="number"],
+		input[type="password"],
+		select,
+		textarea {
+			width: 100%;
+			padding: 10px 15px;
+			border: 1px solid #ced4da;
+			border-radius: 8px;
+			background-color: #fff;
+			box-shadow: none;
+			font-size: 1rem;
+			transition: all 0.2s;
+			margin-bottom: 15px;
+		}
+
+		input:focus,
+		select:focus,
+		textarea:focus {
+			outline: none;
+			border-color: transparent;
+			box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.35);
+		}
+
+		label {
+			font-weight: 600;
+			margin-bottom: 5px;
+			display: inline-block;
+			color: #495057;
+		}
+
+		form .form-group,
+		form div:not(.radio-group):not(.connection-box-wrapper):not(.sim-block):not(.connection-content) {
+			margin-bottom: 20px;
+		}
+
+		.connection-group .container {
+			position: relative;
+			padding: 20px 25px;
+		}
+
+		.connection-group .container::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 6px;
+			height: 100%;
+			background: linear-gradient(to bottom, #ff4081, #ff8c00);
+			border-top-left-radius: 16px;
+			border-bottom-left-radius: 16px;
+		}
+
+		.connection-group {
+			position: relative;
+		}
+
+		.remove-connection-btn {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			z-index: 10;
+			padding: 6px 10px;
+			font-size: 14px;
+			border-radius: 50%;
+			width: 36px;
+			height: 36px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.remove-connection-btn:hover {
+			transform: scale(1.05);
+		}
+
+		.radio-group {
+			display: flex;
+			gap: 15px;
+			margin-bottom: 20px;
+		}
+
+		.radio-group input[type="radio"] {
+			display: none;
+		}
+
+		.radio-group label {
+			background: #e9ecef;
+			border-radius: 30px;
+			padding: 10px 20px;
+			cursor: pointer;
+			font-weight: 500;
+			color: #333;
+			transition: all 0.2s;
+		}
+
+		.radio-group input[type="radio"]:checked + label {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			color: #fff;
+		}
+
+		.radio-group label:hover {
+			background-color: #dee2e6;
+		}
+
+		.sim-block {
+			margin-top: 20px;
+			padding: 20px;
+			border-radius: 12px;
+		}
+
+		.sim-block h3 {
+			font-size: 1.1rem;
+			margin-top: 0;
+		}
+
+		.green {
+			background-color: #198754 !important;
+		}
+		.red {
+			background-color: #dc3545 !important;
+		}
+
+		.btn {
+			border-radius: 30px !important;
+			padding: 10px 20px;
+			font-weight: 500;
+			transition: all 0.2s;
+		}
+
+		.btn-primary {
+			background: linear-gradient(to right, #ff4081, #ff8c00);
+			border: none;
+			color: #fff;
+		}
+
+		.btn-danger {
+			background: #dc3545;
+			border: none;
+			color: #fff;
+		}
+
+		.btn-success {
+			background: #198754;
+			border: none;
+			color: #fff;
+		}
+
+		.btn:hover {
+			transform: translateY(-1px);
+			opacity: .95;
+		}
+
+		.sim-wrapper {
+			display: flex;
+			gap: 20px;
+			align-items: flex-start;
+			justify-content: space-between;
+			margin-top: 20px;
+		}
+
+		.sim-block {
+			flex: 1;
+		}
+
+		.connection-box-wrapper {
+			width: 250px;
+			flex-shrink: 0;
+		}
+
+		.connection-box {
+			color: white;
+			border-radius: 8px;
+			width: 500px;
+			text-align: center;
+		}
+
+		.connection-content {
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 30px;
+		}
+
+		.connection-form {
+			flex: 1;
+		}
+
+		@media(max-width:768px) {
+			.radio-group {
+				flex-direction: column;
+			}
+		}
+
+		/* ----------- MODAL STYLES ----------- */
+		.custom-modal-overlay {
+			position: fixed;
+			inset: 0;
+			background-color: rgba(0, 0, 0, 0.6);
+			display: none;
+			align-items: center;
+			justify-content: center;
+			z-index: 9999;
+		}
+
+		.custom-modal {
+			background: white;
+			padding: 20px;
+			border-radius: 12px;
+			width: 800px;
+			max-width: 95%;
+			max-height: 90vh;
+			overflow-y: auto;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+			display: flex;
+			flex-direction: column;
+		}
+
+		.custom-modal-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.custom-modal-close {
+			background: none;
+			border: none;
+			font-size: 24px;
+			cursor: pointer;
+		}
+
+		.custom-modal-search {
+			width: 100%;
+			margin-top: 10px;
+			padding: 8px;
+			border-radius: 8px;
+			border: 1px solid #ccc;
+		}
+
+		.custom-modal-list {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+			gap: 15px;
+			margin-top: 15px;
+			flex: 1;
+			min-height: 200px;
+			position: relative;
+		}
+
+		.custom-model-card {
+			min-height: 200px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			padding: 15px;
+			border: 1px solid #ddd;
+			border-radius: 10px;
+			background-color: #fff;
+			position: relative;
+			cursor: pointer;
+			transition: box-shadow 0.2s ease, border-color 0.2s ease;
+			overflow: hidden;
+		}
+
+		.custom-model-card:hover {
+			box-shadow: 0 0 10px rgba(40, 167, 69, 0.3);
+			border-color: #198754;
+		}
+
+		.custom-model-card .d-flex.align-items-center > img {
+			width: 80px;
+			height: 80px;
+			object-fit: cover;
+			border-radius: 6px;
+		}
+
+		.custom-model-card .d-flex.align-items-center > div {
+			flex: 1;
+			min-height: 80px;
+		}
+
+		.custom-model-card img[alt="Logo Fabricant"] {
+			width: 80px;
+			height: 40px;
+			object-fit: contain;
+			border-radius: 6px;
+		}
+
+		.custom-model-card .arrow-icon {
+			position: absolute;
+			right: 10px;
+			top: 50%;
+			transform: translateY(-50%) translateX(10px);
+			opacity: 0;
+			transition: transform 0.2s ease, opacity 0.2s ease;
+			font-size: 1.5rem;
+			color: #198754;
+		}
+
+		.custom-model-card:hover .arrow-icon {
+			transform: translateY(-50%) translateX(0);
+			opacity: 1;
+		}
+	</style>
+{% endblock %}
+
+{% block body %}
+	<div class="wrapper">
+		<div class="containerbox">
+			{{ form_start(clientForm, { action: path('app_submit_form'), method: 'POST' }) }}
+
+			<h2>Informations du client</h2>
+			{{ form_widget(clientForm) }}
+			{% set prototype %}
+			<div class="sim-block position-relative border bg-white p-3 mb-3 rounded">
+
+				<div
+					class="position-absolute top-0 end-0 m-2 d-flex align-items-center justify-content-center"
+					style="width: 36px; height: 36px; padding: 0;"
+					onclick="this.closest('.sim-block').remove()">
+					<i class="bi bi-trash" style="color: grey;"></i>
+				</div>
+				<div class="form-group mb-3">
+					<label class="form-label">
+						Carte SIM
+						<i class="bi bi-info-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" title="Numéro de carte SIM au format ICCID (ex: 893301234567890123)"></i>
+					</label>
+					{{ form_widget(interventionForm.interventions.vars.prototype.sim, { 'attr': { 'class': 'form-control' } }) }}
+				</div>
+
+				<div class="form-group mb-3">
+					<label class="form-label">
+						Identifiant de la borne
+						<i class="bi bi-info-circle-fill text-primary ms-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-html="true" title="<img src='{{ asset('build/images/Qrcode_exemple.png') }}' alt='Exemple QR Code' style='max-width:150px;border-radius:8px;'>"></i>
+					</label>
+					{{ form_widget(interventionForm.interventions.vars.prototype.borneName, { 'attr': { 'class': 'form-control' } }) }}
+				</div>
+
+				<div style="display:none;">
+					{{ form_widget(interventionForm.interventions.vars.prototype.chargingStation, {'attr':{'class':'charging-station-hidden'}}) }}
+				</div>
+
+				<div class="form-group">
+					<button type="button" class="btn btn-primary choose-model-btn" onclick="openModal(this)">
+						<i class="bi bi-search me-1"></i>Choisir une borne
+					</button>
+					<div class="model-selected text-muted small mt-1"></div>
+				</div>
+				{% endset %}
+				<h2>Interventions</h2>
+				{{ form_errors(interventionForm) }}
+				<div id="connectionsWrapper" data-prototype="{{ prototype|e('html_attr') }}">
+					{% if interventionForm.interventions|length > 0 %}
+						<div class="connection-group mb-4 p-3 border rounded shadow-sm bg-white position-relative">
+							<div class="connection-content">
+								<div class="connection-form">
+									<h3 class="mb-3">Quel moyen de connexion ?</h3>
+									<div class="radio-group">
+										<div class="form-check">
+											<input type="radio" class="form-check-input" value="sim" checked>
+											<label class="form-check-label">
+												<i class="bi bi-sd-card-fill me-1"></i>Carte SIM</label>
+										</div>
+										<div class="form-check">
+											<input type="radio" class="form-check-input" value="connect">
+											<label class="form-check-label">
+												<i class="bi bi-router-fill me-1"></i>Connect +</label>
+										</div>
+									</div>
+									<div class="sim-blocks-wrapper">
+										{{ form_widget(interventionForm.interventions[0]) }}
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</div>
+
+				<div class="mt-3">
+					<button type="button" id="addConnectionBtn" class="btn btn-primary">
+						<i class="bi bi-plus-circle me-1"></i>Ajouter une borne
+					</button>
+				</div>
+				<div class="mt-4">
+					<button type="submit" class="btn btn-success">
+						<i class="bi bi-save me-1"></i>Créer l'intervention
+					</button>
+				</div>
+
+				{{ form_end(clientForm) }}
+			</div>
+		</div>
+
+		<div id="customModal" class="custom-modal-overlay">
+			<div class="custom-modal">
+				<div class="custom-modal-header">
+					<h2>Choisir une modéle de borne</h2>
+					<button class="custom-modal-close" onclick="closeModal()">&times;</button>
+				</div>
+				<input type="text" id="searchModelInput" class="custom-modal-search" placeholder="Rechercher..."/>
+				<div id="modalModelList" class="custom-modal-list">
+					{% for model in chargingStationModels %}
+				<div class="custom-model-card clickable"
+					data-name="{{ model.model|lower }}"
+					data-manufacturer="{{ model.manufacturer.name|lower }}"
+					data-reference="{{ model.reference|lower }}"
+					onclick="selectModel('{{ model.id }}','{{ model.model }}','{{ model.image }}','{{ model.manufacturer.image }}','{{ model.manufacturer.name }}','{{ model.reference }}')">							<div class="d-flex align-items-center gap-3 mb-2">
+						<img src="{{ asset('uploads/' ~ model.image) }}" alt="Image Borne" style="width:80px;border-radius:6px;"/>
+								<div>
+									<strong>{{ model.model }}</strong><br>
+									<small>{{ model.manufacturer.name }}
+										–
+										{{ model.power }}
+										kW</small>
+									<br>
+									<small>Réference fabricant :
+										{{ model.reference }}
+									</small>
+								</div>
+							</div>
+							<img src="{{ asset('uploads/' ~ model.manufacturer.image) }}" alt="Logo Fabricant" width="100" class="mb-2" style="border-radius:8px;"/>
+							<div class="arrow-icon">&rarr;</div>
+						</div>
+					{% endfor %}
+				</div>
+
+			</div>
+		</div>
+
+		 <script>
+				document.addEventListener('DOMContentLoaded', () => {
+					const wrapper = document.getElementById('connectionsWrapper');
+					const addBtn = document.getElementById('addConnectionBtn');
+					let index = 0;
+				
+					function addIntervention() {
+						const prototype = wrapper.dataset.prototype;
+						const newForm = prototype.replace(/__name__/g, index);
+						const div = document.createElement('div');
+						div.innerHTML = newForm;
+				
+						const deleteBtn = div.querySelector('.remove-connection-btn');
+						if (deleteBtn) {
+							deleteBtn.addEventListener('click', () => {
+								if (wrapper.querySelectorAll('.sim-block').length > 1) {
+									div.remove();
+								} else {
+									alert("Au moins une intervention est requise.");
+								}
+							});
+						}
+				
+						wrapper.appendChild(div);
+						index++;
+					}
+				
+					if (wrapper.querySelectorAll('.sim-block').length === 0) {
+						addIntervention();
+					} else {
+						wrapper.querySelectorAll('.sim-block').forEach((div) => {
+							const deleteBtn = div.querySelector('.remove-connection-btn');
+							if (deleteBtn) {
+								deleteBtn.addEventListener('click', () => {
+									if (wrapper.querySelectorAll('.sim-block').length > 1) {
+										div.remove();
+									} else {
+										alert("Au moins une intervention est requise.");
+									}
+								});
+							}
+							index++;
+						});
+					}
+				
+					addBtn.addEventListener('click', () => {
+						addIntervention();
+					});
+				});
+				
+					let currentHiddenInput, currentDisplayLabel, currentChooseBtn;
+				
+					function openModal(button) {
+						const wrapper = button.closest('.sim-block');
+						currentHiddenInput = wrapper.querySelector('input.charging-station-hidden');
+						currentDisplayLabel = wrapper.querySelector('.model-selected');
+						currentChooseBtn = button;
+						document.getElementById('customModal').style.display = 'flex';
+					}
+				
+					function closeModal() {
+						document.getElementById('customModal').style.display = 'none';
+						currentHiddenInput = currentDisplayLabel = currentChooseBtn = null;
+					}
+				
+					function selectModel(id, name, image, manuImage, manuName, reference) {
+						if (!currentHiddenInput) return;
+				
+						currentHiddenInput.value = id;
+						currentChooseBtn.classList.add('d-none');
+						currentDisplayLabel.innerHTML = `
+							<div class="d-flex align-items-start gap-3 p-2 border rounded bg-light">
+								<img src="/uploads/${image}" style="width:80px; border-radius:6px; object-fit:cover;" alt="Model">
+								<img src="/uploads/${manuImage}" style="width:60px; object-fit:contain;" alt="Manufacturer">
+								<div class="flex-grow-1">
+									<strong>${name}</strong><br>
+									Référence fabriquant : ${reference} </br>
+									<small class="text-muted">${manuName}</small>
+									<div class="mt-2">
+										<button type="button" class="btn btn-sm btn-outline-danger" onclick="resetModelSelection(this)">Supprimer</button>
+									</div>
+								</div>
+							</div>`;
+						closeModal();
+					}
+				
+					function resetModelSelection(button) {
+						const wrapper = button.closest('.sim-block');
+						const input = wrapper.querySelector('input.charging-station-hidden');
+						const label = wrapper.querySelector('.model-selected');
+						const chooseBtn = wrapper.querySelector('.choose-model-btn');
+						if (input) input.value = '';
+						if (label) label.innerHTML = '';
+						if (chooseBtn) chooseBtn.classList.remove('d-none');
+					}
+				</script>
+
+	 <script>
+			document.addEventListener('DOMContentLoaded', function () {
+				const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+				tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+					new bootstrap.Tooltip(tooltipTriggerEl)
+				})
+			})
+		</script>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function () {
+			const searchInput = document.getElementById('searchModelInput');
+			const cards = document.querySelectorAll('.custom-model-card');
+			const modalList = document.getElementById('modalModelList');
+		
+			let noResultMessage = document.createElement('div');
+			noResultMessage.textContent = 'Aucune borne trouvée.';
+			noResultMessage.classList.add('text-center', 'text-muted', 'mt-3');
+			noResultMessage.style.display = 'none';
+			noResultMessage.id = 'noResultsFound';
+			modalList.appendChild(noResultMessage);
+		
+			if (searchInput) {
+				searchInput.addEventListener('input', function () {
+					const value = this.value.trim().toLowerCase();
+					let visibleCount = 0;
+		
+					cards.forEach(card => {
+						console.log("On me parle");
+						const name = card.dataset.name || '';
+						const manufacturer = card.dataset.manufacturer || '';
+						const reference = card.dataset.reference || '';
+
+						if (
+							name.includes(value) ||
+							manufacturer.includes(value) ||
+							reference.includes(value)
+						) {
+							card.style.display = 'block';
+							visibleCount++;
+						} else {
+							card.style.display = 'none';
+						}
+					});
+		
+					noResultMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+				});
+			}
+	});
+		
+	</script>
+
+	{% endblock %}
